@@ -91,7 +91,7 @@ function parse(tokenized) {
         return root;
       }
       tokenized[i].children = [
-        TreeNode(0, tokenized[i].lineNumber),
+        new TreeNode("0", tokenized[i].lineNumber),
         tokenized[i + 1],
       ];
       tokenized.splice(i + 1, 1);
