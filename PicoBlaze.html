@@ -267,6 +267,8 @@
         else document.getElementById("buttons").style.top = 400 + 4 + "px";
       }
     </script>
+    <script src="TreeNode.js"></script>
+    <script src="tokenizer.js"></script>
   </head>
   <body>
     <main>
@@ -274,6 +276,7 @@
       <div id="assemblyCode" contenteditable="true">;Insert assembly here.</div>
       <div id="buttons">
         <button id="highlightButton">Highlight Assembly</button>
+        <button id="assembleButton">Assemble</button>
       </div>
     </main>
     <script type="text/javascript">
@@ -290,6 +293,19 @@
           .scrollTo(0, document.getElementById("assemblyCode").scrollTop);
       };
       document.getElementById("highlightButton").onclick = syntaxHighlihter;
+      document.getElementById("assembleButton").onclick = () => {
+        const assembly = document.getElementById("assemblyCode").innerText;
+        const tokenized = tokenize(assembly);
+        let resultOfTokenizing = "[";
+        for (let i = 0; i < tokenized.length; i++) {
+          const token = tokenized[i];
+          if (token.text == "\n") resultOfTokenizing += '"\\n"';
+          else resultOfTokenizing += '"' + token.text + '"';
+          if (i != tokenized.length - 1) resultOfTokenizing += ",";
+        }
+        resultOfTokenizing += "]";
+        console.log("Result of tokenizing: ", resultOfTokenizing);
+      };
       setupLayout();
       window.onresize = setupLayout;
     </script>
