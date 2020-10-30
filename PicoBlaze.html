@@ -269,6 +269,7 @@
     </script>
     <script src="TreeNode.js"></script>
     <script src="tokenizer.js"></script>
+    <script src="parser.js"></script>
   </head>
   <body>
     <main>
@@ -305,6 +306,8 @@
         }
         resultOfTokenizing += "]";
         console.log("Result of tokenizing: ", resultOfTokenizing);
+        const parsed=parse(tokenized);
+        console.log("Result of parsing: ", parsed.getLispExpression());
       };
       setupLayout();
       window.onresize = setupLayout;
