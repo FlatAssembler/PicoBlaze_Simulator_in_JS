@@ -189,7 +189,12 @@
             continue;
           }
           if (
-            (assemblyCode[i] === " " || assemblyCode[i] === ",") &&
+            (assemblyCode[i] === " " ||
+              assemblyCode[i] === "," ||
+              assemblyCode[i] === "+" ||
+              assemblyCode[i] === "-" ||
+              assemblyCode[i] === "*" ||
+              assemblyCode[i] === "/") &&
             !areWeInAString
           ) {
             highlightedText += highlightToken(currentToken) + assemblyCode[i];
