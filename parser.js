@@ -117,5 +117,7 @@ function parse(tokenized) {
   parseBinaryOperators([ "*", "/" ]);
   parseBinaryOperators([ "+", "-" ]);
   root.children = tokenized;
-  return root;
+  if (root.checkTypes())
+    return root;
+  return new TreeNode("assembly", 0);
 }
