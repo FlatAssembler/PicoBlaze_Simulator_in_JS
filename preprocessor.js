@@ -38,12 +38,12 @@ function makeCompilationContext(parsed) {
     if (/:$/.test(node.text)) {
       console.log(
           "DEBUG: Dealing with a label, point #1..."); // Eh, those JavaScript
-                                                       // debuggers are worse
-                                                       // than useless, I think
-                                                       // now. Logging debug
-                                                       // messages is so much
-                                                       // easier than trying to
-                                                       // use a debugger.
+      // debuggers are worse
+      // than useless, I think
+      // now. Logging debug
+      // messages is so much
+      // easier than trying to
+      // use a debugger.
       if (typeof address === "undefined") {
         alert("Line " + node.lineNumber + ': The label "' + node.text +
               '" appears before any address has been set.');
@@ -132,9 +132,9 @@ function makeCompilationContext(parsed) {
               '" instead of a comma.');
         return context;
       }
-      console.log("Naming a register, point #2...");
+      console.log("DEBUG: Naming a register, point #2...");
       context.namedRegisters.set(node.children[2].text, node.children[0].text);
-      console.log("Naming a register, point #3...");
+      console.log("DEBUG: Naming a register, point #3...");
     }
   }
   return context;
