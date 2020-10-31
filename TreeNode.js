@@ -17,26 +17,30 @@ class TreeNode {
     return ret;
   }
   interpretAsArithmeticExpression(constants) {
+    if (!(constants instanceof Map)) {
+      alert(
+          'Internal compiler error: The "constants" argument is not of the type "Map"!');
+    }
     if (constants.has(this.text))
       return constants.get(this.text);
-    if (this.children.size() != 2 && (this.text == "*" || this.text == "/" ||
+    if (this.children.length != 2 && (this.text == "*" || this.text == "/" ||
                                       this.text == "+" || this.text == "-")) {
       alert("Line #" + this.lineNumber + ": The binary operator " + this.text +
             " has less than two operands.");
       return NaN;
     }
     if (this.text == "*")
-      return (children[0].interpretAsArithmeticExpression(constants) *
-              children[1].interpretAsArithmeticExpression(constants));
+      return (this.children[0].interpretAsArithmeticExpression(constants) *
+              this.children[1].interpretAsArithmeticExpression(constants));
     if (this.text == "/")
-      return (children[0].interpretAsArithmeticExpression(constants) /
-              children[1].interpretAsArithmeticExpression(constants));
+      return (this.children[0].interpretAsArithmeticExpression(constants) /
+              this.children[1].interpretAsArithmeticExpression(constants));
     if (this.text == "+")
-      return (children[0].interpretAsArithmeticExpression(constants) +
-              children[1].interpretAsArithmeticExpression(constants));
+      return (this.children[0].interpretAsArithmeticExpression(constants) +
+              this.children[1].interpretAsArithmeticExpression(constants));
     if (this.text == "-")
-      return (children[0].interpretAsArithmeticExpression(constants) -
-              children[1].interpretAsArithmeticExpression(constants));
+      return (this.children[0].interpretAsArithmeticExpression(constants) -
+              this.children[1].interpretAsArithmeticExpression(constants));
     if (this.text == "()") {
       if (this.children.length != 1) {
         alert("Line #" + this.lineNumber +
@@ -57,6 +61,13 @@ class TreeNode {
     return NaN;
   }
   checkTypes() {
+    // Let's check for inconsistencies that would be impossible in C++, but are
+    // possible in JavaScript.
+    if (typeof this.text !== "string") {
+      alert("Internal compiler error: For some token in the line #" +
+            this.lineNumber + ', the "text" property is not of type "string"');
+      return false;
+    }
     if (!(this.children instanceof Array)) {
       alert('Internal compiler error: The "children" property of the "' +
             this.text + '" token in the line #' + this.lineNumber +
