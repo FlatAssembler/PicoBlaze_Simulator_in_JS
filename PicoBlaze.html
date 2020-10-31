@@ -4,6 +4,11 @@
     <title>PicoBlaze Simulator</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style type="text/css">
+      body {
+        background-color: #fff7ff;
+        background-image: url("Background.gif");
+        background-repeat: no-repeat;
+      }
       main {
         width: 100%;
         max-width: 500px;
@@ -53,6 +58,7 @@
       #buttons {
         top: 400px;
         position: absolute;
+        width: 100%;
       }
       .flag {
         color: #007700;
@@ -73,6 +79,57 @@
       }
       .parenthesis {
         font-weight: bold;
+      }
+      #highlightButton {
+        position: absolute;
+        left: 0;
+        text-align: left;
+        margin-left: 0;
+        float: left;
+      }
+      #assembleButton {
+        position: absolute;
+        right: 5px;
+        text-align: right;
+        margin-right: 0;
+        float: right;
+      }
+      #divWithMachineCode {
+        position: absolute;
+        width: calc(100% - 5px);
+        background: white;
+        height: 100vh;
+        top: 450px;
+        overflow: scroll;
+        max-height: 400px;
+        margin-bottom: 10px;
+      }
+      #warningAboutJavaScript {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        font-weight: bold;
+        font-family: Arial;
+      }
+      table,
+      th,
+      td {
+        border: 1px solid black;
+        border-collapse: collapse;
+      }
+      th {
+        font-family: Arial, Sans-Serif;
+      }
+      td {
+        font-family: Courier New, monospace;
+      }
+      td:nth-child(1) {
+        text-align: right;
+      }
+      table {
+        width: calc(100% - 10px);
+        margin: 5px;
       }
     </style>
     <script type="text/javascript">
@@ -266,10 +323,49 @@
         else
           document.getElementsByTagName("main")[0].style.left =
             window.innerWidth / 2 - 500 / 2 + "px";
-        if (window.innerHeight < 400)
+        if (window.innerHeight < 400) {
           document.getElementById("buttons").style.top =
             window.innerHeight + 4 + "px";
-        else document.getElementById("buttons").style.top = 400 + 4 + "px";
+          document.getElementById("divWithMachineCode").style.top =
+            window.innerHeight + 4 + 50 + "px";
+        } else {
+          document.getElementById("buttons").style.top = 400 + 4 + "px";
+          document.getElementById("divWithMachineCode").style.top = "450px";
+        }
+      }
+      let machineCode = [];
+      for (let i = 0; i < 4096; i++)
+        machineCode.push({ hex: "00000", line: 0 });
+      let PC = 0;
+      function formatAsAddress(n) {
+        let ret = n.toString(16);
+        while (ret.length < 3) ret = "0" + ret;
+        return ret;
+      }
+      function drawTable() {
+        let tableHTML = `
+        <table>
+           <tr>
+             <th colspan=\"4\">Machine Code</th>
+           </tr>
+           <tr>
+             <th>PC</th>
+             <th>Address</th>
+             <th>Directive</th>
+             <th>Line</th>
+           </tr>
+        `;
+        for (let i = 0; i < machineCode.length; i++)
+          tableHTML += `
+            <tr>
+              <td>${PC === i ? "-&gt;" : " "}</td>
+              <td>${formatAsAddress(i)}</td>
+              <td>${machineCode[i].hex}</td>
+              <td>${machineCode[i].line}</td>
+            </tr>
+          `;
+        tableHTML += "</table>";
+        document.getElementById("divWithMachineCode").innerHTML = tableHTML;
       }
     </script>
     <script src="TreeNode.js"></script>
@@ -284,6 +380,11 @@
       <div id="buttons">
         <button id="highlightButton">Highlight Assembly</button>
         <button id="assembleButton">Assemble</button>
+      </div>
+      <div id="divWithMachineCode">
+        <span id="warningAboutJavaScript"
+          >Your browser doesn't seem to support JavaScript!</span
+        >
       </div>
     </main>
     <script type="text/javascript">
@@ -316,9 +417,11 @@
         console.log("Result of parsing: ", parsed.getLispExpression());
         const context = makeCompilationContext(parsed);
         console.log("Result of preprocessing: ", context);
+        alert("Assembler is not yet implemented, sorry about that!");
       };
       setupLayout();
       window.onresize = setupLayout;
+      drawTable();
     </script>
   </body>
 </html>
