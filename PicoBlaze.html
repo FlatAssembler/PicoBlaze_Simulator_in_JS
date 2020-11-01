@@ -338,7 +338,15 @@
         machineCode.push({ hex: "00000", line: 0 });
       let PC = 0;
       function formatAsAddress(n) {
-        let ret = n.toString(16);
+        let ret = Math.round(n).toString(16);
+        if (Math.round(n) >= 4096 || Math.round(n) < 0) {
+          alert(
+            "Some part of the compiler tried to format the number " +
+              n +
+              " as an address, which makes no sense."
+          );
+          return "fff";
+        }
         while (ret.length < 3) ret = "0" + ret;
         return ret;
       }
