@@ -83,4 +83,22 @@ class TreeNode {
       }
     return true;
   }
+  registerNumber(registers) {
+    if (registers.has(this.text))
+      return registers.get(this.text);
+    if (/^s(\d|[a-f])$/i.test(this.text))
+      return this.text.substr(1);
+    return "none";
+  }
+  labelAddress(labels, constants) {
+    if (labels.has(this.text))
+      return formatAsAddress(labels.get(this.text));
+    if (constants.has(this.text))
+      return formatAsAddress(constants.get(this.text));
+    if (/(\d|[a-f])*/i.test(this.text) ||
+        [ "+", "-", "*", "/" ].includes(this.text))
+      // Must not detect "()" as a label.
+      return formatAsAddress(this.interpretAsArithmeticExpression(constants));
+    return "none";
+  }
 }
