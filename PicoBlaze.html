@@ -8,6 +8,7 @@
         background-color: #fff7ff;
         background-image: url("Background.gif");
         background-repeat: no-repeat;
+        background-attachment: fixed;
       }
       main {
         width: 100%;
@@ -15,6 +16,16 @@
         margin-left: auto;
         margin-right: auto;
         position: absolute;
+        top: 65px;
+      }
+      header {
+        width: 100%;
+        text-align: center;
+        font-family: Arial;
+        line-height: 100%;
+      }
+      h1 {
+        margin-bottom: 5px;
       }
       #lineNumbers {
         width: 40px;
@@ -382,6 +393,10 @@
     <script src="preprocessor.js"></script>
   </head>
   <body>
+    <header>
+      <h1>PicoBlaze Simulator</h1>
+      Made by Teo Samar&#382;ija
+    </header>
     <main>
       <div id="lineNumbers">1.</div>
       <div id="assemblyCode" contenteditable="true">;Insert assembly here.</div>
