@@ -55,6 +55,8 @@ class TreeNode {
       return parseInt(this.text.substr(0, this.text.length - 2), 2);
     if (/^([a-f]|[0-9])*$/i.test(this.text))
       return parseInt(this.text, 16);
+    if (this.text[0] === '"' && this.text.length === 3)
+      return this.text.charCodeAt(1);
     alert('Some part of the assembler tried to interpret the token "' +
           this.text + '" in the line #' + this.lineNumber +
           " as a part of an arithmetic expression, which makes no sense.");
@@ -85,9 +87,9 @@ class TreeNode {
   }
   registerNumber(registers) {
     if (registers.has(this.text))
-      return registers.get(this.text);
+      return registers.get(this.text).substr(1).toLowerCase();
     if (/^s(\d|[a-f])$/i.test(this.text))
-      return this.text.substr(1);
+      return this.text.substr(1).toLowerCase();
     return "none";
   }
   labelAddress(labels, constants) {
@@ -95,7 +97,7 @@ class TreeNode {
       return formatAsAddress(labels.get(this.text));
     if (constants.has(this.text))
       return formatAsAddress(constants.get(this.text));
-    if (/(\d|[a-f])*/i.test(this.text) ||
+    if (/^(\d|[a-f])*$/i.test(this.text) ||
         [ "+", "-", "*", "/" ].includes(this.text))
       // Must not detect "()" as a label.
       return formatAsAddress(this.interpretAsArithmeticExpression(constants));

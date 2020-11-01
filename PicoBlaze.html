@@ -40,7 +40,7 @@
         overflow: hidden;
       }
       #assemblyCode {
-        margin-left: 0;
+        margin: 0;
         width: calc(100% - 45px - 5px);
         padding-left: 5px;
         font-family: Courier New, monospace;
@@ -185,6 +185,12 @@
         "SUBC",
         "TEST",
         "XOR",
+        "INST",
+        "LOAD&RETURN",
+        "HWBUILD",
+        "STAR",
+        "OUTPUTK",
+        "REGBANK",
       ];
       const preprocessor = [
         "ADDRESS",
@@ -209,9 +215,9 @@
         if (/:$/.test(token)) return `<span class="label">${token}</span>`;
         if (token[0] === '"') return `<span class="string">${token}</span>`;
         if (
-          (token[0] >= "0" && token[0] <= "9") ||
-          (token[0] >= "a" && token[0] <= "f") ||
-          (token[0] >= "A" && token[0] <= "F")
+          /^(\d|[a-f])+$/i.test(token) ||
+          /\'d$/.test(token) ||
+          /\'b$/.test(token)
         )
           return `<span class="number">${token}</span>`;
         return token;
@@ -391,6 +397,7 @@
     <script src="tokenizer.js"></script>
     <script src="parser.js"></script>
     <script src="preprocessor.js"></script>
+    <script src="assembler.js"></script>
   </head>
   <body>
     <header>
@@ -399,7 +406,33 @@
     </header>
     <main>
       <div id="lineNumbers">1.</div>
-      <div id="assemblyCode" contenteditable="true">;Insert assembly here.</div>
+      <pre id="assemblyCode" contenteditable="true">
+;Insert assembly here...
+Address 0
+;Data directives...
+beginningOfDataDirectives: ;Label
+load s0, s1
+load s1, 14'd / 2
+star s2, s3
+star s3, 1 + 2 * 3
+namereg sf, stack_pointer ;Preprocessor
+store s4, (stack_pointer)
+store s5, FF
+fetch s6, (sa)
+fetch s7, A
+input s8, (sb)
+input s9, (1 + 2) * 3
+output sa, (sc)
+output sa, -1 + 15'd / 2
+constant eight, 15'd / 2 ;Rounding
+outputk eight, a
+jump endOfDataDirectives
+regbank a
+regbank B
+endOfDataDirectives: hwbuild se
+jump beginningOfDataDirectives
+</pre
+      >
       <div id="buttons">
         <button id="highlightButton">Highlight Assembly</button>
         <button id="assembleButton">Assemble</button>
@@ -417,6 +450,7 @@
     document.getElementById("assemblyCode").
              oninput=syntaxHighlihter;
     */
+      setUpLineNumbers();
       document.getElementById("assemblyCode").oninput = setUpLineNumbers;
       document.getElementById("assemblyCode").onscroll = () => {
         document
@@ -440,7 +474,8 @@
         console.log("Result of parsing: ", parsed.getLispExpression());
         const context = makeCompilationContext(parsed);
         console.log("Result of preprocessing: ", context);
-        alert("Assembler is not yet implemented, sorry about that!");
+        assemble(parsed, context);
+        drawTable();
       };
       setupLayout();
       window.onresize = setupLayout;
