@@ -385,9 +385,197 @@ function assemble(parsed, context) {
             "22" +
             node.children[0].labelAddress(context.labels, context.constants);
       } else {
+        if (node.children.length !== 3) {
+          alert(
+              "Line #" + node.lineNumber + ": The '" + node.text +
+              "' node should have either exactly one child node (unconditional jumping) or exactly three (3) child nodes (comma counts as a child node)!");
+          return;
+        }
+        if (node.children[1].text !== ",") {
+          alert("Line #" + node.lineNumber +
+                ": Expected a comma (',') instead of '" + node.text + "'!");
+          return;
+        }
+        if (node.children[2].labelAddress(context.labels, context.constants) ===
+            "none") {
+          alert("Line #" + node.lineNumber + ": Label '" +
+                node.children[2].text + "' is not declared!");
+          return;
+        }
+        if (/^z$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "32" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else if (/^nz$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "36" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else if (/^c$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "3a" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else if (/^nc$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "3e" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else {
+          alert("Line #" + node.lineNumber + ": Invalid flag name '" +
+                node.children[0].text + "'!");
+          return;
+        }
+      }
+      address++;
+    } else if (/^jump@$/i.test(node.text)) {
+      if (node.children.length !== 1 || node.children[0].text !== "()") {
+        alert("Line #" + node.lineNumber + ": The '" + node.text +
+              "' node should have exactly one (1) child, and that is '()'");
+        return;
+      }
+      if (node.children[0].children.length !== 3) {
         alert(
             "Line #" + node.lineNumber +
-            ": Conditional jumping hasn't yet been implemented, sorry about that!");
+            ": The '()' node should have exactly three children (now it has " +
+            node.children[0].children.length + ")!");
+        return;
+      }
+      if (node.children[0].children[1].text !== ",") {
+        alert("Line #" + node.lineNumber +
+              ": Expected a comma (',') instead of '" +
+              node.children[0].children[1].text + "'!");
+        return;
+      }
+      if (node.children[0].children[0].registerNumber(
+              context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ": '" +
+              node.children[0].children[0].text + "' is not a register name!");
+        return;
+      }
+      if (node.children[0].children[2].registerNumber(
+              context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ": '" +
+              node.children[0].children[2].text + "' is not a register name!");
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "26" +
+          node.children[0].children[0].registerNumber(context.namedRegisters) +
+          node.children[0].children[2].registerNumber(context.namedRegisters) +
+          "0";
+      address++;
+    } else if (/^call@$/i.test(node.text)) {
+      if (node.children.length !== 1 || node.children[0].text !== "()") {
+        alert("Line #" + node.lineNumber + ": The '" + node.text +
+              "' node should have exactly one (1) child, and that is '()'");
+        return;
+      }
+      if (node.children[0].children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber +
+            ": The '()' node should have exactly three children (now it has " +
+            node.children[0].children.length + ")!");
+        return;
+      }
+      if (node.children[0].children[1].text !== ",") {
+        alert("Line #" + node.lineNumber +
+              ": Expected a comma (',') instead of '" +
+              node.children[0].children[1].text + "'!");
+        return;
+      }
+      if (node.children[0].children[0].registerNumber(
+              context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ": '" +
+              node.children[0].children[0].text + "' is not a register name!");
+        return;
+      }
+      if (node.children[0].children[2].registerNumber(
+              context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ": '" +
+              node.children[0].children[2].text + "' is not a register name!");
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "24" +
+          node.children[0].children[0].registerNumber(context.namedRegisters) +
+          node.children[0].children[2].registerNumber(context.namedRegisters) +
+          "0";
+      address++;
+    } else if (/^call$/i.test(node.text)) {
+      machineCode[address].line = node.lineNumber;
+      if (node.children.length === 1) {
+        if (node.children[0].labelAddress(context.labels, context.constants) ===
+            "none") {
+          alert("Line #" + node.lineNumber + ": Label '" +
+                node.children[0].text + "' is not declared!");
+          return;
+        }
+        machineCode[address].hex =
+            "20" +
+            node.children[0].labelAddress(context.labels, context.constants);
+      } else {
+        if (node.children.length !== 3) {
+          alert(
+              "Line #" + node.lineNumber + ": The '" + node.text +
+              "' node should have either exactly one child node (unconditional jumping) or exactly three (3) child nodes (comma counts as a child node)!");
+          return;
+        }
+        if (node.children[1].text !== ",") {
+          alert("Line #" + node.lineNumber +
+                ": Expected a comma (',') instead of '" + node.text + "'!");
+          return;
+        }
+        if (node.children[2].labelAddress(context.labels, context.constants) ===
+            "none") {
+          alert("Line #" + node.lineNumber + ": Label '" +
+                node.children[2].text + "' is not declared!");
+          return;
+        }
+        if (/^z$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "30" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else if (/^nz$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "34" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else if (/^c$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "38" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else if (/^nc$/i.test(node.children[0].text))
+          machineCode[address].hex =
+              "3c" +
+              node.children[2].labelAddress(context.labels, context.constants);
+        else {
+          alert("Line #" + node.lineNumber + ": Invalid flag name '" +
+                node.children[0].text + "'!");
+          return;
+        }
+      }
+      address++;
+    } else if (/^return$/i.test(node.text)) {
+      machineCode[address].line = node.lineNumber;
+      if (!node.children.length)
+        machineCode[address].hex = "25000";
+      else if (node.children.length === 1) {
+        if (/^z$/i.test(node.children[0].text))
+          machineCode[address].hex = "31000";
+        else if (/^nz$/i.test(node.children[0].text))
+          machineCode[address].hex = "35000";
+        else if (/^c$/i.test(node.children[0].text))
+          machineCode[address].hex = "39000";
+        else if (/^nc$/i.test(node.children[0].text))
+          machineCode[address].hex = "3d000";
+        else {
+          alert("Line #" + node.lineNumber + ": Invalid flag name '" +
+                node.children[0].text + "'");
+          return;
+        }
+      } else {
+        alert(
+            "Line #" + node.lineNumber + ": The '" + node.text +
+            "' node should have either exactly zero (0) child nodes or exactly one (1) child node!");
         return;
       }
       address++;
