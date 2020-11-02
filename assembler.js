@@ -58,6 +58,19 @@ function assemble(parsed, context) {
     machineCode.push({hex : "00000", line : 0});
   let address = 0;
   for (const node of parsed.children) {
+    const check_if_the_only_argument_is_register = () => {
+      // Let's reduce the code repetition a bit by using lambda functions...
+      if (node.children.length !== 1) {
+        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
+              '" should have exactly 1 child node!');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a valid register name!');
+        return;
+      }
+    };
     if (/^address$/i.test(node.text))
       address =
           node.children[0].interpretAsArithmeticExpression(context.constants);
@@ -578,6 +591,453 @@ function assemble(parsed, context) {
             "' node should have either exactly zero (0) child nodes or exactly one (1) child node!");
         return;
       }
+      address++;
+    } else if (/^add$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "1";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        // If we are adding a constant to a register.
+        machineCode[address].hex += "1";
+      else
+        machineCode[address].hex += "0";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^addcy?$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "1";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        // If we are adding a constant to a register.
+        machineCode[address].hex += "3";
+      else
+        machineCode[address].hex += "2";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^sub$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "1";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        // If we are subtracting a constant from a register.
+        machineCode[address].hex += "9";
+      else
+        machineCode[address].hex += "8";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^subcy?$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "1";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        // If we are subtracting a constant from a register.
+        machineCode[address].hex += "b";
+      else
+        machineCode[address].hex += "a";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^and$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "0";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex += "3";
+      else
+        machineCode[address].hex += "2";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^or$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "0";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex += "5";
+      else
+        machineCode[address].hex += "4";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^xor$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "0";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex += "7";
+      else
+        machineCode[address].hex += "6";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^test$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "0";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex += "d";
+      else
+        machineCode[address].hex += "c";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^testcy?$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "0";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex += "f";
+      else
+        machineCode[address].hex += "e";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^comp(are)?$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "1";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex += "d";
+      else
+        machineCode[address].hex += "c";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^comp(are)?cy$/i.test(node.text)) {
+      if (node.children.length !== 3) {
+        alert(
+            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            '" should have exactly three child nodes (a comma is also a child node).');
+        return;
+      }
+      if (node.children[0].registerNumber(context.namedRegisters) === "none") {
+        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+              '" is not a register!');
+        return;
+      }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "1";
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex += "f";
+      else
+        machineCode[address].hex += "e";
+      machineCode[address].hex +=
+          node.children[0].registerNumber(context.namedRegisters);
+      if (node.children[2].registerNumber(context.namedRegisters) === "none")
+        machineCode[address].hex +=
+            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+                context.constants));
+      else
+        machineCode[address].hex +=
+            node.children[2].registerNumber(context.namedRegisters) + "0";
+      address++;
+    } else if (/^sl0$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "06";
+      address++;
+    } else if (/^sl1$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "07";
+      address++;
+    } else if (/^slx$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "04";
+      address++;
+    } else if (/^sla$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "00";
+      address++;
+    } else if (/^rl$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "02";
+      address++;
+    } else if (/^sr0$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "0e";
+      address++;
+    } else if (/^sr1$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "0f";
+      address++;
+    } else if (/^srx$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "0a";
+      address++;
+    } else if (/^sra$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "08";
+      address++;
+    } else if (/^rr$/i.test(node.text)) {
+      check_if_the_only_argument_is_register();
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex =
+          "14" + node.children[0].registerNumber(context.namedRegisters) + "0c";
+      address++;
+    } else if (/^disable$/i.test(node.text)) {
+      if (node.children.length !== 1 ||
+          !/interrupt/i.test(node.children[0].text)) {
+        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
+              '" should have exactly one child node, and that is "interrupt"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "28000";
+      address++;
+    } else if (/^enable$/i.test(node.text)) {
+      if (node.children.length !== 1 ||
+          !/interrupt/i.test(node.children[0].text)) {
+        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
+              '" should have exactly one child node, and that is "interrupt"!');
+        return;
+      }
+      machineCode[address].line = node.lineNumber;
+      machineCode[address].hex = "28001";
       address++;
     } else if (!isDirective(node.text)) {
       alert("Line #" + node.lineNumber + ': Sorry about that, the mnemonic "' +

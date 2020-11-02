@@ -38,6 +38,7 @@
         max-height: 400px;
         position: absolute;
         overflow: hidden;
+        font-size: 1em;
       }
       #assemblyCode {
         margin: 0;
@@ -53,6 +54,10 @@
         left: 40px;
         overflow: scroll;
         white-space: pre;
+        font-size: 1em; /* Microsoft Edge seems to have some weird ideas
+                         * about how font size should be smaller in <pre>
+                         * than in <div>.
+                         */
       }
       .comment {
         color: #333333;
@@ -156,7 +161,6 @@
         "COMPARE",
         "COMP",
         "DISABLE",
-        "INTERRUPT",
         "ENABLE",
         "FETCH",
         "INPUT",
@@ -193,6 +197,10 @@
         "STAR",
         "OUTPUTK",
         "REGBANK",
+        "TESTCY",
+        "TESTC",
+        "COMPARECY",
+        "COMPCY",
       ];
       const preprocessor = [
         "ADDRESS",
@@ -205,7 +213,10 @@
       function highlightToken(token) {
         if (token[0] === ";") return `<span class="comment">${token}</span>`;
         for (const mnemonic of mnemonics)
-          if (RegExp("^" + mnemonic + "$", "i").test(token))
+          if (
+            RegExp("^" + mnemonic + "$", "i").test(token) ||
+            /^interrupt$/i.test(token)
+          )
             return `<span class="mnemonic">${token}</span>`;
         for (const directive of preprocessor)
           if (RegExp("^" + directive + "$", "i").test(token))
@@ -448,8 +459,50 @@ call nz,function
 call c, function
 call nc, function
 call@ (sA,sb)
+;Various "return" statements...
 function:
 return
+return z
+return nz
+return c
+return nc
+;Arithmetic and logical operators...
+add s0,s1
+add s2,5+10'd/2
+addcy s3,s4
+addc s5,3+12'd/2+1
+sub s6,S7
+sub s8,ff
+subc s9,sa
+subcy sb,a+b
+and sc,sd
+and se,ff
+or sf,se
+or SE,00
+xor sf,se
+xor SE,00
+test sc,sd
+test se,ff
+testcy sc,sd
+testc se,ff
+compare s0,stack_pointer
+comp s1,eight
+comparecy s0,stack_pointer
+compcy s1,eight
+;Bitwise operators...
+sl0 s0
+sl1 s1
+slx s2
+sla s3
+rl s4
+sr0 s5
+sr1 s6
+srx s7
+sra s8
+rr s9
+;Interrupts...
+Disable interrupt
+Enable InterrupT
 </pre
       >
       <div id="buttons">
