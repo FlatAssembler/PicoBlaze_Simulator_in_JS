@@ -382,8 +382,8 @@ function assemble(parsed, context) {
           return;
         }
         machineCode[address].hex =
-            "22" + formatAsAddress(node.children[0].labelAddress(
-                       context.labels, context.constants));
+            "22" +
+            node.children[0].labelAddress(context.labels, context.constants);
       } else {
         alert(
             "Line #" + node.lineNumber +
