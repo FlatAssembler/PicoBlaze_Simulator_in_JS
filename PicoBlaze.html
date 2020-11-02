@@ -152,6 +152,7 @@
         "ADDC",
         "AND",
         "CALL",
+        "CALL@",
         "COMPARE",
         "COMP",
         "DISABLE",
@@ -161,6 +162,7 @@
         "INPUT",
         "IN",
         "JUMP",
+        "JUMP@",
         "LOAD",
         "OR",
         "OUTPUT",
@@ -424,13 +426,30 @@ input s8, (sb)
 input s9, (1 + 2) * 3
 output sa, (sc)
 output sa, -1 + 15'd / 2
-constant eight, 15'd / 2 ;Rounding
+constant eight, 15'd/2 ;Rounding
 outputk eight, a
 jump endOfDataDirectives
 regbank a
 regbank B
 endOfDataDirectives: hwbuild se
 jump beginningOfDataDirectives
+;Conditional jumps...
+beginningOfConditionalJumps:
+jump z,beginningOfConditionalJumps
+jump nZ,beginningOfConditionalJumps
+jump C,beginningOfConditionalJumps
+jump Nc,beginningOfConditionalJumps
+;Setting the program counter (PC)...
+jump@(sD,sE)
+;The "call" instruction...
+call function
+call z,function
+call nz,function
+call c, function
+call nc, function
+call@ (sA,sb)
+function:
+return
 </pre
       >
       <div id="buttons">
