@@ -243,6 +243,25 @@
         "NAMEREG",
         "CONSTANT",
       ];
+      let registers = [new Int8Array(16), new Int8Array(16)],
+        flagZ = [0, 0],
+        flagC = [0, 0],
+        output = new Int8Array(256),
+        memory = new Int8Array(256);
+      function displayRegistersAndFlags() {
+        for (let i = 0; i < 2; i++)
+          for (let j = 0; j < 16; j++)
+            document.getElementById(
+              "register_" +
+                String.fromCharCode("A".charCodeAt(0) + i) +
+                "_s" +
+                j.toString(16)
+            ).innerHTML = formatAsByte(registers[i][j]);
+        document.getElementById("flag_A_Z").innerHTML = flagZ[0];
+        document.getElementById("flag_B_Z").innerHTML = flagZ[1];
+        document.getElementById("flag_A_C").innerHTML = flagC[0];
+        document.getElementById("flag_B_C").innerHTML = flagC[1];
+      }
       function highlightToken(token) {
         if (token[0] === ";") return `<span class="comment">${token}</span>`;
         for (const mnemonic of mnemonics)
@@ -432,7 +451,9 @@
         for (let i = 0; i < machineCode.length; i++)
           tableHTML += `
             <tr>
-              <td id="PC_label_${i}">${PC === i ? "-&gt;" : " "}</td>
+              <td id="PC_label_${formatAsAddress(i)}">${
+            PC === i ? "-&gt;" : " "
+          }</td>
               <td>${formatAsAddress(i)}</td>
               <td>${machineCode[i].hex}</td>
               <td>${machineCode[i].line}</td>
@@ -477,9 +498,10 @@
         let inputOutputTable = `
 <table>
   <tr>
-    <th>Port Address</th>
+    <th>Address</th>
     <th>Input</th>
     <th>Output</th>
+    <th>Memory</th>
   </tr>
         `;
         for (let i = 0; i < 256; i++)
@@ -490,10 +512,18 @@
             formatAsByte(i) +
             '" value="00"></td><td id="output_' +
             formatAsByte(i) +
+            '">00</td><td id="memory_' +
+            formatAsByte(i) +
             '">00</td></tr>';
         inputOutputTable += "</table>";
         document.getElementById("simulationResults").innerHTML =
           registersTable + flagsTable + inputOutputTable;
+      }
+      function displayOutput() {
+        for (let i = 0; i < 256; i++)
+          document.getElementById(
+            "output_" + formatAsByte(i)
+          ).innerHTML = formatAsByte(output[i]);
       }
     </script>
     <script src="TreeNode.js"></script>
@@ -670,10 +700,19 @@ Enable InterrupT
         stopSimulation();
       };
       function stopSimulation() {
+        document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
+          "";
         PC = 0;
+        document.getElementById("PC_label_000").innerHTML = "->";
         playing = false;
         document.getElementById("playImage").style.display = "inline";
         document.getElementById("pauseImage").style.display = "none";
+        for (let i = 0; i < 256; i++) output[i] = 0;
+        for (let i = 0; i < 16; i++) registers[0][i] = registers[1][i] = 0;
+        flagZ = [0, 0];
+        flagC = [0, 0];
+        displayRegistersAndFlags();
+        displayOutput();
       }
       setupLayout();
       window.onresize = setupLayout;
