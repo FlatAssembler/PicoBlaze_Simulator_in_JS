@@ -143,9 +143,15 @@
       td:nth-child(1) {
         text-align: right;
       }
-      table {
+      #machineCode {
         width: calc(100% - 10px);
         margin: 5px;
+      }
+      table {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 5px;
+        margin-bottom: 5px;
       }
       #simulationButtons {
         top: 855px;
@@ -160,6 +166,19 @@
       #stopButton {
         position: absolute;
         right: 5px;
+      }
+      #simulationResults {
+        top: 910px;
+        position: absolute;
+        width: calc(100% - 8px);
+        height: 100vh;
+        max-height: 400px;
+        overflow: scroll;
+        background-color: white;
+        margin-bottom: 15px;
+      }
+      input {
+        width: 30px;
       }
     </style>
     <script type="text/javascript">
@@ -399,7 +418,7 @@
       }
       function drawTable() {
         let tableHTML = `
-        <table>
+        <table id="machineCode">
            <tr>
              <th colspan=\"4\">Machine Code</th>
            </tr>
@@ -413,7 +432,7 @@
         for (let i = 0; i < machineCode.length; i++)
           tableHTML += `
             <tr>
-              <td>${PC === i ? "-&gt;" : " "}</td>
+              <td id="PC_label_${i}">${PC === i ? "-&gt;" : " "}</td>
               <td>${formatAsAddress(i)}</td>
               <td>${machineCode[i].hex}</td>
               <td>${machineCode[i].line}</td>
@@ -421,6 +440,60 @@
           `;
         tableHTML += "</table>";
         document.getElementById("divWithMachineCode").innerHTML = tableHTML;
+        let registersTable = `
+<table>
+  <tr>
+    <th>Registers</th>
+        `;
+        for (let i = 0; i < 16; i++)
+          registersTable += "<th>s" + i.toString(16) + "</th>";
+        registersTable += "</tr><tr><th>REGBANK A</th>";
+        for (let i = 0; i < 16; i++)
+          registersTable +=
+            '<td id="register_A_s' + i.toString(16) + '">00</td>';
+        registersTable += "</tr><tr><th>REGBANK B</th>";
+        for (let i = 0; i < 16; i++)
+          registersTable +=
+            '<td id="register_B_s' + i.toString(16) + '">00</td>';
+        registersTable += "</tr></table>";
+        let flagsTable = `
+        <table>
+          <tr>
+            <th>Flags</th>
+            <th>Zero (Z)</th>
+            <th>Carry (C)</th>
+          </tr>
+          <tr>
+            <th>REGBANK A</th>
+            <td id="flag_A_Z">0</td>
+            <td id="flag_A_C">0</td>
+          </tr>
+          <tr>
+            <th>REGBANK B</th>
+            <td id="flag_B_Z">0</td>
+            <td id="flag_B_C">0</td>
+          </tr>
+        </table>`;
+        let inputOutputTable = `
+<table>
+  <tr>
+    <th>Port Address</th>
+    <th>Input</th>
+    <th>Output</th>
+  </tr>
+        `;
+        for (let i = 0; i < 256; i++)
+          inputOutputTable +=
+            "<tr><th>" +
+            formatAsByte(i) +
+            '</th><td><input id="input_' +
+            formatAsByte(i) +
+            '" value="00"></td><td id="output_' +
+            formatAsByte(i) +
+            '">00</td></tr>';
+        inputOutputTable += "</table>";
+        document.getElementById("simulationResults").innerHTML =
+          registersTable + flagsTable + inputOutputTable;
       }
     </script>
     <script src="TreeNode.js"></script>
@@ -558,8 +631,10 @@ Enable InterrupT
           </svg>
         </button>
       </div>
+      <div id="simulationResults"></div>
     </main>
     <script type="text/javascript">
+      "use strict";
       //For now, attempting to highlight code as the user is typing is worse
       //than useless, because it moves the cursor to the beginning.
       /*
@@ -595,7 +670,7 @@ Enable InterrupT
         stopSimulation();
       };
       function stopSimulation() {
-        pc = 0;
+        PC = 0;
         playing = false;
         document.getElementById("playImage").style.display = "inline";
         document.getElementById("pauseImage").style.display = "none";
