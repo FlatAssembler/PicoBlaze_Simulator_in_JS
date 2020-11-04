@@ -147,6 +147,20 @@
         width: calc(100% - 10px);
         margin: 5px;
       }
+      #simulationButtons {
+        top: 855px;
+        position: absolute;
+        width: 100%;
+        height: 50px;
+      }
+      #playPauseButton {
+        position: absolute;
+        left: 0;
+      }
+      #stopButton {
+        position: absolute;
+        right: 5px;
+      }
     </style>
     <script type="text/javascript">
       "use strict";
@@ -358,9 +372,12 @@
             window.innerHeight + 4 + "px";
           document.getElementById("divWithMachineCode").style.top =
             window.innerHeight + 4 + 50 + "px";
+          document.getElementById("simulationButtons").style.top =
+            2 * window.innerHeight + 2 * 4 + 2 * 50 + "px";
         } else {
           document.getElementById("buttons").style.top = 400 + 4 + "px";
           document.getElementById("divWithMachineCode").style.top = "450px";
+          document.getElementById("simulationButtons").style.top = "855px";
         }
       }
       let machineCode = [];
@@ -514,6 +531,33 @@ Enable InterrupT
           >Your browser doesn't seem to support advanced JavaScript!</span
         >
       </div>
+      <div id="simulationButtons">
+        <button id="playPauseButton">
+          <img
+            src="play.svg"
+            alt="play"
+            id="playImage"
+            style="display: inline"
+          />
+          <img
+            src="pause.svg"
+            alt="pause"
+            id="pauseImage"
+            style="display: none"
+          />
+        </button>
+        <button id="stopButton">
+          <svg width="30" height="30" alt="stop">
+            <defs>
+              <radialGradient id="redGradient">
+                <stop offset="0%" stop-color="rgb(64,0,0)" />
+                <stop offset="75%" stop-color="black" />
+              </radialGradient>
+            </defs>
+            <polygon points="0,0 30,0 30,30 0,30" fill="url(#redGradient)" />
+          </svg>
+        </button>
+      </div>
     </main>
     <script type="text/javascript">
       //For now, attempting to highlight code as the user is typing is worse
@@ -548,10 +592,29 @@ Enable InterrupT
         console.log("Result of preprocessing: ", context);
         assemble(parsed, context);
         drawTable();
+        stopSimulation();
       };
+      function stopSimulation() {
+        pc = 0;
+        document.getElementById("playImage").style.display = "inline";
+        document.getElementById("pauseImage").style.display = "block";
+      }
       setupLayout();
       window.onresize = setupLayout;
       drawTable();
+      let playing = false;
+      function onPlayPauseButton() {
+        playing = !playing;
+        if (!playing) {
+          document.getElementById("playImage").style.display = "inline";
+          document.getElementById("pauseImage").style.display = "none";
+        } else {
+          document.getElementById("playImage").style.display = "none";
+          document.getElementById("pauseImage").style.display = "inline";
+        }
+      }
+      document.getElementById("playPauseButton").onclick = onPlayPauseButton;
+      document.getElementById("stopButton").onclick = stopSimulation;
     </script>
   </body>
 </html>

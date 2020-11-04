@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   sodipodi:docname="play.svg"
+   id="svg11"
+   version="1.1"
+   height="30"
+   width="30">
+  <metadata
+     id="metadata15">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:current-layer="svg11"
+     inkscape:window-maximized="0"
+     inkscape:window-y="28"
+     inkscape:window-x="0"
+     inkscape:cy="15"
+     inkscape:cx="15"
+     inkscape:zoom="27.366667"
+     showgrid="false"
+     id="namedview13"
+     inkscape:window-height="480"
+     inkscape:window-width="774"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0"
+     guidetolerance="10"
+     gridtolerance="10"
+     objecttolerance="10"
+     borderopacity="1"
+     bordercolor="#666666"
+     pagecolor="#ffffff" />
+  <defs
+     id="defs7">
+    <radialGradient
+       r="50%"
+       cy="50%"
+       cx="25%"
+       id="greenToBlack">
+      <stop
+         id="stop2"
+         style="stop-color:rgb(0,64,0);"
+         offset="0%" />
+      <stop
+         id="stop4"
+         style="stop-color:rgb(0,0,0);"
+         offset="100%" />
+    </radialGradient>
+  </defs>
+  <polygon
+     id="polygon9"
+     fill="url(#greenToBlack)"
+     points="0,0 0,30 30,15" />
+</svg>
