@@ -596,8 +596,9 @@ Enable InterrupT
       };
       function stopSimulation() {
         pc = 0;
+        playing = false;
         document.getElementById("playImage").style.display = "inline";
-        document.getElementById("pauseImage").style.display = "block";
+        document.getElementById("pauseImage").style.display = "none";
       }
       setupLayout();
       window.onresize = setupLayout;
@@ -612,6 +613,7 @@ Enable InterrupT
           document.getElementById("playImage").style.display = "none";
           document.getElementById("pauseImage").style.display = "inline";
         }
+        alert("No simulation has been implemented yet, sorry about that!");
       }
       document.getElementById("playPauseButton").onclick = onPlayPauseButton;
       document.getElementById("stopButton").onclick = stopSimulation;
