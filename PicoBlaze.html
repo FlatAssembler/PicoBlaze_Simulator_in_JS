@@ -246,11 +246,11 @@
         "NAMEREG",
         "CONSTANT",
       ];
-      let registers = [new Int8Array(16), new Int8Array(16)],
+      let registers = [new Uint8Array(16), new Uint8Array(16)],
         flagZ = [0, 0],
         flagC = [0, 0],
-        output = new Int8Array(256),
-        memory = new Int8Array(256),
+        output = new Uint8Array(256),
+        memory = new Uint8Array(256),
         regbank = 0;
       let simulationThread;
       function displayRegistersAndFlags() {
@@ -553,7 +553,25 @@
       <div id="lineNumbers">1.</div>
       <pre id="assemblyCode" contenteditable="true">
 ;Insert assembly here...
+;Example: Fibonacci sequence...
 Address 0
+load s0,0
+load s1,1
+store s1,1
+load s2,2
+infinite_loop:
+sub s2, 2
+Fetch s0,(s2)
+add s2,1
+fetch s1,(s2)
+add s2,1
+add s1,s0
+jump c,overflow
+store s1,(s2)
+add s2,1
+jump infinite_loop
+overflow:
+;Examples of the assembly syntax:
 ;Data directives...
 beginningOfDataDirectives: ;Label
 load s0, s1
