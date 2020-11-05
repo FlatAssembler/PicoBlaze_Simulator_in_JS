@@ -180,6 +180,9 @@
       input {
         width: 30px;
       }
+      .regbank_b {
+        font-style: italic;
+      }
     </style>
     <script type="text/javascript">
       "use strict";
@@ -247,7 +250,8 @@
         flagZ = [0, 0],
         flagC = [0, 0],
         output = new Int8Array(256),
-        memory = new Int8Array(256);
+        memory = new Int8Array(256),
+        regbank = 0;
       function displayRegistersAndFlags() {
         for (let i = 0; i < 2; i++)
           for (let j = 0; j < 16; j++)
@@ -261,6 +265,12 @@
         document.getElementById("flag_B_Z").innerHTML = flagZ[1];
         document.getElementById("flag_A_C").innerHTML = flagC[0];
         document.getElementById("flag_B_C").innerHTML = flagC[1];
+        const regbank_a = document.getElementsByClassName("regbank_a");
+        const regbank_b = document.getElementsByClassName("regbank_b");
+        for (const element of regbank_a)
+          element.style.fontStyle = regbank == 0 ? "none" : "italic";
+        for (const element of regbank_b)
+          element.style.fontStyle = regbank == 1 ? "none" : "italic";
       }
       function highlightToken(token) {
         if (token[0] === ";") return `<span class="comment">${token}</span>`;
@@ -468,11 +478,11 @@
         `;
         for (let i = 0; i < 16; i++)
           registersTable += "<th>s" + i.toString(16) + "</th>";
-        registersTable += "</tr><tr><th>REGBANK A</th>";
+        registersTable += '</tr><tr class="regbank_a"><th>REGBANK A</th>';
         for (let i = 0; i < 16; i++)
           registersTable +=
             '<td id="register_A_s' + i.toString(16) + '">00</td>';
-        registersTable += "</tr><tr><th>REGBANK B</th>";
+        registersTable += '</tr><tr class="regbank_b"><th>REGBANK B</th>';
         for (let i = 0; i < 16; i++)
           registersTable +=
             '<td id="register_B_s' + i.toString(16) + '">00</td>';
@@ -484,12 +494,12 @@
             <th>Zero (Z)</th>
             <th>Carry (C)</th>
           </tr>
-          <tr>
+          <tr class="regbank_a">
             <th>REGBANK A</th>
             <td id="flag_A_Z">0</td>
             <td id="flag_A_C">0</td>
           </tr>
-          <tr>
+          <tr class="regbank_b">
             <th>REGBANK B</th>
             <td id="flag_B_Z">0</td>
             <td id="flag_B_C">0</td>
@@ -711,6 +721,7 @@ Enable InterrupT
         for (let i = 0; i < 16; i++) registers[0][i] = registers[1][i] = 0;
         flagZ = [0, 0];
         flagC = [0, 0];
+        regbank = 0;
         displayRegistersAndFlags();
         displayOutput();
       }
