@@ -252,6 +252,7 @@
         output = new Int8Array(256),
         memory = new Int8Array(256),
         regbank = 0;
+      let simulationThread;
       function displayRegistersAndFlags() {
         for (let i = 0; i < 2; i++)
           for (let j = 0; j < 16; j++)
@@ -541,6 +542,7 @@
     <script src="parser.js"></script>
     <script src="preprocessor.js"></script>
     <script src="assembler.js"></script>
+    <script src="simulator.js"></script>
   </head>
   <body>
     <header>
@@ -710,6 +712,7 @@ Enable InterrupT
         stopSimulation();
       };
       function stopSimulation() {
+        if (playing) clearInterval(simulationThread);
         document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
           "";
         PC = 0;
@@ -732,13 +735,14 @@ Enable InterrupT
       function onPlayPauseButton() {
         playing = !playing;
         if (!playing) {
+          clearInterval(simulationThread);
           document.getElementById("playImage").style.display = "inline";
           document.getElementById("pauseImage").style.display = "none";
         } else {
+          simulationThread = setInterval(simulateOneInstruction, 1000);
           document.getElementById("playImage").style.display = "none";
           document.getElementById("pauseImage").style.display = "inline";
         }
-        alert("No simulation has been implemented yet, sorry about that!");
       }
       document.getElementById("playPauseButton").onclick = onPlayPauseButton;
       document.getElementById("stopButton").onclick = stopSimulation;
