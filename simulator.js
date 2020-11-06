@@ -1,5 +1,9 @@
 "use strict";
 function simulateOneInstruction() {
+  PC =
+      PC % 4096; // If you are at the end of a program, and there is no "return"
+                 // there, jump to the beginning of the program. I think that's
+                 // how PicoBlaze behaves, though I haven't tried it.
   document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
   if (machineCode[PC].hex.substr(0, 2) === "00") {
     // LOAD register,register
@@ -13,8 +17,9 @@ function simulateOneInstruction() {
     PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "16") {
     // STAR register,constant ;Storing a constant into an inactive register
-    registers[!regbank | 0 /*That is how you convert a boolean to an integer in
-                                               JavaScript.*/
+    registers[!regbank |
+              0 /*That is how you convert a boolean to an integer in
+                                                                      JavaScript.*/
     ][parseInt(machineCode[PC].hex[2], 16)] =
         parseInt(machineCode[PC].hex.substr(3), 16);
     PC++;
@@ -107,11 +112,12 @@ function simulateOneInstruction() {
   } else if (machineCode[PC].hex.substr(0, 2) === "22") {
     // JUMP label
     PC = parseInt(machineCode[PC].hex.substr(3), 16);
-  } else if (machineCode[PC].hex.substr(0, 2) === "14") {
+  } else if (machineCode[PC].hex.substr(0, 2) === "14" &&
+             machineCode[PC].hex.substr(3) == "80") {
     // HWBUILD register
     flagC[regbank] =
         1; // Have a better idea? We can't simulate all of what this directive
-           // does, but we can simulate this part of it.
+    // does, but we can simulate this part of it.
     PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "10") {
     // ADD register, register
@@ -243,26 +249,308 @@ function simulateOneInstruction() {
       flagC[regbank] = 0;
     registers[regbank][firstRegister] = result;
     PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "03") {
+    // AND register, constant
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+    const result = firstValue & secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "02") {
+    // AND register, register
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    const result = firstValue & secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "04") {
+    // OR register, register
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    const result = firstValue | secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "05") {
+    // OR register, constant
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+    const result = firstValue | secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "06") {
+    // XOR register, register
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    const result = firstValue ^ secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "07") {
+    // XOR register, constant
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+    const result = firstValue ^ secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "0c" ||
+             machineCode[PC].hex.substr(0, 2) === "0e") {
+    // TEST register, register ;The same as "AND", but does not store the result
+    // (only the flags). I am not sure if there is a difference between "0c" and
+    // "0e", they appear to be the same.
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    const result = firstValue & secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    // registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "0d" ||
+             machineCode[PC].hex.substr(0, 2) == "0f") {
+    // TEST register, constant
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+    const result = firstValue & secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result % 256 === 255)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    // registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "1c") {
+    // COMPARE register, register
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    const result = firstValue - secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result < 0)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    // registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "1d") {
+    // COMPARE register, constant
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+    const result = firstValue - secondValue;
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result < 0)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    // registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "1e") {
+    // COMPARECY register, register
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    const result = firstValue - secondValue - flagC[regbank];
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result < 0)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    // registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "1f") {
+    // COMPARECY register, constant
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+    const result = firstValue - secondValue - flagC[regbank];
+    if (result % 256 === 0)
+      flagZ[regbank] = 1;
+    else
+      flagZ[regbank] = 0;
+    if (result < 0)
+      flagC[regbank] = 1;
+    else
+      flagC[regbank] = 0;
+    // registers[regbank][firstRegister] = result;
+    PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "14") {
+    // Bit-shifting operations...
+    const registerIndex = parseInt(machineCode[PC].hex[2], 16);
+    let registerValue = registers[regbank][registerIndex];
+    console.log("DEBUG: Shifting the bits in register s" +
+                registerIndex.toString(16));
+    const set_flags_after_shift_left = () => {
+      flagC[regbank] = (registerValue > 255) | 0;
+      flagZ[regbank] = (registerValue % 256 === 0) | 0;
+    };
+    const set_flags_before_shift_right = () => {
+      flagC[regbank] = registerValue % 2;
+      flagZ[regbank] = (registerValue % 256 === 0) | 0;
+    };
+    switch (machineCode[PC].hex.substr(3)) {
+    case "06": // SL0
+      registerValue <<= 1;
+      set_flags_after_shift_left();
+      break;
+    case "07": // SL1
+      registerValue = (registerValue << 1) + 1;
+      set_flags_after_shift_left();
+      break;
+    case "04": // SLX
+      registerValue = (registerValue << 1) + (registerValue % 2);
+      set_flags_after_shift_left();
+      break;
+    case "00": // SLA
+      registerValue = (registerValue << 1) + flagC[regbank];
+      set_flags_after_shift_left();
+      break;
+    case "02": // RL
+      registerValue = (registerValue << 1) + Math.floor(registerValue / 128);
+      set_flags_after_shift_left();
+      break;
+    case "0e": // SR0
+      set_flags_before_shift_right();
+      registerValue >>= 1;
+      break;
+    case "0f": // SR1
+      set_flags_before_shift_right();
+      registerValue = (registerValue >> 1) + 128;
+      break;
+    case "0a": // SRX
+      set_flags_before_shift_right();
+      registerValue =
+          (registerValue >> 1) + Math.floor(registerValue / 128) * 128;
+      break;
+    case "08": // SRA
+      const oldFlagC = flagC[regbank];
+      set_flags_before_shift_right();
+      registerValue = (registerValue >> 1) + oldFlagC;
+      break;
+    case "0c": // RR
+      set_flags_before_shift_right();
+      registerValue = (registerValue >> 1) + 128 * (registerValue % 2);
+      break;
+    default:
+      alert('The instruction "' + machineCode[PC].hex +
+            '", assembled from line #' + machineCode[PC].line +
+            ", hasn't been implemented yet, sorry about that!");
+    }
+    registers[regbank][registerIndex] = registerValue;
+    PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "32") {
+    // JUMP Z, label
     if (flagZ[regbank])
       PC = parseInt(machineCode[PC].hex.substr(3), 16);
     else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "36") {
+    // JUMP NZ, label
     if (!flagZ[regbank])
       PC = parseInt(machineCode[PC].hex.substr(3), 16);
     else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "3a") {
+    // JUMP C, label
     if (flagC[regbank])
       PC = parseInt(machineCode[PC].hex.substr(3), 16);
     else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "3e") {
+    // JUMP NC, label
     if (!flagC[regbank])
       PC = parseInt(machineCode[PC].hex.substr(3), 16);
     else
       PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "20") {
+    // CALL functionName
+    callStack.push(PC);
+    PC = parseInt(machineCode[PC].hex.substr(3), 16);
+  } else if (machineCode[PC].hex.substr(0, 2) === "25") {
+    // RETURN
+    if (callStack.length)
+      PC = callStack.pop() + 1;
+    else {
+      clearInterval(simulationThread);
+      alert("The program exited!");
+    }
   } else {
     alert(
         'Sorry about that, the simulator currently does not support the instruction "' +

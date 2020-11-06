@@ -251,7 +251,8 @@
         flagC = [0, 0],
         output = new Uint8Array(256),
         memory = new Uint8Array(256),
-        regbank = 0;
+        regbank = 0,
+        callStack = [];
       let simulationThread;
       function displayRegistersAndFlags() {
         for (let i = 0; i < 2; i++)
@@ -553,11 +554,26 @@
       <div id="lineNumbers">1.</div>
       <pre id="assemblyCode" contenteditable="true">
 ;Insert assembly here...
-;Example: Fibonacci sequence...
+;Example:
+;Count the number of ones in the binary
+;representations of the numbers in the
+;Fibonacci sequence. Output the indexes,
+;the Fibonacci numbers and the number of
+;ones in the binary representations as
+;decimal (base 10) numbers.
 Address 0
 load s0,0
 load s1,1
+store s0,0
 store s1,1
+;Output the results for 0th and 1st...
+output s0,0
+output s0,1
+output s0,2
+output s1,3
+output s1,4
+output s1,5
+load s5,6
 load s2,2
 infinite_loop:
 sub s2, 2
@@ -568,9 +584,65 @@ add s2,1
 add s1,s0
 jump c,overflow
 store s1,(s2)
+load s4,0
+load s3,1
+count_the_ones_loop: ;Repeats 8 times.
+test s1,s3
+jump z,it_is_zero
+add s4,1
+it_is_zero:
+sl0 s3
+jump nc,count_the_ones_loop
+;Output the index as a decimal...
+load sa,s2
+call divideBy10
+call multiplyBy16
+add sa,sb
+output sa,(s5)
+add s5,1
+;Output the Fibonacci number...
+load sa,s1
+compare sa,100'd
+;If it's less than 100...
+;display as decimal.
+jump nc,displayFibonacciAsHexadecimal
+call divideBy10
+call multiplyBy16
+add sa,sb
+displayFibonacciAsHexadecimal:
+output sa,(s5)
+add s5,1
+;Output the number of ones...
+output s4,(s5) ;Always less than 10.
+add s5,1
 add s2,1
 jump infinite_loop
-overflow:
+overflow: return
+
+divideBy10:
+star s0,sa
+regbank b
+load s1,0
+beginning_of_loop:
+compare s0,10'd
+jump c,end_of_loop
+sub s0,10'd
+add s1,1
+jump beginning_of_loop
+end_of_loop:
+star sa,s1
+star sb,s0
+regbank a
+return
+
+multiplyBy16:
+;16=2^4
+sl0 sa
+sl0 sa
+sl0 sa
+sl0 sa
+return
+
 ;Examples of the assembly syntax:
 ;Data directives...
 beginningOfDataDirectives: ;Label
@@ -742,6 +814,7 @@ Enable InterrupT
         for (let i = 0; i < 16; i++) registers[0][i] = registers[1][i] = 0;
         flagZ = [0, 0];
         flagC = [0, 0];
+        callStack = [];
         regbank = 0;
         displayRegistersAndFlags();
         displayOutput();
@@ -757,7 +830,7 @@ Enable InterrupT
           document.getElementById("playImage").style.display = "inline";
           document.getElementById("pauseImage").style.display = "none";
         } else {
-          simulationThread = setInterval(simulateOneInstruction, 1000);
+          simulationThread = setInterval(simulateOneInstruction, 500);
           document.getElementById("playImage").style.display = "none";
           document.getElementById("pauseImage").style.display = "inline";
         }
