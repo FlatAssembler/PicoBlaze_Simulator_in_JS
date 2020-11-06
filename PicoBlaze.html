@@ -18,11 +18,20 @@
         position: absolute;
         top: 65px;
       }
-      header {
+      header,
+      footer {
         width: 100%;
         text-align: center;
         font-family: Arial;
         line-height: 100%;
+      }
+      footer {
+        max-width: 500px;
+        position: absolute;
+        top: 1380px;
+        left: 50%;
+        height: 75px;
+        transform: translate(-50%, 0);
       }
       h1 {
         margin-bottom: 5px;
@@ -424,10 +433,13 @@
             window.innerHeight + 4 + 50 + "px";
           document.getElementById("simulationButtons").style.top =
             2 * window.innerHeight + 2 * 4 + 2 * 50 + "px";
+          document.getElementsByTagName("footer")[0].style.top =
+            65 + 3 * 4 + 2 * 50 + 3 * window.innerHeight;
         } else {
           document.getElementById("buttons").style.top = 400 + 4 + "px";
           document.getElementById("divWithMachineCode").style.top = "450px";
           document.getElementById("simulationButtons").style.top = "855px";
+          document.getElementsByTagName("footer")[0].style.top = "1380px";
         }
       }
       let machineCode = [];
@@ -548,7 +560,7 @@
   <body>
     <header>
       <h1>PicoBlaze Simulator</h1>
-      Made by Teo Samar&#382;ija
+      Made by Teo Samar&#382;ija.
     </header>
     <main>
       <div id="lineNumbers">1.</div>
@@ -587,7 +599,7 @@ store s1,(s2)
 load s4,0
 load s3,1
 count_the_ones_loop: ;Repeats 8 times.
-test s1,s3
+Test s1,s3
 jump z,it_is_zero
 add s4,1
 it_is_zero:
@@ -601,11 +613,11 @@ add sa,sb
 output sa,(s5)
 add s5,1
 ;Output the Fibonacci number...
-load sa,s1
+Load sa,s1
 compare sa,100'd
 ;If it's less than 100...
 ;display as decimal.
-jump nc,displayFibonacciAsHexadecimal
+Jump nc,displayFibonacciAsHexadecimal
 call divideBy10
 call multiplyBy16
 add sa,sb
@@ -613,8 +625,8 @@ displayFibonacciAsHexadecimal:
 output sa,(s5)
 add s5,1
 ;Output the number of ones...
-output s4,(s5) ;Always less than 10.
-add s5,1
+Output s4,(s5) ;Always less than 10.
+Add s5,1
 add s2,1
 jump infinite_loop
 overflow: return
@@ -765,6 +777,16 @@ Enable InterrupT
       </div>
       <div id="simulationResults"></div>
     </main>
+    <footer>
+      Not affiliated with
+      <a
+        href="https://www.xilinx.com/products/intellectual-property/picoblaze.html"
+        >PicoBlaze</a
+      >. If you want to contribute,
+      <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS"
+        >fork me on GitHub</a
+      >.
+    </footer>
     <script type="text/javascript">
       "use strict";
       //For now, attempting to highlight code as the user is typing is worse
