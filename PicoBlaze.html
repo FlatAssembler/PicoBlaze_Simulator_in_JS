@@ -148,9 +148,11 @@
       }
       td {
         font-family: Courier New, monospace;
+        text-align: center;
       }
       td:nth-child(1) {
         text-align: right;
+        font-weight: bold;
       }
       #machineCode {
         width: calc(100% - 10px);
@@ -209,6 +211,9 @@
       }
       .turning_off {
         background: red;
+      }
+      #interrupt_flag {
+        font-style: normal;
       }
     </style>
     <script type="text/javascript">
@@ -276,6 +281,7 @@
       let registers = [new Uint8Array(16), new Uint8Array(16)],
         flagZ = [0, 0],
         flagC = [0, 0],
+        flagIE = 1,
         output = new Uint8Array(256),
         memory = new Uint8Array(256),
         regbank = 0,
@@ -364,6 +370,21 @@
           element.style.fontStyle = regbank == 0 ? "normal" : "italic";
         for (const element of regbank_b)
           element.style.fontStyle = regbank == 1 ? "normal" : "italic";
+        if (
+          document.getElementById("interrupt_flag").innerHTML !==
+            flagIE.toString() &&
+          flagIE
+        )
+          document.getElementById("interrupt_flag").className = "changed";
+        else if (
+          document.getElementById("interrupt_flag").innerHTML !==
+          flagIE.toString()
+        )
+          document.getElementById("interrupt_flag").className = "turning_off";
+        else if (flagIE === 0)
+          document.getElementById("interrupt_flag").className = "inactive";
+        else document.getElementById("interrupt_flag").className = "active";
+        document.getElementById("interrupt_flag").innerHTML = flagIE;
       }
       function highlightToken(token) {
         if (token[0] === ";") return `<span class="comment">${token}</span>`;
@@ -432,6 +453,7 @@
           }
           if (
             (assemblyCode[i] === " " ||
+              assemblyCode[i] === "\t" ||
               assemblyCode[i] === "," ||
               assemblyCode[i] === "+" ||
               assemblyCode[i] === "-" ||
@@ -589,11 +611,13 @@
             <th>Flags</th>
             <th>Zero (Z)</th>
             <th>Carry (C)</th>
+            <th>Interrupt Enabled (IE)</th>
           </tr>
           <tr class="regbank_a">
             <th>REGBANK A</th>
             <td id="flag_A_Z">0</td>
             <td id="flag_A_C">0</td>
+            <td id="interrupt_flag" rowspan="2">1</td>
           </tr>
           <tr class="regbank_b">
             <th>REGBANK B</th>
@@ -656,6 +680,14 @@
 ;ones in the binary representations as
 ;decimal (base 10) numbers.
 Address 0
+;On real PicoBlaze, disabling interrupts
+;makes the program run slightly faster.
+;So, let us do that here (although it has
+;no effect in this simulator).
+DISABLE INTERRUPT
+;The zeroth Fibonacci number is 0, and the
+;first one is 1. Let us store them in the
+;memory.
 load s0,0
 load s1,1
 store s0,0
@@ -667,8 +699,14 @@ output s0,2
 output s1,3
 output s1,4
 output s1,5
+;Load the pointers into registers...
 load s5,6
 load s2,2
+;Now goes the loop for calculating the
+;Fibonacci numbers. We don't know the
+;number of repetitions in advance, and
+;we will stop when we can no longer store
+;current Fibonacci number in a register.
 infinite_loop:
 regbank b
 ;Test if "flag_B_Z" works,
@@ -676,14 +714,23 @@ regbank b
 ;doesn't seem to trigger it.
 xor sf,ff
 regbank a
+;Fetch the previous 2 Fibonacci numbers
+;from the RAM memory...
 sub s2, 2
 Fetch s0,(s2)
 add s2,1
 fetch s1,(s2)
 add s2,1
+;Add them together...
 add s1,s0
+;If the result does not fit in the
+;register, go to the end of the program.
 jump c,overflow
+;Store the just calculated Fibonacci
+;number into RAM...
 store s1,(s2)
+;Count the number of 1-s in its binary
+;representation...
 load s4,0
 load s3,10000000'b
 count_the_ones_loop: ;Repeats 8 times.
@@ -926,6 +973,7 @@ Enable InterrupT
         flagC = [0, 0];
         callStack = [];
         regbank = 0;
+        flagIE = 1;
         displayRegistersAndFlags();
         displayOutput();
       }

@@ -54,7 +54,9 @@ function parse(tokenized) {
     for (const directive of preprocessor)
       if (RegExp("^" + directive + "$", "i").test(tokenized[i].text))
         isMnemonicOrPreprocessorDirective = true;
-    if (!isMnemonicOrPreprocessorDirective)
+    if (!isMnemonicOrPreprocessorDirective ||
+        (tokenized.length === 1 && (/^enable$/i.test(tokenized[0].text) ||
+                                    /^disable$/i.test(tokenized[0].text))))
       continue;
     // If the current token is a mnemonic or a preprocessor directive, seek for
     // the next new-line character. Unfortunately, we can't use the C++ find_if
