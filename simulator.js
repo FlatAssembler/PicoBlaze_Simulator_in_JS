@@ -17,9 +17,8 @@ function simulateOneInstruction() {
     PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "16") {
     // STAR register,constant ;Storing a constant into an inactive register
-    registers[!regbank |
-              0 /*That is how you convert a boolean to an integer in
-                                                                            JavaScript.*/
+    registers[!regbank | 0 /*That is how you convert a boolean to an integer in
+                                   JavaScript.*/
     ][parseInt(machineCode[PC].hex[2], 16)] =
         parseInt(machineCode[PC].hex.substr(3), 16);
     PC++;
@@ -551,6 +550,10 @@ function simulateOneInstruction() {
       clearInterval(simulationThread);
       alert("The program exited!");
     }
+  } else if (machineCode[PC].hex.substr(0, 2) === "28") {
+    // INTERRUPT ENABLE|DISABLE
+    flagIE = machineCode[PC].hex[4] | 0;
+    PC++;
   } else {
     alert(
         'Sorry about that, the simulator currently does not support the instruction "' +

@@ -1039,6 +1039,18 @@ function assemble(parsed, context) {
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex = "28001";
       address++;
+    } else if (/^returni$/i.test(node.text)) {
+      if (node.children.length !== 1) {
+        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
+              '" should have exactly one child node!');
+        return;
+      }
+      if (/^enable$/i.test(node.children[0].text))
+        machineCode[address].hex = "29001";
+      else if (/^disable$/i.test(node.children[0].text))
+        machineCode[address].hex = "29000";
+      machineCode[address].line = node.lineNumber;
+      address++;
     } else if (!isDirective(node.text)) {
       alert("Line #" + node.lineNumber + ': Sorry about that, the mnemonic "' +
             node.text + '" is not implemented.');
