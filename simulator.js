@@ -2,8 +2,8 @@
 function simulateOneInstruction() {
   PC =
       PC % 4096; // If you are at the end of a program, and there is no "return"
-                 // there, jump to the beginning of the program. I think that's
-                 // how PicoBlaze behaves, though I haven't tried it.
+  // there, jump to the beginning of the program. I think that's
+  // how PicoBlaze behaves, though I haven't tried it.
   document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
   if (machineCode[PC].hex.substr(0, 2) === "00") {
     // LOAD register,register
@@ -19,7 +19,7 @@ function simulateOneInstruction() {
     // STAR register,constant ;Storing a constant into an inactive register
     registers[!regbank |
               0 /*That is how you convert a boolean to an integer in
-                                                                      JavaScript.*/
+                                                                            JavaScript.*/
     ][parseInt(machineCode[PC].hex[2], 16)] =
         parseInt(machineCode[PC].hex.substr(3), 16);
     PC++;
@@ -463,7 +463,7 @@ function simulateOneInstruction() {
     };
     const set_flags_before_shift_right = () => {
       flagC[regbank] = registerValue % 2;
-      flagZ[regbank] = (registerValue % 256 === 0) | 0;
+      flagZ[regbank] = (Math.floor(registerValue / 2) === 0) | 0;
     };
     switch (machineCode[PC].hex.substr(3)) {
     case "06": // SL0
