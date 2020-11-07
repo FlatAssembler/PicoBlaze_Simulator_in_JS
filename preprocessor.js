@@ -55,7 +55,7 @@ function makeCompilationContext(parsed) {
               '" has already been declared!');
         return context;
       }
-      if (!/^(_|[a-z])\w*:$/.test(node.text)) {
+      if (!/^(_|[a-z])\w*:$/i.test(node.text)) {
         alert("Line " + node.lineNumber + ': "' + node.text +
               '" is not an allowed label name.');
       }
@@ -90,7 +90,7 @@ function makeCompilationContext(parsed) {
               node.children[0].text + '" has already been declared.');
         return context;
       }
-      if (!/^(_|[a-z])\w*$/.test(node.children[0].text)) {
+      if (!/^(_|[a-z])\w*$/i.test(node.children[0].text)) {
         alert("Line " + node.lineNumber + ': "' + node.children[0].text +
               '" is not an allowed constant name.');
         return context;
