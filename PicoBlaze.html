@@ -192,6 +192,24 @@
       .regbank_b {
         font-style: italic;
       }
+      .active {
+        background: white;
+        color: black;
+      }
+      .inactive {
+        background: black;
+        color: white;
+        border-color: white;
+      }
+      .changed,
+      .turning_off {
+        background: lightGreen;
+        color: black;
+        font-weight: bold;
+      }
+      .turning_off {
+        background: red;
+      }
     </style>
     <script type="text/javascript">
       "use strict";
@@ -265,23 +283,87 @@
       let simulationThread;
       function displayRegistersAndFlags() {
         for (let i = 0; i < 2; i++)
-          for (let j = 0; j < 16; j++)
-            document.getElementById(
+          for (let j = 0; j < 16; j++) {
+            const tableCell = document.getElementById(
               "register_" +
                 String.fromCharCode("A".charCodeAt(0) + i) +
                 "_s" +
                 j.toString(16)
-            ).innerHTML = formatAsByte(registers[i][j]);
+            );
+            if (
+              tableCell.innerHTML !== formatAsByte(registers[i][j]) &&
+              registers[i][j]
+            )
+              tableCell.className = "changed";
+            else if (tableCell.innerHTML !== formatAsByte(registers[i][j]))
+              tableCell.className = "turning_off";
+            else if (tableCell.innerHTML === "00")
+              tableCell.className = "inactive";
+            else tableCell.className = "active";
+            tableCell.innerHTML = formatAsByte(registers[i][j]);
+          }
+        if (
+          document.getElementById("flag_A_Z").innerHTML !==
+            flagZ[0].toString() &&
+          flagZ[0]
+        )
+          document.getElementById("flag_A_Z").className = "changed";
+        else if (
+          document.getElementById("flag_A_Z").innerHTML !== flagZ[0].toString()
+        )
+          document.getElementById("flag_A_Z").className = "turning_off";
+        else if (flagZ[0] === 0)
+          document.getElementById("flag_A_Z").className = "inactive";
+        else document.getElementById("flag_A_Z").className = "active";
         document.getElementById("flag_A_Z").innerHTML = flagZ[0];
+        if (
+          document.getElementById("flag_B_Z").innerHTML !==
+            flagZ[1].toString() &&
+          flagZ[1]
+        )
+          document.getElementById("flag_B_Z").className = "changed";
+        else if (
+          document.getElementById("flag_B_Z").innerHTML !== flagZ[1].toString()
+        )
+          document.getElementById("flag_B_Z").className = "turning_off";
+        else if (flagZ[1] === 0)
+          document.getElementById("flag_B_Z").className = "inactive";
+        else document.getElementById("flag_B_Z").className = "active";
         document.getElementById("flag_B_Z").innerHTML = flagZ[1];
+        if (
+          document.getElementById("flag_A_C").innerHTML !==
+            flagC[0].toString() &&
+          flagC[0]
+        )
+          document.getElementById("flag_A_C").className = "changed";
+        else if (
+          document.getElementById("flag_A_C").innerHTML !== flagC[0].toString()
+        )
+          document.getElementById("flag_A_Z").className = "turning_off";
+        else if (flagC[0] === 0)
+          document.getElementById("flag_A_C").className = "inactive";
+        else document.getElementById("flag_A_C").className = "active";
         document.getElementById("flag_A_C").innerHTML = flagC[0];
+        if (
+          document.getElementById("flag_B_C").innerHTML !==
+            flagC[1].toString() &&
+          flagC[1]
+        )
+          document.getElementById("flag_B_C").className = "changed";
+        else if (
+          document.getElementById("flag_B_C").innerHTML !== flagC[1].toString()
+        )
+          document.getElementById("flag_B_C").className = "turning_off";
+        else if (flagC[1] === 0)
+          document.getElementById("flag_B_C").className = "inactive";
+        else document.getElementById("flag_B_C").className = "active";
         document.getElementById("flag_B_C").innerHTML = flagC[1];
         const regbank_a = document.getElementsByClassName("regbank_a");
         const regbank_b = document.getElementsByClassName("regbank_b");
         for (const element of regbank_a)
-          element.style.fontStyle = regbank == 0 ? "none" : "italic";
+          element.style.fontStyle = regbank == 0 ? "normal" : "italic";
         for (const element of regbank_b)
-          element.style.fontStyle = regbank == 1 ? "none" : "italic";
+          element.style.fontStyle = regbank == 1 ? "normal" : "italic";
       }
       function highlightToken(token) {
         if (token[0] === ";") return `<span class="comment">${token}</span>`;
@@ -588,6 +670,12 @@ output s1,5
 load s5,6
 load s2,2
 infinite_loop:
+regbank b
+;Test if "flag_B_Z" works,
+;because the rest of the program
+;doesn't seem to trigger it.
+xor sf,ff
+regbank a
 sub s2, 2
 Fetch s0,(s2)
 add s2,1
@@ -597,13 +685,13 @@ add s1,s0
 jump c,overflow
 store s1,(s2)
 load s4,0
-load s3,1
+load s3,10000000'b
 count_the_ones_loop: ;Repeats 8 times.
 Test s1,s3
 jump z,it_is_zero
 add s4,1
 it_is_zero:
-sl0 s3
+sr0 s3
 jump nc,count_the_ones_loop
 ;Output the index as a decimal...
 load sa,s2
@@ -844,6 +932,7 @@ Enable InterrupT
       setupLayout();
       window.onresize = setupLayout;
       drawTable();
+      displayRegistersAndFlags();
       let playing = false;
       function onPlayPauseButton() {
         playing = !playing;
