@@ -1049,6 +1049,12 @@ function assemble(parsed, context) {
         machineCode[address].hex = "29001";
       else if (/^disable$/i.test(node.children[0].text))
         machineCode[address].hex = "29000";
+      else {
+        alert("Line #" + node.lineNumber +
+              ": Expected \"ENABLE\" or \"DISABLE\" instead of \"" +
+              node.children[0].text + "\"!");
+        return;
+      }
       machineCode[address].line = node.lineNumber;
       address++;
     } else if (!isDirective(node.text)) {
