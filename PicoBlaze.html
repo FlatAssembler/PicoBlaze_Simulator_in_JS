@@ -458,7 +458,8 @@
               assemblyCode[i] === "+" ||
               assemblyCode[i] === "-" ||
               assemblyCode[i] === "*" ||
-              assemblyCode[i] === "/") &&
+              assemblyCode[i] === "/" ||
+              assemblyCode[i] === "^") &&
             !areWeInAString
           ) {
             highlightedText += highlightToken(currentToken) + assemblyCode[i];
@@ -737,7 +738,7 @@ store s1,(s2)
 ;Count the number of 1-s in its binary
 ;representation...
 load s4,0
-load s3,10000000'b
+load s3,2^7
 count_the_ones_loop: ;Repeats 8 times.
 Test s1,s3
 jump z,it_is_zero

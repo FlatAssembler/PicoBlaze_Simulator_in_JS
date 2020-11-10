@@ -61,7 +61,7 @@ function tokenize(input) {
     if ((input[i] == "(" || input[i] == ")" || input[i] == "[" ||
          input[i] == "]" || input[i] == "{" || input[i] == "}" ||
          input[i] == "," || input[i] == "/" || input[i] == "*" ||
-         input[i] == "-" || input[i] == "+") &&
+         input[i] == "-" || input[i] == "+" || input[i] == "^") &&
         !areWeInAString) {
       tokenized.push(new TreeNode(currentToken, currentLine));
       tokenized.push(new TreeNode(input[i], currentLine));
