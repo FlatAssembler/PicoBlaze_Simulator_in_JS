@@ -982,6 +982,7 @@ Enable InterrupT
         stopSimulation();
       };
       function stopSimulation() {
+        document.getElementById("fastForwardButton").disabled = false;
         if (playing) clearInterval(simulationThread);
         document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
           "";
@@ -1009,10 +1010,12 @@ Enable InterrupT
         playing = !playing;
         if (!playing) {
           clearInterval(simulationThread);
+          document.getElementById("fastForwardButton").disabled = false;
           document.getElementById("playImage").style.display = "inline";
           document.getElementById("pauseImage").style.display = "none";
         } else {
           simulationThread = setInterval(simulateOneInstruction, 500);
+          document.getElementById("fastForwardButton").disabled = true;
           document.getElementById("playImage").style.display = "none";
           document.getElementById("pauseImage").style.display = "inline";
         }
@@ -1023,6 +1026,7 @@ Enable InterrupT
       }
       function fastForward() {
         playing = true;
+        document.getElementById("fastForwardButton").disabled = true;
         simulationThread = setInterval(simulateOneInstruction, 0);
         document.getElementById("playImage").style.display = "none";
         document.getElementById("pauseImage").style.display = "inline";
