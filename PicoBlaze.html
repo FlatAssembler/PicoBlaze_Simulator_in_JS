@@ -208,6 +208,18 @@
       #interrupt_flag {
         font-style: normal;
       }
+      .tooltip {
+        display: none;
+      }
+      button:hover .tooltip {
+        display: block;
+        position: absolute;
+        background: #ffffaa;
+        z-index: 10;
+        padding: 2px;
+        font-style: italic;
+        font-family: Times;
+      }
     </style>
     <script type="text/javascript">
       "use strict";
@@ -896,9 +908,17 @@ Enable InterrupT
             id="pauseImage"
             style="display: none"
           />
+          <span class="tooltip">Play/Pause</span>
+          <!--Didn't know modern browsers don't display alts automatically
+              when you hover over an image.-->
+        </button>
+        <button id="fastForwardButton">
+          <img src="fastForward.svg" alt="Fast Forward" />
+          <span class="tooltip">Fast Forward</span>
         </button>
         <button id="singleStepButton">
           <img src="singleStep.svg" alt="Single Step" />
+          <span class="tooltip">Single Step</span>
         </button>
         <button id="stopButton">
           <svg width="30" height="30" alt="stop">
@@ -910,6 +930,7 @@ Enable InterrupT
             </defs>
             <polygon points="0,0 30,0 30,30 0,30" fill="url(#redGradient)" />
           </svg>
+          <span class="tooltip">Stop</span>
         </button>
       </div>
       <div id="simulationResults"></div>
@@ -1000,9 +1021,16 @@ Enable InterrupT
         if (playing) return;
         simulateOneInstruction();
       }
+      function fastForward() {
+        playing = true;
+        simulationThread = setInterval(simulateOneInstruction, 0);
+        document.getElementById("playImage").style.display = "none";
+        document.getElementById("pauseImage").style.display = "inline";
+      }
       document.getElementById("playPauseButton").onclick = onPlayPauseButton;
       document.getElementById("stopButton").onclick = stopSimulation;
       document.getElementById("singleStepButton").onclick = onSingleStepButton;
+      document.getElementById("fastForwardButton").onclick = fastForward;
     </script>
   </body>
 </html>
