@@ -419,9 +419,9 @@
         areWeHighlighting = true;
         const assemblyCodeDiv = document.getElementById("assemblyCode");
         const assemblyCode = assemblyCodeDiv.innerText
+          .replace(/&/g, "&amp;")
           .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/&/g, "&amp;");
+          .replace(/>/g, "&gt;");
         //const start=edit.selectionStart,
         //  end=edit.selectionEnd; //Cursor position.
         let areWeInAString = false;
@@ -624,7 +624,12 @@
             <td id="flag_B_Z">0</td>
             <td id="flag_B_C">0</td>
           </tr>
-        </table>`;
+        </table>
+        <div style="text-align: center; font-family: Arial;">
+        <b style="background: #FF7777; padding-left: 2px; padding-right:2px;">
+        NOTE</b>:
+        I have good reasons to think the emulation of flags is unrealistic,
+        especially when it comes to <code>REGBANK</code>s.</div>`;
         let inputOutputTable = `
 <table>
   <tr>
@@ -688,32 +693,32 @@ DISABLE INTERRUPT
 ;The zeroth Fibonacci number is 0, and the
 ;first one is 1. Let us store them in the
 ;memory.
-load s0,0
+Load s0,0
 load s1,1
 store s0,0
 store s1,1
 ;Output the results for 0th and 1st...
-output s0,0
+Output s0,0
 output s0,1
 output s0,2
 output s1,3
 output s1,4
 output s1,5
 ;Load the pointers into registers...
-load s5,6
+Load s5,6
 load s2,2
 ;Now goes the loop for calculating the
 ;Fibonacci numbers. We don't know the
 ;number of repetitions in advance, and
 ;we will stop when we can no longer store
 ;current Fibonacci number in a register.
-infinite_loop:
-regbank b
+Infinite_loop:
+Regbank b
 ;Test if "flag_B_Z" works,
 ;because the rest of the program
 ;doesn't seem to trigger it.
 xor sf,ff
-regbank a
+Regbank a
 ;Fetch the previous 2 Fibonacci numbers
 ;from the RAM memory...
 sub s2, 2
@@ -763,7 +768,7 @@ add s5,1
 Output s4,(s5) ;Always less than 10.
 Add s5,1
 add s2,1
-jump infinite_loop
+jump Infinite_loop
 overflow: return
 
 divideBy10:
