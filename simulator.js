@@ -643,6 +643,15 @@ function simulateOneInstruction() {
     // INTERRUPT ENABLE|DISABLE
     flagIE = machineCode[PC].hex[4] | 0;
     PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "29") {
+    // RETURNI ENABLE|DISABLE
+    flagIE = machineCode[PC].hex[4] | 0;
+    if (callStack.length)
+      PC = callStack.pop() + 1;
+    else {
+      clearInterval(simulationThread);
+      alert("The program exited!");
+    }
   } else {
     alert(
         'Sorry about that, the simulator currently does not support the instruction "' +
