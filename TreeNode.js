@@ -29,6 +29,9 @@ class TreeNode {
             " has less than two operands.");
       return NaN;
     }
+    if (this.text == "^")
+      return (this.children[0].interpretAsArithmeticExpression(constants) **
+              this.children[1].interpretAsArithmeticExpression(constants));
     if (this.text == "*")
       return (this.children[0].interpretAsArithmeticExpression(constants) *
               this.children[1].interpretAsArithmeticExpression(constants));

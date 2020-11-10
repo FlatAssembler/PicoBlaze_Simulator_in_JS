@@ -116,6 +116,7 @@ function parse(tokenized) {
         continue;
       }
   };
+  parseBinaryOperators([ "^" ]); // Exponentiation.
   parseBinaryOperators([ "*", "/" ]);
   parseBinaryOperators([ "+", "-" ]);
   root.children = tokenized;

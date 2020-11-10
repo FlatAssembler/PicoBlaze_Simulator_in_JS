@@ -1039,7 +1039,7 @@ function assemble(parsed, context) {
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex = "28001";
       address++;
-    } else if (/^returni$/i.test(node.text)) {
+    } else if (/^ret(urn)?i$/i.test(node.text)) {
       if (node.children.length !== 1) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
               '" should have exactly one child node!');
