@@ -45,11 +45,9 @@ function simulateOneInstruction() {
     // STORE register,memory_address ;Copy a register onto a memory address.
     memory[parseInt(machineCode[PC].hex.substr(3), 16)] =
         registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
-    for (const sElement of (
-             document.getElementById("memory_" + machineCode[PC].hex.substr(3))
-                 .innerHTML = formatAsByte(
-                 registers[regbank][parseInt(machineCode[PC].hex[2], 16)]))) {
-    }
+    document.getElementById("memory_" + machineCode[PC].hex.substr(3))
+        .innerHTML =
+        formatAsByte(registers[regbank][parseInt(machineCode[PC].hex[2], 16)]);
     PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "0a") {
     // FETCH register,(register) ;Dereference the pointer in the second
@@ -110,7 +108,7 @@ function simulateOneInstruction() {
     PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "22") {
     // JUMP label
-    PC = parseInt(machineCode[PC].hex.substr(3), 16);
+    PC = parseInt(machineCode[PC].hex.substr(2), 16);
   } else if (machineCode[PC].hex.substr(0, 2) === "14" &&
              machineCode[PC].hex.substr(3) == "80") {
     // HWBUILD register
@@ -166,7 +164,7 @@ function simulateOneInstruction() {
       flagC[regbank] = 0;
     registers[regbank][firstRegister] = result;
     PC++;
-  } else if (machineCode[PC].hex.substr(0, 2) === "12") {
+  } else if (machineCode[PC].hex.substr(0, 2) === "13") {
     // ADDCY register, constant
     const firstRegister = parseInt(machineCode[PC].hex[2], 16);
     const firstValue = registers[regbank][firstRegister];
@@ -517,31 +515,78 @@ function simulateOneInstruction() {
   } else if (machineCode[PC].hex.substr(0, 2) === "32") {
     // JUMP Z, label
     if (flagZ[regbank])
-      PC = parseInt(machineCode[PC].hex.substr(3), 16);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
     else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "36") {
     // JUMP NZ, label
     if (!flagZ[regbank])
-      PC = parseInt(machineCode[PC].hex.substr(3), 16);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
     else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "3a") {
     // JUMP C, label
     if (flagC[regbank])
-      PC = parseInt(machineCode[PC].hex.substr(3), 16);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
     else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "3e") {
     // JUMP NC, label
     if (!flagC[regbank])
-      PC = parseInt(machineCode[PC].hex.substr(3), 16);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
     else
       PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "26") {
+    // JUMP@ register,register ; Jump to the address pointed by the registers
+    // (something like function pointers, except that "return" won't work).
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    PC = fistValue % 16 * 256 + secondValue;
   } else if (machineCode[PC].hex.substr(0, 2) === "20") {
     // CALL functionName
     callStack.push(PC);
-    PC = parseInt(machineCode[PC].hex.substr(3), 16);
+    PC = parseInt(machineCode[PC].hex.substr(2), 16);
+  } else if (machineCode[PC].hex.substr(0, 2) === "30") {
+    // CALL Z, functionName ; Call the function only if the Zero Flag is set.
+    if (flagZ[regbank]) {
+      callStack.push(PC);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
+    } else
+      PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "34") {
+    // CALL NZ, functionName ; Call the function only if the Zero Flag is not
+    // set.
+    if (!flagZ[regbank]) {
+      callStack.push(PC);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
+    } else
+      PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "38") {
+    // CALL C, functionName ; Call the function only if the Carry Flag is set.
+    if (flagC[regbank]) {
+      callStack.push(PC);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
+    } else
+      PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "3c") {
+    // CALL NC, functionName ; Call the function only if the Carry Flag is not
+    // set.
+    if (!flagC[regbank]) {
+      callStack.push(PC);
+      PC = parseInt(machineCode[PC].hex.substr(2), 16);
+    } else
+      PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "24") {
+    // CALL@ register,register ; Jump the function pointed by the function
+    // pointer stored in the registers.
+    const firstRegister = parseInt(machineCode[PC].hex[2], 16);
+    const secondRegister = parseInt(machineCode[PC].hex[3], 16);
+    const firstValue = registers[regbank][firstRegister];
+    const secondValue = registers[regbank][secondRegister];
+    callStack.push(PC);
+    PC = fistValue % 16 * 256 + secondValue;
   } else if (machineCode[PC].hex.substr(0, 2) === "25") {
     // RETURN
     if (callStack.length)
@@ -550,6 +595,50 @@ function simulateOneInstruction() {
       clearInterval(simulationThread);
       alert("The program exited!");
     }
+  } else if (machineCode[PC].hex.substr(0, 2) === "31") {
+    // RETURN Z ; Return from a function only if the Zero Flag is set.
+    if (flagZ[regbank]) {
+      if (callStack.length)
+        PC = callStack.pop() + 1;
+      else {
+        clearInterval(simulationThread);
+        alert("The program exited!");
+      }
+    } else
+      PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "35") {
+    // RETURN NZ ; Return from a function only if the Zero Flag is not set.
+    if (!flagZ[regbank]) {
+      if (callStack.length)
+        PC = callStack.pop() + 1;
+      else {
+        clearInterval(simulationThread);
+        alert("The program exited!");
+      }
+    } else
+      PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "39") {
+    // RETURN C ; Return from a function only if the Carry Flag is set.
+    if (flagC[regbank]) {
+      if (callStack.length)
+        PC = callStack.pop() + 1;
+      else {
+        clearInterval(simulationThread);
+        alert("The program exited!");
+      }
+    } else
+      PC++;
+  } else if (machineCode[PC].hex.substr(0, 2) === "3d") {
+    // RETURN NC ; Return from a function only if the Carry Flag is not set.
+    if (!flagC[regbank]) {
+      if (callStack.length)
+        PC = callStack.pop() + 1;
+      else {
+        clearInterval(simulationThread);
+        alert("The program exited!");
+      }
+    } else
+      PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "28") {
     // INTERRUPT ENABLE|DISABLE
     flagIE = machineCode[PC].hex[4] | 0;
