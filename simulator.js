@@ -592,7 +592,8 @@ function simulateOneInstruction() {
     if (callStack.length)
       PC = callStack.pop() + 1;
     else {
-      clearInterval(simulationThread);
+      if (playing)
+        clearInterval(simulationThread);
       alert("The program exited!");
     }
   } else if (machineCode[PC].hex.substr(0, 2) === "31") {
@@ -601,7 +602,8 @@ function simulateOneInstruction() {
       if (callStack.length)
         PC = callStack.pop() + 1;
       else {
-        clearInterval(simulationThread);
+        if (playing)
+          clearInterval(simulationThread);
         alert("The program exited!");
       }
     } else
@@ -612,7 +614,8 @@ function simulateOneInstruction() {
       if (callStack.length)
         PC = callStack.pop() + 1;
       else {
-        clearInterval(simulationThread);
+        if (playing)
+          clearInterval(simulationThread);
         alert("The program exited!");
       }
     } else
@@ -623,7 +626,8 @@ function simulateOneInstruction() {
       if (callStack.length)
         PC = callStack.pop() + 1;
       else {
-        clearInterval(simulationThread);
+        if (playing)
+          clearInterval(simulationThread);
         alert("The program exited!");
       }
     } else
@@ -634,7 +638,8 @@ function simulateOneInstruction() {
       if (callStack.length)
         PC = callStack.pop() + 1;
       else {
-        clearInterval(simulationThread);
+        if (playing)
+          clearInterval(simulationThread);
         alert("The program exited!");
       }
     } else
@@ -649,7 +654,8 @@ function simulateOneInstruction() {
     if (callStack.length)
       PC = callStack.pop() + 1;
     else {
-      clearInterval(simulationThread);
+      if (playing)
+        clearInterval(simulationThread);
       alert("The program exited!");
     }
   } else {

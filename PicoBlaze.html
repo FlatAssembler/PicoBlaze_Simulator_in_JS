@@ -169,14 +169,7 @@
         position: absolute;
         width: 100%;
         height: 50px;
-      }
-      #playPauseButton {
-        position: absolute;
-        left: 0;
-      }
-      #stopButton {
-        position: absolute;
-        right: 5px;
+        text-align: center;
       }
       #simulationResults {
         top: 910px;
@@ -904,6 +897,9 @@ Enable InterrupT
             style="display: none"
           />
         </button>
+        <button id="singleStepButton">
+          <img src="singleStep.svg" alt="Single Step" />
+        </button>
         <button id="stopButton">
           <svg width="30" height="30" alt="stop">
             <defs>
@@ -1000,8 +996,13 @@ Enable InterrupT
           document.getElementById("pauseImage").style.display = "inline";
         }
       }
+      function onSingleStepButton() {
+        if (playing) return;
+        simulateOneInstruction();
+      }
       document.getElementById("playPauseButton").onclick = onPlayPauseButton;
       document.getElementById("stopButton").onclick = stopSimulation;
+      document.getElementById("singleStepButton").onclick = onSingleStepButton;
     </script>
   </body>
 </html>
