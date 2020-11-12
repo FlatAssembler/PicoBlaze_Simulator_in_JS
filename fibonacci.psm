@@ -1,0 +1,118 @@
+;The example program from "PicoBlaze.html".
+;Example:
+;Count the number of ones in the binary
+;representations of the numbers in the
+;Fibonacci sequence. Output the indexes,
+;the Fibonacci numbers and the number of
+;ones in the binary representations as
+;decimal (base 10) numbers.
+Address 0
+;On real PicoBlaze, disabling interrupts
+;makes the program run slightly faster.
+;So, let us do that here (although it has
+;no effect in this simulator).
+DISABLE INTERRUPT
+;The zeroth Fibonacci number is 0, and the
+;first one is 1. Let us store them in the
+;memory.
+Load s0,0
+load s1,1
+store s0,0
+store s1,1
+;Output the results for 0th and 1st...
+Output s0,0
+output s0,1
+output s0,2
+output s1,3
+output s1,4
+output s1,5
+;Load the pointers into registers...
+Load s5,6
+load s2,2
+;Now goes the loop for calculating the
+;Fibonacci numbers. We don't know the
+;number of repetitions in advance, and
+;we will stop when we can no longer store
+;current Fibonacci number in a register.
+Infinite_loop:
+Regbank b
+;Test if "flag_B_Z" works,
+;because the rest of the program
+;doesn't seem to trigger it.
+xor sf,ff
+Regbank a
+;Fetch the previous 2 Fibonacci numbers
+;from the RAM memory...
+sub s2, 2
+Fetch s0,(s2)
+add s2,1
+fetch s1,(s2)
+add s2,1
+;Add them together...
+add s1,s0
+;If the result does not fit in the
+;register, go to the end of the program.
+jump c,overflow
+;Store the just calculated Fibonacci
+;number into RAM...
+store s1,(s2)
+;Count the number of 1-s in its binary
+;representation...
+load s4,0
+load s3,2^7
+count_the_ones_loop: ;Repeats 8 times.
+Test s1,s3
+jump z,it_is_zero
+add s4,1
+it_is_zero:
+sr0 s3
+jump nc,count_the_ones_loop
+;Output the index as a decimal...
+load sa,s2
+call divideBy10
+call multiplyBy16
+add sa,sb
+output sa,(s5)
+add s5,1
+;Output the Fibonacci number...
+Load sa,s1
+compare sa,100'd
+;If it's less than 100...
+;display as decimal.
+Jump nc,displayFibonacciAsHexadecimal
+call divideBy10
+call multiplyBy16
+add sa,sb
+displayFibonacciAsHexadecimal:
+output sa,(s5)
+add s5,1
+;Output the number of ones...
+Output s4,(s5) ;Always less than 10.
+Add s5,1
+add s2,1
+jump Infinite_loop
+overflow: return
+
+divideBy10:
+star s0,sa
+regbank b
+load s1,0
+beginning_of_loop:
+compare s0,10'd
+jump c,end_of_loop
+sub s0,10'd
+add s1,1
+jump beginning_of_loop
+end_of_loop:
+star sa,s1
+star sb,s0
+regbank a
+return
+
+multiplyBy16:
+;16=2^4
+sl0 sa
+sl0 sa
+sl0 sa
+sl0 sa
+return

@@ -1,0 +1,25 @@
+;An example program which converts binary
+;to Gray code and vice versa, maybe it
+;comes useful to somebody.
+address 0
+start: ;Infinite loop...
+  ;Converting from binary to gray...
+  constant binary_input,0
+  constant gray_output,0
+  input s0,binary_input
+  load s1,s0
+  sr0 s1
+  xor s1,s0
+  output s1,gray_output
+  ;Converting from gray to binary...
+  constant gray_input,1
+  constant binary_output,1
+  input s0,gray_input
+  load s1,s0
+  convert_to_binary_loop:
+    sr0 s1
+    xor s0,s1
+    compare s1,0
+  jump nz,convert_to_binary_loop
+  output s0,binary_output
+jump start
