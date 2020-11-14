@@ -537,13 +537,13 @@ function simulateOneInstruction() {
     else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "26") {
-    // JUMP@ register,register ; Jump to the address pointed by the registers
+    // JUMP@ (register, register) ; Jump to the address pointed by the registers
     // (something like function pointers, except that "return" won't work).
     const firstRegister = parseInt(machineCode[PC].hex[2], 16);
     const secondRegister = parseInt(machineCode[PC].hex[3], 16);
     const firstValue = registers[regbank][firstRegister];
     const secondValue = registers[regbank][secondRegister];
-    PC = fistValue % 16 * 256 + secondValue;
+    PC = firstValue % 16 * 256 + secondValue;
   } else if (machineCode[PC].hex.substr(0, 2) === "20") {
     // CALL functionName
     callStack.push(PC);
@@ -579,14 +579,14 @@ function simulateOneInstruction() {
     } else
       PC++;
   } else if (machineCode[PC].hex.substr(0, 2) === "24") {
-    // CALL@ register,register ; Jump the function pointed by the function
+    // CALL@ (register, register) ; Jump the function pointed by the function
     // pointer stored in the registers.
     const firstRegister = parseInt(machineCode[PC].hex[2], 16);
     const secondRegister = parseInt(machineCode[PC].hex[3], 16);
     const firstValue = registers[regbank][firstRegister];
     const secondValue = registers[regbank][secondRegister];
     callStack.push(PC);
-    PC = fistValue % 16 * 256 + secondValue;
+    PC = firstValue % 16 * 256 + secondValue;
   } else if (machineCode[PC].hex.substr(0, 2) === "25") {
     // RETURN
     if (callStack.length)
