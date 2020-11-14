@@ -531,20 +531,22 @@
         document.getElementById("lineNumbers").innerHTML = lineNumbersHTML;
       }
       function setupLayout() {
-        if (window.innerWidth < 500)
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight; //Modern browsers execute JavaScript so fast that calling "window.innerWidth" multiple times within a function leads to a race condition.
+        if (windowWidth < 500)
           document.getElementsByTagName("main")[0].style.left = 8 + "px";
         else
           document.getElementsByTagName("main")[0].style.left =
-            window.innerWidth / 2 - 500 / 2 + "px";
-        if (window.innerHeight < 400) {
+            windowWidth / 2 - 500 / 2 + "px";
+        if (windowHeight < 400) {
           document.getElementById("buttons").style.top =
-            window.innerHeight + 4 + "px";
+            windowHeight + 4 + "px";
           document.getElementById("divWithMachineCode").style.top =
-            window.innerHeight + 4 + 50 + "px";
+            windowHeight + 4 + 50 + "px";
           document.getElementById("simulationButtons").style.top =
-            2 * window.innerHeight + 2 * 4 + 2 * 50 + "px";
+            2 * windowHeight + 2 * 4 + 2 * 50 + "px";
           document.getElementsByTagName("footer")[0].style.top =
-            65 + 3 * 4 + 2 * 50 + 3 * window.innerHeight;
+            65 + 3 * 4 + 2 * 50 + 3 * windowHeight;
         } else {
           document.getElementById("buttons").style.top = 400 + 4 + "px";
           document.getElementById("divWithMachineCode").style.top = "450px";
@@ -943,7 +945,8 @@ Enable InterrupT
       >. If you want to contribute,
       <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS"
         >fork me on GitHub</a
-      >.
+      >. If you would like to know more about me, visit my
+      <a href="https://flatassembler.github.io/">homepage</a>.
     </footer>
     <script type="text/javascript">
       "use strict";
@@ -963,7 +966,14 @@ Enable InterrupT
       document.getElementById("highlightButton").onclick = syntaxHighlihter;
       document.getElementById("assembleButton").onclick = () => {
         const assembly = document.getElementById("assemblyCode").innerText;
-        const tokenized = tokenize(assembly);
+
+        let tokenized;
+        try {
+          tokenized = tokenize(assembly);
+        } catch (error) {
+          alert("Internal compiler error in the tokenizer: " + error.message);
+          return;
+        }
         let resultOfTokenizing = "[";
         for (let i = 0; i < tokenized.length; i++) {
           const token = tokenized[i];
@@ -973,16 +983,33 @@ Enable InterrupT
         }
         resultOfTokenizing += "]";
         console.log("Result of tokenizing: ", resultOfTokenizing);
-        const parsed = parse(tokenized);
+        let parsed;
+        try {
+          parsed = parse(tokenized);
+        } catch (error) {
+          alert("Internal compiler error in the parser: " + error.message);
+        }
         console.log("Result of parsing: ", parsed.getLispExpression());
-        const context = makeCompilationContext(parsed);
+        let context;
+        try {
+          context = makeCompilationContext(parsed);
+        } catch (error) {
+          alert(
+            "Internal compiler error in the preprocessor: " + error.message
+          );
+        }
         console.log("Result of preprocessing: ", context);
-        assemble(parsed, context);
+        try {
+          assemble(parsed, context);
+        } catch {
+          alert("Internal assembler error: " + error.message);
+        }
         drawTable();
         stopSimulation();
       };
       function stopSimulation() {
         document.getElementById("fastForwardButton").disabled = false;
+        document.getElementById("singleStepButton").disabled = false;
         if (playing) clearInterval(simulationThread);
         document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
           "";
@@ -1011,11 +1038,13 @@ Enable InterrupT
         if (!playing) {
           clearInterval(simulationThread);
           document.getElementById("fastForwardButton").disabled = false;
+          document.getElementById("singleStepButton").disabled = false;
           document.getElementById("playImage").style.display = "inline";
           document.getElementById("pauseImage").style.display = "none";
         } else {
           simulationThread = setInterval(simulateOneInstruction, 500);
           document.getElementById("fastForwardButton").disabled = true;
+          document.getElementById("singleStepButton").disabled = true;
           document.getElementById("playImage").style.display = "none";
           document.getElementById("pauseImage").style.display = "inline";
         }
@@ -1027,6 +1056,7 @@ Enable InterrupT
       function fastForward() {
         playing = true;
         document.getElementById("fastForwardButton").disabled = true;
+        document.getElementById("singleStepButton").disabled = true;
         simulationThread = setInterval(simulateOneInstruction, 0);
         document.getElementById("playImage").style.display = "none";
         document.getElementById("pauseImage").style.display = "inline";
