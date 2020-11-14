@@ -891,7 +891,7 @@
         console.log("Result of preprocessing: ", context);
         try {
           assemble(parsed, context);
-        } catch {
+        } catch (error) {
           alert("Internal assembler error: " + error.message);
         }
         drawTable();
