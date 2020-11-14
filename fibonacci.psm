@@ -1,5 +1,3 @@
-;The example program from "PicoBlaze.html".
-;Example:
 ;Count the number of ones in the binary
 ;representations of the numbers in the
 ;Fibonacci sequence. Output the indexes,
