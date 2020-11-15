@@ -1,4 +1,5 @@
 ;Examples of the assembly syntax:
+address 0
 ;Data directives...
 beginningOfDataDirectives: ;Label
 load s0, s1
