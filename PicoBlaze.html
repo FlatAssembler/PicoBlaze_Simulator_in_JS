@@ -221,7 +221,7 @@
         font-family: Times;
       }
       .exampleCodeLink {
-        position: absolute;
+        position: relative;
         margin: 5px;
         width: 120px;
         height: 150px;
@@ -232,7 +232,7 @@
         background: lightGray;
       }
       #divWithExamples {
-        background: white;
+        background: #ffffee;
         font-family: Arial;
         width: calc(100% - 5px);
         position: absolute;
@@ -248,6 +248,7 @@
       }
       #examples {
         overflow-x: scroll;
+        overflow-y: hidden;
         margin: 5px;
         background: gray;
         height: 173px;
@@ -258,6 +259,12 @@
         margin-top: 5px;
         font-size: 14px;
         font-weight: bold;
+      }
+      #callForMoreExamples {
+        margin: 5px;
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
       }
     </style>
     <script type="text/javascript">
@@ -571,7 +578,13 @@
       }
       function setupLayout() {
         const windowWidth = window.innerWidth;
-        const windowHeight = window.innerHeight; //Modern browsers execute JavaScript so fast that calling "window.innerWidth" multiple times within a function leads to a race condition.
+        const windowHeight = window.innerHeight;
+        //Modern browsers execute
+        //JavaScript so fast that
+        //calling "window.innerWidth"
+        //multiple times within a
+        //function leads to a race
+        //condition.
         if (windowWidth < 500)
           document.getElementsByTagName("main")[0].style.left = 8 + "px";
         else
@@ -605,8 +618,11 @@
         }
         const examples = document.getElementsByClassName("exampleCodeLink");
         let left = 8;
+        let top = 0;
         for (const example of examples) {
           example.style.left = left + "px";
+          example.style.top = top + "px";
+          top -= 155;
           left += 130;
         }
       }
@@ -725,6 +741,8 @@
           ).innerHTML = formatAsByte(output[i]);
       }
       function fetchExample(exampleName) {
+        document.getElementById("assemblyCode").innerHTML =
+          ";Fetching the example from GitHub...";
         fetch(
           "https://raw.githubusercontent.com/FlatAssembler/PicoBlaze_Simulator_in_JS/master/" +
             exampleName
@@ -744,12 +762,12 @@
           );
       }
     </script>
-    <script src="TreeNode.js"></script>
-    <script src="tokenizer.js"></script>
-    <script src="parser.js"></script>
-    <script src="preprocessor.js"></script>
-    <script src="assembler.js"></script>
-    <script src="simulator.js"></script>
+    <script src="TreeNode.js" type="text/javascript"></script>
+    <script src="tokenizer.js" type="text/javascript"></script>
+    <script src="parser.js" type="text/javascript"></script>
+    <script src="preprocessor.js" type="text/javascript"></script>
+    <script src="assembler.js" type="text/javascript"></script>
+    <script src="simulator.js" type="text/javascript"></script>
   </head>
   <body>
     <header>
@@ -768,13 +786,37 @@
           <div class="exampleCodeLink" onclick="fetchExample('fibonacci.psm')">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/FibonacciRabbit.svg/220px-FibonacciRabbit.svg.png"
+              alt="Rabbit Experiment"
             />Fibonacci Sequence
           </div>
           <div class="exampleCodeLink" onclick="fetchExample('gray.psm')">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Gray_code_tesseract.svg/220px-Gray_code_tesseract.svg.png"
+              alt="Hamming Cube"
             />Gray Code
           </div>
+          <div
+            class="exampleCodeLink"
+            onclick="fetchExample('assemblerTest.psm')"
+          >
+            <img src="assemblerTest.gif" alt="Assembly Code" />Assembler Test
+          </div>
+          <div class="exampleCodeLink">
+            <div id="callForMoreExamples">
+              Have some example you would like to add here?
+              <a
+                href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues"
+                >Contact me on GitHub</a
+              >!
+            </div>
+          </div>
+          <div
+            class="exampleCodeLink"
+            style="background: transparent; width: 8px"
+          ></div>
+          <!-- For some reason (I don't know a lot of CSS),
+               adding a right padding to "examples" div does
+               not work. -->
         </div>
       </div>
       <div id="buttons">
@@ -851,7 +893,7 @@
       document.getElementById("assemblyCode").onscroll = () => {
         document
           .getElementById("lineNumbers")
-          .scrollTo(0, document.getElementById("assemblyCode").scrollTop);
+          .scroll(0, document.getElementById("assemblyCode").scrollTop);
       };
       document.getElementById("highlightButton").onclick = syntaxHighlihter;
       document.getElementById("assembleButton").onclick = () => {

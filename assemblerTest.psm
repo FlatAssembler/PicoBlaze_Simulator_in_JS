@@ -1,0 +1,82 @@
+;Examples of the assembly syntax:
+;Data directives...
+beginningOfDataDirectives: ;Label
+load s0, s1
+load s1, 14'd / 2
+star s2, s3
+star s3, 1 + 2 * 3
+namereg sf, stack_pointer ;Preprocessor
+store s4, (stack_pointer)
+store s5, FF
+fetch s6, (sa)
+fetch s7, A
+input s8, (sb)
+input s9, (1 + 2) * 3
+output sa, (sc)
+output sa, -1 + 15'd / 2
+constant eight, 15'd/2 ;Rounding
+outputk eight, a
+jump endOfDataDirectives
+regbank a
+regbank B
+endOfDataDirectives: hwbuild se
+jump beginningOfDataDirectives
+;Conditional jumps...
+beginningOfConditionalJumps:
+jump z,beginningOfConditionalJumps
+jump nZ,beginningOfConditionalJumps
+jump C,beginningOfConditionalJumps
+jump Nc,beginningOfConditionalJumps
+;Setting the program counter (PC)...
+jump@(sD,sE)
+;The "call" instruction...
+call function
+call z,function
+call nz,function
+call c, function
+call nc, function
+call@ (sA,sb)
+;Various "return" statements...
+function:
+return
+return z
+return nz
+return c
+return nc
+;Arithmetic and logical operators...
+add s0,s1
+add s2,5+10'd/2
+addcy s3,s4
+addc s5,3+12'd/2+1
+sub s6,S7
+sub s8,ff
+subc s9,sa
+subcy sb,a+b
+and sc,sd
+and se,ff
+or sf,se
+or SE,00
+xor sf,se
+xor SE,00
+test sc,sd
+test se,ff
+testcy sc,sd
+testc se,ff
+compare s0,stack_pointer
+comp s1,eight
+comparecy s0,stack_pointer
+compcy s1,eight
+;Bitwise operators...
+sl0 s0
+sl1 s1
+slx s2
+sla s3
+rl s4
+sr0 s5
+sr1 s6
+srx s7
+sra s8
+rr s9
+;Interrupts...
+Disable interrupt
+Enable InterrupT
