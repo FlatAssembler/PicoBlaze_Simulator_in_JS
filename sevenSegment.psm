@@ -1,0 +1,16 @@
+;Hexadecimal counter,
+;useful for testing the seven-segment
+;displays.
+address 000
+load s0,0
+load s1,0
+infiniteLoop:
+  add s0,1
+  jump nc,doNotIncreaseS1
+    add s1,1
+  doNotIncreaseS1:
+  constant hex1_port,1
+  constant hex2_port,2
+  output s0,hex2_port
+  output s1,hex1_port
+jump infiniteLoop
