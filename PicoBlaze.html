@@ -760,10 +760,72 @@
           document.getElementById(
             "output_" + formatAsByte(i)
           ).innerHTML = formatAsByte(output[i]);
+        displayHexadecimalNumber(
+          document.getElementById("sevenSegmentDisplay0"),
+          output[1] >> 4
+        );
+        displayHexadecimalNumber(
+          document.getElementById("sevenSegmentDisplay1"),
+          output[1] % 2 ** 4
+        );
+        displayHexadecimalNumber(
+          document.getElementById("sevenSegmentDisplay2"),
+          output[2] >> 4
+        );
+        displayHexadecimalNumber(
+          document.getElementById("sevenSegmentDisplay3"),
+          output[2] % 2 ** 4
+        );
+      }
+      function displayHexadecimalNumber(display, number) {
+        if (
+          !(display instanceof SVGElement) ||
+          display.classList[0] != "sevenSegmentDisplay"
+        ) {
+          if (playing) clearInterval(simulationThread);
+          alert(
+            "The simulator crashed! Some part of the simulator attempted to display a hexadecmal number on something that's not an HTML element suited for that."
+          );
+          return;
+        }
+        if (number < 0 || number > 15 || typeof number !== "number") {
+          if (playing) clearInterval(simulationThread);
+          alert(
+            'The simulator crashed! Some part of the simulator tried to display "' +
+              number +
+              '" as a hexadecimal digit.'
+          );
+        }
+        number = Math.floor(number);
+        const LEDs = [
+          "1111110", // 0
+          "0110000", // 1
+          "1101101", // 2
+          "1111001", // 3
+          "0110011", // 4
+          "1011011", // 5
+          "1011111", // 6
+          "1110000", // 7
+          "1111111", // 8
+          "1111011", // 9
+          "1110111", // A
+          "0011111", // b
+          "1001110", // c
+          "0111101", // d
+          "1001111", // E
+          "1000111", // F
+        ];
+        const LED = LEDs[number];
+        for (let i = 0; i < display.children.length; i++)
+          display.children[i].setAttribute(
+            "fill",
+            LED[i] === "0" ? "gray" : "red"
+          );
       }
       function fetchExample(exampleName) {
         document.getElementById("assemblyCode").innerHTML =
           ";Fetching the example from GitHub...";
+        setUpLineNumbers();
         fetch(
           "https://raw.githubusercontent.com/FlatAssembler/PicoBlaze_Simulator_in_JS/master/" +
             exampleName
@@ -821,6 +883,13 @@
             onclick="fetchExample('assemblerTest.psm')"
           >
             <img src="assemblerTest.gif" alt="Assembly Code" />Assembler Test
+          </div>
+          <div
+            class="exampleCodeLink"
+            onclick="fetchExample('sevenSegment.psm')"
+          >
+            <img src="hexadecimal_counter.png" alt="Digital Clock" />Hexadecimal
+            Counter
           </div>
           <div class="exampleCodeLink">
             <div id="callForMoreExamples">
