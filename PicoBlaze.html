@@ -267,11 +267,18 @@
         transform: translate(0, -50%);
       }
       #graphicalResults {
+        overflow: scroll;
         position: absolute;
         top: 910px;
         height: 200px;
         width: calc(100% - 5px);
         background: white;
+      }
+      .sevenSegmentDisplay {
+        background: black;
+        width: 50px;
+        height: 100px;
+        margin: 5px;
       }
     </style>
     <script type="text/javascript">
@@ -622,11 +629,11 @@
           document.getElementById("simulationButtons").style.top =
             855 + 210 + "px";
           document.getElementById("simulationResults").style.top =
-            910 + 2*210 + "px";
+            910 + 2 * 210 + "px";
           document.getElementById("graphicalResults").style.top =
             910 + 210 + "px";
           document.getElementsByTagName("footer")[0].style.top =
-            1380 + 2*210 + "px";
+            1380 + 2 * 210 + "px";
         }
         const examples = document.getElementsByClassName("exampleCodeLink");
         let left = 8;
@@ -693,7 +700,8 @@
         for (let i = 0; i < 16; i++)
           registersTable +=
             '<td id="register_A_s' + i.toString(16) + '">00</td>';
-        registersTable += '<td id="register_PC" rowspan=2>000</td></tr><tr class="regbank_b"><th>REGBANK B</th>';
+        registersTable +=
+          '<td id="register_PC" rowspan=2>000</td></tr><tr class="regbank_b"><th>REGBANK B</th>';
         for (let i = 0; i < 16; i++)
           registersTable +=
             '<td id="register_B_s' + i.toString(16) + '">00</td>';
@@ -880,7 +888,7 @@
           <span class="tooltip">Stop</span>
         </button>
       </div>
-      <div id="graphicalResults">Display - not yet implemented.</div>
+      <div id="graphicalResults"></div>
       <div id="simulationResults"></div>
     </main>
     <footer>
@@ -1011,6 +1019,39 @@
       document.getElementById("stopButton").onclick = stopSimulation;
       document.getElementById("singleStepButton").onclick = onSingleStepButton;
       document.getElementById("fastForwardButton").onclick = fastForward;
+      const svgNS = document.getElementById("stopButton").children[0]
+        .namespaceURI;
+      let sevenSegmentDisplays = document.createElement("div");
+      sevenSegmentDisplays.style.width = 4 * 60 + "px";
+      sevenSegmentDisplays.style.marginLeft = "auto";
+      sevenSegmentDisplays.style.marginRight = "auto";
+      for (let i = 0; i < 4; i++) {
+        let sevenSegmentDisplay = document.createElementNS(svgNS, "svg");
+        sevenSegmentDisplay.classList.add("sevenSegmentDisplay");
+        sevenSegmentDisplay.id = "sevenSegmentDisplay" + i;
+        const polygons = [
+          "15,5  35, 5 40,10 35,15 15,15 10,10", //Segment A (top)
+          "40,10 45,15 45,45 40,50 35,45 35,15", //Segment B (top-right)
+          "40,50 45,55 45,85 40,90 35,85 35,55", //Segment C (bottom-right)
+          "40,90 35,95 15,95 10,90 15,85 35,85", //Segment D (bottom)
+          "10,90  5,85  5,55 10,50 15,55 15,85", //Segment E (bottom-left)
+          "10,50  5,45  5,15 10,10 15,15 15,45", //Segment F (top-left)
+          "10,50 15,45 35,45 40,50 35,55 15,55", //Segment G (hyphen in the middle)
+        ];
+        for (const polygonPoints of polygons) {
+          let polygon = document.createElementNS(svgNS, "polygon");
+          if (polygons.indexOf(polygonPoints) == 6)
+            polygon.setAttribute("fill", "red");
+          else polygon.setAttribute("fill", "gray");
+          polygon.setAttribute("points", polygonPoints);
+          polygon.setAttribute("stroke", "black");
+          sevenSegmentDisplay.appendChild(polygon);
+        }
+        sevenSegmentDisplays.appendChild(sevenSegmentDisplay);
+      }
+      document
+        .getElementById("graphicalResults")
+        .appendChild(sevenSegmentDisplays);
     </script>
   </body>
 </html>
