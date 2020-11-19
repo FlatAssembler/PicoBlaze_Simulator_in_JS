@@ -776,6 +776,10 @@
           document.getElementById("sevenSegmentDisplay3"),
           output[2] % 2 ** 4
         );
+        for (let i = 0; i < 8; i++)
+          document
+            .getElementById("LED" + i)
+            .setAttribute("fill", output[0] & (1 << i) ? "lightGreen" : "gray");
       }
       function displayHexadecimalNumber(display, number) {
         if (
@@ -1121,6 +1125,23 @@
       document
         .getElementById("graphicalResults")
         .appendChild(sevenSegmentDisplays);
+      let LEDs = document.createElementNS(svgNS, "svg");
+      LEDs.setAttribute("width", 400);
+      LEDs.setAttribute("height", 30);
+      LEDs.style.background = "darkGreen";
+      LEDs.style.marginLeft = "auto";
+      LEDs.style.marginRight = "auto";
+      LEDs.style.display = "block";
+      for (let i = 0; i < 8; i++) {
+        let LED = document.createElementNS(svgNS, "circle");
+        LED.setAttribute("fill", "gray");
+        LED.setAttribute("cx", 25 + i * 50);
+        LED.setAttribute("cy", 15);
+        LED.setAttribute("r", 5);
+        LED.id = "LED" + (7 - i);
+        LEDs.appendChild(LED);
+      }
+      document.getElementById("graphicalResults").appendChild(LEDs);
     </script>
   </body>
 </html>

@@ -1,16 +1,29 @@
 ;Hexadecimal counter,
 ;useful for testing the seven-segment
-;displays.
+;displays and the LEDs.
+;Would run too fast on real PicoBlaze
+;to be useful.
 address 000
 load s0,0
 load s1,0
+load s3,10100000'b
+load s4,0
 infiniteLoop:
   add s0,1
   jump nc,doNotIncreaseS1
     add s1,1
   doNotIncreaseS1:
+  load s5,s4
+  load s4,s0
+  and s4,f0
+  compare s4,s5
+  jump z,theSecondDigitHasNotChanged
+    rr s3
+  theSecondDigitHasNotChanged:
   constant hex1_port,1
   constant hex2_port,2
+  constant led_port,0
   output s0,hex2_port
   output s1,hex1_port
+  output s3,led_port
 jump infiniteLoop
