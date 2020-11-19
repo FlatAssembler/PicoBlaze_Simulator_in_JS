@@ -673,7 +673,7 @@ function simulateOneInstruction() {
         "-&gt;";
   } catch (error) {
     if (playing)
-      clearInteval(simulationThread);
+      clearInterval(simulationThread);
     alert("The simulator crashed! Error: " + error.message);
   }
 }

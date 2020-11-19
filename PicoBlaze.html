@@ -266,6 +266,13 @@
         top: 50%;
         transform: translate(0, -50%);
       }
+      #graphicalResults {
+        position: absolute;
+        top: 910px;
+        height: 200px;
+        width: calc(100% - 5px);
+        background: white;
+      }
     </style>
     <script type="text/javascript">
       "use strict";
@@ -436,6 +443,7 @@
           document.getElementById("interrupt_flag").className = "inactive";
         else document.getElementById("interrupt_flag").className = "active";
         document.getElementById("interrupt_flag").innerHTML = flagIE;
+        document.getElementById("register_PC").innerHTML = formatAsAddress(PC);
       }
       function highlightToken(token) {
         if (token[0] === ";") return `<span class="comment">${token}</span>`;
@@ -598,10 +606,12 @@
           document.getElementById("simulationButtons").style.top =
             2 * windowHeight + 3 * 4 + 30 + 200 + "px";
           document.getElementsByTagName("footer")[0].style.top =
-            65 + 4 + 2 * 50 + 3 * windowHeight + 200 + "px";
+            65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + "px";
           document.getElementById("divWithExamples").style.top =
             windowHeight + 4 + "px";
           document.getElementById("simulationResults").style.top =
+            windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + "px";
+          document.getElementById("graphicalResults").style.top =
             windowHeight * 2 + 200 + 65 + 50 - 30 + "px";
         } else {
           document.getElementById("divWithExamples").style.top = 410 + "px";
@@ -612,9 +622,11 @@
           document.getElementById("simulationButtons").style.top =
             855 + 210 + "px";
           document.getElementById("simulationResults").style.top =
+            910 + 2*210 + "px";
+          document.getElementById("graphicalResults").style.top =
             910 + 210 + "px";
           document.getElementsByTagName("footer")[0].style.top =
-            1380 + 210 + "px";
+            1380 + 2*210 + "px";
         }
         const examples = document.getElementsByClassName("exampleCodeLink");
         let left = 8;
@@ -676,11 +688,12 @@
         `;
         for (let i = 0; i < 16; i++)
           registersTable += "<th>s" + i.toString(16) + "</th>";
+        registersTable += "<th>PC</th>";
         registersTable += '</tr><tr class="regbank_a"><th>REGBANK A</th>';
         for (let i = 0; i < 16; i++)
           registersTable +=
             '<td id="register_A_s' + i.toString(16) + '">00</td>';
-        registersTable += '</tr><tr class="regbank_b"><th>REGBANK B</th>';
+        registersTable += '<td id="register_PC" rowspan=2>000</td></tr><tr class="regbank_b"><th>REGBANK B</th>';
         for (let i = 0; i < 16; i++)
           registersTable +=
             '<td id="register_B_s' + i.toString(16) + '">00</td>';
@@ -867,6 +880,7 @@
           <span class="tooltip">Stop</span>
         </button>
       </div>
+      <div id="graphicalResults">Display - not yet implemented.</div>
       <div id="simulationResults"></div>
     </main>
     <footer>
