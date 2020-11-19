@@ -870,6 +870,12 @@
       <div id="divWithExamples">
         <span id="examplesSpan">Examples:</span>
         <div id="examples">
+          <div class="exampleCodeLink" onclick="fetchExample('bin2dec.psm')">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/2/21/Arabic_numerals-en.svg?download"
+              alt="Two hands"
+            />Binary to Decimal
+          </div>
           <div class="exampleCodeLink" onclick="fetchExample('fibonacci.psm')">
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/FibonacciRabbit.svg/220px-FibonacciRabbit.svg.png"
@@ -1127,9 +1133,9 @@
         .appendChild(sevenSegmentDisplays);
       let LEDs = document.createElementNS(svgNS, "svg");
       LEDs.setAttribute("width", 400);
-      LEDs.setAttribute("height", 30);
-      LEDs.style.background = "darkGreen";
-      LEDs.style.marginLeft = "auto";
+      LEDs.setAttribute("height", 60);
+      LEDs.style.background = "darkGreen"; //"fill" does not work here.
+      LEDs.style.marginLeft = "auto"; //No idea why this is necessary.
       LEDs.style.marginRight = "auto";
       LEDs.style.display = "block";
       for (let i = 0; i < 8; i++) {
@@ -1140,8 +1146,53 @@
         LED.setAttribute("r", 5);
         LED.id = "LED" + (7 - i);
         LEDs.appendChild(LED);
+        let switchHolder = document.createElementNS(svgNS, "rect");
+        switchHolder.setAttribute("fill", "black");
+        switchHolder.setAttribute("width", 5);
+        switchHolder.setAttribute("height", 30);
+        switchHolder.setAttribute("y", 25);
+        switchHolder.setAttribute("x", 23 + i * 50);
+        LEDs.appendChild(switchHolder);
+        let button = document.createElementNS(svgNS, "rect");
+        button.setAttribute("fill", "gray");
+        button.setAttribute("width", 15);
+        button.setAttribute("height", 15);
+        button.setAttribute("x", 18 + i * 50);
+        button.setAttribute("y", 25 + 30 - 15);
+        button.id = "switch" + i;
+        button.setAttribute("data-buttonValue", 1 << (7 - i));
+        button.onclick = onSwitchPressed;
+        LEDs.appendChild(button);
       }
       document.getElementById("graphicalResults").appendChild(LEDs);
+      function onSwitchPressed(event) {
+        let valueOfTheFirstInput = parseInt(
+          document.getElementById("input_00").value,
+          16
+        );
+        valueOfTheFirstInput ^= event.target.getAttribute("data-buttonValue");
+        if (
+          valueOfTheFirstInput & event.target.getAttribute("data-buttonValue")
+        )
+          event.target.setAttribute("y", 25);
+        else event.target.setAttribute("y", 25 + 30 - 15);
+        document.getElementById("input_00").value = formatAsByte(
+          valueOfTheFirstInput
+        );
+      }
+      document.getElementById("input_00").oninput = () => {
+        const value =
+          Math.abs(
+            parseInt(document.getElementById("input_00").value, 16) | 0
+          ) % 256;
+        let formatedAsBinary = value.toString(2);
+        while (formatedAsBinary.length < 8)
+          formatedAsBinary = "0" + formatedAsBinary;
+        for (let i = 0; i < 8; i++)
+          document
+            .getElementById("switch" + i)
+            .setAttribute("y", 40 - formatedAsBinary[i] * 15);
+      };
     </script>
   </body>
 </html>
