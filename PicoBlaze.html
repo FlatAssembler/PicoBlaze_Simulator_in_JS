@@ -37,7 +37,7 @@
         margin-bottom: 5px;
       }
       #lineNumbers {
-        width: 40px;
+        width: 60px;
         margin-right: 0;
         font-family: Courier New, monospace;
         display: inline-block;
@@ -51,7 +51,7 @@
       }
       #assemblyCode {
         margin: 0;
-        width: calc(100% - 45px - 5px);
+        width: calc(100% - 65px - 5px);
         padding-left: 5px;
         font-family: Courier New, monospace;
         text-align: left;
@@ -60,7 +60,7 @@
         height: 100vh;
         max-height: 400px;
         position: absolute;
-        left: 40px;
+        left: 60px;
         overflow: scroll;
         white-space: pre;
         font-size: 1em; /* Microsoft Edge seems to have some weird ideas
@@ -280,6 +280,11 @@
         height: 100px;
         margin: 5px;
       }
+      .breakpoint_icon {
+        display: none;
+        width: calc(1em - 3px);
+        height: calc(1em - 3px);
+      }
     </style>
     <script type="text/javascript">
       "use strict";
@@ -350,7 +355,8 @@
         output = new Uint8Array(256),
         memory = new Uint8Array(256),
         regbank = 0,
-        callStack = [];
+        callStack = [],
+        breakpoints = [];
       let simulationThread;
       function displayRegistersAndFlags() {
         for (let i = 0; i < 2; i++)
@@ -588,8 +594,46 @@
         );
         let lineNumbersHTML = "";
         for (let i = 1; i <= numberOfLines; i++)
-          lineNumbersHTML += i + ".<br/>";
+          lineNumbersHTML +=
+            '<div id="label_line_' +
+            i +
+            '" data-linenumber="' +
+            i +
+            '"><img src="breakpoint.png" alt="BP" id="breakpoint_icon_' +
+            i +
+            '" class="breakpoint_icon"/>' +
+            i +
+            ".</div>";
         document.getElementById("lineNumbers").innerHTML = lineNumbersHTML;
+        for (let i = 1; i <= numberOfLines; i++)
+          document.getElementById("label_line_" + i).onclick = setBreakpoint;
+        for (let i = 0; i < breakpoints.length; i++)
+          if (breakpoints[i] <= numberOfLines)
+            document.getElementById(
+              "breakpoint_icon_" + breakpoints[i]
+            ).style.display = "inline";
+          else {
+            breakpoints.splice(i, 1);
+            i--;
+          }
+      }
+      function setBreakpoint(event) {
+        alert("Breakpoints are not yet implemented in the simulator!");
+        const lineNumber = parseInt(
+          event.currentTarget.getAttribute("data-linenumber")
+        );
+        console.log("Setting/removing breakpoint on line #" + lineNumber + ".");
+        if (breakpoints.includes(lineNumber))
+          breakpoints.splice(breakpoints.indexOf(lineNumber), 1);
+        else breakpoints.push(lineNumber);
+        if (breakpoints.includes(lineNumber))
+          document.getElementById(
+            "breakpoint_icon_" + lineNumber
+          ).style.display = "inline";
+        else
+          document.getElementById(
+            "breakpoint_icon_" + lineNumber
+          ).style.display = "none";
       }
       function setupLayout() {
         const windowWidth = window.innerWidth;
@@ -754,6 +798,11 @@
         inputOutputTable += "</table>";
         document.getElementById("simulationResults").innerHTML =
           registersTable + flagsTable + inputOutputTable;
+        if (
+          document.getElementById("input_00") &&
+          typeof document.getElementById("input_00").oninput === "function"
+        )
+          document.getElementById("input_00").oninput();
       }
       function displayOutput() {
         for (let i = 0; i < 256; i++)
@@ -779,7 +828,10 @@
         for (let i = 0; i < 8; i++)
           document
             .getElementById("LED" + i)
-            .setAttribute("fill", output[0] & (1 << i) ? "lightGreen" : "gray");
+            .setAttribute(
+              "fill",
+              output[0] & (1 << i) ? "lightGreen" : "#333333"
+            );
       }
       function displayHexadecimalNumber(display, number) {
         if (
@@ -823,7 +875,7 @@
         for (let i = 0; i < display.children.length; i++)
           display.children[i].setAttribute(
             "fill",
-            LED[i] === "0" ? "gray" : "red"
+            LED[i] === "0" ? "#333333" : "red"
           );
       }
       function fetchExample(exampleName) {
@@ -1121,7 +1173,7 @@
           let polygon = document.createElementNS(svgNS, "polygon");
           if (polygons.indexOf(polygonPoints) == 6)
             polygon.setAttribute("fill", "red");
-          else polygon.setAttribute("fill", "gray");
+          else polygon.setAttribute("fill", "#333333");
           polygon.setAttribute("points", polygonPoints);
           polygon.setAttribute("stroke", "black");
           sevenSegmentDisplay.appendChild(polygon);
@@ -1140,7 +1192,7 @@
       LEDs.style.display = "block";
       for (let i = 0; i < 8; i++) {
         let LED = document.createElementNS(svgNS, "circle");
-        LED.setAttribute("fill", "gray");
+        LED.setAttribute("fill", "#333333");
         LED.setAttribute("cx", 25 + i * 50);
         LED.setAttribute("cy", 15);
         LED.setAttribute("r", 5);
