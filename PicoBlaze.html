@@ -618,7 +618,6 @@
           }
       }
       function setBreakpoint(event) {
-        alert("Breakpoints are not yet implemented in the simulator!");
         const lineNumber = parseInt(
           event.currentTarget.getAttribute("data-linenumber")
         );
@@ -796,8 +795,12 @@
             formatAsByte(i) +
             '">00</td></tr>';
         inputOutputTable += "</table>";
+        let oldOnInput;
+        if (document.getElementById("input_00"))
+          oldOnInput = document.getElementById("input_00").oninput;
         document.getElementById("simulationResults").innerHTML =
           registersTable + flagsTable + inputOutputTable;
+        document.getElementById("input_00").oninput = oldOnInput;
         if (
           document.getElementById("input_00") &&
           typeof document.getElementById("input_00").oninput === "function"
