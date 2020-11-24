@@ -285,6 +285,11 @@
         width: calc(1em - 3px);
         height: calc(1em - 3px);
       }
+      #register_PC {
+        font-style: normal;
+        /*Otherwise it will turn italic when Regbank B
+          is being used, even though it stays active.*/
+      }
     </style>
     <script type="text/javascript">
       "use strict";
@@ -709,7 +714,7 @@
         let tableHTML = `
         <table id="machineCode">
            <tr>
-             <th colspan=\"4\">Machine Code</th>
+             <th colspan="4">Machine Code</th>
            </tr>
            <tr>
              <th>PC</th>
@@ -795,17 +800,23 @@
             formatAsByte(i) +
             '">00</td></tr>';
         inputOutputTable += "</table>";
-        let oldOnInput;
-        if (document.getElementById("input_00"))
+        let oldOnInput, oldInput00Value;
+        if (document.getElementById("input_00")) {
           oldOnInput = document.getElementById("input_00").oninput;
+          oldInput00Value = document.getElementById("input_00").value;
+        }
         document.getElementById("simulationResults").innerHTML =
           registersTable + flagsTable + inputOutputTable;
         document.getElementById("input_00").oninput = oldOnInput;
         if (
           document.getElementById("input_00") &&
           typeof document.getElementById("input_00").oninput === "function"
-        )
+        ) {
+          document.getElementById("input_00").value = oldInput00Value;
+          //Because, on real PicoBlaze, switches do not automatically switch
+          //to 0 when assembling is done.
           document.getElementById("input_00").oninput();
+        }
       }
       function displayOutput() {
         for (let i = 0; i < 256; i++)
