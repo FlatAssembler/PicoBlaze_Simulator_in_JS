@@ -17,6 +17,7 @@
         margin-right: auto;
         position: absolute;
         top: 65px;
+        --lineNumbersWidth: 60px;
       }
       header,
       footer {
@@ -38,7 +39,8 @@
         margin-bottom: 5px;
       }
       #lineNumbers {
-        width: 60px;
+        width: 60px; /*Fallback for browsers which do not support "var".*/
+        width: var(--lineNumbersWidth);
         margin-right: 0;
         font-family: Courier New, monospace;
         display: inline-block;
@@ -52,7 +54,14 @@
       }
       #assemblyCode {
         margin: 0;
-        width: calc(100% - 65px - 5px);
+        width: calc(
+          100% - 70px
+        ); /*I am not sure breaking compatibility
+                                    with Firefox 52 (probably the most
+                                    advanced browser which can run on
+                                    Windows XP, but it does not support
+                                    CSS "var" function) is acceptable today.*/
+        width: calc(100% - var(--lineNumbersWidth) - 10px);
         padding-left: 5px;
         font-family: Courier New, monospace;
         text-align: left;
@@ -296,6 +305,13 @@
         /*
 https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in-chrome
         */
+      }
+      #downloadHex {
+        margin-top: 5px;
+        margin-bottom: 5px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
       }
     </style>
     <script type="text/javascript">
@@ -719,6 +735,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       }
       function drawTable() {
         let tableHTML = `
+        <button id="downloadHex">Download Hexadecimal</button>
         <table id="machineCode">
            <tr>
              <th colspan="4">Machine Code</th>
@@ -824,9 +841,34 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           //to 0 when assembling is done.
           document.getElementById("input_00").oninput();
         }
+        document.getElementById("downloadHex").onclick = downloadHex;
+      }
+      function downloadHex() {
+        /*
+        Loosely based on:
+        https://stackoverflow.com/a/33622881/8902065
+        */
+        let hexadecimalString = "";
+        for (let i = 0; i < 2 ** 12; i++)
+          hexadecimalString += machineCode[i].hex + "\r\n";
+        let arrayOfBytes = new Uint8Array(hexadecimalString.length);
+        for (let i = 0; i < hexadecimalString.length; i++)
+          arrayOfBytes[i] = hexadecimalString.charCodeAt(i);
+        const blob = new Blob([arrayOfBytes], {
+          type: "application/binhex",
+          endings: "transparent",
+        });
+        const url = URL.createObjectURL(blob);
+        let link = document.createElement("a");
+        link.href = url;
+        link.download = "program.hex";
+        link.style.display = "none";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
       }
       function displayOutput() {
-        for (let i = 0; i < 256; i++)
+        for (let i = 0; i < 2 ** 8; i++)
           document.getElementById(
             "output_" + formatAsByte(i)
           ).innerHTML = formatAsByte(output[i]);
