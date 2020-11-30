@@ -129,9 +129,9 @@ function assemble(parsed, context) {
       machineCode[address].hex = "1";
       if (node.children[2].registerNumber(context.namedRegisters) === "none")
         // If we are moving a constant to a register.
-        machineCode[address].hex += "6";
-      else
         machineCode[address].hex += "7";
+      else
+        machineCode[address].hex += "6";
       machineCode[address].hex +=
           node.children[0].registerNumber(context.namedRegisters);
       if (node.children[2].registerNumber(context.namedRegisters) === "none")
