@@ -26,14 +26,14 @@ function simulateOneInstruction() {
       registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
           parseInt(machineCode[PC].hex.substr(3), 16);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "16") {
+    } else if (machineCode[PC].hex.substr(0, 2) === "17") {
       // STAR register,constant ;Storing a constant into an inactive register
       registers[!regbank | 0 /*That is how you convert a boolean to an integer
                                 in JavaScript.*/
       ][parseInt(machineCode[PC].hex[2], 16)] =
           parseInt(machineCode[PC].hex.substr(3), 16);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "17") {
+    } else if (machineCode[PC].hex.substr(0, 2) === "16") {
       // STAR register,register ;Copying from an active register into an
       // inactive one.
       registers[!regbank | 0][parseInt(machineCode[PC].hex[2], 16)] =
