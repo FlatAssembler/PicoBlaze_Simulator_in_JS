@@ -7,7 +7,7 @@
 ;the terminal, converts them into binary,
 ;and then prints the binary representations
 ;back onto the terminal.
-;Example input would be: <pre style="background: black; color: azure; margin-top: 0; margin-bottom: 0;">
+;Example input would be: <pre style="font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
 <span style="color: black">;</span>1
 <span style="color: black">;</span>2
 <span style="color: black">;</span>4
@@ -16,7 +16,7 @@
 <span style="color: black">;</span>127
 <span style="color: black">;</span>255
 <span style="color: black">;</span></pre>
-;And the expected output is: <pre style="background: black; color: azure; margin-top: 0; margin-bottom: 0;">
+;And the expected output is: <pre style="font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
 <span style="color: black">;</span>1
 <span style="color: black">;</span>10
 <span style="color: black">;</span>100
