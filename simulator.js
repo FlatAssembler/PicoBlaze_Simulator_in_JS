@@ -76,40 +76,116 @@ function simulateOneInstruction() {
     } else if (machineCode[PC].hex.substr(0, 2) === "08") {
       // INPUT register,(register) ;Read a byte from a port specified by a
       // register.
-      registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = parseInt(
-          document
-              .getElementById(
-                  "input_" +
-                  formatAsByte(
-                      registers[regbank][parseInt(machineCode[PC].hex[3], 16)]))
-              .value,
-          16);
+      const port = registers[regbank][parseInt(machineCode[PC].hex[3], 16)];
+      if ((port === 2 || port === 3) && is_UART_enabled) {
+        if (port === 3) {
+          registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
+              document.getElementById("UART_INPUT")
+                  .value.charCodeAt(currentlyReadCharacterInUART);
+          currentlyReadCharacterInUART++;
+        } else
+          registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
+              currentlyReadCharacterInUART <
+                      document.getElementById("UART_INPUT").value.length
+                  ? parseInt("00001000" /*U_RX_D*/, 2)
+                  : 0;
+      } else
+        registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = parseInt(
+            document
+                .getElementById("input_" +
+                                formatAsByte(registers[regbank][parseInt(
+                                    machineCode[PC].hex[3], 16)]))
+                .value,
+            16);
       PC++;
     } else if (machineCode[PC].hex.substr(0, 2) === "09") {
       // INPUT register, port_number
-      registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = parseInt(
-          document.getElementById("input_" + machineCode[PC].hex.substr(3))
-              .value,
-          16);
+      const port = parseInt(machineCode[PC].hex.substr(3), 16);
+      if ((port === 2 || port === 3) && is_UART_enabled) {
+        if (port === 3) { // UART_RX_PORT
+          registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
+              document.getElementById("UART_INPUT")
+                  .value.charCodeAt(currentlyReadCharacterInUART);
+          currentlyReadCharacterInUART++;
+        } else if (port === 2) // UART_STATUS_PORT
+          registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
+              currentlyReadCharacterInUART <
+                      document.getElementById("UART_INPUT").value.length
+                  ? parseInt("00001000" /*U_RX_D*/, 2)
+                  : 0;
+        else {
+          alert(
+              "Internal simulator error: The simulator got into a forbidden state!");
+          stopSimulation();
+        }
+      } else
+        registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = parseInt(
+            document.getElementById("input_" + machineCode[PC].hex.substr(3))
+                .value,
+            16);
       PC++;
     } else if (machineCode[PC].hex.substr(0, 2) === "2c") {
       // OUTPUT register,(register) ;Output the result of the first register to
       // the port specified by the second register.
-      output[registers[regbank][parseInt(machineCode[PC].hex[3], 16)]] =
-          registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
+      const port = registers[regbank][parseInt(machineCode[PC].hex[3], 16)];
+      const value = registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
+      if ((port === 3 || port === 4) && is_UART_enabled) {
+        if (port === 3) // UART_TX_PORT
+          document.getElementById("UART_OUTPUT").innerText +=
+              String.fromCharCode(value);
+        else if (port === 4) // UART_RESET_PORT
+          document.getElementById("UART_OUTPUT").innerText = "";
+        else {
+          alert(
+              "Internal simulator error: The simulator got into a forbidden state!");
+          stopSimulation();
+        }
+      } else
+        output[registers[regbank][parseInt(machineCode[PC].hex[3], 16)]] =
+            registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
       displayOutput();
       PC++;
     } else if (machineCode[PC].hex.substr(0, 2) === "2d") {
       // OUTPUT register, port_number
-      output[parseInt(machineCode[PC].hex.substr(3), 16)] =
-          registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
-      displayOutput();
+      const port = parseInt(machineCode[PC].hex.substr(3), 16);
+      const value = registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
+      if ((port === 3 || port === 4) && is_UART_enabled) {
+        if (port === 3) // UART_TX_PORT
+          document.getElementById("UART_OUTPUT").innerText +=
+              String.fromCharCode(value);
+        else if (port === 4) // UART_RESET_PORT
+          document.getElementById("UART_OUTPUT").innerText = "";
+        else {
+          alert(
+              "Internal simulator error: The simulator got into a forbidden state!");
+          stopSimulation();
+        }
+      } else {
+        output[parseInt(machineCode[PC].hex.substr(3), 16)] =
+            registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
+        displayOutput();
+      }
       PC++;
     } else if (machineCode[PC].hex.substr(0, 2) === "2b") {
       // OUTPUTK constant, port_number
-      output[parseInt(machineCode[PC].hex[4], 16)] =
-          parseInt(machineCode[PC].hex.substr(2, 2), 16);
-      displayOutput();
+      const value = parseInt(machineCode[PC].hex.substr(2, 2), 16);
+      const port = parseInt(machineCode[PC].hex[4], 16);
+      if ((port === 3 || port === 4) && is_UART_enabled) {
+        if (port === 3) // UART_TX_PORT
+          document.getElementById("UART_OUTPUT").innerText +=
+              String.fromCharCode(value);
+        else if (port === 4) // UART_RESET_PORT
+          document.getElementById("UART_OUTPUT").innerText = "";
+        else {
+          alert(
+              "Internal simulator error: The simulator got into a forbidden state!");
+          stopSimulation();
+        }
+      } else {
+        output[parseInt(machineCode[PC].hex[4], 16)] =
+            parseInt(machineCode[PC].hex.substr(2, 2), 16);
+        displayOutput();
+      }
       PC++;
     } else if (machineCode[PC].hex === "37000") {
       // REGBANK A
@@ -123,7 +199,7 @@ function simulateOneInstruction() {
       // JUMP label
       PC = parseInt(machineCode[PC].hex.substr(2), 16);
     } else if (machineCode[PC].hex.substr(0, 2) === "14" &&
-               machineCode[PC].hex.substr(3) == "80") {
+               machineCode[PC].hex.substr(3) === "80") {
       // HWBUILD register
       flagC[regbank] =
           1; // Have a better idea? We can't simulate all of what this directive
@@ -379,7 +455,7 @@ function simulateOneInstruction() {
       // registers[regbank][firstRegister] = result;
       PC++;
     } else if (machineCode[PC].hex.substr(0, 2) === "0d" ||
-               machineCode[PC].hex.substr(0, 2) == "0f") {
+               machineCode[PC].hex.substr(0, 2) === "0f") {
       // TEST register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];

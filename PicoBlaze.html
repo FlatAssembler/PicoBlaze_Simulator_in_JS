@@ -431,7 +431,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         memory = new Uint8Array(256),
         regbank = 0,
         callStack = [],
-        breakpoints = [];
+        breakpoints = [],
+        currentlyReadCharacterInUART = 0;
       let simulationThread;
       function displayRegistersAndFlags() {
         for (let i = 0; i < 2; i++)
@@ -513,9 +514,9 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         const regbank_a = document.getElementsByClassName("regbank_a");
         const regbank_b = document.getElementsByClassName("regbank_b");
         for (const element of regbank_a)
-          element.style.fontStyle = regbank == 0 ? "normal" : "italic";
+          element.style.fontStyle = regbank === 0 ? "normal" : "italic";
         for (const element of regbank_b)
-          element.style.fontStyle = regbank == 1 ? "normal" : "italic";
+          element.style.fontStyle = regbank === 1 ? "normal" : "italic";
         if (
           document.getElementById("interrupt_flag").innerHTML !==
             flagIE.toString() &&
@@ -974,7 +975,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       function displayHexadecimalNumber(display, number) {
         if (
           !(display instanceof SVGElement) ||
-          display.classList[0] != "sevenSegmentDisplay"
+          display.classList[0] !== "sevenSegmentDisplay"
         ) {
           if (playing) clearInterval(simulationThread);
           alert(
@@ -1065,6 +1066,12 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
               src="https://upload.wikimedia.org/wikipedia/commons/2/21/Arabic_numerals-en.svg?download"
               alt="Two hands"
             />Binary to Decimal
+          </div>
+          <div class="exampleCodeLink" onclick="fetchExample('dec2bin.psm')">
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/DEC_VT100_terminal_transparent.png/220px-DEC_VT100_terminal_transparent.png"
+              alt="Two hands"
+            />Decimal to Binary
           </div>
           <div class="exampleCodeLink" onclick="fetchExample('fibonacci.psm')">
             <img
@@ -1213,9 +1220,9 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         let resultOfTokenizing = "[";
         for (let i = 0; i < tokenized.length; i++) {
           const token = tokenized[i];
-          if (token.text == "\n") resultOfTokenizing += '"\\n"';
+          if (token.text === "\n") resultOfTokenizing += '"\\n"';
           else resultOfTokenizing += '"' + token.text + '"';
-          if (i != tokenized.length - 1) resultOfTokenizing += ",";
+          if (i !== tokenized.length - 1) resultOfTokenizing += ",";
         }
         resultOfTokenizing += "]";
         console.log("Result of tokenizing: ", resultOfTokenizing);
@@ -1251,7 +1258,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
           "";
         PC = 0;
-        document.getElementById("PC_label_000").innerHTML = "->";
+        document.getElementById("PC_label_000").innerHTML = "-&gt;";
         playing = false;
         document.getElementById("playImage").style.display = "inline";
         document.getElementById("pauseImage").style.display = "none";
@@ -1264,6 +1271,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         flagIE = 1;
         displayRegistersAndFlags();
         displayOutput();
+        currentlyReadCharacterInUART = 0;
       }
       setupLayout();
       window.onresize = setupLayout;
@@ -1326,7 +1334,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         ];
         for (const polygonPoints of polygons) {
           let polygon = document.createElementNS(svgNS, "polygon");
-          if (polygons.indexOf(polygonPoints) == 6)
+          if (polygons.indexOf(polygonPoints) === 6)
             polygon.setAttribute("fill", "#ffaaaa");
           else polygon.setAttribute("fill", "#333333");
           polygon.setAttribute("points", polygonPoints);
