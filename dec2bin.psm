@@ -7,7 +7,7 @@
 ;the terminal, converts them into binary,
 ;and then prints the binary representations
 ;back onto the terminal.
-;Example input would be: <pre style="font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
+;Example input would be: <span style="white-space: pre; display: block; font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
 <span style="color: black">;</span>1
 <span style="color: black">;</span>2
 <span style="color: black">;</span>4
@@ -15,8 +15,8 @@
 <span style="color: black">;</span>15
 <span style="color: black">;</span>127
 <span style="color: black">;</span>255
-<span style="color: black">;</span></pre>
-;And the expected output is: <pre style="font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
+<span style="color: black">;</span></span>
+;And the expected output is: <span style="white-space:pre; display: block; font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
 <span style="color: black">;</span>1
 <span style="color: black">;</span>10
 <span style="color: black">;</span>100
@@ -24,7 +24,7 @@
 <span style="color: black">;</span>1111
 <span style="color: black">;</span>1111111
 <span style="color: black">;</span>11111111
-<span style="color: black">;</span></pre>
+<span style="color: black">;</span></span>
 ;Note that you need to click the
 ;"Enable UART" button in order to use it.
 ;Also, the trailing empty line in the input
