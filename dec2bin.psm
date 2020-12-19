@@ -110,7 +110,7 @@ beginning_of_converting_to_binary:
   store s9,(pointer)
   add pointer,1
   jump beginning_of_converting_to_binary
-end_of_converting_to_binary_loop:
+end_of_converting_to_binary:
 ;Do some basic sanity check, such as that
 ;the pointer does not point to zero.
 compare pointer,0
