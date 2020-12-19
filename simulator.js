@@ -12,6 +12,7 @@ function simulateOneInstruction() {
       playing = false;
       document.getElementById("fastForwardButton").disabled = false;
       document.getElementById("singleStepButton").disabled = false;
+      document.getElementById("UART_INPUT").disabled = false;
       document.getElementById("playImage").style.display = "inline";
       document.getElementById("pauseImage").style.display = "none";
     }
