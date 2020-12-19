@@ -103,6 +103,12 @@
       .label {
         color: #770077;
       }
+      label {
+        display: block;
+        font-family: Arial, Helvetica, sans-serif;
+        margin-left: 8px;
+        margin-top: 3px;
+      }
       .string {
         color: #770000;
       }
@@ -313,6 +319,38 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         margin-left: auto;
         margin-right: auto;
         display: block;
+      }
+      textarea {
+        resize: none;
+        overflow: scroll;
+        width: calc(100% - 3 * 8px - 2px);
+        margin-left: calc(2 * 8px);
+        height: 95px;
+        background-color: black;
+        color: aquamarine;
+      }
+      #UART_IO {
+        height: 250px;
+        font-size: 1em;
+        position: absolute;
+        width: calc(100% - 5px);
+        overflow: hidden;
+        background-color: azure;
+      }
+      #UART_OUTPUT {
+        height: 95px;
+        width: calc(100% - 3 * 8px);
+        margin-left: calc(2 * 8px);
+        overflow: scroll;
+        background-color: black;
+        color: aquamarine;
+        margin-top: auto;
+        border-style: solid;
+        border-width: 2px;
+        border-right-color: lightgray;
+        border-bottom-color: lightgray;
+        border-top-color: darkgray;
+        border-left-color: darkgray;
       }
     </style>
     <script type="text/javascript">
@@ -685,13 +723,15 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           document.getElementById("simulationButtons").style.top =
             2 * windowHeight + 3 * 4 + 30 + 200 + "px";
           document.getElementsByTagName("footer")[0].style.top =
-            65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + "px";
+            65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + 260 + "px";
           document.getElementById("divWithExamples").style.top =
             windowHeight + 4 + "px";
           document.getElementById("simulationResults").style.top =
-            windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + "px";
+            windowHeight * 2 + 200 + 200 + 65 + 50 - 30 + 210 + 260 + "px";
           document.getElementById("graphicalResults").style.top =
             windowHeight * 2 + 200 + 65 + 50 - 30 + "px";
+          document.getElementById("UART_IO").style.top =
+            windowHeight * 2 + 200 + 200 + 65 + 50 - 30 + 210 + "px";
         } else {
           document.getElementById("divWithExamples").style.top = 410 + "px";
           document.getElementById("buttons").style.top =
@@ -701,11 +741,12 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           document.getElementById("simulationButtons").style.top =
             855 + 210 + "px";
           document.getElementById("simulationResults").style.top =
-            910 + 2 * 210 + "px";
+            910 + 2 * 210 + 260 + "px";
+          document.getElementById("UART_IO").style.top = 910 + 2 * 210 + "px";
           document.getElementById("graphicalResults").style.top =
             910 + 210 + "px";
           document.getElementsByTagName("footer")[0].style.top =
-            1380 + 2 * 210 + "px";
+            1380 + 2 * 210 + 260 + "px";
         }
         const examples = document.getElementsByClassName("exampleCodeLink");
         let left = 8;
@@ -762,7 +803,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         tableHTML += "</table>";
         document.getElementById("divWithMachineCode").innerHTML = tableHTML;
         let registersTable = `
-<table>
+<table style="font-size:0.95em;">
   <tr>
     <th>Registers</th>
         `;
@@ -939,7 +980,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         for (let i = 0; i < display.children.length; i++)
           display.children[i].setAttribute(
             "fill",
-            LED[i] === "0" ? "#333333" : "red"
+            LED[i] === "0" ? "#333333" : "#ffaaaa"
           );
       }
       function fetchExample(exampleName) {
@@ -1084,6 +1125,12 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         </button>
       </div>
       <div id="graphicalResults"></div>
+      <div id="UART_IO">
+        <label for="UART_INPUT">UART input:</label>
+        <textarea id="UART_INPUT"></textarea>
+        <label for="UART_OUTPUT">UART output:</label>
+        <pre id="UART_OUTPUT"></pre>
+      </div>
       <div id="simulationResults"></div>
     </main>
     <footer>
@@ -1242,7 +1289,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         for (const polygonPoints of polygons) {
           let polygon = document.createElementNS(svgNS, "polygon");
           if (polygons.indexOf(polygonPoints) == 6)
-            polygon.setAttribute("fill", "red");
+            polygon.setAttribute("fill", "#ffaaaa");
           else polygon.setAttribute("fill", "#333333");
           polygon.setAttribute("points", polygonPoints);
           polygon.setAttribute("stroke", "black");
