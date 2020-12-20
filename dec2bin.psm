@@ -7,7 +7,7 @@
 ;the terminal, converts them into binary,
 ;and then prints the binary representations
 ;back onto the terminal.
-;Example input would be: <span style="white-space: pre; display: block; font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
+;Example input would be: <span style="white-space: pre; display: block; font-size: 1em; background: black; color: aquamarine; margin-top: 0; margin-bottom: 0;">
 <span style="color: black">;</span>1
 <span style="color: black">;</span>2
 <span style="color: black">;</span>4
@@ -16,14 +16,14 @@
 <span style="color: black">;</span>127
 <span style="color: black">;</span>255
 <span style="color: black">;</span></span>
-;And the expected output is: <span style="white-space:pre; display: block; font-size: 1em; background: black; color: azure; margin-top: 0; margin-bottom: 0;">
-<span style="color: black">;</span>1
-<span style="color: black">;</span>10
-<span style="color: black">;</span>100
-<span style="color: black">;</span>1000
-<span style="color: black">;</span>1111
-<span style="color: black">;</span>1111111
-<span style="color: black">;</span>11111111
+;And the expected output is: <span style="white-space:pre; display: block; font-size: 1em; background: black; color: aquamarine; margin-top: 0; margin-bottom: 0;">
+<span style="color: black">;</span>1_(10)=1_(2)
+<span style="color: black">;</span>2_(10)=10_(2)
+<span style="color: black">;</span>4_(10)=100_(2)
+<span style="color: black">;</span>8_(10)=1000_(2)
+<span style="color: black">;</span>15_(10)=1111_(2)
+<span style="color: black">;</span>127_(10)=1111111_(2)
+<span style="color: black">;</span>255_(10)=11111111_(2)
 <span style="color: black">;</span></span>
 ;Note that you need to click the
 ;"Enable UART" button in order to use it.
@@ -59,6 +59,11 @@ ADDRESS 000
 START:
 ;At the beginning, the number is 0.
 load s0,0
+;And we are storing its string
+;representation at the beginning
+;of RAM.
+namereg s3,pointer
+load pointer,0
 ;Now follows a loop to load
 ;the digits of the number.
 loading_the_number:
@@ -73,8 +78,10 @@ loading_the_number:
     load s1,"9"
     compare s1,s9
     jump c,print_the_number
-  ;If it is a digit, multiply the number
-  ;you have got with 10.
+  ;If it is a digit, store it into RAM.
+  store s9,(pointer)
+  add pointer,1
+  ;Multiply the number you have got by 10.
   load sf,s0
   call multiply_by_10
   load s0,se
@@ -88,13 +95,45 @@ loading_the_number:
                           ;non-digit is
                           ;loaded.
 print_the_number:
-;If the number to be printed is zero,
+;If there are no digits to be printed,
 ;do not print anything.
-sub s0,0
+sub pointer,0
 jump z,START
+print_the_decimal:
+load s4,pointer
+load pointer,0
+printing_the_decimal_loop:
+  compare pointer,s4
+  jump nc, end_of_printing_the_decimal
+  fetch s9,(pointer)
+  call UART_TX
+  add pointer,1
+  jump printing_the_decimal_loop
+end_of_printing_the_decimal:
+;After you have repeated the decimal
+;number, print the string "_(10)=".
+load s9,"_"
+call UART_TX
+load s9,"("
+call UART_TX
+load s9,"1"
+call UART_TX
+load s9,"0"
+call UART_TX
+load s9,")"
+call UART_TX
+load s9,"="
+call UART_TX
+;If the number to be printed is
+;equal to zero, print 0.
+sub s0,0
+jump nz,print_the_binary
+load s9,"0"
+call UART_TX
+jump end_of_printing_loop
+print_the_binary:
 ;Make the pointer point to the
 ;beginning of RAM.
-namereg s3,pointer
 load pointer,0
 ;Now goes a loop which stores the binary
 ;representation of the number we have
@@ -145,7 +184,15 @@ beginning_of_printing_loop:
   jump beginning_of_printing_loop
 end_of_printing_loop:
 ;After you have printed that binary number,
-;insert a newline character.
+;print the string "_(2)" and a new-line.
+load s9,"_"
+call UART_TX
+load s9,"("
+call UART_TX
+load s9,"2"
+call UART_TX
+load s9,")"
+call UART_TX
 load s9,a ;newline character, 0xa=='\n'.
 call UART_TX
 ;The program runs in an infinite loop...
