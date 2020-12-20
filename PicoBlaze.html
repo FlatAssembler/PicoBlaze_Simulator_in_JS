@@ -1165,7 +1165,9 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         </button>
       </div>
       <div id="graphicalResults"></div>
-      <button id="UART_enable_button">Enable UART terminal</button>
+      <button id="UART_enable_button">
+        <span id="enable_or_disable_UART">Enable</span> UART terminal
+      </button>
       <div id="UART_IO">
         <label for="UART_INPUT">UART input:</label>
         <textarea id="UART_INPUT"></textarea>
@@ -1416,6 +1418,9 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         document.getElementById("UART_IO").style.display = is_UART_enabled
           ? "block"
           : "none";
+        document.getElementById(
+          "enable_or_disable_UART"
+        ).innerHTML = is_UART_enabled ? "Disable" : "Enable";
         window.onresize();
       };
     </script>
