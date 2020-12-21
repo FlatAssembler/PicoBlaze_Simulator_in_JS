@@ -1,12 +1,12 @@
-;This is an example program that uses UART,
+;This is an example program that uses <abbr title="Universal Asynchronous Receiver-Transmitter">UART</abbr>,
 ;the interface that PicoBlaze uses for
-;connecting to terminals (a DOS-like
+;connecting to terminals (a <abbr title="Disk Operating System">DOS</abbr>-like
 ;user interface, with a keyboard and a
 ;screen capable of displaying text).
 ;It loads base-10 integer numbers from
 ;the terminal, converts them into binary,
-;and then prints the binary representations
-;back onto the terminal.
+;and then prints the binary
+;representations back onto the terminal.
 ;Example input would be: <span style="white-space: pre; display: block; font-size: 1em; background: black; color: aquamarine; margin-top: 0; margin-bottom: 0;">
 <span style="color: black">;</span>1
 <span style="color: black">;</span>2
@@ -91,6 +91,7 @@ loading_the_number:
   ;And then add it to the number you
   ;have got.
   add s0,s9
+  call c,abort ;In case of overflow.
   jump loading_the_number ;Repeat until a
                           ;non-digit is
                           ;loaded.
@@ -154,8 +155,12 @@ end_of_converting_to_binary:
 ;the pointer does not point to zero.
 compare pointer,0
 jump nz,beginning_of_printing_loop
-return ;Something went wrong
-       ;so end the program.
+call abort ;Something went wrong
+           ;so end the program.
+;Check whether there are more than 8 bits.
+compare pointer,9
+jump c,beginning_of_printing_loop
+call abort
 ;Now goes a loop which will print
 ;the binary number in RAM, with digits
 ;in the correct order. The pointer now
@@ -173,8 +178,8 @@ beginning_of_printing_loop:
     jump z,memory_is_fine
     compare s9,"1"
     jump z,memory_is_fine
-    return ;Something went wrong,
-           ;so end the program.
+    call abort ;Something went wrong,
+               ;so end the program.
   memory_is_fine:
   ;If everything is fine, print that digit.
   call UART_TX
@@ -201,9 +206,28 @@ JUMP START
 multiply_by_10:
   load se,sf
   add se,se
+  call c,abort
   add se,se
+  call c,abort
   add se,sf
+  call c,abort
   add se,se
+  call c,abort
+return
+
+abort:
+  load s9,"E"
+  call UART_TX
+  load s9,"R"
+  call UART_TX
+  load s9,"R"
+  call UART_TX
+  load s9,"O"
+  call UART_TX
+  load s9,"R"
+  call UART_TX
+  infinite_loop:
+  jump infinite_loop
 return
 
 ;Now follows some boilerplate code
