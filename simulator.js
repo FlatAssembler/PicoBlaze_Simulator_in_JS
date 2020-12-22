@@ -87,7 +87,7 @@ function simulateOneInstruction() {
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
               currentlyReadCharacterInUART <
                       document.getElementById("UART_INPUT").value.length
-                  ? parseInt("00001000" /*U_RX_D*/, 2)
+                  ? 0b00001000 /*U_RX_D*/
                   : 0;
       } else
         registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = parseInt(
@@ -111,7 +111,7 @@ function simulateOneInstruction() {
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
               currentlyReadCharacterInUART <
                       document.getElementById("UART_INPUT").value.length
-                  ? parseInt("00001000" /*U_RX_D*/, 2)
+                  ? 0b00001000 /*U_RX_D*/
                   : 0;
         else {
           alert(
