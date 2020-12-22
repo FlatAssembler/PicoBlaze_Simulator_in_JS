@@ -68,13 +68,14 @@ load pointer,0
 ;Now follows a loop to load
 ;the digits of the number.
 loading_the_number:
-  ;Load a character from the UART terminal.
+  ;Load a character from the UART
+  ;terminal.
   call UART_RX
   ;Check whether the character is a digit.
     compare s9,"0"
-    ;If it is not a digit, jump to the part
-    ;of the program for printing the number
-    ;you have got.
+    ;If it is not a digit, jump to the
+    ;part of the program for printing
+    ;the number you have got.
     jump c,print_the_number
     load s1,"9"
     compare s1,s9
@@ -190,15 +191,17 @@ beginning_of_printing_loop:
     call abort ;Something went wrong,
                ;so end the program.
   memory_is_fine:
-  ;If everything is fine, print that digit.
+  ;If everything is fine, print that
+  ;digit.
   call UART_TX
-  ;Repeat until you have printed all digits
-  ;of the binary number
+  ;Repeat until you have printed all
+  ;digits of the binary number
   ;stored in RAM.
   jump beginning_of_printing_loop
 end_of_printing_loop:
-;After you have printed that binary number,
-;print the string "_(2)" and a new-line.
+;After you have printed that binary
+;number, print the string "_(2)" and
+;a new-line.
 load s9,"_"
 call UART_TX
 load s9,"("
