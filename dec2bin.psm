@@ -1,6 +1,6 @@
-;This is an example program that uses <abbr title="Universal Asynchronous Receiver-Transmitter">UART</abbr>,
-;the interface that PicoBlaze uses for
-;connecting to terminals (a <abbr title="Disk Operating System">DOS</abbr>-like
+;This is an example program that uses
+;<abbr title="Universal Asynchronous Receiver-Transmitter">UART</abbr>, the interface that PicoBlaze uses
+;for connecting to terminals (a <abbr title="Disk Operating System">DOS</abbr>-like
 ;user interface, with a keyboard and a
 ;screen capable of displaying text).
 ;It loads base-10 integer numbers from
@@ -27,8 +27,9 @@
 <span style="color: black">;</span></span>
 ;Note that you need to click the
 ;"Enable UART" button in order to use it.
-;Also, the trailing empty line in the input
-;is necessary for the result to be printed.
+;Also, the trailing empty line in the
+;input is necessary for the result to be
+;printed.
 
 ;Now follows some boilerplate code
 ;we use in our Computer Architecture
@@ -107,6 +108,16 @@ printing_the_decimal_loop:
   compare pointer,s4
   jump nc, end_of_printing_the_decimal
   fetch s9,(pointer)
+  ;Do some basic sanity check: Is the
+  ;character you are printing indeed
+  ;a decimal digit?
+    compare s9,"0"
+    call c,abort
+    load s1,"9"
+    compare s1,s9
+    call c,abort
+  ;If it is indeed a decimal digit,
+  ;print it.
   call UART_TX
   add pointer,1
   jump printing_the_decimal_loop
@@ -154,13 +165,11 @@ end_of_converting_to_binary:
 ;Do some basic sanity check, such as that
 ;the pointer does not point to zero.
 compare pointer,0
-jump nz,beginning_of_printing_loop
-call abort ;Something went wrong
-           ;so end the program.
+call z,abort ;Something went wrong
+             ;so end the program.
 ;Check whether there are more than 8 bits.
 compare pointer,9
-jump c,beginning_of_printing_loop
-call abort
+call nc,abort
 ;Now goes a loop which will print
 ;the binary number in RAM, with digits
 ;in the correct order. The pointer now
@@ -225,6 +234,10 @@ abort:
   load s9,"O"
   call UART_TX
   load s9,"R"
+  call UART_TX
+  load s9,"!"
+  call UART_TX
+  load s9,a ;newline
   call UART_TX
   infinite_loop:
   jump infinite_loop
