@@ -559,7 +559,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           return `<span class="number">${token}</span>`;
         return token;
       }
-      function syntaxHighlihter(/*edit*/) {
+      function syntaxHighlighter(/*edit*/) {
         //"edit" should contain the
         //cursor position, but that
         //seems not to work.
@@ -1203,7 +1203,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       //than useless, because it moves the cursor to the beginning.
       /*
     document.getElementById("assemblyCode").
-             oninput=syntaxHighlihter;
+             oninput=syntaxHighlighter;
     */
       setUpLineNumbers();
       document.getElementById("assemblyCode").oninput = setUpLineNumbers;
@@ -1212,7 +1212,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           .getElementById("lineNumbers")
           .scroll(0, document.getElementById("assemblyCode").scrollTop);
       };
-      document.getElementById("highlightButton").onclick = syntaxHighlihter;
+      document.getElementById("highlightButton").onclick = syntaxHighlighter;
       document.getElementById("assembleButton").onclick = () => {
         const assembly = document.getElementById("assemblyCode").innerText;
 
@@ -1393,7 +1393,10 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         );
         valueOfTheFirstInput ^= event.target.getAttribute("data-buttonValue");
         if (
-          valueOfTheFirstInput & event.target.getAttribute("data-buttonValue")
+          valueOfTheFirstInput &
+          /* bitwise (not a typo) */ event.target.getAttribute(
+            "data-buttonValue"
+          )
         )
           event.target.setAttribute("y", 25);
         else event.target.setAttribute("y", 25 + 30 - 15);
