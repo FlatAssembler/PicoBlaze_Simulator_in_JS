@@ -238,9 +238,9 @@
         font-family: Times;
       }
       .exampleCodeLink {
-        position: relative;
         margin: 5px;
         width: 120px;
+        flex-shrink: 0;
         height: 150px;
         background: white;
         text-align: center;
@@ -267,21 +267,12 @@
         overflow-x: scroll;
         overflow-y: hidden;
         margin: 5px;
+        display: flex;
         background: gray;
         height: 173px;
       }
-      #examplesSpan {
-        display: block;
-        margin-left: 5px;
-        margin-top: 5px;
-        font-size: 14px;
-        font-weight: bold;
-      }
       #callForMoreExamples {
         margin: 5px;
-        position: absolute;
-        top: 50%;
-        transform: translate(0, -50%);
       }
       #graphicalResults {
         overflow: scroll;
@@ -778,15 +769,6 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           document.getElementsByTagName("footer")[0].style.top =
             1380 + 2 * 210 + is_UART_enabled * 260 + 50 + "px";
         }
-        const examples = document.getElementsByClassName("exampleCodeLink");
-        let left = 8;
-        let top = 0;
-        for (const example of examples) {
-          example.style.left = left + "px";
-          example.style.top = top + "px";
-          top -= 155;
-          left += 130;
-        }
       }
       let machineCode = [];
       for (let i = 0; i < 4096; i++)
@@ -1106,13 +1088,12 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
               >!
             </div>
           </div>
-          <div
-            class="exampleCodeLink"
-            style="background: transparent; width: 8px"
-          ></div>
-          <!-- For some reason (I don't know a lot of CSS),
-               adding a right padding to "examples" div does
-               not work. -->
+          <div style="width: 1px; flex-shrink: 0">
+            <!--
+                Because, apparently, CSS ignores the right-margin on flex
+                elements that cause overflow.
+           -->
+          </div>
         </div>
       </div>
       <div id="buttons">
