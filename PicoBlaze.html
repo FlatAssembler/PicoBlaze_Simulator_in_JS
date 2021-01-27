@@ -1378,14 +1378,14 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         })
         .then((jsonFromGithub) => {
           const examplesArray = JSON.parse(jsonFromGithub);
-          let examplesHTML;
+          let examplesHTML="";
           for (const example of examplesArray) {
             examplesHTML += `
           <div class="exampleCodeLink" onclick="fetchExample('${example.file_name}')">
             <img
               src="${example.image}"
               alt="${example.image_alt}"
-            />${name}
+            />${example.name}
           </div>
               `;
           }
@@ -1406,6 +1406,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
            -->
           </div>            
             `;
+          document.getElementById("examples").style.justifyContent="initial";
+          document.getElementById("examples").style.alignItems="initial";
           document.getElementById("examples").innerHTML = examplesHTML;
         })
         .catch((error) => {
