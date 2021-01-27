@@ -268,6 +268,8 @@
         overflow-y: hidden;
         margin: 5px;
         display: flex;
+        justify-content: center;
+        align-items: center;
         background: gray;
         height: 173px;
       }
@@ -349,6 +351,11 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         width: calc(100% - 5px);
         font-size: 24px;
         line-height: 36px;
+      }
+      #fetchingExamples {
+        background: white;
+        padding: 10px;
+        margin: 10px;
       }
     </style>
     <script type="text/javascript">
@@ -1007,7 +1014,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
             exampleName
         )
           .then((response) => {
-            if (!response.ok) throw new Error("Error " + response.status);
+            if (!response.ok) throw new Error(response.status);
             else return response.text();
           })
           .then((text) => {
@@ -1042,58 +1049,9 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       <div id="divWithExamples">
         <span id="examplesSpan">Examples:</span>
         <div id="examples">
-          <div class="exampleCodeLink" onclick="fetchExample('bin2dec.psm')">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/2/21/Arabic_numerals-en.svg?download"
-              alt="Numeral Systems"
-            />Binary to Decimal
-          </div>
-          <div class="exampleCodeLink" onclick="fetchExample('dec2bin.psm')">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/DEC_VT100_terminal_transparent.png/220px-DEC_VT100_terminal_transparent.png"
-              alt="UART Terminal"
-            />Decimal to Binary
-          </div>
-          <div class="exampleCodeLink" onclick="fetchExample('fibonacci.psm')">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/FibonacciRabbit.svg/220px-FibonacciRabbit.svg.png"
-              alt="Rabbit Experiment"
-            />Fibonacci Sequence
-          </div>
-          <div class="exampleCodeLink" onclick="fetchExample('gray.psm')">
-            <img
-              src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Gray_code_tesseract.svg/220px-Gray_code_tesseract.svg.png"
-              alt="Hamming Cube"
-            />Gray Code
-          </div>
-          <div
-            class="exampleCodeLink"
-            onclick="fetchExample('assemblerTest.psm')"
-          >
-            <img src="assemblerTest.gif" alt="Assembly Code" />Assembler Test
-          </div>
-          <div
-            class="exampleCodeLink"
-            onclick="fetchExample('sevenSegment.psm')"
-          >
-            <img src="hexadecimal_counter.png" alt="Digital Clock" />Hexadecimal
-            Counter
-          </div>
-          <div class="exampleCodeLink">
-            <div id="callForMoreExamples">
-              Have some example you would like to add here?
-              <a
-                href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues"
-                >Contact me on GitHub</a
-              >!
-            </div>
-          </div>
-          <div style="width: 1px; flex-shrink: 0">
-            <!--
-                Because, apparently, CSS ignores the right-margin on flex
-                elements that cause overflow.
-           -->
-          </div>
+          <span id="fetchingExamples">
+            Fetching the examples from GitHub...
+          </span>
         </div>
       </div>
       <div id="buttons">
@@ -1375,7 +1333,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         valueOfTheFirstInput ^= event.target.getAttribute("data-buttonValue");
         if (
           valueOfTheFirstInput &
-          /* bitwise (not a typo) */ event.target.getAttribute(
+          /* bitwise and (not a typo) */ event.target.getAttribute(
             "data-buttonValue"
           )
         )
@@ -1411,6 +1369,49 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         ).innerHTML = is_UART_enabled ? "Disable" : "Enable";
         window.onresize();
       };
+      fetch(
+        "https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/raw/master/examples.json"
+      )
+        .then((response) => {
+          if (!response.ok) throw new Error(response.status);
+          else return response.text();
+        })
+        .then((jsonFromGithub) => {
+          const examplesArray = JSON.parse(jsonFromGithub);
+          let examplesHTML;
+          for (const example of examplesArray) {
+            examplesHTML += `
+          <div class="exampleCodeLink" onclick="fetchExample('${example.file_name}')">
+            <img
+              src="${example.image}"
+              alt="${example.image_alt}"
+            />${name}
+          </div>
+              `;
+          }
+          examplesHTML += `
+         <div class="exampleCodeLink">
+            <div id="callForMoreExamples">
+              Have some example you would like to add here?
+              <a
+                href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues"
+                >Contact me on GitHub</a
+              >!
+            </div>
+          </div>
+          <div style="width: 1px; flex-shrink: 0">
+            <!--
+                Because, apparently, CSS ignores the right-margin on flex
+                elements that cause overflow.
+           -->
+          </div>            
+            `;
+          document.getElementById("examples").innerHTML = examplesHTML;
+        })
+        .catch((error) => {
+          document.getElementById("fetchingExamples").innerHTML =
+            "Failed to fetch the examples JSON from GitHub: " + error;
+        });
     </script>
   </body>
 </html>
