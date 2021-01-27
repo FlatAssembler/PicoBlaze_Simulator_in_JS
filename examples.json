@@ -1,0 +1,38 @@
+[
+  {
+    "file_name": "bin2dec.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/21/Arabic_numerals-en.svg?download",
+    "image_alt": "Numeral Systems",
+    "name": "Binary to Decimal"
+  },
+  {
+    "file_name": "dec2bin.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9f/DEC_VT100_terminal_transparent.png/220px-DEC_VT100_terminal_transparent.png",
+    "image_alt": "UART Terminal",
+    "name": "Decimal to Binary"
+  },
+  {
+    "file_name": "fibonacci.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/FibonacciRabbit.svg/220px-FibonacciRabbit.svg.png",
+    "image_alt": "Rabbit Experiment",
+    "name": "Fibonacci Sequence"
+  },
+  {
+    "file_name": "gray.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Gray_code_tesseract.svg/220px-Gray_code_tesseract.svg.png",
+    "image_alt": "Hamming Cube",
+    "name": "Gray Code"
+  },
+  {
+    "file_name": "assemblerTest.psm",
+    "image": "https://flatassembler.github.io/PicoBlaze/assemblerTest.gif",
+    "image_alt": "Assembly Code",
+    "name": "Assembler Test"
+  },
+  {
+    "file_name": "sevenSegment.psm",
+    "image": "https://flatassembler.github.io/PicoBlaze/hexadecimal_counter.png",
+    "image_alt": "Digital Clock",
+    "name": "Hexadecimal Counter"
+  }
+]
