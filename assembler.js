@@ -383,7 +383,7 @@ function assemble(parsed, context) {
       }
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex = formatAsInstruction(
-          node.children[0].interpretAsArithmeticExpression(constants));
+          node.children[0].interpretAsArithmeticExpression(context.constants));
       address++;
     } else if (/^jump$/i.test(node.text)) {
       machineCode[address].line = node.lineNumber;
