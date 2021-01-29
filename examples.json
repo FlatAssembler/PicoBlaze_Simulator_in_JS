@@ -1,7 +1,7 @@
 [
   {
     "file_name": "bin2dec.psm",
-    "image": "https://upload.wikimedia.org/wikipedia/commons/2/21/Arabic_numerals-en.svg?download",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/2/21/Arabic_numerals-en.svg",
     "image_alt": "Numeral Systems",
     "name": "Binary to Decimal"
   },
