@@ -251,9 +251,10 @@
       #divWithExamples {
         background: #ffffee;
         font-family: Arial;
-        width: calc(100% - 5px);
+        width: calc(100% - 7px);
         position: absolute;
         top: 405px;
+        padding-left: 2px;
       }
       .exampleCodeLink img {
         width: 100px;
@@ -305,6 +306,11 @@
         /*
 https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in-chrome
         */
+        background: #cccccc; /*WebPositive apparently shows
+                               no background on buttons by
+                               default.*/
+        padding-top: 3px;
+        padding-bottom: 1px;
       }
       #downloadHex {
         margin-top: 5px;
@@ -1126,7 +1132,11 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       >. If you want to contribute,
       <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS"
         >fork me on GitHub</a
-      >. If you would like to know more about me, visit my
+      >. Exceptionally helpful would be contributions to
+      <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_for_Android"
+        >the Android version of this simulator</a
+      >, as I am not an experienced Android developer. If you would like to know
+      more about me, visit my
       <a href="https://flatassembler.github.io/">homepage</a>. The documentation
       for this simulator is available in
       <a href="PicoBlaze.rtf">this <abbr title="Rich Text Format">RTF</abbr></a>
