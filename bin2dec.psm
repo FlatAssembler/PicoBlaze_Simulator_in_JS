@@ -3,45 +3,45 @@
 ;them on the 7-segment displays.
 ;Also, converting them to Gray code and
 ;displaying the Gray code using LEDs.
-address 000
+address 0
 infinite_loop:
-  input s0,0
-  load sa,s0
-  load sc,0
-  compare sa,200'd
-  jump c, lessThan200
-    sub sa,200'd
-    load sc,2
+  input   s0, 0
+  load    sa, s0
+  load    sc, 0
+  compare sa, 200'd
+  jump    c , lessThan200
+      sub  sa, 200'd
+      load sc, 2
   lessThan200:
-  compare sa,100'd
-  jump c, lessThan100
-    sub sa,100'd
-    load sc,1
+  compare sa, 100'd
+  jump    c , lessThan100
+      sub  sa, 100'd
+      load sc, 1
   lessThan100:
-  call divideBy10
-  call multiplyBy16
-  add sa,sb
-  output sc,1
-  output sa,2
-  load s1,s0
-  sr0 s1
-  xor s1,s0
-  output s1,0
+  call   divideBy10
+  call   multiplyBy16
+  add    sa, sb
+  output sc, 1
+  output sa, 2
+  load   s1, s0
+  sr0    s1
+  xor    s1, s0
+  output s1, 0
 jump infinite_loop
 
 divideBy10:
-star s0,sa
+star    s0, sa
 regbank b
-load s1,0
+load    s1, 0
 beginning_of_loop:
-  compare s0,10'd
-  jump c,end_of_loop
-  sub s0,10'd
-  add s1,1
-  jump beginning_of_loop
+    compare s0, 10'd
+    jump    c , end_of_loop
+    sub     s0, 10'd
+    add     s1, 1
+    jump beginning_of_loop
 end_of_loop:
-star sa,s1
-star sb,s0
+star    sa, s1
+star    sb, s0
 regbank a
 return
 
