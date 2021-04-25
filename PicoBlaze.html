@@ -149,10 +149,14 @@
       #warningAboutJavaScript {
         display: flex;
         justify-content: center;
+        text-align: center;
         align-items: center;
         height: 100%;
         font-weight: bold;
         font-family: Arial;
+        margin-right: 25px;
+        margin-left: 10px;
+        max-width: 450px;
       }
       table,
       th,
@@ -252,6 +256,13 @@
         background: #ffffee;
         font-family: Arial;
         width: calc(100% - 7px);
+        max-width: calc(
+          500px - 7px
+        ); /* To make the warning about
+            * lack of support for modern
+            * JavaScript legible in
+            * Internet Explorer 11.
+            */
         position: absolute;
         top: 405px;
         padding-left: 2px;
@@ -1065,9 +1076,23 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         <button id="assembleButton">Assemble</button>
       </div>
       <div id="divWithMachineCode">
-        <span id="warningAboutJavaScript"
-          >Your browser doesn't seem to support advanced JavaScript!</span
-        >
+        <div id="warningAboutJavaScript">
+          Your browser doesn't seem to support modern JavaScript, needed for
+          this web-app!<br />
+          I would recommend you to use
+          <a href="https://www.torproject.org/">The TOR Browser</a>. Modern
+          JavaScript executes the fastest in it, as fast as in
+          <a href="https://www.mozilla.org/en-US/">Firefox</a> (as they use the
+          same JavaScript engine), but TOR Browser protects privacy
+          significantly more.<br />Please consider that, if too few people use
+          tools for protecting privacy on the Internet, those that use them are
+          considered suspicious. Participating in a system that does not respect
+          privacy is putting everybody in danger of mass surveillance (which
+          makes people less honest about their beliefs, and which can easily
+          result in predictive policing). If you think you have nothing to hide
+          (in that case, you are probably unfamiliar with all the senseless laws
+          that apply to you), please think of others.
+        </div>
       </div>
       <div id="simulationButtons">
         <button id="playPauseButton">
