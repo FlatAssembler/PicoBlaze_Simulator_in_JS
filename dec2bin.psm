@@ -72,14 +72,14 @@ loading_the_number:
   ;terminal.
   call UART_RX
   ;Check whether the character is a digit.
-    compare s9,"0"
+    compare s9, "0"
     ;If it is not a digit, jump to the
     ;part of the program for printing
     ;the number you have got.
     jump c,print_the_number
-    load s1,"9"
-    compare s1,s9
-    jump c,print_the_number
+    load s9, "9" + 1
+    ;Suggestion by a <a href="https://codereview.stackexchange.com/questions/253951/converting-decimal-to-binary-in-assembly/253978#253978">StackExchange user</a>.
+    jump nc, print_the_number
   ;If it is a digit, store it into RAM.
   store s9,(pointer)
   add pointer,1
