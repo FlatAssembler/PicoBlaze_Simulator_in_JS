@@ -1415,18 +1415,20 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         })
         .then((jsonFromGithub) => {
           const examplesArray = JSON.parse(jsonFromGithub);
-          let examplesHTML = "";
-          for (const example of examplesArray) {
-            examplesHTML += `
+          let examplesHTML =
+            examplesArray
+              .map(
+                (example) => `
           <div class="exampleCodeLink" onclick="fetchExample('${example.file_name}')">
             <img
               src="${example.image}"
               alt="${example.image_alt}"
             />${example.name}
           </div>
-              `;
-          }
-          examplesHTML += `
+              `
+              )
+              .join("") +
+            `
          <div class="exampleCodeLink">
             <div id="callForMoreExamples">
               Have some example you would like to add here?
