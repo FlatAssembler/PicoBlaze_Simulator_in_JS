@@ -252,6 +252,8 @@
         margin: 5px;
         width: 120px;
         flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
         height: 150px;
         background: white;
         text-align: center;
@@ -292,7 +294,7 @@
         background: gray;
         height: 173px;
       }
-      #callForMoreExamples {
+      .callForMoreExamples {
         margin: 5px;
       }
       #graphicalResults {
@@ -1067,7 +1069,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
     <main>
       <div id="lineNumbers">1.</div>
       <pre id="assemblyCode" contenteditable="true">
-;Insert assembly here...
+;Insert PicoBlaze assembly here...
 </pre
       >
       <div id="divWithExamples">
@@ -1094,8 +1096,14 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           few people use tools for protecting privacy on the Internet, using
           them is considered suspicious. Participating in a system that does not
           respect privacy is putting everybody in danger of mass surveillance
-          and predictive policing. If you think you have nothing to hide
-          (breaking senseless laws and red flags), please think of others.
+          and predictive policing. Even if you think you have nothing to hide,
+          please think of others (and learn about senseless laws and red flags
+          that apply to you).<br />
+          My
+          <a href="../compiler.html"
+            >web-app that converts arithmetic expressions to x86 assembly</a
+          >
+          can run in ancient browsers, in case you want to try it.
         </div>
       </div>
       <div id="simulationButtons">
@@ -1429,8 +1437,14 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
               )
               .join("") +
             `
-         <div class="exampleCodeLink">
-            <div id="callForMoreExamples">
+          <div class="exampleCodeLink" style="display: flex">
+            <div class="callForMoreExamples">
+            Maybe you'd like to try <a href="../Duktape.zip">my examples of x86 assembly</a>,
+            that <a href="../AEC_specification.html#HowToCompile">AEC compiles</a> to?
+            </div>
+          </div>
+          <div class="exampleCodeLink" style="display: flex">
+            <div class="callForMoreExamples">
               Have some example you would like to add here?
               <a
                 href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues"
