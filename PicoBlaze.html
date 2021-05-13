@@ -384,6 +384,9 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         margin: 10px;
       }
     </style>
+
+    <script id="fetchPolyfill"></script>
+    <script id="BabelJS"></script>
     <script type="text/javascript">
       "use strict";
       let is_UART_enabled = false,
@@ -959,9 +962,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       }
       function displayOutput() {
         for (let i = 0; i < 2 ** 8; i++)
-          document.getElementById(
-            "output_" + formatAsByte(i)
-          ).innerHTML = formatAsByte(output[i]);
+          document.getElementById("output_" + formatAsByte(i)).innerHTML =
+            formatAsByte(output[i]);
         displayHexadecimalNumber(
           document.getElementById("sevenSegmentDisplay0"),
           output[1] >> 4
@@ -1100,12 +1102,29 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           please think of others (and learn about senseless laws and red flags
           that apply to you).<br />
           My
-          <a href="../compiler.html"
+          <a href="https://flatassembler.github.io/compiler.html"
             >web-app that converts arithmetic expressions to x86 assembly</a
           >
-          can run in ancient browsers, in case you want to try it.
+          can run in ancient browsers, in case you want to try it.<br />
+          Or, you can try
+          <a href="javascript:void(0)" onclick="downloadBabel()"
+            >polyfilling your browser with BabelJS</a
+          >.
         </div>
       </div>
+      <script>
+        function downloadBabel() {
+          var scripts = document.getElementsByTagName("script");
+          for (var i = 0; i < scripts.length; i++) {
+            if (scripts[i].type == "text/javascript")
+              scripts[i].type = "text/babel";
+          }
+          document.getElementById("BabelJS").src =
+            "https://unpkg.com/@babel/standalone/babel.min.js";
+          document.getElementById("fetchPolyfill").src =
+            "https://cdnjs.cloudflare.com/ajax/libs/fetch/3.6.2/fetch.min.js";
+        }
+      </script>
       <div id="simulationButtons">
         <button id="playPauseButton">
           <img
@@ -1305,8 +1324,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       document.getElementById("stopButton").onclick = stopSimulation;
       document.getElementById("singleStepButton").onclick = onSingleStepButton;
       document.getElementById("fastForwardButton").onclick = fastForward;
-      const svgNS = document.getElementById("stopButton").children[0]
-        .namespaceURI;
+      const svgNS =
+        document.getElementById("stopButton").children[0].namespaceURI;
       let sevenSegmentDisplays = document.createElement("div");
       sevenSegmentDisplays.style.width = 4 * 60 + "px";
       sevenSegmentDisplays.style.marginLeft = "auto";
@@ -1386,9 +1405,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         )
           event.target.setAttribute("y", 25);
         else event.target.setAttribute("y", 25 + 30 - 15);
-        document.getElementById("input_00").value = formatAsByte(
-          valueOfTheFirstInput
-        );
+        document.getElementById("input_00").value =
+          formatAsByte(valueOfTheFirstInput);
       }
       document.getElementById("input_00").oninput = () => {
         const value =
@@ -1411,9 +1429,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         document.getElementById("UART_IO").style.display = is_UART_enabled
           ? "block"
           : "none";
-        document.getElementById(
-          "enable_or_disable_UART"
-        ).innerHTML = is_UART_enabled ? "Disable" : "Enable";
+        document.getElementById("enable_or_disable_UART").innerHTML =
+          is_UART_enabled ? "Disable" : "Enable";
         window.onresize();
       };
       fetch("https://flatassembler.github.io/PicoBlaze/examples.json")
@@ -1439,8 +1456,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
             `
           <div class="exampleCodeLink" style="display: flex">
             <div class="callForMoreExamples">
-            Maybe you'd like to try <a href="../Duktape.zip">my examples of x86 assembly</a>,
-            that <a href="../AEC_specification.html#HowToCompile">AEC compiles</a> to?
+            Maybe you'd like to try <a href="https://flatassembler.github.io/Duktape.zip">my examples of x86 assembly</a>,
+            that <a href="https://flatassembler.github.io/AEC_specification.html#HowToCompile">AEC compiles</a> to?
             </div>
           </div>
           <div class="exampleCodeLink" style="display: flex">
