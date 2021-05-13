@@ -1123,7 +1123,12 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
           document.getElementById("BabelJS").src =
             "https://unpkg.com/@babel/standalone/babel.min.js";
           document.getElementById("BabelPolyfill").src =
-            "https://cdnjs.cloudflare.com/ajax/libs/core-js/3.11.0/minified.js";
+            "https://unpkg.com/core-js-bundle/index.js";
+          /*
+	       Do not include the minified file, because Babel Minifier
+	       transpiles "RegExp('x','y')" into "/x/y", which is a syntax
+	       error in Internet Explorer 11!
+	    */
           document.getElementById("fetchPolyfill").src =
             "https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js";
         }
