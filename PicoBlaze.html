@@ -384,7 +384,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
         margin: 10px;
       }
     </style>
-
+    <script id="symbolPolyfill"></script>
     <script id="fetchPolyfill"></script>
     <script id="BabelJS"></script>
     <script id="BabelPolyfill"></script>
@@ -1120,6 +1120,8 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
             if (scripts[i].type == "text/javascript")
               scripts[i].type = "text/babel";
           }
+          document.getElementById("symbolPolyfill").src =
+            "https://cdn.jsdelivr.net/npm/symbol-es6/symbol-es6.min.js";
           document.getElementById("BabelPolyfill").src =
             "https://unpkg.com/@babel/polyfill/dist/polyfill.js";
           /*
