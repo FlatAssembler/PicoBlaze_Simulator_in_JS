@@ -1116,11 +1116,6 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       </div>
       <script>
         function downloadBabel() {
-          var scripts = document.getElementsByTagName("script");
-          for (var i = 0; i < scripts.length; i++) {
-            if (scripts[i].type == "text/javascript")
-              scripts[i].type = "text/babel";
-          }
           document.getElementById("objectAssignPolyfill").src =
             "https://cdn.jsdelivr.net/npm/object-assign-polyfill/index.min.js";
           document.getElementById("symbolPolyfill").src =
@@ -1131,11 +1126,16 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
 	       Do not include the minified file, because Babel Minifier
 	       transpiles "RegExp('x','y')" into "/x/y", which is a syntax
 	       error in Internet Explorer 11!
-	    */
+	  */
           document.getElementById("BabelJS").src =
             "https://unpkg.com/@babel/standalone/babel.min.js";
           document.getElementById("fetchPolyfill").src =
             "https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js";
+          var scripts = document.getElementsByTagName("script");
+          for (var i = 0; i < scripts.length; i++) {
+            if (scripts[i].type == "text/javascript")
+              scripts[i].type = "text/babel";
+          }
         }
       </script>
       <div id="simulationButtons">
