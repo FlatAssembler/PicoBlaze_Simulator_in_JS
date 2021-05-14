@@ -1133,8 +1133,14 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
             "https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js";
           var scripts = document.getElementsByTagName("script");
           for (var i = 0; i < scripts.length; i++) {
-            if (scripts[i].type == "text/javascript")
-              scripts[i].type = "text/babel";
+            if (scripts[i].type == "text/javascript") {
+              var newScriptTag = document.createElement("script");
+              newScriptTag.type = "text/babel";
+              newScriptTag.src = scripts[i].src;
+              newScriptTag.setAttribute("async", false);
+              newScriptTag.innerHTML = scripts[i].innerHTML;
+              document.body.appendChild(newScriptTag);
+            }
           }
         }
       </script>
