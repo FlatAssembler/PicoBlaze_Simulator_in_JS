@@ -20,7 +20,7 @@ function formatAsInstruction(n) {
     alert(
       "Some part of the assembler tried to format the number " +
         n +
-        " as a byte, which makes no sense."
+        " as an instruction, which makes no sense."
     );
     return "ff";
   }
@@ -35,7 +35,7 @@ function formatAs4bits(n) {
     alert(
       "Some part of the assembler tried to format the number " +
         n +
-        " as a 4 bits, which makes no sense."
+        " as a single hexadecimal digit, which makes no sense."
     );
     return "f";
   }
