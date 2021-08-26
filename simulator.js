@@ -17,30 +17,31 @@ function simulateOneInstruction() {
       document.getElementById("pauseImage").style.display = "none";
     }
     document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
-    if (machineCode[PC].hex.substr(0, 2) === "00") {
+    const currentDirective = parseInt(machineCode[PC].hex, 16);
+    if ((currentDirective & 0xff000) === 0x00000) {
       // LOAD register,register
       registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
           registers[regbank][parseInt(machineCode[PC].hex[3], 16)];
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "01") {
+    } else if ((currentDirective & 0xff000) === 0x01000) {
       // LOAD register,constant
       registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
           parseInt(machineCode[PC].hex.substr(3), 16);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "17") {
+    } else if ((currentDirective & 0xff000) === 0x17000) {
       // STAR register,constant ;Storing a constant into an inactive register
       registers[!regbank | 0 /*That is how you convert a boolean to an integer
                                 in JavaScript.*/
       ][parseInt(machineCode[PC].hex[2], 16)] =
           parseInt(machineCode[PC].hex.substr(3), 16);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "16") {
+    } else if ((currentDirective & 0xff000) === 0x16000) {
       // STAR register,register ;Copying from an active register into an
       // inactive one.
       registers[!regbank | 0][parseInt(machineCode[PC].hex[2], 16)] =
           registers[regbank][parseInt(machineCode[PC].hex[3], 16)];
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "2e") {
+    } else if ((currentDirective & 0xff000) === 0x2e000) {
       // STORE register,(register) ;Store the first register at the memory
       // location where the second register points to.
       memory[registers[regbank][parseInt(machineCode[PC].hex[3], 16)]] =
@@ -53,7 +54,7 @@ function simulateOneInstruction() {
           .innerHTML = formatAsByte(
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)]);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "2f") {
+    } else if ((currentDirective & 0xff000) === 0x2f000) {
       // STORE register,memory_address ;Copy a register onto a memory address.
       memory[parseInt(machineCode[PC].hex.substr(3), 16)] =
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
@@ -61,19 +62,19 @@ function simulateOneInstruction() {
           .innerHTML = formatAsByte(
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)]);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "0a") {
+    } else if ((currentDirective & 0xff000) === 0x0a000) {
       // FETCH register,(register) ;Dereference the pointer in the second
       // register.
       registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
           memory[registers[regbank][parseInt(machineCode[PC].hex[3], 16)]];
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "0b") {
+    } else if ((currentDirective & 0xff000) === 0x0b000) {
       // FETCH register,memory_address ;Copy the value at memory_address to the
       // register.
       registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
           memory[parseInt(machineCode[PC].hex.substr(3), 16)];
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "08") {
+    } else if ((currentDirective & 0xff000) === 0x08000) {
       // INPUT register,(register) ;Read a byte from a port specified by a
       // register.
       const port = registers[regbank][parseInt(machineCode[PC].hex[3], 16)];
@@ -98,7 +99,7 @@ function simulateOneInstruction() {
                 .value,
             16);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "09") {
+    } else if ((currentDirective & 0xff000) === 0x09000) {
       // INPUT register, port_number
       const port = parseInt(machineCode[PC].hex.substr(3), 16);
       if ((port === 2 || port === 3) && is_UART_enabled) {
@@ -124,7 +125,7 @@ function simulateOneInstruction() {
                 .value,
             16);
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "2c") {
+    } else if ((currentDirective & 0xff000) === 0x2c000) {
       // OUTPUT register,(register) ;Output the result of the first register to
       // the port specified by the second register.
       const port = registers[regbank][parseInt(machineCode[PC].hex[3], 16)];
@@ -145,7 +146,7 @@ function simulateOneInstruction() {
             registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
       displayOutput();
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "2d") {
+    } else if ((currentDirective & 0xff000) === 0x2d000) {
       // OUTPUT register, port_number
       const port = parseInt(machineCode[PC].hex.substr(3), 16);
       const value = registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
@@ -166,7 +167,7 @@ function simulateOneInstruction() {
         displayOutput();
       }
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "2b") {
+    } else if ((currentDirective & 0xff000) === 0x2b000) {
       // OUTPUTK constant, port_number
       const value = parseInt(machineCode[PC].hex.substr(2, 2), 16);
       const port = parseInt(machineCode[PC].hex[4], 16);
@@ -187,15 +188,15 @@ function simulateOneInstruction() {
         displayOutput();
       }
       PC++;
-    } else if (machineCode[PC].hex === "37000") {
+    } else if (currentDirective === 0x37000) {
       // REGBANK A
       regbank = 0;
       PC++;
-    } else if (machineCode[PC].hex === "37001") {
+    } else if (currentDirective === 0x37001) {
       // REGBANK B
       regbank = 1;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "22") {
+    } else if ((currentDirective & 0xff000) === 0x22000) {
       // JUMP label
       PC = parseInt(machineCode[PC].hex.substr(2), 16);
     } else if (machineCode[PC].hex.substr(0, 2) === "14" &&
@@ -205,7 +206,7 @@ function simulateOneInstruction() {
           1; // Have a better idea? We can't simulate all of what this directive
       // does, but we can simulate this part of it.
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "10") {
+    } else if ((currentDirective & 0xff000) === 0x10000) {
       // ADD register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -221,7 +222,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] += secondValue;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "11") {
+    } else if ((currentDirective & 0xff000) === 0x11000) {
       // ADD register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -236,7 +237,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] += secondValue;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "12") {
+    } else if ((currentDirective & 0xff000) === 0x12000) {
       // ADDCY register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -253,7 +254,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "13") {
+    } else if ((currentDirective & 0xff000) === 0x13000) {
       // ADDCY register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -269,7 +270,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "18") {
+    } else if ((currentDirective & 0xff000) === 0x18000) {
       // SUB register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -286,7 +287,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "19") {
+    } else if ((currentDirective & 0xff000) === 0x19000) {
       // SUB register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -302,7 +303,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "1a") {
+    } else if ((currentDirective & 0xff000) === 0x1a000) {
       // SUBCY register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -319,7 +320,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "1b") {
+    } else if ((currentDirective & 0xff000) === 0x1b000) {
       // SUBCY register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -335,7 +336,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "03") {
+    } else if ((currentDirective & 0xff000) === 0x03000) {
       // AND register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -351,7 +352,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "02") {
+    } else if ((currentDirective & 0xff000) === 0x02000) {
       // AND register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -368,7 +369,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "04") {
+    } else if ((currentDirective & 0xff000) === 0x04000) {
       // OR register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -385,7 +386,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "05") {
+    } else if ((currentDirective & 0xff000) === 0x05000) {
       // OR register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -401,7 +402,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "06") {
+    } else if ((currentDirective & 0xff000) === 0x06000) {
       // XOR register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -418,7 +419,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "07") {
+    } else if ((currentDirective & 0xff000) === 0x07000) {
       // XOR register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -434,8 +435,8 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "0c" ||
-               machineCode[PC].hex.substr(0, 2) === "0e") {
+    } else if ((currentDirective & 0xff000) === 0x0c000 ||
+               (currentDirective & 0xff000) === 0x0e000) {
       // TEST register, register ;The same as "AND", but does not store the
       // result (only the flags). I am not sure if there is a difference between
       // "0c" and "0e", they appear to be the same.
@@ -454,8 +455,8 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       // registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "0d" ||
-               machineCode[PC].hex.substr(0, 2) === "0f") {
+    } else if ((currentDirective & 0xff000) === 0x0d000 ||
+               (currentDirective & 0xff000) === 0x0f000) {
       // TEST register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -471,7 +472,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       // registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "1c") {
+    } else if ((currentDirective & 0xff000) === 0x1c000) {
       // COMPARE register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -488,7 +489,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       // registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "1d") {
+    } else if ((currentDirective & 0xff000) === 0x1d000) {
       // COMPARE register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -504,7 +505,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       // registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "1e") {
+    } else if ((currentDirective & 0xff000) === 0x1e000) {
       // COMPARECY register, register
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const secondRegister = parseInt(machineCode[PC].hex[3], 16);
@@ -521,7 +522,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       // registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "1f") {
+    } else if ((currentDirective & 0xff000) === 0x1f000) {
       // COMPARECY register, constant
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
       const firstValue = registers[regbank][firstRegister];
@@ -537,7 +538,7 @@ function simulateOneInstruction() {
         flagC[regbank] = 0;
       // registers[regbank][firstRegister] = result;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "14") {
+    } else if ((currentDirective & 0xff000) === 0x14000) {
       // Bit-shifting operations...
       const registerIndex = parseInt(machineCode[PC].hex[2], 16);
       let registerValue = registers[regbank][registerIndex];
@@ -601,31 +602,31 @@ function simulateOneInstruction() {
       }
       registers[regbank][registerIndex] = registerValue;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "32") {
+    } else if ((currentDirective & 0xff000) === 0x32000) {
       // JUMP Z, label
       if (flagZ[regbank])
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "36") {
+    } else if ((currentDirective & 0xff000) === 0x36000) {
       // JUMP NZ, label
       if (!flagZ[regbank])
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "3a") {
+    } else if ((currentDirective & 0xff000) === 0x3a000) {
       // JUMP C, label
       if (flagC[regbank])
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "3e") {
+    } else if ((currentDirective & 0xff000) === 0x3e000) {
       // JUMP NC, label
       if (!flagC[regbank])
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "26") {
+    } else if ((currentDirective & 0xff000) === 0x26000) {
       // JUMP@ (register, register) ; Jump to the address pointed by the
       // registers (something like function pointers, except that "return" won't
       // work).
@@ -634,18 +635,18 @@ function simulateOneInstruction() {
       const firstValue = registers[regbank][firstRegister];
       const secondValue = registers[regbank][secondRegister];
       PC = firstValue % 16 * 256 + secondValue;
-    } else if (machineCode[PC].hex.substr(0, 2) === "20") {
+    } else if ((currentDirective & 0xff000) === 0x20000) {
       // CALL functionName
       callStack.push(PC);
       PC = parseInt(machineCode[PC].hex.substr(2), 16);
-    } else if (machineCode[PC].hex.substr(0, 2) === "30") {
+    } else if ((currentDirective & 0xff000) === 0x30000) {
       // CALL Z, functionName ; Call the function only if the Zero Flag is set.
       if (flagZ[regbank]) {
         callStack.push(PC);
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "34") {
+    } else if ((currentDirective & 0xff000) === 0x34000) {
       // CALL NZ, functionName ; Call the function only if the Zero Flag is not
       // set.
       if (!flagZ[regbank]) {
@@ -653,14 +654,14 @@ function simulateOneInstruction() {
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "38") {
+    } else if ((currentDirective & 0xff000) === 0x38000) {
       // CALL C, functionName ; Call the function only if the Carry Flag is set.
       if (flagC[regbank]) {
         callStack.push(PC);
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "3c") {
+    } else if ((currentDirective & 0xff000) === 0x3c000) {
       // CALL NC, functionName ; Call the function only if the Carry Flag is not
       // set.
       if (!flagC[regbank]) {
@@ -668,7 +669,7 @@ function simulateOneInstruction() {
         PC = parseInt(machineCode[PC].hex.substr(2), 16);
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "24") {
+    } else if ((currentDirective & 0xff000) === 0x24000) {
       // CALL@ (register, register) ; Jump the function pointed by the function
       // pointer stored in the registers.
       const firstRegister = parseInt(machineCode[PC].hex[2], 16);
@@ -677,7 +678,7 @@ function simulateOneInstruction() {
       const secondValue = registers[regbank][secondRegister];
       callStack.push(PC);
       PC = firstValue % 16 * 256 + secondValue;
-    } else if (machineCode[PC].hex.substr(0, 2) === "25") {
+    } else if ((currentDirective & 0xff000) === 0x25000) {
       // RETURN
       if (callStack.length)
         PC = callStack.pop() + 1;
@@ -686,7 +687,7 @@ function simulateOneInstruction() {
           clearInterval(simulationThread);
         alert("The program exited!");
       }
-    } else if (machineCode[PC].hex.substr(0, 2) === "31") {
+    } else if ((currentDirective & 0xff000) === 0x31000) {
       // RETURN Z ; Return from a function only if the Zero Flag is set.
       if (flagZ[regbank]) {
         if (callStack.length)
@@ -698,7 +699,7 @@ function simulateOneInstruction() {
         }
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "35") {
+    } else if ((currentDirective & 0xff000) === 0x35000) {
       // RETURN NZ ; Return from a function only if the Zero Flag is not set.
       if (!flagZ[regbank]) {
         if (callStack.length)
@@ -710,7 +711,7 @@ function simulateOneInstruction() {
         }
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "39") {
+    } else if ((currentDirective & 0xff000) === 0x39000) {
       // RETURN C ; Return from a function only if the Carry Flag is set.
       if (flagC[regbank]) {
         if (callStack.length)
@@ -722,7 +723,7 @@ function simulateOneInstruction() {
         }
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "3d") {
+    } else if ((currentDirective & 0xff000) === 0x3d000) {
       // RETURN NC ; Return from a function only if the Carry Flag is not set.
       if (!flagC[regbank]) {
         if (callStack.length)
@@ -734,11 +735,11 @@ function simulateOneInstruction() {
         }
       } else
         PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "28") {
+    } else if ((currentDirective & 0xff000) === 0x28000) {
       // INTERRUPT ENABLE|DISABLE
       flagIE = machineCode[PC].hex[4] | 0;
       PC++;
-    } else if (machineCode[PC].hex.substr(0, 2) === "29") {
+    } else if ((currentDirective & 0xff000) === 0x29000) {
       // RETURNI ENABLE|DISABLE
       flagIE = machineCode[PC].hex[4] | 0;
       if (callStack.length)
@@ -751,7 +752,8 @@ function simulateOneInstruction() {
     } else {
       alert(
           'Sorry about that, the simulator currently does not support the instruction "' +
-          machineCode[PC].hex + '", assembled from line #' +
+          machineCode[PC].hex + '" (' + currentDirective + ' & ' + 0xff000 +
+          ' = ' + (currentDirective & 0xff000) + '), assembled from line #' +
           machineCode[PC].line + ".");
       stopSimulation();
     }
