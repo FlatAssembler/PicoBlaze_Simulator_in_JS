@@ -1222,7 +1222,52 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
       other formats are available on GitHub as well). For now, the documentation
       is only available in Croatian. If you are willing to spend your time
       translating it to English (better than machine translation), contact me on
-      GitHub.
+      GitHub or
+      <a href="javascript:void(0)" onclick="sendMail('Teo')"
+        >send me an e-mail</a
+      >.
+      <script>
+        //Copied from: https://flatassembler.github.io/compiler
+        //I have written that many years ago...
+        function sendMail(whom) {
+          var sifrirano;
+          if (whom == "Tomasz")
+            sifrirano = [
+              6, 2, 36, 28, 1, 42, 17, 21, 23, 50, 54, 9, 21, 17, 19, 35, 17,
+              22, 8, 16, 60, 0, 6, 75, 28, 53, 17,
+            ];
+          else if (whom == "Teo")
+            sifrirano = [
+              27, 0, 36, 75, 1, 49, 8, 21, 23, 8, 57, 15, 21, 37, 21, 61, 29, 4,
+              9, 92, 51, 10, 25,
+            ];
+          var tmp = sifrirano[0];
+          sifrirano[0] = sifrirano[2];
+          sifrirano[2] = tmp;
+          tmp = sifrirano[17];
+          sifrirano[17] = sifrirano[16];
+          sifrirano[16] = tmp;
+          var hash2;
+          if (whom == "Teo") hash2 = 554;
+          else if (whom == "Tomasz") hash2 = 603;
+          var kljuc = prompt(
+            "Spambot protection problem: What is the name of the fictional character who had a spell casted on him so that he couldn't grow up, and he had to fight against the pirates? His nickname is 'Pan'.",
+            "His name without 'Pan'."
+          );
+          var desifrirano = [];
+          for (var i = 0; i < sifrirano.length; i++)
+            desifrirano.push(sifrirano[i] ^ kljuc.charCodeAt(i % kljuc.length));
+          var hash1 = 0;
+          for (var i = 0; i < desifrirano.length; i++)
+            hash1 = (hash1 * 128 + desifrirano[i]) % 907;
+          if (hash1 == hash2) {
+            var email = "";
+            for (var i = 0; i < desifrirano.length; i++)
+              email += String.fromCharCode(desifrirano[i]);
+            window.location.assign("mailto:" + email);
+          } else alert("Unfortunately, you didn't give the expected answer.");
+        }
+      </script>
     </footer>
     <script type="text/javascript">
       "use strict";
@@ -1496,7 +1541,7 @@ https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in
                 Because, apparently, CSS ignores the right-margin on flex
                 elements that cause overflow.
            -->
-          </div>            
+          </div>
             `;
           document.getElementById("examples").style.justifyContent = "initial";
           document.getElementById("examples").style.alignItems = "initial";
