@@ -1,0 +1,377 @@
+body {
+  background-color: #fff7ff;
+  background-image: url("Background.gif");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+main {
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  position: absolute;
+  top: 65px;
+  --lineNumbersWidth: 60px;
+}
+header,
+footer {
+  width: 100%;
+  text-align: center;
+  font-family: Arial;
+  line-height: 100%;
+}
+footer {
+  width: calc(100% - 2 * 5px);
+  max-width: calc(500px - 2 * 5px);
+  position: absolute;
+  top: 1380px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  padding-bottom: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+h1 {
+  margin-bottom: 5px;
+}
+#lineNumbers {
+  width: 60px; /*Fallback for browsers which do not support "var".*/
+  width: var(--lineNumbersWidth);
+  margin-right: 0;
+  font-family: Courier New, monospace;
+  display: inline-block;
+  text-align: right;
+  background: #aaaaaa;
+  height: 100vh;
+  max-height: 400px;
+  position: absolute;
+  overflow: hidden;
+  font-size: 1em;
+}
+#assemblyCode {
+  margin: 0;
+  width: calc(
+    100% - 70px
+  ); /* I am not sure breaking compatibility
+      * with Firefox 52 (probably the most
+      * advanced browser which can run on
+      * Windows XP, but it does not support
+      * CSS "var" function) is acceptable today.
+      */
+  width: calc(100% - var(--lineNumbersWidth) - 10px);
+  padding-left: 5px;
+  font-family: Courier New, monospace;
+  text-align: left;
+  display: inline-block;
+  background: #eeeeee;
+  height: 100vh;
+  max-height: 400px;
+  position: absolute;
+  left: 60px;
+  left: var(--lineNumbersWidth);
+  overflow: scroll;
+  white-space: pre;
+  font-size: 1em; /* Microsoft Edge seems to have some weird ideas
+                   * about how font size should be smaller in <pre>
+                   * than in <div>.
+                   */
+}
+.comment {
+  color: #333333;
+  font-style: italic;
+}
+.mnemonic {
+  color: #000077;
+  font-weight: bold;
+}
+.register {
+  color: #773300;
+  font-weight: bold;
+}
+#buttons {
+  top: 400px;
+  position: absolute;
+  width: 100%;
+}
+.flag {
+  color: #007700;
+  font-weight: bold;
+}
+.label {
+  color: #770077;
+}
+label {
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+  margin-left: 8px;
+  margin-top: 3px;
+}
+.string {
+  color: #770000;
+}
+.number {
+  color: #007777;
+}
+.directive {
+  color: #770077;
+  font-weight: bold;
+}
+.parenthesis {
+  font-weight: bold;
+}
+#highlightButton {
+  position: absolute;
+  left: 0;
+  text-align: left;
+  margin-left: 0;
+  float: left;
+}
+#assembleButton {
+  position: absolute;
+  right: 5px;
+  text-align: right;
+  margin-right: 0;
+  float: right;
+}
+#divWithMachineCode {
+  position: absolute;
+  width: calc(100% - 5px);
+  background: white;
+  height: 100vh;
+  top: 450px;
+  overflow: scroll;
+  max-height: 400px;
+  margin-bottom: 10px;
+}
+#warningAboutJavaScript {
+  display: block;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  height: 100%;
+  font-weight: bold;
+  font-family: Arial;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: 25px;
+  margin-left: 10px;
+  max-width: 450px;
+}
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th {
+  font-family: Arial, Sans-Serif;
+}
+td {
+  font-family: Courier New, monospace;
+  text-align: center;
+}
+td:nth-child(1) {
+  text-align: right;
+  font-weight: bold;
+}
+#machineCode {
+  width: calc(100% - 10px);
+  margin: 5px;
+}
+table {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#simulationButtons {
+  top: 855px;
+  position: absolute;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+}
+#simulationResults {
+  top: 910px;
+  position: absolute;
+  width: calc(100% - 8px);
+  height: 100vh;
+  max-height: 400px;
+  overflow: scroll;
+  background-color: white;
+  margin-bottom: 15px;
+}
+input {
+  width: 30px;
+}
+.regbank_b {
+  font-style: italic;
+}
+.active {
+  background: white;
+  color: black;
+}
+.inactive {
+  background: black;
+  color: white;
+  border-color: white;
+}
+.changed,
+.turning_off {
+  background: lightGreen;
+  color: black;
+  font-weight: bold;
+}
+.turning_off {
+  background: red;
+}
+#interrupt_flag {
+  font-style: normal;
+}
+.tooltip {
+  display: none;
+}
+button:hover .tooltip {
+  display: block;
+  position: absolute;
+  background: #ffffaa;
+  z-index: 10;
+  padding: 2px;
+  font-style: italic;
+  font-family: Times;
+}
+.exampleCodeLink {
+  margin: 5px;
+  width: 120px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  background: white;
+  text-align: center;
+}
+.exampleCodeLink:hover {
+  background: lightGray;
+}
+#divWithExamples {
+  background: #ffffee;
+  font-family: Arial;
+  width: calc(100% - 7px);
+  max-width: calc(
+    500px - 7px
+  ); /* To make the warning about
+      * lack of support for modern
+      * JavaScript legible in
+      * Internet Explorer 11.
+      */
+  position: absolute;
+  top: 405px;
+  padding-left: 2px;
+}
+.exampleCodeLink img {
+  width: 100px;
+  height: 100px;
+  margin-left: auto;
+  margin-top: 5px;
+  margin-right: auto;
+  background: white;
+}
+#examples {
+  overflow-x: scroll;
+  overflow-y: hidden;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: gray;
+  height: 173px;
+}
+.callForMoreExamples {
+  margin: 5px;
+}
+#graphicalResults {
+  overflow: scroll;
+  position: absolute;
+  top: 910px;
+  height: 200px;
+  width: calc(100% - 5px);
+  background: white;
+}
+.sevenSegmentDisplay {
+  background: black;
+  width: 50px;
+  height: 100px;
+  margin: 5px;
+}
+.breakpoint_icon {
+  display: none;
+  width: calc(1em - 3px);
+  height: calc(1em - 3px);
+}
+#register_PC {
+  font-style: normal;
+  /*Otherwise it will turn italic when Regbank B
+    is being used, even though it stays active.*/
+}
+button {
+  position: relative;
+  /*
+https://stackoverflow.com/questions/64995585/tooltips-work-in-firefox-but-not-in-chrome
+  */
+  background: #cccccc; /*WebPositive apparently shows
+                         no background on buttons by
+                         default.*/
+  padding-top: 3px;
+  padding-bottom: 1px;
+}
+#downloadHex {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+textarea {
+  resize: none;
+  overflow: scroll;
+  width: calc(100% - 3 * 8px - 2px);
+  margin-left: calc(2 * 8px);
+  height: 95px;
+  background-color: black;
+  color: aquamarine;
+}
+#UART_IO {
+  height: 250px;
+  font-size: 1em;
+  position: absolute;
+  width: calc(100% - 5px);
+  overflow: hidden;
+  background-color: azure;
+  display: none;
+}
+#UART_OUTPUT {
+  height: 95px;
+  width: calc(100% - 3 * 8px);
+  margin-left: calc(2 * 8px);
+  overflow: scroll;
+  background-color: black;
+  color: aquamarine;
+  margin-top: auto;
+  border-style: solid;
+  border-width: 2px;
+  border-right-color: lightgray;
+  border-bottom-color: lightgray;
+  border-top-color: darkgray;
+  border-left-color: darkgray;
+}
+#UART_enable_button {
+  position: absolute;
+  width: calc(100% - 5px);
+  font-size: 24px;
+  line-height: 36px;
+}
+#fetchingExamples {
+  background: white;
+  padding: 10px;
+  margin: 10px;
+}
