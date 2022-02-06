@@ -1,3 +1,19 @@
+;<b style="color: #770000">WARNING</b>: I have tried to run this on
+;         real PicoBlaze, but failed.
+;         Now, I did not have time to
+;         test whether a simpler
+;         example program using UART
+;         would work, to see if it
+;         is a problem with this
+;         program, or if it is maybe
+;         a problem with the way I
+;         set up PicoBlaze. I have
+;         opened a 
+;         <a href="https://stackoverflow.com/q/70981222">StackOverflow question</a>
+;         about it, but, thus far, I
+;         received no response.
+
+
 ;This is an example program that uses
 ;<abbr title="Universal Asynchronous Receiver-Transmitter">UART</abbr>, the interface that PicoBlaze uses
 ;for connecting to terminals (a <abbr title="Disk Operating System">DOS</abbr>-like
