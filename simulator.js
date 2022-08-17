@@ -18,6 +18,11 @@ function simulateOneInstruction() {
     }
     document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
     const currentDirective = parseInt(machineCode[PC].hex, 16);
+    // TODO: "bennyboy" from "atheistforums.org" thinks my program can be
+    // speeded up by using a switch-case instead of the large if-else (that a
+    // switch-case would compile into a more efficient assembly code), so it
+    // would be interesting to investigate whether that's true:
+    // https://atheistforums.org/thread-61911-post-2112817.html#pid2112817
     if ((currentDirective & 0xff000) === 0x00000) {
       // LOAD register,register
       registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
