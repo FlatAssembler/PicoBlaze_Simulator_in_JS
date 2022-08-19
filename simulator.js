@@ -212,8 +212,7 @@ function simulateOneInstruction() {
     } else if ((currentDirective & 0xff000) === 0x22000) {
       // JUMP label
       PC = parseInt(machineCode[PC].hex.substr(2), 16);
-    } else if (machineCode[PC].hex.substr(0, 2) === "14" &&
-               machineCode[PC].hex.substr(3) === "80") {
+    } else if ((currentDirective & 0xff0ff) == 0x14080) {
       // HWBUILD register
       flagC[regbank] =
           1; // Have a better idea? We can't simulate all of what this directive
