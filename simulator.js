@@ -242,6 +242,14 @@ function simulateOneInstruction() {
       */
       break;
     case 0x37000:
+      if ((currentDirective & 0x00ff0) !== 0) {
+        alert(
+            'Sorry about that, the simulator currently does not support the instruction "' +
+            machineCode[PC].hex + '" (' + currentDirective + " & " + 0xff000 +
+            " = " + (currentDirective & 0xff000) + "), assembled from line #" +
+            machineCode[PC].line + ".");
+        stopSimulation();
+      }
       if (currentDirective % 2 === 0)
         regbank = 0;
       else
@@ -696,6 +704,7 @@ function simulateOneInstruction() {
         break;
       case "80": // HWBUILD (not a bit-shifting operation)
         flagC[regbank] = 1;
+        break;
       default:
         alert('The instruction "' + machineCode[PC].hex +
               '", assembled from line #' + machineCode[PC].line +
