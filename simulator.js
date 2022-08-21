@@ -242,7 +242,7 @@ function simulateOneInstruction() {
       */
       break;
     case 0x37000:
-      if ((currentDirective & 0x00ff0) !== 0) {
+      if ((currentDirective & 0x00ff0) !== 0 || (currentDirective & 0xf) > 1) {
         alert(
             'Sorry about that, the simulator currently does not support the instruction "' +
             machineCode[PC].hex + '" (' + currentDirective + " & " + 0xff000 +
