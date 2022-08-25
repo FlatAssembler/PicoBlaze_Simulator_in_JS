@@ -221,7 +221,7 @@ document.getElementById("UART_enable_button").onclick = () => {
       is_UART_enabled ? "Disable" : "Enable";
   window.onresize();
 };
-fetch("https://flatassembler.github.io/PicoBlaze/examples.json")
+fetch(URL_of_JSON_with_examples)
     .then((response) => {
       if (!response.ok)
         throw new Error(response.status);

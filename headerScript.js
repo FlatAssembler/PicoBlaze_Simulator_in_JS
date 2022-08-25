@@ -497,9 +497,7 @@ function fetchExample(exampleName) {
   document.getElementById("assemblyCode").innerHTML =
       ";Fetching the example from GitHub...";
   setUpLineNumbers();
-  fetch(
-      "https://raw.githubusercontent.com/FlatAssembler/PicoBlaze_Simulator_in_JS/master/" +
-      exampleName)
+  fetch(URL_prefix_of_the_examples + exampleName)
       .then((response) => {
         if (!response.ok)
           throw new Error(response.status);
