@@ -1,6 +1,113 @@
-Simulator PicoBlaze ra?unala u JavaScriptu
+SVEU?ILIŠTE JOSIPA JURJA STROSSMAYERA U OSIJEKU
+FAKULTET ELEKTROTEHNIKE, RA?UNARSTVA I INFORMACIJSKIH TEHNOLOGIJA
 
-Autor: Teo Samaržija
+
+
+Sveu?ilišni studij
+
+
+
+
+
+SIMULATOR PICOBLAZE RA?UNALA U JAVASCRIPTU
+
+Završni rad
+
+
+
+
+
+
+Teo Samaržija
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Osijek, 2022.
+
+
+Obrazac D1: Obrazac za imenovanje Povjerenstva za završni rad
+Osijek, 29. 8. 2022.
+Odboru za završne i diplomske radove
+Imenovanje Povjerenstva za završni rad
+Ime i prezime Pristupnika:
+Teo Samaržija
+Studij, smjer:
+Preddiplomski sveu?ilišni studij Ra?unarstvo
+Mat. br. Pristupnika, godina upisa:
+N/A, 2018
+OIB studenta:
+50107259317
+Mentor:
+Izv. prof. dr. sc. Ivan Aleksi
+Sumentor:
+N/A
+Sumentor iz tvrtke:
+N/A
+Predsjednik povjerenstva:
+
+?lan povjerenstva 1:
+Izv. prof. dr. sc. Ivan Aleksi
+?lan povjerenstva 2:
+
+Naslov završnog rada:
+Simulator PicoBlaze ra?unala u JavaScriptu
+Znanstvena grana završnog rada:
+Arhitektura ra?unala (zn. polje ra?unarstvo)
+Zadatak završnog rada:
+Napraviti simulator PicoBlaze ra?unala koji se može vrtjeti u internetskom pregledniku.
+Prijedlog ocjene pismenog dijela ispita (završnog rada):
+
+Kratko obrazloženje ocjene prema Kriterijima za ocjenjivanje završnih i diplomskih radova:
+
+Datum prijedloga ocjene od strane mentora:
+
+Potvrda mentora o predaji kona?ne verzije rada:
+
+
+Datum:
+
+
+IZJAVA O ORIGINALNOSTI RADA
+Osijek, 29. 8. 2022.
+Ime i prezime studenta:
+Teo Samaržija
+Studij:
+Preddiplomski sveu?ilišni studij Ra?unarstvo
+Mat. br. studenta, godina upisa:
+N/A, 2018.
+Turnitin podudaranje [%]:
+8
+Ovom izjavom izjavljujem da je rad pod nazivom: Simulator PicoBlaze ra?unala u JavaScriptu
+izra?en pod vodstvom mentora izv. prof. dr. sc. Ivan Aleksi
+moj vlastiti rad i prema mom najboljem znanju ne sadrži prethodno objavljene ili neobjavljene pisane materijale drugih osoba, osim onih koji su izri?ito priznati navo?enjem literature ili drugih izvora informacija.
+Izjavljujem da je intelektualni sadržaj navedenog rada proizvod mog vlastitog rada, osim u onom dijelu za koji mi je bila potrebna pomo? mentora, sumentora i drugih osoba, a što je izri?ito navedeno u radu.
+Potpis studenta:
+
+
 
 SAŽETAK: Autor teksta bio je frustriran nedostacima postoje?ih simulatora malog ra?unala PicoBlaze, te je napravio druk?iji simulator PicoBlazea u programskom jeziku JavaScript. Taj se simulator može pokrenuti u modernim internetskim preglednicima1 (autor misli da je najstariji internetski preglednik u kojem simulator funkcionira kako treba Firefox 52, posljednja verzija Firefoxa koja se može vrtjeti na Windows XP-u). U tekstu slijede detalji o tome kako je autor napravio svoj simulator te koje su prednosti i mane tog simulatora u usporedbi s ve? postoje?im simulatorima. Nisu korišteni nikakvi radni okviri (frameworksi), kôd je pisan uglavnom u VIM-u (za manje izmjene) i Eclipseu (za ve?e izmjene), za ure?ivanje slika korišteni su GIMP i Inkscape, za traženje pogrešaka u programu korišteni su alati za programiranje koji se dobiju uz Firefox i internetski servis LGTM. Za formatiranje koda korišteni su Prettier (za HTML i CSS) i ClangFormat (za JavaScript).
 
@@ -60,3 +167,11 @@ Korisnik foruma atheistforums.org zvan bennyboy ima dvije ideje kako ubrzati moj
 
 Zahvale
 Posebno zahvaljujem profesoru Ivanu Aleksiju što me potakao da ovo napravim i što je sakupio informacije na internetu potrebne za to. Zahvaljujem i programerima koji su napravili internetski servis LGTM, stati?ki analizer za JavaScript koji me je upozorio na neke greške koje sam napravio. JavaScript je relativno loš programski jezik i takvi su alati korisni.
+Abstract: The author of the text was frustrated by the shortcomings of existing simulators of the small computer called PicoBlaze, so he created a different PicoBlaze simulator in the JavaScript programming language. This simulator can be run in modern Internet browsers9 (the author thinks that the oldest Internet browser in which the simulator works properly is Firefox 52, the last version of Firefox that can be run on Windows XP). The text explains the details of how the author made his simulator and what the advantages and disadvantages are of that simulator compared to the existing simulators. No frameworks were used, the code was written mainly in VIM (for minor changes) and Eclipse (for major changes), GIMP and Inkscape were used for image editing, programming tools that come with Firefox were used to search for debugging the program, and the LGTM internet service was also used to search for errors.. Prettier (for HTML and CSS) and ClangFormat (for JavaScript) were used to format the code.
+Životopis
+Ja sam Teo Samaržija, ro?en sam 1999. u Osijeku. Osnovnu školu sam završio u Donjem Miholjcu (Osnovna škola August Harambaši?), a u srednju školu išao sam u Op?u gimnaziju u Donjem Miholjcu (1. razred, dio 2. razreda, kraj 3. razreda i 4. razred), te u Op?u gimnaziju u Našicama (kraj 2. razreda i po?etak 3. razreda).
+?esto sam sudjelovao na informati?kim natjecanjima. U 6. razredu osnovne osvojio sam 3. mjesto na županijskom natjecanju10, u 7. razredu 4. mjesto na državnom natjecanju11, u 8. razredu 6. mjesto na državnom natjecanju12 (sve je to organizirao Infokup), u srednjoj školi sam se, kad sam bio 3. razred, natjecao na HONI-ju, te sam osvojio 15. mjesto13. 2019. godine sam, kao student prve godine, sudjelovao na STEM Games natjecanju iz programiranja, na kojem je moja ekipa osvojila 7. mjesto14. Osim na natjecanjima iz informatike, sudjelovao sam, kad sam bio 2. razred srednje škole, i na AZOO-vom državnom natjecanju iz latinskog jezika, gdje sam osvojio 7. mjesto15.
+Izdava?ka ku?a Panon izdala mi je knjigu pod naslovom Jezici za gimnazijalce16, te sam sudjelovao na konferenciji Kopa?ki Rit, Ju?er, Danas, Sutra s prezentacijom Toponimija Baranje u svjetlu novih promišljanja17. 2022. godine napisao sam tekst o ideji da je to k-r što se ponavlja u nazivima rijeka u Hrvatskoj (Krka, Korana, Kravarš?ica, Krbavica, Krapina, dvije Karašice) zna?ilo jednostavno te?i, on je objavljen u Valpova?kom godišnjaku18, na mojoj web-stranici19 te ?e, ako sve bude u redu, biti objavljen u ?asopisu za nacionalne manjine Regionalnim studijama u Sopronu.
+Softwareski projekt na kojem radim i koji mi je posebno drag je Arithmetic Expression Compiler, o kojem možete ?itati na mojoj web-stranici20. Ukratko, to je compilirani programski jezik niske razine (lako se su?eljava s asemblerskim jezikom) kojim možemo ciljati x86 procesore te možemo ciljati WebAssembly.
+Upisao sam 2018. godine FERIT u Osijeku, smjer Ra?unarstvo, i trenutno sam student tre?e godine.
+
