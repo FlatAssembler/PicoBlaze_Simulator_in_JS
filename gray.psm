@@ -1,6 +1,8 @@
 ;An example program which converts binary
 ;to Gray code and vice versa, maybe it
 ;comes useful to somebody.
+;There is also a <a href="https://www.reddit.com/r/PicoBlaze/comments/xdjazy/does_anybody_know_how_the_gray_code_example/?utm_source=share&utm_medium=web2x&context=3">Reddit discussion</a> about
+;this program.
 address 0
 start: ;Infinite loop...
   ;Converting from binary to gray...
