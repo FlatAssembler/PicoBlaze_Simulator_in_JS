@@ -4,6 +4,8 @@
 ;the Fibonacci numbers and the number of
 ;ones in the binary representations as
 ;decimal (base 10) numbers.
+;I have asked a <a href="https://mathoverflow.net/q/430716/491436">MathOverflow question</a>
+;about the output of this program.
 Address 0
 ;On real PicoBlaze, disabling interrupts
 ;makes the program run slightly faster.
