@@ -8,9 +8,8 @@ document.getElementById("assemblyCode").
 setUpLineNumbers();
 document.getElementById("assemblyCode").oninput = setUpLineNumbers;
 document.getElementById("assemblyCode").onscroll = () => {
-  document
-    .getElementById("lineNumbers")
-    .scroll(0, document.getElementById("assemblyCode").scrollTop);
+  document.getElementById("lineNumbers")
+      .scroll(0, document.getElementById("assemblyCode").scrollTop);
 };
 document.getElementById("highlightButton").onclick = syntaxHighlighter;
 document.getElementById("assembleButton").onclick = () => {
@@ -26,9 +25,12 @@ document.getElementById("assembleButton").onclick = () => {
   let resultOfTokenizing = "[";
   for (let i = 0; i < tokenized.length; i++) {
     const token = tokenized[i];
-    if (token.text === "\n") resultOfTokenizing += '"\\n"';
-    else resultOfTokenizing += '"' + token.text + '"';
-    if (i !== tokenized.length - 1) resultOfTokenizing += ",";
+    if (token.text === "\n")
+      resultOfTokenizing += '"\\n"';
+    else
+      resultOfTokenizing += '"' + token.text + '"';
+    if (i !== tokenized.length - 1)
+      resultOfTokenizing += ",";
   }
   resultOfTokenizing += "]";
   console.log("Result of tokenizing: ", resultOfTokenizing);
@@ -58,17 +60,20 @@ function stopSimulation() {
   document.getElementById("fastForwardButton").disabled = false;
   document.getElementById("singleStepButton").disabled = false;
   document.getElementById("UART_INPUT").disabled = false;
-  if (playing) clearInterval(simulationThread);
+  if (playing)
+    clearInterval(simulationThread);
   document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
   PC = 0;
   document.getElementById("PC_label_000").innerHTML = "-&gt;";
   playing = false;
   document.getElementById("playImage").style.display = "inline";
   document.getElementById("pauseImage").style.display = "none";
-  for (let i = 0; i < 256; i++) output[i] = 0;
-  for (let i = 0; i < 16; i++) registers[0][i] = registers[1][i] = 0;
-  flagZ = [0, 0];
-  flagC = [0, 0];
+  for (let i = 0; i < 256; i++)
+    output[i] = 0;
+  for (let i = 0; i < 16; i++)
+    registers[0][i] = registers[1][i] = 0;
+  flagZ = [ 0, 0 ];
+  flagC = [ 0, 0 ];
   callStack = [];
   regbank = 0;
   flagIE = 1;
@@ -100,7 +105,8 @@ function onPlayPauseButton() {
   }
 }
 function onSingleStepButton() {
-  if (playing) return;
+  if (playing)
+    return;
   simulateOneInstruction();
 }
 function fastForward() {
@@ -138,7 +144,8 @@ for (let i = 0; i < 4; i++) {
     let polygon = document.createElementNS(svgNS, "polygon");
     if (polygons.indexOf(polygonPoints) === 6)
       polygon.setAttribute("fill", "#ffaaaa");
-    else polygon.setAttribute("fill", "#333333");
+    else
+      polygon.setAttribute("fill", "#333333");
     polygon.setAttribute("points", polygonPoints);
     polygon.setAttribute("stroke", "black");
     sevenSegmentDisplay.appendChild(polygon);
@@ -150,7 +157,7 @@ let LEDs = document.createElementNS(svgNS, "svg");
 LEDs.setAttribute("width", 400);
 LEDs.setAttribute("height", 60);
 LEDs.style.background = "darkGreen"; //"fill" does not work here.
-LEDs.style.marginLeft = "auto"; // No idea why this is necessary.
+LEDs.style.marginLeft = "auto";      // No idea why this is necessary.
 LEDs.style.marginRight = "auto";
 LEDs.style.display = "block";
 for (let i = 0; i < 8; i++) {
@@ -181,68 +188,61 @@ for (let i = 0; i < 8; i++) {
 }
 document.getElementById("graphicalResults").appendChild(LEDs);
 function onSwitchPressed(event) {
-  let valueOfTheFirstInput = parseInt(
-    document.getElementById("input_00").value,
-    16
-  );
+  let valueOfTheFirstInput =
+      parseInt(document.getElementById("input_00").value, 16);
   valueOfTheFirstInput ^= event.target.getAttribute("data-buttonValue");
-  if (
-    valueOfTheFirstInput &
-    /* bitwise and (not a typo) */ event.target.getAttribute("data-buttonValue")
-  )
+  if (valueOfTheFirstInput &
+      /* bitwise and (not a typo) */ event.target.getAttribute(
+          "data-buttonValue"))
     event.target.setAttribute("y", 25);
-  else event.target.setAttribute("y", 25 + 30 - 15);
+  else
+    event.target.setAttribute("y", 25 + 30 - 15);
   document.getElementById("input_00").value =
-    formatAsByte(valueOfTheFirstInput);
+      formatAsByte(valueOfTheFirstInput);
 }
 document.getElementById("input_00").oninput = () => {
   const value =
-    Math.abs(parseInt(document.getElementById("input_00").value, 16) | 0) % 256;
+      Math.abs(parseInt(document.getElementById("input_00").value, 16) | 0) %
+      256;
   let formatedAsBinary = value.toString(2);
-  while (formatedAsBinary.length < 8) formatedAsBinary = "0" + formatedAsBinary;
+  while (formatedAsBinary.length < 8)
+    formatedAsBinary = "0" + formatedAsBinary;
   for (let i = 0; i < 8; i++)
-    document
-      .getElementById("switch" + i)
-      .setAttribute("y", 40 - formatedAsBinary[i] * 15);
+    document.getElementById("switch" + i)
+        .setAttribute("y", 40 - formatedAsBinary[i] * 15);
 };
 document.getElementById("UART_enable_button").onclick = () => {
   is_UART_enabled = !is_UART_enabled;
-  document.getElementById("input_02").disabled = document.getElementById(
-    "input_03"
-  ).disabled = is_UART_enabled;
-  document.getElementById("UART_IO").style.display = is_UART_enabled
-    ? "block"
-    : "none";
-  document.getElementById("enable_or_disable_UART").innerHTML = is_UART_enabled
-    ? "Disable"
-    : "Enable";
+  document.getElementById("input_02").disabled =
+      document.getElementById("input_03").disabled = is_UART_enabled;
+  document.getElementById("UART_IO").style.display =
+      is_UART_enabled ? "block" : "none";
+  document.getElementById("enable_or_disable_UART").innerHTML =
+      is_UART_enabled ? "Disable" : "Enable";
   window.onresize();
 };
 fetch(URL_of_JSON_with_examples)
-  .then((response) => {
-    if (!response.ok) throw new Error(response.status);
-    else return response.text();
-  })
-  .then((jsonFromGithub) => {
-    const examplesArray = JSON.parse(jsonFromGithub);
-    let examplesHTML =
-      examplesArray
-        .map(
-          (example) => `
+    .then((response) => {
+      if (!response.ok)
+        throw new Error(response.status);
+      else
+        return response.text();
+    })
+    .then((jsonFromGithub) => {
+      const examplesArray = JSON.parse(jsonFromGithub);
+      let examplesHTML = examplesArray
+                             .map((example) => `
     <div class="exampleCodeLink" onclick="fetchExample('${example.file_name}')">
       <img
         src="${example.image}"
         alt="${example.image_alt}"
       />${example.name}
     </div>
-        `
-        )
-        .join("") +
-      `
+        `).join("") + `
     <div class="exampleCodeLink" style="display: flex">
       <div class="callForMoreExamples">
       Maybe you'd like to try <a href="https://flatassembler.github.io/Duktape.zip">my examples of x86 assembly</a>,
-      that <a href="https://flatassembler.github.io/AEC_specification.html#HowToCompile">AEC compiles</a> to?
+      that <a href="https://flatassembler.github.io/AEC_specification.html#HowToCompile"><abbr title="Arithmetic Expression Compiler, my programming language">AEC</abbr> compiles</a> to?
       </div>
     </div>
     <div class="exampleCodeLink" style="display: flex">
@@ -261,11 +261,11 @@ fetch(URL_of_JSON_with_examples)
      -->
     </div>
       `;
-    document.getElementById("examples").style.justifyContent = "initial";
-    document.getElementById("examples").style.alignItems = "initial";
-    document.getElementById("examples").innerHTML = examplesHTML;
-  })
-  .catch((error) => {
-    document.getElementById("fetchingExamples").innerHTML =
-      "Failed to fetch the examples JSON from GitHub: " + error;
-  });
+      document.getElementById("examples").style.justifyContent = "initial";
+      document.getElementById("examples").style.alignItems = "initial";
+      document.getElementById("examples").innerHTML = examplesHTML;
+    })
+    .catch((error) => {
+      document.getElementById("fetchingExamples").innerHTML =
+          "Failed to fetch the examples JSON from GitHub: " + error;
+    });
