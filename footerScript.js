@@ -242,7 +242,7 @@ fetch(URL_of_JSON_with_examples)
     <div class="exampleCodeLink" style="display: flex">
       <div class="callForMoreExamples">
       Maybe you'd like to try <a href="https://flatassembler.github.io/Duktape.zip">my examples of x86 assembly</a>,
-      that <a href="https://flatassembler.github.io/AEC_specification.html#HowToCompile"><abbr title="Arithmetic Expression Compiler, my programming language">AEC</abbr> compiles</a> to?
+      that <a href="https://flatassembler.github.io/AEC_specification.html#AEC_to_x86"><abbr title="Arithmetic Expression Compiler, my programming language">AEC</abbr> compiles</a> to?
       </div>
     </div>
     <div class="exampleCodeLink" style="display: flex">
