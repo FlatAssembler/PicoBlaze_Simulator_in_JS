@@ -184,7 +184,7 @@ compare pointer, 0
 call z, abort ;Something went wrong
               ;so end the program.
 ;Check whether there are more than 8 bits.
-compare pointer, 9
+compare pointer, 8 + 1
 call    nc     , abort
 ;Now goes a loop which will print
 ;the binary number in RAM, with digits
