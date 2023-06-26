@@ -1,3 +1,14 @@
+;This program has been tested on real
+;PicoBlaze and it worked there! While
+;this program uses regbanks and flags,
+;I would not take the fact that it
+;works on PicoBlaze to mean that the
+;emulation of flags in this simulator
+;is realistic when the regbank changes.
+;Namely, given what I know, it is
+;possible that real PicoBlaze does not
+;have separate flags for each regbank.
+
 ;Converting binary numbers entered using
 ;the switches to decimal and displaying
 ;them on the 7-segment displays.
