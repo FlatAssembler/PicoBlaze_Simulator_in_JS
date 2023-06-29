@@ -119,9 +119,9 @@ function highlightToken(token) {
   return token;
 }
 function syntaxHighlighter(/*edit*/) {
-  //"edit" should contain the
-  // cursor position, but that
-  // seems not to work.
+  //"edit" should contain the cursor position, but that seems not to work.
+  // I have opened a StackOverflow question about that:
+  // https://stackoverflow.com/q/76566400/8902065
   if (areWeHighlighting)
     return;
   areWeHighlighting = true;
