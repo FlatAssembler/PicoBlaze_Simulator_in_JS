@@ -1,3 +1,9 @@
+// I have hand-written this parser partly because I don't know of any BISON-like
+// tool that supports JavaScript and partly because I am not even sure how would
+// I make a parser for PicoBlaze Assembly in BISON. The keywords "enable" and
+// "disable" are problematic (they can be both mnemonics and, let's say so,
+// "adverbs"). I have opened a StackExchange question about that:
+// https://langdev.stackexchange.com/q/1679/330
 "use strict";
 function parse(tokenized) {
   let report = "[";
