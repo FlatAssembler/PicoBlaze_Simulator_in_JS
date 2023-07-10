@@ -6,6 +6,9 @@
 ;PicoBlaze doesn't have separate
 ;flags for each regbank. In that
 ;case, this test will fail.
+;I have started a
+;<a href="https://stackoverflow.com/q/76653465/8902065">StackOverflow question about this</a>,
+;thus far receiving no response.
 
 ;Now follows some boilerplate code
 ;we use in our Computer Architecture
