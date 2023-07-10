@@ -34,5 +34,11 @@
     "image": "https://flatassembler.github.io/PicoBlaze/hexadecimal_counter.png",
     "image_alt": "Digital Clock",
     "name": "Hexadecimal Counter"
+  },
+  {
+    "file_name": "regbanks_flags_test.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Intel_80486DX2_top.jpg/180px-Intel_80486DX2_top.jpg",
+    "image_alt": "CPU",
+    "name": "Regbanks-Flags Test"
   }
 ]
