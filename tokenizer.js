@@ -1,4 +1,6 @@
 "use strict";
+// TODO: Fix this issue with tokenizing string with whitespace:
+// https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/5
 function tokenize(input) {
   let tokenized = [];
   let areWeInAString = false;
