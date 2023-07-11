@@ -50,7 +50,7 @@ load s9, "n"
 call UART_TX
 load s9, "g"
 call UART_TX
-load s9, 20 ;Space
+load s9, " "
 call UART_TX
 load s9, "t"
 call UART_TX
@@ -58,7 +58,7 @@ load s9, "h"
 call UART_TX
 load s9, "e"
 call UART_TX
-load s9, 20 ;Space
+load s9, " "
 call UART_TX
 load s9, "r"
 call UART_TX
@@ -88,7 +88,7 @@ load s9, "g"
 call UART_TX
 load s9, "s"
 call UART_TX
-load s9, 20 ;Space
+load s9, " "
 call UART_TX
 load s9, "t"
 call UART_TX
@@ -104,7 +104,7 @@ load s9, "."
 call UART_TX
 load s9, "."
 call UART_TX
-load s9, 20 ;Space
+load s9, " "
 call UART_TX
 ;Now follows the core of the test...
 regbank a
@@ -146,10 +146,12 @@ load s9, "t"
 call UART_TX
 load s9, "e"
 call UART_TX
+load s9, "!"
+call UART_TX
 load s9, a ;New-line character.
 call UART_TX
 load   s0, ff
-output s0, 0
+output s0, LED_PORT
 jump infinite_loop
 success:
 load s9, "S"
@@ -166,10 +168,12 @@ load s9, "s"
 call UART_TX
 load s9, "s"
 call UART_TX
+load s9, "!"
+call UART_TX
 load s9, a ;New-line character.
 call UART_TX
 load   s0, aa
-output s0, 0
+output s0, LED_PORT
 jump infinite_loop
 failure:
 load s9, "F"
@@ -186,10 +190,12 @@ load s9, "r"
 call UART_TX
 load s9, "e"
 call UART_TX
+load s9, "!"
+call UART_TX
 load s9, a ;New-line character.
 call UART_TX
 load   s0, 55
-output s0, 0
+output s0, LED_PORT
 infinite_loop:
 jump infinite_loop
 
