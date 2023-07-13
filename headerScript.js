@@ -108,7 +108,11 @@ function highlightToken(token) {
       return `<span class="directive">${token}</span>`;
   if (/^s(\d|[a-f])$/i.test(token))
     return `<span class="register">${token}</span>`;
-  if (/^N?[CZAB]$/i.test(token))
+  if (/^N?[CZAB]$/i.test(
+          token)) // TODO: This actually sometimes incorrectly highlights "a" as
+                  // a flag, when it is in fact a hexadecimal constant. You can
+                  // read more about it here:
+                  // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6
     return `<span class="flag">${token}</span>`;
   if (/:$/.test(token))
     return `<span class="label">${token}</span>`;
