@@ -8,6 +8,11 @@
 ;Namely, given what I know, it is
 ;possible that real PicoBlaze does not
 ;have separate flags for each regbank.
+;The "Regbanks-Flags Test" is supposed
+;to test for that (to succeed if and 
+;only if flags work the way I think they
+;do when the regbank changes, and to
+;fail if they do not).
 
 ;Converting binary numbers entered using
 ;the switches to decimal and displaying
