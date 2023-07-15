@@ -51,6 +51,11 @@ call UART_TX
 load s9, "g"
 call UART_TX
 load s9, " "
+;The last line tokenizes correctly
+;only as of the version
+;<a href="https://sourceforge.net/projects/picoblaze-simulator/files/v2.7/">PicoBlaze_Simulator_in_JS v2.7</a>,
+;see <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/5">this GitHub issue</a> for more
+;information about that.
 call UART_TX
 load s9, "t"
 call UART_TX
@@ -149,6 +154,10 @@ call UART_TX
 load s9, "!"
 call UART_TX
 load s9, a ;New-line character.
+;The last line is being highlighted
+;incorrectly by the syntax
+;highlighter, see <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6">this GitHub issue</a> for
+;more information about that.
 call UART_TX
 load   s0, ff
 output s0, LED_PORT

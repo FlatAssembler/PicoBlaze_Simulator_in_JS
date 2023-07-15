@@ -226,6 +226,10 @@ call UART_TX
 load s9, ")"
 call UART_TX
 load s9, a ;newline character, 0xa=='\n'.
+;The last line is being highlighted
+;incorrectly by the syntax
+;highlighter, see <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6">this GitHub issue</a> for
+;more information about that.
 call UART_TX
 ;The program runs in an infinite loop...
 JUMP START
