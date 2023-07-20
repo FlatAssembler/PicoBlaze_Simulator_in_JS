@@ -232,8 +232,8 @@ load s9, a ;newline character, 0xa=='\n'.
 ;more information about that.
 ;While I don't know how to solve that,
 ;there does appear to be a simple
-;work-around: simply, when <code>a</code>
-;is a hexadecimal constant, type <code>0a</code>
+;work-around: simply, when `<code>a</code>`
+;is a hexadecimal constant, type `<code>0a</code>`
 ;instead, and it will be highlighted
 ;correctly.
 call UART_TX
