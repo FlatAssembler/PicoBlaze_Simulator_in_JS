@@ -53,6 +53,8 @@ function parse(tokenized) {
       }
       let lineNumberOfElseOrEndIf =
           tokenized[pointerToTheEndIfOrElse].lineNumber;
+      if (!counter) // If there is no else-clause.
+        thenClause.splice(thenClause.length - 1, 1);
       tokenized.splice(i + 1, pointerToTheEndIfOrElse - i);
       tokenized[i].children.push(parse(thenClause));
       if (counter) {
@@ -76,6 +78,7 @@ function parse(tokenized) {
           elseClause.push(tokenized[pointerToEndIf]);
           pointerToEndIf++;
         }
+        elseClause.splice(elseClause.length - 1, 1);
         tokenized.splice(i + 1, pointerToEndIf - i);
         tokenized[i].children.push(parse(elseClause));
       }
@@ -120,6 +123,7 @@ function parse(tokenized) {
         loopClause.push(tokenized[pointerToEndWhile]);
         pointerToEndWhile++;
       }
+      loopClause.splice(loopClause.length - 1, 1);
       tokenized[i].children.push(parse(loopClause));
       tokenized.splice(i + 1, pointerToEndWhile - i);
     }
@@ -241,7 +245,8 @@ function parse(tokenized) {
   parseBinaryOperators([ "*", "/" ]);
   parseBinaryOperators([ "+", "-" ]);
   parseBinaryOperators([ "<", ">", "=" ]);
-  parseBinaryOperators([ "&", "|" ]);
+  parseBinaryOperators([ "&" ]);
+  parseBinaryOperators([ "|" ]);
   root.children = tokenized;
   if (root.checkTypes())
     return root;
