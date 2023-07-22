@@ -9,7 +9,20 @@ const mnemonics = [
   "SUBCY",   "SUBC",    "TEST",    "XOR",    "INST",  "LOAD&RETURN", "HWBUILD",
   "STAR",    "OUTPUTK", "REGBANK", "TESTCY", "TESTC", "COMPARECY",   "COMPCY",
 ];
-const preprocessor = [ "ADDRESS", "ORG", "VHDL", "EQU", "NAMEREG", "CONSTANT" ];
+const preprocessor = [
+  "ADDRESS",
+  "ORG",
+  "VHDL",
+  "EQU",
+  "NAMEREG",
+  "CONSTANT",
+  "DISPLAY",
+  "IF",
+  "ELSE",
+  "ENDIF",
+  "WHILE",
+  "ENDWHILE",
+];
 let registers = [ new Uint8Array(16), new Uint8Array(16) ], flagZ = [ 0, 0 ],
     flagC = [ 0, 0 ], flagIE = 1, output = new Uint8Array(256),
     memory = new Uint8Array(256), regbank = 0, callStack = [], breakpoints = [],
@@ -108,11 +121,11 @@ function highlightToken(token) {
       return `<span class="directive">${token}</span>`;
   if (/^s(\d|[a-f])$/i.test(token))
     return `<span class="register">${token}</span>`;
-  if (/^N?[CZAB]$/i.test(
-          token)) // TODO: This actually sometimes incorrectly highlights "a" as
-                  // a flag, when it is in fact a hexadecimal constant. You can
-                  // read more about it here:
-                  // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6
+  if (/^N?[CZAB]$/i.test(token))
+    // TODO: This actually sometimes incorrectly highlights "a" as
+    // a flag, when it is in fact a hexadecimal constant. You can
+    // read more about it here:
+    // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6
     return `<span class="flag">${token}</span>`;
   if (/:$/.test(token))
     return `<span class="label">${token}</span>`;
