@@ -6,15 +6,15 @@ display "We are about to display Fibonacci numbers smaller than 100 in the UART 
 display a
 constant first, 0
 constant second, 1
-while first &lt; 100
-	if first &lt; 10
+while first &lt; 100'd
+	if first &lt; 10'd
 		display "0" + first
 		display a
 	else
 		constant remainder, first
 		constant counter, 0
-		while remainder &gt; 10 - 1
-			constant remainder, remainder - 10
+		while remainder &gt; 10'd - 1
+			constant remainder, remainder - 10'd
 			constant counter, counter + 1
 		endwhile
 		display counter + "0"
