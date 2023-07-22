@@ -31,7 +31,7 @@ function parse(tokenized) {
         }
         pointerToTheNextNewline++;
       }
-      tokenized[i].children.push(parse(condition));
+      tokenized[i].children.push(parse(condition).children[0]);
       tokenized.splice(i + 1, pointerToTheNextNewline - i);
       let pointerToTheEndIfOrElse = i + 1, counter = 1, thenClause = [];
       while (true) {
@@ -107,7 +107,7 @@ function parse(tokenized) {
         }
         pointerToTheNextNewline++;
       }
-      tokenized[i].children.push(parse(condition));
+      tokenized[i].children.push(parse(condition).children[0]);
       tokenized.splice(i + 1, pointerToTheNextNewline - i);
       let pointerToEndWhile = i + 1, counter = 1, loopClause = [];
       while (counter) {
@@ -177,7 +177,9 @@ function parse(tokenized) {
       if (RegExp("^" + mnemonic + "$", "i").test(tokenized[i].text))
         isMnemonicOrPreprocessorDirective = true;
     for (const directive of preprocessor)
-      if (RegExp("^" + directive + "$", "i").test(tokenized[i].text))
+      if (RegExp("^" + directive + "$", "i").test(tokenized[i].text) &&
+          !/^while$/i.test(tokenized[i].text) &&
+          !/^if$/i.test(tokenized[i].text))
         isMnemonicOrPreprocessorDirective = true;
     if (!isMnemonicOrPreprocessorDirective ||
         (tokenized.length === 1 && (/^enable$/i.test(tokenized[0].text) ||
