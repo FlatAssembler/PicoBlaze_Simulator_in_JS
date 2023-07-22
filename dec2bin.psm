@@ -72,6 +72,17 @@ CONSTANT U_RX_H, 00010000'b
 ; RxFIFO full
 CONSTANT U_RX_F, 00100000'b
 
+display "Before starting this "
+display "program, enter decimal "
+display "integers separated by "
+display "new-line characters in"
+display "the text-area above, and "
+display "also insert a new-line "
+display "character after the last "
+display "number."
+display a ;A new-line character, see
+          ;below for more details.
+
 ADDRESS 000
 START:
 ;At the beginning, the number is 0.
