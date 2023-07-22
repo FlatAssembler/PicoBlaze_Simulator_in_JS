@@ -53,8 +53,6 @@ function parse(tokenized) {
       }
       let lineNumberOfElseOrEndIf =
           tokenized[pointerToTheEndIfOrElse].lineNumber;
-      if (!counter) // If there is no else-clause.
-        thenClause.splice(thenClause.length - 1, 1);
       tokenized.splice(i + 1, pointerToTheEndIfOrElse - i);
       tokenized[i].children.push(parse(thenClause));
       if (counter) {
