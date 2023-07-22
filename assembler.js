@@ -83,11 +83,12 @@ function assemble(parsed, context) {
         return;
       }
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
-          "none") { // TODO: "bennyboy" from "atheistforums.org" thinks that
-                    // doing this check (whether an argument is a register) slows
-                    // down the assembler significantly, it would be good to
-                    // investigate whether that is true:
-                    // https://atheistforums.org/thread-61911-post-2112572.html#pid2112572
+          "none") {
+        // TODO: "bennyboy" from "atheistforums.org" thinks that
+        // doing this check (whether an argument is a register) slows
+        // down the assembler significantly, it would be good to
+        // investigate whether that is true:
+        // https://atheistforums.org/thread-61911-post-2112572.html#pid2112572
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
         return;

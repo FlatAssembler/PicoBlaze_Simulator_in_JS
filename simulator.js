@@ -44,7 +44,7 @@ function simulateOneInstruction() {
     case 0x17000:
       // STAR register,constant ;Storing a constant into an inactive register
       registers[!regbank | 0 /*That is how you convert a boolean to an integer
-                                        in JavaScript.*/
+                                              in JavaScript.*/
       ][parseInt(machineCode[PC].hex[2], 16)] =
           parseInt(machineCode[PC].hex.substr(3), 16);
       PC++;
@@ -232,14 +232,14 @@ function simulateOneInstruction() {
       }
       PC++;
       /*    } else if (currentDirective === 0x37000) {
-            // REGBANK A
-            regbank = 0;
-            PC++;
-          } else if (currentDirective === 0x37001) {
-            // REGBANK B
-            regbank = 1;
-            PC++;
-      */
+          // REGBANK A
+          regbank = 0;
+          PC++;
+        } else if (currentDirective === 0x37001) {
+          // REGBANK B
+          regbank = 1;
+          PC++;
+    */
       break;
     case 0x37000:
       if ((currentDirective & 0x00ff0) !== 0 || (currentDirective & 0xf) > 1) {
@@ -261,13 +261,13 @@ function simulateOneInstruction() {
       // JUMP label
       PC = parseInt(machineCode[PC].hex.substr(2), 16);
       /*    } else if ((currentDirective & 0xff0ff) == 0x14080) {
-            // HWBUILD register
-            flagC[regbank] =
-                1; // Have a better idea? We can't simulate all of what this
-         directive
-            // does, but we can simulate this part of it.
-            PC++;
-      */ // Moved to bit-shifting operations...
+          // HWBUILD register
+          flagC[regbank] =
+              1; // Have a better idea? We can't simulate all of what this
+       directive
+          // does, but we can simulate this part of it.
+          PC++;
+    */ // Moved to bit-shifting operations...
       //    } else if ((currentDirective & 0xff000) === 0x10000) {
       break;
     case 0x10000:
@@ -526,8 +526,8 @@ function simulateOneInstruction() {
       registers[regbank][firstRegister] = result;
       PC++;
       /*    } else if ((currentDirective & 0xff000) === 0x0c000 ||
-                     (currentDirective & 0xff000) === 0x0e000) {
-      */
+                   (currentDirective & 0xff000) === 0x0e000) {
+    */
       break;
     case 0x0c000:
     case 0x0e000:
@@ -550,7 +550,7 @@ function simulateOneInstruction() {
       // registers[regbank][firstRegister] = result;
       PC++;
       /*    } else if ((currentDirective & 0xff000) === 0x0d000 ||
-                     (currentDirective & 0xff000) === 0x0f000) {*/
+                   (currentDirective & 0xff000) === 0x0f000) {*/
       break;
     case 0x0d000:
     case 0x0f000:
