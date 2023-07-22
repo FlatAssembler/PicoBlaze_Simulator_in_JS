@@ -1,0 +1,26 @@
+;This is a program to test the new features of the preprocessor,
+;the `display` directive, `if` branching and `while` loops,
+;but it doesn't work correctly for now.
+
+display "We are about to display Fibonacci numbers smaller than 100 in the UART terminal..."
+display a
+constant first, 0
+constant second, 1
+while first &lt; 100
+	if first &lt; 10
+		display "0" + first
+		display a
+	else
+		constant remainder, first
+		constant counter, 0
+		while remainder &gt; 10 - 1
+			constant remainder, remainder - 10
+			constant counter, counter + 1
+		endwhile
+		display counter + "0"
+		display remainder + "0"
+		display a
+	endif
+	constant second, first + second
+	constant first, second - first
+endwhile
