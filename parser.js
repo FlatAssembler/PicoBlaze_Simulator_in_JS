@@ -19,7 +19,7 @@ function parse(tokenized) {
       let i = 0; i < tokenized.length;
       i++ // First, let's deal with if-branching
   ) {
-    if (/^if$/i.test(tokenized[i].text)) {
+    if (/^if$/i.test(tokenized[i].text) && tokenized[i].children.length == 0) {
       let pointerToTheNextNewline = i + 1, condition = [];
       while (tokenized[pointerToTheNextNewline].text != "\n") {
         condition.push(tokenized[pointerToTheNextNewline]);
@@ -93,7 +93,8 @@ function parse(tokenized) {
       let i = 0; i < tokenized.length;
       i++ // Then, let's deal with while-loops...
   ) {
-    if (/^while$/i.test(tokenized[i].text)) {
+    if (/^while$/i.test(tokenized[i].text) &&
+        tokenized[i].children.length == 0) {
       let pointerToTheNextNewline = i + 1, condition = [];
       while (tokenized[pointerToTheNextNewline].text != "\n") {
         condition.push(tokenized[pointerToTheNextNewline]);
