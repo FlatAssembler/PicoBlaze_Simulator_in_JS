@@ -40,5 +40,11 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Intel_80486DX2_top.jpg/180px-Intel_80486DX2_top.jpg",
     "image_alt": "CPU",
     "name": "Regbanks-Flags Test"
+  },
+  {
+    "file_name": "preprocessor_test.psm",
+    "image": "https://www.theflatearthsociety.org/forum/avr/avatar_1461509_1483220545.png",
+    "image_alt": "FlatAssembler showcase",
+    "name": "Preprocessor Test"
   }
 ]
