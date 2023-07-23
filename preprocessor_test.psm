@@ -5,14 +5,15 @@
 ;`<code>while</code>` loops,
 ;but it doesn't work correctly for now.
 
-;WARNING: Please do not press 
+;WARNING: Please do not press
 ;         "<i>Highlight Assembly</i>", as
 ;         there is a bug in the syntax
 ;         highlighter inserting a
 ;         semi-colon after the less-than
 ;         and greater-than character,
 ;         causing syntax errors in programs
-;         such as this one.
+;         such as this one. I have opened
+;         a <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/7">GitHub issue about that</a>.
 
 display "We are about to display Fibonacci numbers smaller than 100 in the UART terminal..."
 display a ;0xa=='\n', a new-line character.
@@ -32,7 +33,7 @@ while first &lt; 100'd
 		endwhile
 		display counter + "0"
 		display remainder + "0"
-                display " "
+		display " "
 		display a
 	endif
 	constant second, first + second
