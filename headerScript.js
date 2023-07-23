@@ -143,9 +143,13 @@ function syntaxHighlighter(/*edit*/) {
     return;
   areWeHighlighting = true;
   const assemblyCodeDiv = document.getElementById("assemblyCode");
-  const assemblyCode = assemblyCodeDiv.innerText.replace(/&/g, "&amp;")
-                           .replace(/</g, "&lt;")
-                           .replace(/>/g, "&gt;");
+  const assemblyCode =
+      assemblyCodeDiv.innerText.replace(/&/g, "&amp;")
+          .replace(
+              /</g,
+              "&lt;") // This appears to cause this bug:
+                      // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/7
+          .replace(/>/g, "&gt;");
   // const start=edit.selectionStart,
   //  end=edit.selectionEnd; //Cursor position.
   let areWeInAString = false;
