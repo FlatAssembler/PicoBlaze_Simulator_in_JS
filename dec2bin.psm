@@ -72,6 +72,9 @@ CONSTANT U_RX_H, 00010000'b
 ; RxFIFO full
 CONSTANT U_RX_F, 00100000'b
 
+;The following code will not
+;assemble in PicoBlaze_Simulator_in_JS
+;version older than <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/releases/tag/v2.8">v2.8</a>.
 display "Before starting this "
 display "program, enter decimal "
 display "integers separated by "
@@ -81,7 +84,7 @@ display "also insert a new-line "
 display "character after the last "
 display "number."
 display a ;A new-line character, see
-          ;below for more details.
+          ;<a href="#newline_character">below</a> for more details.
 
 ADDRESS 000
 START:
@@ -236,7 +239,7 @@ load s9, "2"
 call UART_TX
 load s9, ")"
 call UART_TX
-load s9, a ;newline character, 0xa=='\n'.
+load s9, a ;<span id="newline_character">newline character</a>, 0xa=='\n'.
 ;The last line is being highlighted
 ;incorrectly by the syntax
 ;highlighter, see <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6">this GitHub issue</a> for
