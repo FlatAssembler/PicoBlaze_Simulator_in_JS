@@ -1,14 +1,27 @@
-;This is a program to test the new features of the preprocessor,
-;the `display` directive, `if` branching and `while` loops,
+;This is a program to test the
+;new features of the preprocessor,
+;the `<code>display</code>` directive,
+;`<code>if</code>` branching and
+;`<code>while</code>` loops,
 ;but it doesn't work correctly for now.
 
+;WARNING: Please do not press 
+;         "<i>Highlight Assembly</i>", as
+;         there is a bug in the syntax
+;         highlighter inserting a
+;         semi-colon after the less-than
+;         and greater-than character,
+;         causing syntax errors in programs
+;         such as this one.
+
 display "We are about to display Fibonacci numbers smaller than 100 in the UART terminal..."
-display a
+display a ;0xa=='\n', a new-line character.
 constant first, 0
 constant second, 1
 while first &lt; 100'd
 	if first &lt; 10'd
 		display "0" + first
+		display " " ;In case inserting a new-line character doesn't work...
 		display a
 	else
 		constant remainder, first
@@ -19,6 +32,7 @@ while first &lt; 100'd
 		endwhile
 		display counter + "0"
 		display remainder + "0"
+                display " "
 		display a
 	endif
 	constant second, first + second
