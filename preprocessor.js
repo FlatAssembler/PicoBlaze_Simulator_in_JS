@@ -30,15 +30,15 @@ function makeCompilationContext(parsed, oldCompilationContext) {
   let address;
   for (const node of parsed.children) {
     if (isMnemonic(node.text)) {
-      if (typeof address === "undefined") {
-        alert("Line " + node.lineNumber + ': The mnemonic "' + node.text +
-              '" appears before any address has been set.');
-        return context;
-      }
       if (typeof oldCompilationContext != "undefined") {
         alert(
             "Line #" + node.lineNumber + ': A mnemonic "' + node.text +
             '" appears in an if-branching or a while-loop, where only preprocessor directives can appear!');
+        return context;
+      }
+      if (typeof address === "undefined") {
+        alert("Line " + node.lineNumber + ': The mnemonic "' + node.text +
+              '" appears before any address has been set.');
         return context;
       }
       address++; // This won't work for most assembly language dialects, but it
