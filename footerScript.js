@@ -236,7 +236,7 @@ fetch(URL_of_JSON_with_examples)
       <img
         src="${example.image}"
         alt="${example.image_alt}"
-      />${example.name}
+      /><br/>${example.name}
     </div>
         `).join("") + `
     <div class="exampleCodeLink" style="display: flex">
