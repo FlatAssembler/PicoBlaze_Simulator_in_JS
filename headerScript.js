@@ -152,6 +152,12 @@ function syntaxHighlighter(/*edit*/) {
           .replace(/>/g, "&gt;");
   // const start=edit.selectionStart,
   //  end=edit.selectionEnd; //Cursor position.
+  if (assemblyCode.indexOf("&") != -1) {
+    alert(
+        "Sorry about that, but syntax highlighting of the programs containing `<`, `&`, and `>` is not supported yet.");
+    areWeHighlighting = false;
+    return;
+  }
   let areWeInAString = false;
   let areWeInAComment = false;
   let currentToken = "";
