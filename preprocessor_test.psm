@@ -1,16 +1,19 @@
 ;This is a program to test the
 ;new features of the preprocessor,
 ;the `<code>display</code>` directive,
-;`<code>if</code>` branching and
-;`<code>while</code>` loops,
-;but it doesn't work correctly for now.
+;`<code>if</code>`-`<code>else</code>` branching and
+;`<code>while</code>` loops, by
+;printing the Fibonacci numbers
+;smaller than 100 on the terminal
+;during the assembly time.
 
 ;WARNING: Please do not press
-;         "<i>Highlight Assembly</i>", as
-;         there is a bug in the syntax
+;         "<i>Highlight Assembly</i>"
+;         before you assemble this program,
+;         as there is a bug in the syntax
 ;         highlighter inserting a
 ;         semi-colon after the less-than
-;         and greater-than character,
+;         and greater-than characters,
 ;         causing syntax errors in programs
 ;         such as this one. I have opened
 ;         a <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/7">GitHub issue about that</a>.
