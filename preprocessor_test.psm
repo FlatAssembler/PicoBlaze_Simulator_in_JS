@@ -6,6 +6,8 @@
 ;printing the Fibonacci numbers
 ;smaller than 100 on the terminal
 ;during the assembly time.
+;I have started a
+;<a href="https://board.flatassembler.net/topic.php?p=232650#232650">forum thread about this program</a>.
 
 ;WARNING: Please do not press
 ;         "<i>Highlight Assembly</i>"
