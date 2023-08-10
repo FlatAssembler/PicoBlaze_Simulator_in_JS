@@ -17,9 +17,9 @@ function parse(tokenized) {
   let root = new TreeNode("assembly", 0); // Value which will be returned.
   for (
       let i = 0; i < tokenized.length;
-      i++ // First, let's deal with if-branching
+      i++ // First, let's deal with if-branching and while-loops...
   ) {
-    if (/^if$/i.test(tokenized[i].text) && tokenized[i].children.length == 0) {
+    if (/^if$/i.test(tokenized[i].text)) {
       let pointerToTheNextNewline = i + 1, condition = [];
       while (tokenized[pointerToTheNextNewline].text != "\n") {
         condition.push(tokenized[pointerToTheNextNewline]);
@@ -80,21 +80,13 @@ function parse(tokenized) {
         tokenized.splice(i + 1, pointerToEndIf - i);
         tokenized[i].children.push(parse(elseClause));
       }
-    }
-    if (/^endif$/i.test(tokenized[i].text) ||
-        /^else$/i.test(tokenized[i].text)) {
+    } else if (/^endif$/i.test(tokenized[i].text) ||
+               /^else$/i.test(tokenized[i].text)) {
       alert("Line #" + tokenized[i].lineNumber +
             ': The preprocessor directive "' + tokenized[i].text +
             '" found without the corresponding "if" directive!');
       return root;
-    }
-  }
-  for (
-      let i = 0; i < tokenized.length;
-      i++ // Then, let's deal with while-loops...
-  ) {
-    if (/^while$/i.test(tokenized[i].text) &&
-        tokenized[i].children.length == 0) {
+    } else if (/^while$/i.test(tokenized[i].text)) {
       let pointerToTheNextNewline = i + 1, condition = [];
       while (tokenized[pointerToTheNextNewline].text != "\n") {
         condition.push(tokenized[pointerToTheNextNewline]);
@@ -125,8 +117,7 @@ function parse(tokenized) {
       loopClause.splice(loopClause.length - 1, 1);
       tokenized[i].children.push(parse(loopClause));
       tokenized.splice(i + 1, pointerToEndWhile - i);
-    }
-    if (/^endwhile$/i.test(tokenized[i].text)) {
+    } else if (/^endwhile$/i.test(tokenized[i].text)) {
       alert(
           "Line #" + tokenized[i].lineNumber +
           ': The preprocessor directive "endwhile" found without the corresponding "while" directive!');
