@@ -9,7 +9,7 @@
 ;I have started a
 ;<a href="https://board.flatassembler.net/topic.php?p=232650#232650">forum thread about this program</a>.
 
-;WARNING: Please do not press
+;<b style="color: #770000">WARNING</b>: Please do not press
 ;         "<i>Highlight Assembly</i>"
 ;         before you assemble this program,
 ;         as there is a bug in the syntax
