@@ -141,7 +141,13 @@ function makeCompilationContext(parsed, oldCompilationContext) {
       context.namedRegisters.set(node.children[2].text, node.children[0].text);
       console.log("DEBUG: Naming a register, point #3...");
     }
-    if (/^display$/i.test(node.text)) {
+    if (/^display$/i.test(node.text) &&
+        (
+            typeof PicoBlaze !==
+            "object" // Because UART_OUTPUT is not declared in PicoBlaze
+                     // Simulator for Android, which we detect by `PicoBlaze`
+                     // being declared.
+            )) {
       if (node.children[0].text[0] == '"')
         document.getElementById("UART_OUTPUT").innerText +=
             node.children[0].text.substr(1, node.children[0].text.length - 2);
