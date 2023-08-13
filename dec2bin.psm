@@ -74,7 +74,9 @@ CONSTANT U_RX_F, 00100000'b
 
 ;The following code will not
 ;assemble in PicoBlaze_Simulator_in_JS
-;version older than <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/releases/tag/v2.8">v2.8</a>.
+;version older than <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/releases/tag/v2.8">v2.8</a>,
+;and it is a no-operation in
+;PicoBlaze Simulator for Android.
 display "Before starting this "
 display "program, enter decimal "
 display "integers separated by "
