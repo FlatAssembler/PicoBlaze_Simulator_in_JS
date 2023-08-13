@@ -12,7 +12,7 @@
 ;assembly (that the assembler written in
 ;JavaScript sent no machine code to the
 ;main program written in Java) in
-;PicoBlaze Simulator for Android.
+;<a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_for_Android">PicoBlaze Simulator for Android</a>.
 ;I have started a
 ;<a href="https://board.flatassembler.net/topic.php?p=232650#232650">forum thread about this program</a>.
 
