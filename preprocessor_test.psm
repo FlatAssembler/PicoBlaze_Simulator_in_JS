@@ -6,6 +6,13 @@
 ;printing the Fibonacci numbers
 ;smaller than 100 on the terminal
 ;during the assembly time.
+;This program compiles to no machine
+;code at all, and it does nothing except
+;causing an error message right after
+;assembly (that the assembler written in
+;JavaScript sent no machine code to the
+;main program written in Java) in
+;PicoBlaze Simulator for Android.
 ;I have started a
 ;<a href="https://board.flatassembler.net/topic.php?p=232650#232650">forum thread about this program</a>.
 
