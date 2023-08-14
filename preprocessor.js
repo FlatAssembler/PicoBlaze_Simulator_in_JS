@@ -151,10 +151,21 @@ function makeCompilationContext(parsed, oldCompilationContext) {
       if (node.children[0].text[0] == '"')
         document.getElementById("UART_OUTPUT").innerText +=
             node.children[0].text.substr(1, node.children[0].text.length - 2);
-      else
-        document.getElementById("UART_OUTPUT").innerText += String.fromCharCode(
-            node.children[0].interpretAsArithmeticExpression(
-                context.constants));
+      else {
+        const ASCIIValue =
+            node.children[0].interpretAsArithmeticExpression(context.constants);
+        if (ASCIIValue != '\n'.charCodeAt(0))
+          document.getElementById("UART_OUTPUT")
+              .appendChild(
+                  document.createTextNode(String.fromCharCode(ASCIIValue)));
+        else
+          document.getElementById("UART_OUTPUT")
+              .appendChild(document.createElement(
+                  "br")); // This doesn't appear to work in Firefox if UART is
+                          // disabled while assembling...
+      }
+    } else if (/^display$/i.test(node.text)) {
+      // TODO: Do something sensible in PicoBlaze Simulator for Android...
     }
     if (/^if$/i.test(node.text) && node.children.length == 2) {
       //"if" without "else"
