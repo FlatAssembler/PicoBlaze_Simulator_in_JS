@@ -35,6 +35,7 @@ while first &lt; 100'd
 	if first &lt; 10'd
 		display "0" + first
 		display " " ;In case inserting a new-line character doesn't work...
+		            ;I have opened <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/8">a GitHub issue about that problem</a>.
 		display a
 	else
 		constant remainder, first

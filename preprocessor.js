@@ -169,7 +169,9 @@ function makeCompilationContext(parsed, oldCompilationContext) {
           document.getElementById("UART_OUTPUT")
               .appendChild(document.createElement(
                   "br")); // This doesn't appear to work in Firefox if UART is
-                          // disabled while assembling...
+                          // disabled while assembling, and I have opened a
+                          // GitHub issue about that:
+                          // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/8
       }
     } else if (/^display$/i.test(node.text)) {
       if (node.children[0].text[0] == '"') {
