@@ -20,6 +20,10 @@ function makeCompilationContext(parsed, oldCompilationContext) {
       namedRegisters : new Map(),
       labels : new Map(),
     };
+  if (typeof PicoBlaze === "object")
+    context.constants.set("PicoBlaze_Simulator_for_Android", 1);
+  else
+    context.constants.set("PicoBlaze_Simulator_in_JS", 1);
   if (!(parsed instanceof TreeNode) || parsed.text != "assembly") {
     // Such an error would be impossible in C++, but there is nothing preventing
     // it in JavaScript.
@@ -165,7 +169,18 @@ function makeCompilationContext(parsed, oldCompilationContext) {
                           // disabled while assembling...
       }
     } else if (/^display$/i.test(node.text)) {
-      // TODO: Do something sensible in PicoBlaze Simulator for Android...
+      if (node.children[0].text[0] == '"') {
+        for (let i = 0; i < node.children[0].text.length; i++)
+          if (node.children[0].text[i] != '"')
+            PicoBlaze.displayCharacterOnTerminal(
+                node.children[0].text.charCodeAt(
+                    i)); // Right now, `displayCharacterOnTerminal` is a
+                         // no-operation in PicoBlaze_Simulator_for_Android.
+      } else {
+        PicoBlaze.displayCharacterOnTerminal(
+            node.children[0].interpretAsArithmeticExpression(
+                context.constants));
+      }
     }
     if (/^if$/i.test(node.text) && node.children.length == 2) {
       //"if" without "else"
