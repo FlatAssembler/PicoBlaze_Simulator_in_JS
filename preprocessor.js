@@ -20,10 +20,13 @@ function makeCompilationContext(parsed, oldCompilationContext) {
       namedRegisters : new Map(),
       labels : new Map(),
     };
-  if (typeof PicoBlaze === "object")
+  if (typeof PicoBlaze === "object") {
     context.constants.set("PicoBlaze_Simulator_for_Android", 1);
-  else
+    context.constants.set("PicoBlaze_Simulator_in_JS", 0);
+  } else {
     context.constants.set("PicoBlaze_Simulator_in_JS", 1);
+    context.constants.set("PicoBlaze_Simulator_for_Android", 0);
+  }
   if (!(parsed instanceof TreeNode) || parsed.text != "assembly") {
     // Such an error would be impossible in C++, but there is nothing preventing
     // it in JavaScript.
