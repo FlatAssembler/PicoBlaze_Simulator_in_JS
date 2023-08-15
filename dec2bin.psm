@@ -74,9 +74,8 @@ CONSTANT U_RX_F, 00100000'b
 
 ;The following code will not
 ;assemble in PicoBlaze_Simulator_in_JS
-;version older than <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/releases/tag/v2.8">v2.8</a>,
-;and it is a no-operation in
-;<a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_for_Android">PicoBlaze Simulator for Android</a>.
+;version older than <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/releases/tag/v2.8">v2.8</a>.
+if PicoBlaze_Simulator_in_JS
 display "Before starting this "
 display "program, enter decimal "
 display "integers separated by "
@@ -87,6 +86,29 @@ display "character after the last "
 display "number."
 display a ;A new-line character, see
           ;<a href="#newline_character">below</a> for more details.
+endif
+
+;The following code is a no-operation
+;in the current version of
+;<a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_for_Android">PicoBlaze Simulator for Android</a>,
+;but I hope it will be useful in some
+;future version (when that program is
+;finished by somebody who knows Java
+;and Android well).
+if PicoBlaze_Simulator_for_Android
+display "After starting this "
+display "program, type decimal "
+display "integers here and "
+display "press Enter after "
+display "each. Right after "
+display "you press Enter, "
+display "this program will "
+display "convert the decimal "
+display "integer you just entered "
+display "to binary."
+display a
+endif
+
 
 ADDRESS 000
 START:
