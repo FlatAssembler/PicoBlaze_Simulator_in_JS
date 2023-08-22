@@ -22,6 +22,6 @@ const preprocessor = [
   "ENDWHILE",
 ];
 
-if (typeof module != undefined) { // In case we are testing with JEST...
-  module.exports = {mnemonics : mnemonics, preprocessor : preprocessor}
+if (typeof module != "undefined") { // In case we are testing with JEST...
+  module.exports = {mnemonics : mnemonics, preprocessor : preprocessor};
 }
