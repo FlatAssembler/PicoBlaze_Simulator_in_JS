@@ -67,6 +67,11 @@ test("Hexadecimal numbers", () => {
   expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
       .toEqual(0xa / 2);
 })
+test("Hexadecimal numbers composed entirely of decimal digits", () => {
+  const AST = parser.parse(tokenizer.tokenize("10 / 2"));
+  expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
+      .toEqual(0x10 / 2);
+})
 test("ASCII", () => {
   const AST = parser.parse(tokenizer.tokenize('"A"'));
   expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
