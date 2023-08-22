@@ -20,6 +20,10 @@
     "url": "https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues"
   },
   "homepage": "https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS#readme",
+  "engines" : {
+    "npm" : ">=8.0.0",
+    "node" : ">=16.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.22.10",
     "@babel/preset-env": "^7.22.10",
