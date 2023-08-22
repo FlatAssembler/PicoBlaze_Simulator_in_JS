@@ -27,7 +27,7 @@
 ;         such as this one. I have opened
 ;         a <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/7">GitHub issue about that</a>.
 
-display "We are about to display Fibonacci numbers smaller than 100 in the UART terminal..."
+display "We are about to display Fibonacci numbers smaller than 100 in the UART terminal... "
 display a ;0xa=='\n', a new-line character.
 constant first, 0
 constant second, 1
