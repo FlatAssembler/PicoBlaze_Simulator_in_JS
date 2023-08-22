@@ -1,0 +1,27 @@
+{
+  "name": "picoblaze-simulator-js",
+  "version": "1.0.0",
+  "description": "A PicoBlaze simulator in JS",
+  "main": "app.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS.git"
+  },
+  "keywords": [
+    "picoblaze",
+    "githubpages"
+  ],
+  "author": "FlatAssembler",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues"
+  },
+  "homepage": "https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS#readme",
+  "devDependencies": {
+    "jest": "^29.6.3",
+    "jest-environment-jsdom": "^29.6.3"
+  }
+}
