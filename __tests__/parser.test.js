@@ -102,5 +102,13 @@ endif
       .toEqual(
           "(\"assembly\" (\"if\" (\"&\" (\">\" \"i\" \"0\") (\"<\" \"i\" \"10'd\")) (\"assembly\" (\"while\" (\"<\" \"i\" \"10'd\") (\"assembly\" (\"constant\" \"i\" \",\" (\"+\" \"i\" \"1\")) (\"display\" (\"+\" \"\"0\"\" \"i\")) (\"display\" \"a\"))))))");
 })
+test("Enabling and disabling interrupts", () => {
+  const AST = parser.parse(tokenizer.tokenize(`
+enable interrupts
+returni enable
+`));
+  expect(AST.getLispExpression())
+      .toEqual('("assembly" ("enable" "interrupts") ("returni" "enable"))');
+})
 }
 );
