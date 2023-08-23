@@ -1,0 +1,13 @@
+javascript:
+  image: node:latest
+  stage: test
+  before_script:
+    - 'yarn global add jest'
+    - 'yarn add --dev jest-junit'
+  script:
+    - 'jest --ci --reporters=default --reporters=jest-junit'
+  artifacts:
+    when: always
+    reports:
+      junit:
+        - junit.xml
