@@ -1,4 +1,4 @@
-global.formatAsAddress = require("../headerScript.js").formatAsAddress; //referenced by tokenizer
+global.formatAsAddress = require("../headerScript.js").formatAsAddress; //referenced by simulator
 
 const simulator = require("../simulator.js");
 
