@@ -21,6 +21,13 @@ const clearGlobals = () => {
         td.setAttribute('id', "PC_label_" + formatAsAddress(i));
         document.body.appendChild(td);
     }
+
+    /* UART setup*/
+    global.is_UART_enabled = false;
+    const uartOutputEl = document.createElement('pre');
+    uartOutputEl.setAttribute('id', 'UART_OUTPUT');
+    uartOutputEl.innerText = "";
+    document.body.appendChild(uartOutputEl);
 };
 
 describe("PicoBlaze MachineCode Simulator", () => {
@@ -76,6 +83,26 @@ describe("PicoBlaze MachineCode Simulator", () => {
             simulator.simulateOneInstruction();
         }
         expect(registers[0][0]).toBe(255);
+    })
+
+    test("Output register to UART terminal", () => {
+        global.is_UART_enabled = true;
+
+        const machineCode = 'Hello'.split('')
+            .map((c, i) => [
+                //Convert every char to its codepoint and load s0
+                {hex: '010' + c.charCodeAt(0).toString(16), line: i*2+1},
+                //Write to port 3
+                {hex: '2d003', line: i*2+2}
+            ])
+            .flat();
+
+        global.machineCode = machineCode;
+        machineCode.forEach(() => {
+            simulator.simulateOneInstruction();
+        })
+
+        expect(document.getElementById("UART_OUTPUT").innerText).toBe('Hello')
     })
 
 })
