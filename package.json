@@ -4,7 +4,7 @@
   "description": "A PicoBlaze simulator in JS",
   "main": "app.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "repository": {
     "type": "git",
