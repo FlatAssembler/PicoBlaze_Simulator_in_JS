@@ -45,8 +45,8 @@ describe("PicoBlaze MachineCode Simulator", () => {
         ];
 
 
-        simulator.simulateOneInstruction(); //load s0, 5
-        simulator.simulateOneInstruction(); //add s0, 4
+        simulator.simulateOneInstructionUsingGlobals(); //load s0, 5
+        simulator.simulateOneInstructionUsingGlobals(); //add s0, 4
         expect(registers[0][0]).toBe(9);
     })
 
@@ -57,16 +57,16 @@ describe("PicoBlaze MachineCode Simulator", () => {
         ];
 
 
-        simulator.simulateOneInstruction(); //load s0, 00000101´b
-        simulator.simulateOneInstruction(); //sr1 s0
+        simulator.simulateOneInstructionUsingGlobals(); //load s0, 00000101´b
+        simulator.simulateOneInstructionUsingGlobals(); //sr1 s0
         expect(registers[0][0].toString(2)).toBe('10000010');
     })
 
     test("sub 5 - 4 equals 1", () => {
         global.machineCode = [{hex:"01005",line:3},{hex:"19004",line:4}]
         console.time("test")
-        simulator.simulateOneInstruction(); //load s0, 0
-        simulator.simulateOneInstruction(); //sub s4, 4
+        simulator.simulateOneInstructionUsingGlobals(); //load s0, 0
+        simulator.simulateOneInstructionUsingGlobals(); //sub s4, 4
 
         expect(registers[0][0]).toBe(1);
     })
@@ -74,8 +74,8 @@ describe("PicoBlaze MachineCode Simulator", () => {
     test("jump nz + labels work", () => {
         global.machineCode = [{hex:"01000",line:4},{hex:"011ff",line:5},{hex:"11001",line:7},{hex:"19101",line:8},
             {hex:"36002",line:9}]
-        simulator.simulateOneInstruction(); //load s0, 0
-        simulator.simulateOneInstruction(); //load s1, 255'd
+        simulator.simulateOneInstructionUsingGlobals(); //load s0, 0
+        simulator.simulateOneInstructionUsingGlobals(); //load s1, 255'd
 
         /*
         label:
@@ -85,7 +85,7 @@ describe("PicoBlaze MachineCode Simulator", () => {
          */
         for (let i = 0; i < 255 * 3; i++) {
             //we do it a few times since it's fast :). took less than 100ms on my machine
-            simulator.simulateOneInstruction();
+            simulator.simulateOneInstructionUsingGlobals();
         }
         expect(registers[0][0]).toBe(255);
     })
@@ -105,7 +105,7 @@ describe("PicoBlaze MachineCode Simulator", () => {
             );
 
         global.machineCode.forEach(() => {
-            simulator.simulateOneInstruction();
+            simulator.simulateOneInstructionUsingGlobals();
         })
 
         //Reconstruct string from registers
@@ -132,7 +132,7 @@ describe("PicoBlaze MachineCode Simulator", () => {
 
         global.machineCode = machineCode;
         machineCode.forEach(() => {
-            simulator.simulateOneInstruction();
+            simulator.simulateOneInstructionUsingGlobals();
         })
 
         expect(document.getElementById("UART_OUTPUT").innerText).toBe('Hello')

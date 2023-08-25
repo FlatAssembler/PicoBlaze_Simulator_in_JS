@@ -1,8 +1,25 @@
 "use strict";
-function simulateOneInstruction() {
+function simulateOneInstructionUsingGlobals() {
+  const state = {
+    machineCode,
+    registers,
+    PC,
+    regbank,
+    flagZ,
+    flagC,
+    breakpoints,
+    playing,
+    displayRegistersAndFlags: ()=>{},
+    alert: console.log
+  }
+
+  simulateOneInstruction(state);
+  Object.assign(window, state);
+}
+
+function simulateOneInstruction(state) {
   try {
-    PC = PC %
-         4096; // If you are at the end of a program, and there is no "return"
+    let PC = state.PC % 4096; // If you are at the end of a program, and there is no "return"
     // there, jump to the beginning of the program. I think that's
     // how PicoBlaze behaves, though I haven't tried it.
     if (breakpoints.includes(machineCode[PC].line)) {
@@ -905,6 +922,7 @@ function simulateOneInstruction() {
           machineCode[PC].line + ".");
       stopSimulation();
     }
+    state.PC = PC;
     displayRegistersAndFlags();
     document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
         "-&gt;";
