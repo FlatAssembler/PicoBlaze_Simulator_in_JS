@@ -2,17 +2,23 @@ global.formatAsAddress = require("../headerScript.js").formatAsAddress; //refere
 
 const simulator = require("../simulator.js");
 
+function initialState() {
+    return {
+        registers: [new Array(16).fill(0), new Array(16).fill(0)],
+        PC: 0,
+        machineCode: [new Array(4096).fill({hex: '00000', line: 0})],
+        regbank: 0,
+        flagZ: [0, 0],
+        flagC: [0, 0],
+        breakpoints: [],
+        playing: false
+    }
+}
+
 const clearGlobals = () => {
 
-    global.registers = [new Array(16).fill(0), new Array(16).fill(0)];
-    global.PC = 0;
-    global.machineCode = [new Array(4096).fill({hex: '00000', line: 0})];
-    global.regbank = 0;
-    global.flagZ = [0,0];
-    global.flagC = [0,0];
+    Object.assign(global, initialState())
 
-    global.breakpoints = [];
-    global.playing = false;
     global.displayRegistersAndFlags = jest.fn();
     global.alert = (...args) => console.log(args);
 
@@ -48,6 +54,21 @@ describe("PicoBlaze MachineCode Simulator", () => {
         simulator.simulateOneInstruction(); //load s0, 5
         simulator.simulateOneInstruction(); //add s0, 4
         expect(registers[0][0]).toBe(9);
+    })
+
+    test("add 4 + 5 equals 9 using state", () => {
+        const machineCode = [
+            {hex: '01005', line: 3}, //load s0, 5
+            {hex: '11004', line: 4}, //add s0, 4
+        ];
+
+        const state = {...initialState(), machineCode};
+
+        simulator.simulateOneInstruction(state); //load s0, 5
+        simulator.simulateOneInstruction(state); //add s0, 4
+
+        expect(state.registers[0][0]).toBe(9);
+        expect(state.PC).toBe(2)
     })
 
     test("SR1 shifts right adding 1", () => {
