@@ -1,25 +1,28 @@
 "use strict";
-function simulateOneInstructionUsingGlobals() {
-  const state = {
-    machineCode,
-    registers,
-    PC,
-    regbank,
-    flagZ,
-    flagC,
-    breakpoints,
-    playing,
-    displayRegistersAndFlags: ()=>{},
-    alert: console.log
-  }
-
-  simulateOneInstruction(state);
-  Object.assign(window, state);
-}
 
 function simulateOneInstruction(state) {
+
+  //Temporary overload
+  if (state == null) {
+    // Create state from globals, call itself with a state made from globals, assign again then return
+    // This is so existing code can keep working as it did. Once everything is refactored out state should be mandatory
+    const state = {
+      machineCode: window.machineCode,
+      registers: window.registers,
+      PC: window.PC, //int primitive (must reassign to state after simulateOneInstruction)
+      regbank: window.regbank, //int primitive (same)
+      flagZ: window.flagZ,
+      flagC: window.flagC,
+      breakpoints: window.breakpoints,
+      playing: window.playing,
+    }
+    simulateOneInstruction(state);
+    Object.assign(window, state); //Reassign mutated state to the globals and return
+    return;
+  }
+  let {machineCode, flagC, flagZ, registers, regbank, playing, PC} = state;
   try {
-    let PC = state.PC % 4096; // If you are at the end of a program, and there is no "return"
+    PC = PC % 4096; // If you are at the end of a program, and there is no "return"
     // there, jump to the beginning of the program. I think that's
     // how PicoBlaze behaves, though I haven't tried it.
     if (breakpoints.includes(machineCode[PC].line)) {
@@ -922,7 +925,6 @@ function simulateOneInstruction(state) {
           machineCode[PC].line + ".");
       stopSimulation();
     }
-    state.PC = PC;
     displayRegistersAndFlags();
     document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
         "-&gt;";
@@ -931,4 +933,7 @@ function simulateOneInstruction(state) {
       clearInterval(simulationThread);
     alert("The simulator crashed! Error: " + error.message);
   }
+  state.playing = playing;
+  state.PC = PC;
+  state.regbank = regbank;
 }
