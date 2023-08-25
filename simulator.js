@@ -18,6 +18,7 @@ function simulateOneInstruction(state) {
       playing: window.playing, //boolean primitive
       memory: window.memory,
       callStack: window.callStack,
+      output: window.output,
       is_UART_enabled: window.is_UART_enabled, //readonly boolean primitive
       currentlyReadCharacterInUART: window.currentlyReadCharacterInUART //int primitive
     }
@@ -37,6 +38,7 @@ function simulateOneInstruction(state) {
     breakpoints,
     memory,
     callStack,
+    output,
     is_UART_enabled,
     currentlyReadCharacterInUART
   } = state;
