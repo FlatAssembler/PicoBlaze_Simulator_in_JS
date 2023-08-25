@@ -13,14 +13,34 @@ function simulateOneInstruction(state) {
       regbank: window.regbank, //int primitive (same)
       flagZ: window.flagZ,
       flagC: window.flagC,
+      flagIE: window.flagIE, //int primitive
       breakpoints: window.breakpoints,
-      playing: window.playing,
+      playing: window.playing, //boolean primitive
+      memory: window.memory,
+      callStack: window.callStack,
+      is_UART_enabled: window.is_UART_enabled, //readonly boolean primitive
+      currentlyReadCharacterInUART: window.currentlyReadCharacterInUART //int primitive
     }
     simulateOneInstruction(state);
     Object.assign(window, state); //Reassign mutated state to the globals and return
     return;
   }
-  let {machineCode, flagC, flagZ, registers, regbank, playing, PC} = state;
+  let {
+    machineCode,
+    PC,
+    registers,
+    flagC,
+    flagZ,
+    flagIE,
+    regbank,
+    playing,
+    breakpoints,
+    memory,
+    callStack,
+    is_UART_enabled,
+    currentlyReadCharacterInUART
+  } = state;
+
   try {
     PC = PC % 4096; // If you are at the end of a program, and there is no "return"
     // there, jump to the beginning of the program. I think that's
@@ -933,7 +953,12 @@ function simulateOneInstruction(state) {
       clearInterval(simulationThread);
     alert("The simulator crashed! Error: " + error.message);
   }
-  state.playing = playing;
+
+  // reassigned here, we could also mutate state in place
   state.PC = PC;
   state.regbank = regbank;
+  state.flagIE = flagIE;
+  state.playing = playing;
+  state.is_UART_enabled = is_UART_enabled; //This one is readonly, no need to reassign here
+  state.currentlyReadCharacterInUART = currentlyReadCharacterInUART;
 }
