@@ -24,10 +24,15 @@ const clearGlobals = () => {
 
     /* UART setup*/
     global.is_UART_enabled = false;
+    global.currentlyReadCharacterInUART = 0;
+    const uartInputEl = document.createElement('textarea');
+    uartInputEl.setAttribute('id', 'UART_INPUT');
+
     const uartOutputEl = document.createElement('pre');
     uartOutputEl.setAttribute('id', 'UART_OUTPUT');
     uartOutputEl.innerText = "";
     document.body.appendChild(uartOutputEl);
+    document.body.appendChild(uartInputEl)
 };
 
 describe("PicoBlaze MachineCode Simulator", () => {
@@ -83,6 +88,34 @@ describe("PicoBlaze MachineCode Simulator", () => {
             simulator.simulateOneInstruction();
         }
         expect(registers[0][0]).toBe(255);
+    })
+
+    test("Input UART to register", () => {
+        global.is_UART_enabled = true;
+
+        const str = "Hello";
+        const el = document.getElementById("UART_INPUT");
+        el.value = str;
+
+        global.machineCode = str.split('')
+            .map((c, i) => (
+                //Input to Hello to s0, s1, ...sN
+                {hex: '09' + i + '03', line: i+1}
+                )
+            );
+
+        global.machineCode.forEach(() => {
+            simulator.simulateOneInstruction();
+        })
+
+        //Reconstruct string from registers
+        const actual = registers[0].slice(0, str.length) //s0 to s5
+            .map(charcode => String.fromCharCode(charcode))
+            .join('');
+
+        expect(actual).toBe('Hello');
+        expect(global.currentlyReadCharacterInUART).toBe(str.length);
+
     })
 
     test("Output register to UART terminal", () => {
