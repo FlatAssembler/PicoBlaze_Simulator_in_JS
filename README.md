@@ -1,8 +1,12 @@
-# PicoBlaze Emulator in JavaScript
+# PicoBlaze Assembler and Emulator in JavaScript
 
 ![Picture of PicoBlaze](Background.gif)
 
-This is my attempt to implement a [Xilinx PicoBlaze](https://en.wikipedia.org/wiki/PicoBlaze) assembler and emulator in JavaScript. My Computer Architecture professor Ivan Aleksi asked me to make it in case physical laboratory exercises need to be canceled because of a pandemic. You can see the assembler and the emulator live on [my website](https://flatassembler.github.io/PicoBlaze/PicoBlaze.html) and on [SourceForge](https://picoblaze-simulator.sourceforge.io/) (let's hope it will never happen that both of them are down right when you need a PicoBlaze Simulator). Right now, it has no back-end. Maybe I will add some back-end to enable users to share their own examples and comment on other users' examples later, but, for that, I will need to learn quite a bit of PHP, and it will work only on SourceForge because GitHub Pages supports no back-end scripting. The documentation, in Croatian, is available in the `seminar` folder, in DOCX, DOC, ODT, PDF and [RTF](https://flatassembler.github.io/PicoBlaze/PicoBlaze.rtf) formats.
+This is my attempt to implement a [Xilinx PicoBlaze](https://en.wikipedia.org/wiki/PicoBlaze) assembler and emulator in JavaScript. My Computer Architecture professor Ivan Aleksi asked me to make it in case physical laboratory exercises need to be canceled because of a pandemic. You can see the assembler and the emulator live on [my website](https://flatassembler.github.io/PicoBlaze/PicoBlaze.html) and on [SourceForge](https://picoblaze-simulator.sourceforge.io/) (let's hope it will never happen that both of them are down right when you need a PicoBlaze assembler and emulator). I try my best to make it work on both places in Firefox 52 and newer browsers at all times. Or, if you want to try the version which has more features, but potentially has bugs, you can try [where a version of this program is hosted on @agustiza's website](https://agustiza.github.io/PicoBlaze_Simulator_in_JS/PicoBlaze.html).
+
+Right now, this program has no back-end. Maybe I will add some back-end to enable users to share their own examples and comment on other users' examples later, but, for that, I will need to learn quite a bit of PHP, and it will work only on SourceForge because GitHub Pages supports no back-end scripting.
+
+The documentation, in Croatian, is available in the `seminar` folder, in DOCX, DOC, ODT, PDF and [RTF](https://flatassembler.github.io/PicoBlaze/PicoBlaze.rtf) formats.
 
 If you want to host this project yourself, you might want to edit the lines following the [17th line of the `PicoBlaze.html` file](https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/blob/6e28dd2b8ce3c8344bf223ced8983b5eb2fb2eb5/PicoBlaze.html#L17):
 ```html
