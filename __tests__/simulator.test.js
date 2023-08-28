@@ -159,4 +159,13 @@ describe("PicoBlaze MachineCode Simulator", () => {
         expect(document.getElementById("UART_OUTPUT").innerText).toBe('Hello')
     })
 
+    test('return when calllstack is empty alerts that the program exited', () => {
+        let alertMsg;
+        global.alert = (str) => {alertMsg = str};
+        global.machineCode = [{hex: '25000', line: 8}] //Return
+        simulator.simulateOneInstruction();
+
+        expect(alertMsg).toBe("The program exited!")
+    })
+
 })
