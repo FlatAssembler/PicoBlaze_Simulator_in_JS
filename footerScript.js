@@ -53,42 +53,37 @@ document.getElementById("assembleButton").onclick = () => {
   } catch (error) {
     alert("Internal assembler error: " + error.message);
   }
-  drawTable();
+  drawTable(state);
   stopSimulation();
 };
 function stopSimulation() {
   document.getElementById("fastForwardButton").disabled = false;
   document.getElementById("singleStepButton").disabled = false;
   document.getElementById("UART_INPUT").disabled = false;
-  if (playing)
-    clearInterval(simulationThread);
-  document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
-  PC = 0;
+  document.getElementById("PC_label_" + formatAsAddress(state.PC)).innerHTML = "";
   document.getElementById("PC_label_000").innerHTML = "-&gt;";
-  playing = false;
   document.getElementById("playImage").style.display = "inline";
   document.getElementById("pauseImage").style.display = "none";
-  for (let i = 0; i < 256; i++)
-    output[i] = 0;
-  for (let i = 0; i < 16; i++)
-    registers[0][i] = registers[1][i] = 0;
-  flagZ = [ 0, 0 ];
-  flagC = [ 0, 0 ];
-  callStack = [];
-  regbank = 0;
-  flagIE = 1;
+
+  if (state.playing)
+    clearInterval(simulationThread);
+  state = initialState();
+  /*TODO: Probably shouldn't have to do this. machineCode is not actually state but an input */
+  state.machineCode = machineCode;
+
   displayRegistersAndFlags();
   displayOutput();
-  currentlyReadCharacterInUART = 0;
 }
-setupLayout();
-window.onresize = setupLayout;
-drawTable();
-displayRegistersAndFlags();
+
+let state = initialState();
+setupLayout(state.is_UART_enabled);
+window.onresize = () => setupLayout(state.is_UART_enabled);
+drawTable(state);
+displayRegistersAndFlags();//TODO: STATE
 let playing = false;
 function onPlayPauseButton() {
-  playing = !playing;
-  if (!playing) {
+  state.playing = !state.playing;
+  if (!state.playing) {
     clearInterval(simulationThread);
     document.getElementById("fastForwardButton").disabled = false;
     document.getElementById("singleStepButton").disabled = false;
@@ -96,7 +91,7 @@ function onPlayPauseButton() {
     document.getElementById("playImage").style.display = "inline";
     document.getElementById("pauseImage").style.display = "none";
   } else {
-    simulationThread = setInterval(simulateOneInstruction, 500);
+    simulationThread = setInterval(() => simulateOneInstruction(state), 500);
     document.getElementById("fastForwardButton").disabled = true;
     document.getElementById("singleStepButton").disabled = true;
     document.getElementById("UART_INPUT").disabled = true;
@@ -105,16 +100,16 @@ function onPlayPauseButton() {
   }
 }
 function onSingleStepButton() {
-  if (playing)
+  if (state.playing)
     return;
-  simulateOneInstruction();
+  simulateOneInstruction(state);
 }
 function fastForward() {
-  playing = true;
+  state.playing = true;
   document.getElementById("fastForwardButton").disabled = true;
   document.getElementById("singleStepButton").disabled = true;
   document.getElementById("UART_INPUT").disabled = true;
-  simulationThread = setInterval(simulateOneInstruction, 0);
+  simulationThread = setInterval(() => simulateOneInstruction(state), 0);
   document.getElementById("playImage").style.display = "none";
   document.getElementById("pauseImage").style.display = "inline";
 }
@@ -212,13 +207,13 @@ document.getElementById("input_00").oninput = () => {
         .setAttribute("y", 40 - formatedAsBinary[i] * 15);
 };
 document.getElementById("UART_enable_button").onclick = () => {
-  is_UART_enabled = !is_UART_enabled;
+  state.is_UART_enabled = !state.is_UART_enabled;
   document.getElementById("input_02").disabled =
       document.getElementById("input_03").disabled = is_UART_enabled;
   document.getElementById("UART_IO").style.display =
-      is_UART_enabled ? "block" : "none";
+      state.is_UART_enabled ? "block" : "none";
   document.getElementById("enable_or_disable_UART").innerHTML =
-      is_UART_enabled ? "Disable" : "Enable";
+      state.is_UART_enabled ? "Disable" : "Enable";
   window.onresize();
 };
 fetch(URL_of_JSON_with_examples)
