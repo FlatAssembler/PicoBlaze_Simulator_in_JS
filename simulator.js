@@ -1,31 +1,31 @@
 "use strict";
 
+function _stateFromGlobals() {
+  return {
+    machineCode: machineCode,
+    registers: registers,
+    PC: PC, //int primitive (must reassign to state after simulateOneInstruction)
+    regbank: regbank, //int primitive (same)
+    flagZ: flagZ,
+    flagC: flagC,
+    flagIE: flagIE, //int primitive
+    breakpoints: breakpoints,
+    playing: playing, //boolean primitive
+    memory: memory,
+    callStack: callStack,
+    output: output,
+    is_UART_enabled: is_UART_enabled, //readonly boolean primitive
+    currentlyReadCharacterInUART: currentlyReadCharacterInUART //int primitive
+  }
+}
+
+function InvalidCallstackError(instruction) {
+  this.message = "The program exited! Tried to return without a callstack at line " + instruction.line;
+  this.instruction = instruction;
+}
+
 function simulateOneInstruction(state) {
 
-  //Temporary overload
-  if (state == null) {
-    // Create state from globals, call itself with a state made from globals, assign again then return
-    // This is so existing code can keep working as it did. Once everything is refactored out state should be mandatory
-    const state = {
-      machineCode: window.machineCode,
-      registers: window.registers,
-      PC: window.PC, //int primitive (must reassign to state after simulateOneInstruction)
-      regbank: window.regbank, //int primitive (same)
-      flagZ: window.flagZ,
-      flagC: window.flagC,
-      flagIE: window.flagIE, //int primitive
-      breakpoints: window.breakpoints,
-      playing: window.playing, //boolean primitive
-      memory: window.memory,
-      callStack: window.callStack,
-      output: window.output,
-      is_UART_enabled: window.is_UART_enabled, //readonly boolean primitive
-      currentlyReadCharacterInUART: window.currentlyReadCharacterInUART //int primitive
-    }
-    simulateOneInstruction(state);
-    Object.assign(window, state); //Reassign mutated state to the globals and return
-    return;
-  }
   let {
     machineCode,
     PC,
@@ -42,6 +42,14 @@ function simulateOneInstruction(state) {
     is_UART_enabled,
     currentlyReadCharacterInUART
   } = state;
+
+  const popStack = () => {
+    if (callStack.length)
+      return callStack.pop() + 1;
+    else {
+      throw new InvalidCallstackError(machineCode[PC]);
+    }
+  }
 
   try {
     PC = PC % 4096; // If you are at the end of a program, and there is no "return"
@@ -856,25 +864,13 @@ function simulateOneInstruction(state) {
       break;
     case 0x25000:
       // RETURN
-      if (callStack.length)
-        PC = callStack.pop() + 1;
-      else {
-        if (playing)
-          clearInterval(simulationThread);
-        alert("The program exited!");
-      }
+      PC = popStack();
       //    } else if ((currentDirective & 0xff000) === 0x31000) {
       break;
     case 0x31000:
       // RETURN Z ; Return from a function only if the Zero Flag is set.
       if (flagZ[regbank]) {
-        if (callStack.length)
-          PC = callStack.pop() + 1;
-        else {
-          if (playing)
-            clearInterval(simulationThread);
-          alert("The program exited!");
-        }
+        PC = popStack();
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x35000) {
@@ -882,13 +878,7 @@ function simulateOneInstruction(state) {
     case 0x35000:
       // RETURN NZ ; Return from a function only if the Zero Flag is not set.
       if (!flagZ[regbank]) {
-        if (callStack.length)
-          PC = callStack.pop() + 1;
-        else {
-          if (playing)
-            clearInterval(simulationThread);
-          alert("The program exited!");
-        }
+        PC = popStack();
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x39000) {
@@ -896,13 +886,7 @@ function simulateOneInstruction(state) {
     case 0x39000:
       // RETURN C ; Return from a function only if the Carry Flag is set.
       if (flagC[regbank]) {
-        if (callStack.length)
-          PC = callStack.pop() + 1;
-        else {
-          if (playing)
-            clearInterval(simulationThread);
-          alert("The program exited!");
-        }
+        PC = popStack();
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x3d000) {
@@ -910,13 +894,7 @@ function simulateOneInstruction(state) {
     case 0x3d000:
       // RETURN NC ; Return from a function only if the Carry Flag is not set.
       if (!flagC[regbank]) {
-        if (callStack.length)
-          PC = callStack.pop() + 1;
-        else {
-          if (playing)
-            clearInterval(simulationThread);
-          alert("The program exited!");
-        }
+        PC = popStack();
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x28000) {
@@ -930,13 +908,7 @@ function simulateOneInstruction(state) {
     case 0x29000:
       // RETURNI ENABLE|DISABLE
       flagIE = machineCode[PC].hex[4] | 0;
-      if (callStack.length)
-        PC = callStack.pop() + 1;
-      else {
-        if (playing)
-          clearInterval(simulationThread);
-        alert("The program exited!");
-      }
+      PC = popStack();
       //    } else {
       break;
     default:
@@ -953,7 +925,15 @@ function simulateOneInstruction(state) {
   } catch (error) {
     if (playing)
       clearInterval(simulationThread);
-    alert("The simulator crashed! Error: " + error.message);
+
+    if (error instanceof InvalidCallstackError) {
+      displayRegistersAndFlags();
+      document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
+          "-&gt;";
+      alert(error.message);
+    } else {
+      alert("The simulator crashed! Error: " + error.message);
+    }
   }
 
   // reassigned here, we could also mutate state in place
