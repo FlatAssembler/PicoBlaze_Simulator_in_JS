@@ -110,5 +110,10 @@ returni enable
   expect(AST.getLispExpression())
       .toEqual('("assembly" ("enable" "interrupts") ("returni" "enable"))');
 })
+test("Unary operators", () => {
+  const AST = parser.parse(tokenizer.tokenize("-1 + 2"));
+  expect(AST.getLispExpression())
+      .toEqual('("assembly" ("+" ("-" "0" "1") "2"))');
+})
 }
 );
