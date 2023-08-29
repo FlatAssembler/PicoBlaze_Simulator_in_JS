@@ -27,5 +27,9 @@ function initialState() {
 }
 
 function initialMachineCode() {
-    return new Array(4096).fill({hex: '00000', line: 0})
+    const machineCode = new Array(4096);
+    for (let i = 0; i < machineCode.length; i++) {
+        machineCode[i] = {hex: '00000', line: 0};
+    }
+    return machineCode;
 }
