@@ -290,6 +290,8 @@ function drawTable(machineCode, PC, is_UART_enabled) {
     //FIXME: cheating a bit here with the global but someone could click downloadHex before compilation
     if (typeof state == 'undefined' || typeof state.machineCode == 'undefined') {
       machineCode = initialMachineCode();
+    } else {
+      machineCode = state.machineCode;
     }
     downloadHex(machineCode);
   };

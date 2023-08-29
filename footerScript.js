@@ -60,6 +60,7 @@ document.getElementById("assembleButton").onclick = () => {
     state.machineCode = assemble(parsed, context);
   } catch (error) {
     alert("Internal assembler error: " + error.message);
+    state.machineCode = initialMachineCode();
   }
 
   drawTable(state.machineCode, state.PC, state.is_UART_enabled);
