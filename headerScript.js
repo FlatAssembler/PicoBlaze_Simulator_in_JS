@@ -1,17 +1,9 @@
 "use strict";
-let is_UART_enabled = false, areWeHighlighting = false;
-let registers = [ new Uint8Array(16), new Uint8Array(16) ], flagZ = [ 0, 0 ],
-    flagC = [ 0, 0 ], flagIE = 1, output = new Uint8Array(256),
-    memory = new Uint8Array(256), regbank = 0, callStack = [], breakpoints = [],
-    currentlyReadCharacterInUART = 0;
 let simulationThread;
 
-let machineCode = [];
-for (let i = 0; i < 4096; i++)
-  machineCode.push({hex : "00000", line : 0});
-let PC = 0;
+function displayRegistersAndFlags(state) {
+  const {flagZ, flagC, flagIE, PC, registers, regbank} = state;
 
-function displayRegistersAndFlags() {
   for (let i = 0; i < 2; i++)
     for (let j = 0; j < 16; j++) {
       const tableCell = document.getElementById(
@@ -92,133 +84,8 @@ function displayRegistersAndFlags() {
   document.getElementById("interrupt_flag").innerHTML = flagIE;
   document.getElementById("register_PC").innerHTML = formatAsAddress(PC);
 }
-function highlightToken(token) {
-  if (token[0] === ";")
-    return `<span class="comment">${token}</span>`;
-  for (const mnemonic of mnemonics)
-    if (RegExp("^" + mnemonic + "$", "i").test(token) ||
-        /^interrupt$/i.test(token))
-      return `<span class="mnemonic">${token}</span>`;
-  for (const directive of preprocessor)
-    if (RegExp("^" + directive + "$", "i").test(token))
-      return `<span class="directive">${token}</span>`;
-  if (/^s(\d|[a-f])$/i.test(token))
-    return `<span class="register">${token}</span>`;
-  if (/^N?[CZAB]$/i.test(token))
-    // TODO: This actually sometimes incorrectly highlights "a" as
-    // a flag, when it is in fact a hexadecimal constant. You can
-    // read more about it here:
-    // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6
-    return `<span class="flag">${token}</span>`;
-  if (/:$/.test(token))
-    return `<span class="label">${token}</span>`;
-  if (token[0] === '"')
-    return `<span class="string">${token}</span>`;
-  if (/^(\d|[a-f])+$/i.test(token) || /\'d$/.test(token) || /\'b$/.test(token))
-    return `<span class="number">${token}</span>`;
-  return token;
-}
-function syntaxHighlighter(/*edit*/) {
-  //"edit" should contain the cursor position, but that seems not to work.
-  // I have opened a StackOverflow question about that:
-  // https://stackoverflow.com/q/76566400/8902065
-  if (areWeHighlighting)
-    return;
-  areWeHighlighting = true;
-  const assemblyCodeDiv = document.getElementById("assemblyCode");
-  const assemblyCode =
-      assemblyCodeDiv.innerText.replace(/&/g, "&amp;")
-          .replace(
-              /</g,
-              "&lt;") // This appears to cause this bug:
-                      // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/7
-          .replace(/>/g, "&gt;");
-  // const start=edit.selectionStart,
-  //  end=edit.selectionEnd; //Cursor position.
-  if (assemblyCode.indexOf("&") != -1) {
-    alert(
-        "Sorry about that, but syntax highlighting of the programs containing `<`, `&`, and `>` is not supported yet.");
-    areWeHighlighting = false;
-    return;
-  }
-  let areWeInAString = false;
-  let areWeInAComment = false;
-  let currentToken = "";
-  let highlightedText = "";
-  for (let i = 0; i < assemblyCode.length; i++) {
-    if (assemblyCode[i] === ";" && !areWeInAString) {
-      highlightedText += highlightToken(currentToken);
-      currentToken = ";";
-      areWeInAComment = true;
-      continue;
-    }
-    if (areWeInAComment && assemblyCode[i] !== "\n") {
-      currentToken += assemblyCode[i];
-      continue;
-    }
-    if (assemblyCode[i] === "\n") {
-      areWeInAString = false;
-      areWeInAComment = false;
-      highlightedText += highlightToken(currentToken) + "<br/>";
-      currentToken = "";
-      continue;
-    }
-    if (assemblyCode[i] === ":" && !areWeInAString) {
-      highlightedText += highlightToken(currentToken + assemblyCode[i]);
-      currentToken = "";
-      continue;
-    }
-    if ((assemblyCode[i] === " " || assemblyCode[i] === "\t" ||
-         assemblyCode[i] === "," || assemblyCode[i] === "+" ||
-         assemblyCode[i] === "-" || assemblyCode[i] === "*" ||
-         assemblyCode[i] === "/" || assemblyCode[i] === "^") &&
-        !areWeInAString) {
-      highlightedText += highlightToken(currentToken) + assemblyCode[i];
-      currentToken = "";
-      continue;
-    }
-    if (assemblyCode[i] === '"' && !areWeInAString) {
-      highlightedText += highlightToken(currentToken);
-      currentToken = '"';
-      areWeInAString = true;
-      continue;
-    }
-    if ((assemblyCode[i] === "(" || assemblyCode[i] === ")" ||
-         assemblyCode[i] === "[" || assemblyCode[i] === "]" ||
-         assemblyCode[i] === "{" || assemblyCode[i] === "}") &&
-        !areWeInAString) {
-      highlightedText += highlightToken(currentToken) +
-                         '<span class="parenthesis">' + assemblyCode[i] +
-                         "</span>";
-      currentToken = "";
-      continue;
-    }
-    if (assemblyCode[i] !== '"') {
-      currentToken += assemblyCode[i];
-      continue;
-    }
-    if (assemblyCode[i] === '"' && areWeInAString) {
-      highlightedText += highlightToken(currentToken + '"');
-      currentToken = "";
-      areWeInAString = false;
-    }
-  }
-  highlightedText += highlightToken(currentToken);
-  assemblyCodeDiv.innerHTML = highlightedText;
-  // The following code is supposed to move the cursor to the correct
-  // position, but it doesn't work.
-  /*
-  const range=document.createRange();
-  range.setStart(assemblyCodeDiv,start);
-  range.setEnd(assemblyCodeDiv,end);
-  const selection=window.getSelection();
-  selection.removeAllRanges();
-  selection.addRange(range);
-  */
-  setUpLineNumbers();
-  areWeHighlighting = false;
-}
-function setUpLineNumbers() {
+
+function setUpLineNumbers(breakpoints) {
   const assemblyCode = document.getElementById("assemblyCode").innerText;
   const numberOfLines = Math.max((assemblyCode.match(/\n/g) || []).length, 1);
   let lineNumbersHTML = "";
@@ -228,8 +95,11 @@ function setUpLineNumbers() {
         '"><img src="breakpoint.png" alt="BP" id="breakpoint_icon_' + i +
         '" class="breakpoint_icon"/>' + i + ".</div>";
   document.getElementById("lineNumbers").innerHTML = lineNumbersHTML;
-  for (let i = 1; i <= numberOfLines; i++)
-    document.getElementById("label_line_" + i).onclick = setBreakpoint;
+  for (let i = 1; i <= numberOfLines; i++) {
+    document.getElementById("label_line_" + i).onclick = (ev) => {
+      setBreakpoint(ev, breakpoints)
+    };
+  }
   for (let i = 0; i < breakpoints.length; i++)
     if (breakpoints[i] <= numberOfLines)
       document.getElementById("breakpoint_icon_" + breakpoints[i])
@@ -239,22 +109,21 @@ function setUpLineNumbers() {
       i--;
     }
 }
-function setBreakpoint(event) {
+function setBreakpoint(event, breakpoints) {
   const lineNumber =
       parseInt(event.currentTarget.getAttribute("data-linenumber"));
   console.log("Setting/removing breakpoint on line #" + lineNumber + ".");
-  if (breakpoints.includes(lineNumber))
+  if (breakpoints.includes(lineNumber)) {
     breakpoints.splice(breakpoints.indexOf(lineNumber), 1);
-  else
-    breakpoints.push(lineNumber);
-  if (breakpoints.includes(lineNumber))
     document.getElementById("breakpoint_icon_" + lineNumber).style.display =
         "inline";
-  else
+  } else {
+    breakpoints.push(lineNumber);
     document.getElementById("breakpoint_icon_" + lineNumber).style.display =
         "none";
+  }
 }
-function setupLayout() {
+function setupLayout(is_UART_enabled) {
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
   // Modern browsers execute
@@ -318,7 +187,7 @@ function formatAsAddress(n) {
     ret = "0" + ret;
   return ret;
 }
-function drawTable() {
+function drawTable(machineCode, PC, is_UART_enabled) {
   let tableHTML = `
   <button id="downloadHex">Download Hexadecimal</button>
   <table id="machineCode">
@@ -415,17 +284,25 @@ function drawTable() {
     // to 0 when assembling is done.
     document.getElementById("input_00").oninput();
   }
-  document.getElementById("downloadHex").onclick = downloadHex;
-  document.getElementById("input_02").disabled =
-      document.getElementById("input_03").disabled = is_UART_enabled;
+  document.getElementById("downloadHex").onclick = () => {
+    let machineCode;
+
+    //FIXME: cheating a bit here with the global but someone could click downloadHex before compilation
+    if (typeof state == 'undefined' || typeof state.machineCode == 'undefined') {
+      machineCode = initialMachineCode();
+    }
+    downloadHex(machineCode);
+  };
+  document.getElementById("input_02").disabled = is_UART_enabled;
+  document.getElementById("input_03").disabled = is_UART_enabled;
 }
-function downloadHex() {
+function downloadHex(machineCode) {
   /*
   Loosely based on:
   https://stackoverflow.com/a/33622881/8902065
   */
   let hexadecimalString = "";
-  for (let i = 0; i < 2 ** 12; i++)
+  for (let i = 0; i < 4096; i++)
     hexadecimalString += machineCode[i].hex + "\r\n";
   let arrayOfBytes = new Uint8Array(hexadecimalString.length);
   for (let i = 0; i < hexadecimalString.length; i++)
@@ -443,7 +320,11 @@ function downloadHex() {
   link.click();
   link.remove();
 }
-function displayOutput() {
+
+/**
+ * TODO: STATE, or refactor to ports
+ */
+function displayOutput(output) {
   for (let i = 0; i < 2 ** 8; i++)
     document.getElementById("output_" + formatAsByte(i)).innerHTML =
         formatAsByte(output[i]);
@@ -462,14 +343,14 @@ function displayOutput() {
 function displayHexadecimalNumber(display, number) {
   if (!(display instanceof SVGElement) ||
       display.classList[0] !== "sevenSegmentDisplay") {
-    if (playing)
+    if (playing) //FIXME: throw here and stop simulation instead of using global
       clearInterval(simulationThread);
     alert(
-        "The simulator crashed! Some part of the simulator attempted to display a hexadecmal number on something that's not an HTML element suited for that.");
+        "The simulator crashed! Some part of the simulator attempted to display a hexadecimal number on something that's not an HTML element suited for that.");
     return;
   }
   if (number < 0 || number > 15 || typeof number !== "number") {
-    if (playing)
+    if (playing) //FIXME: throw here and stop simulation instead of using global
       clearInterval(simulationThread);
     alert(
         'The simulator crashed! Some part of the simulator tried to display "' +
@@ -502,7 +383,7 @@ function displayHexadecimalNumber(display, number) {
 function fetchExample(exampleName) {
   document.getElementById("assemblyCode").innerHTML =
       ";Fetching the example from GitHub...";
-  setUpLineNumbers();
+  setUpLineNumbers([]);
   fetch(URL_prefix_of_the_examples + exampleName)
       .then((response) => {
         if (!response.ok)
@@ -512,7 +393,7 @@ function fetchExample(exampleName) {
       })
       .then((text) => {
         document.getElementById("assemblyCode").innerHTML = text;
-        setUpLineNumbers();
+        setUpLineNumbers([]);
       })
       .catch((error) =>
                  alert("Fetching the example code from GitHub unsuccessful! " +

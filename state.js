@@ -7,14 +7,14 @@ function initialState() {
         PC: 0, //STATE (stop sim)
 
         //not state
-        machineCode: [new Array(4096).fill({hex: '00000', line: 0})],
+        machineCode: initialMachineCode(),
 
         regbank: 0, //STATE (stop sim)
         flagZ: [0, 0], //STATE (stop sim)
         flagC: [0, 0], //STATE (stop sim)
         flagIE: 1, //STATE (stop sim)
 
-        //maybe should be extracted
+        //TODO: maybe should be extracted
         breakpoints: [],
         playing: false,
 
@@ -22,6 +22,10 @@ function initialState() {
         callStack: [], //STATE (stop sim)
         output: new Array(256).fill(0), //STATE (stop sim)
         is_UART_enabled: false, //readonly boolean primitive
-        currentlyReadCharacterInUART: 0 //STATE (stop sim)
+        currentlyReadCharacterInUART: 0 //STATE (stop sim) TODO:extract to ports
     }
+}
+
+function initialMachineCode() {
+    return new Array(4096).fill({hex: '00000', line: 0})
 }

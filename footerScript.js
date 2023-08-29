@@ -5,16 +5,20 @@
 document.getElementById("assemblyCode").
        oninput=syntaxHighlighter;
 */
-setUpLineNumbers();
+setUpLineNumbers([]);
 document.getElementById("assemblyCode").oninput = setUpLineNumbers;
 document.getElementById("assemblyCode").onscroll = () => {
   document.getElementById("lineNumbers")
       .scroll(0, document.getElementById("assemblyCode").scrollTop);
 };
-document.getElementById("highlightButton").onclick = syntaxHighlighter;
+document.getElementById("highlightButton").onclick = (ev) => {
+  syntaxHighlighter();
+  setUpLineNumbers(state.breakpoints); //FIXME: not sure here, too much drilldown of params
+}
 document.getElementById("assembleButton").onclick = () => {
   const assembly = document.getElementById("assemblyCode").innerText;
 
+  //Tokenizing assembly->tokenList
   let tokenized;
   try {
     tokenized = tokenize(assembly);
@@ -34,6 +38,8 @@ document.getElementById("assembleButton").onclick = () => {
   }
   resultOfTokenizing += "]";
   console.log("Result of tokenizing: ", resultOfTokenizing);
+
+  //Parsing tokenList->AST
   let parsed;
   try {
     parsed = parse(tokenized);
@@ -48,15 +54,18 @@ document.getElementById("assembleButton").onclick = () => {
     alert("Internal compiler error in the preprocessor: " + error.message);
   }
   console.log("Result of preprocessing: ", context);
+
+  //Compiling AST->MachineCode
   try {
-    assemble(parsed, context);
+    state.machineCode = assemble(parsed, context);
   } catch (error) {
     alert("Internal assembler error: " + error.message);
   }
-  drawTable(state);
-  stopSimulation();
+
+  drawTable(state.machineCode, state.PC, state.is_UART_enabled);
+  stopSimulation(); //FIXME: hidden inside this function call is a copy of the machineCode reference
 };
-function stopSimulation() {
+function stopSimulation() { //TODO: Maybe use state? Probably should actually be extracted from simulateOneStep
   document.getElementById("fastForwardButton").disabled = false;
   document.getElementById("singleStepButton").disabled = false;
   document.getElementById("UART_INPUT").disabled = false;
@@ -67,19 +76,22 @@ function stopSimulation() {
 
   if (state.playing)
     clearInterval(simulationThread);
+
+  /*FIXME: Probably shouldn't have to do this. machineCode is not actually state but an input
+     and could be handled differently*/
+  const machineCode = state.machineCode; // Save machineCode as we don't want to recompile
   state = initialState();
-  /*TODO: Probably shouldn't have to do this. machineCode is not actually state but an input */
   state.machineCode = machineCode;
 
-  displayRegistersAndFlags();
-  displayOutput();
+  displayRegistersAndFlags(state);
+  displayOutput(state.output);
 }
 
 let state = initialState();
 setupLayout(state.is_UART_enabled);
 window.onresize = () => setupLayout(state.is_UART_enabled);
-drawTable(state);
-displayRegistersAndFlags();//TODO: STATE
+drawTable(state.machineCode, state.PC, state.is_UART_enabled);
+displayRegistersAndFlags(state);
 let playing = false;
 function onPlayPauseButton() {
   state.playing = !state.playing;
@@ -209,7 +221,7 @@ document.getElementById("input_00").oninput = () => {
 document.getElementById("UART_enable_button").onclick = () => {
   state.is_UART_enabled = !state.is_UART_enabled;
   document.getElementById("input_02").disabled =
-      document.getElementById("input_03").disabled = is_UART_enabled;
+      document.getElementById("input_03").disabled = state.is_UART_enabled;
   document.getElementById("UART_IO").style.display =
       state.is_UART_enabled ? "block" : "none";
   document.getElementById("enable_or_disable_UART").innerHTML =

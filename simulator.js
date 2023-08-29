@@ -1,24 +1,5 @@
 "use strict";
 
-function _stateFromGlobals() {
-  return {
-    machineCode: machineCode,
-    registers: registers,
-    PC: PC, //int primitive (must reassign to state after simulateOneInstruction)
-    regbank: regbank, //int primitive (same)
-    flagZ: flagZ,
-    flagC: flagC,
-    flagIE: flagIE, //int primitive
-    breakpoints: breakpoints,
-    playing: playing, //boolean primitive
-    memory: memory,
-    callStack: callStack,
-    output: output,
-    is_UART_enabled: is_UART_enabled, //readonly boolean primitive
-    currentlyReadCharacterInUART: currentlyReadCharacterInUART //int primitive
-  }
-}
-
 function InvalidCallstackError(instruction) {
   this.message = "The program exited! Tried to return without a callstack at line " + instruction.line;
   this.instruction = instruction;
@@ -228,7 +209,7 @@ function simulateOneInstruction(state) {
       } else
         output[registers[regbank][parseInt(machineCode[PC].hex[3], 16)]] =
             registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
-      displayOutput();
+      displayOutput(output);
       PC++;
       //    } else if ((currentDirective & 0xff000) === 0x2d000) {
       break;
@@ -253,7 +234,7 @@ function simulateOneInstruction(state) {
       } else {
         output[parseInt(machineCode[PC].hex.substr(3), 16)] =
             registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
-        displayOutput();
+        displayOutput(output);
       }
       PC++;
       //    } else if ((currentDirective & 0xff000) === 0x2b000) {
@@ -278,7 +259,7 @@ function simulateOneInstruction(state) {
       } else {
         output[parseInt(machineCode[PC].hex[4], 16)] =
             parseInt(machineCode[PC].hex.substr(2, 2), 16);
-        displayOutput();
+        displayOutput(output);
       }
       PC++;
       /*    } else if (currentDirective === 0x37000) {
@@ -919,7 +900,7 @@ function simulateOneInstruction(state) {
           machineCode[PC].line + ".");
       stopSimulation();
     }
-    displayRegistersAndFlags();
+    displayRegistersAndFlags(state);
     document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
         "-&gt;";
   } catch (error) {
@@ -927,7 +908,9 @@ function simulateOneInstruction(state) {
       clearInterval(simulationThread);
 
     if (error instanceof InvalidCallstackError) {
-      displayRegistersAndFlags();
+      //FIXME: Duplicated because it's what it was doing before using an exception to control flow.
+      // following 2 lines should be deleted once I refactor this.
+      displayRegistersAndFlags(state);
       document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
           "-&gt;";
       alert(error.message);

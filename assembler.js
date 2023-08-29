@@ -53,9 +53,8 @@ function isDirective(str) {
 }
 
 function assemble(parsed, context) {
-  machineCode = [];
-  for (let i = 0; i < 4096; i++)
-    machineCode.push({hex : "00000", line : 0});
+  const machineCode = initialMachineCode();
+
   let address = 0;
   for (const node of parsed.children) {
     const check_if_the_only_argument_is_register = () => {
@@ -115,7 +114,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^star$/i.test(node.text)) {
+    }
+    else if (/^star$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -150,7 +150,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^store$/i.test(node.text)) {
+    }
+    else if (/^store$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -197,7 +198,8 @@ function assemble(parsed, context) {
             formatAsByte(node.children[2].interpretAsArithmeticExpression(
                 context.constants));
       address++;
-    } else if (/^fetch$/i.test(node.text)) {
+    }
+    else if (/^fetch$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -244,7 +246,8 @@ function assemble(parsed, context) {
             formatAsByte(node.children[2].interpretAsArithmeticExpression(
                 context.constants));
       address++;
-    } else if (/^input$/i.test(node.text)) {
+    }
+    else if (/^input$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -291,7 +294,8 @@ function assemble(parsed, context) {
             formatAsByte(node.children[2].interpretAsArithmeticExpression(
                 context.constants));
       address++;
-    } else if (/^output$/i.test(node.text)) {
+    }
+    else if (/^output$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -338,7 +342,8 @@ function assemble(parsed, context) {
             formatAsByte(node.children[2].interpretAsArithmeticExpression(
                 context.constants));
       address++;
-    } else if (/^outputk$/i.test(node.text)) {
+    }
+    else if (/^outputk$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -358,7 +363,8 @@ function assemble(parsed, context) {
           formatAs4bits(node.children[2].interpretAsArithmeticExpression(
               context.constants));
       address++;
-    } else if (/^regbank$/i.test(node.text)) {
+    }
+    else if (/^regbank$/i.test(node.text)) {
       if (node.children.length !== 1) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
               '" should have exactly one (1) child!');
@@ -376,7 +382,8 @@ function assemble(parsed, context) {
         return;
       }
       address++;
-    } else if (/^hwbuild$/i.test(node.text)) {
+    }
+    else if (/^hwbuild$/i.test(node.text)) {
       if (node.children.length !== 1) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
               '" should have exactly one (1) child!');
@@ -393,7 +400,8 @@ function assemble(parsed, context) {
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "80";
       address++;
-    } else if (/^inst$/i.test(node.text)) {
+    }
+    else if (/^inst$/i.test(node.text)) {
       if (node.children.length !== 1) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
               '" should have exactly one (1) child!');
@@ -403,7 +411,8 @@ function assemble(parsed, context) {
       machineCode[address].hex = formatAsInstruction(
           node.children[0].interpretAsArithmeticExpression(context.constants));
       address++;
-    } else if (/^jump$/i.test(node.text)) {
+    }
+    else if (/^jump$/i.test(node.text)) {
       machineCode[address].line = node.lineNumber;
       if (node.children.length === 1) {
         if (node.children[0].getLabelAddress(context.labels,
@@ -456,7 +465,8 @@ function assemble(parsed, context) {
         }
       }
       address++;
-    } else if (/^jump@$/i.test(node.text)) {
+    }
+    else if (/^jump@$/i.test(node.text)) {
       if (node.children.length !== 1 || node.children[0].text !== "()") {
         alert("Line #" + node.lineNumber + ": The '" + node.text +
               "' node should have exactly one (1) child, and that is '()'");
@@ -495,7 +505,8 @@ function assemble(parsed, context) {
                                      context.namedRegisters) +
                                  "0";
       address++;
-    } else if (/^call@$/i.test(node.text)) {
+    }
+    else if (/^call@$/i.test(node.text)) {
       if (node.children.length !== 1 || node.children[0].text !== "()") {
         alert("Line #" + node.lineNumber + ": The '" + node.text +
               "' node should have exactly one (1) child, and that is '()'");
@@ -534,7 +545,8 @@ function assemble(parsed, context) {
                                      context.namedRegisters) +
                                  "0";
       address++;
-    } else if (/^call$/i.test(node.text)) {
+    }
+    else if (/^call$/i.test(node.text)) {
       machineCode[address].line = node.lineNumber;
       if (node.children.length === 1) {
         if (node.children[0].getLabelAddress(context.labels,
@@ -587,7 +599,8 @@ function assemble(parsed, context) {
         }
       }
       address++;
-    } else if (/^return$/i.test(node.text)) {
+    }
+    else if (/^return$/i.test(node.text)) {
       machineCode[address].line = node.lineNumber;
       if (!node.children.length)
         machineCode[address].hex = "25000";
@@ -612,7 +625,8 @@ function assemble(parsed, context) {
         return;
       }
       address++;
-    } else if (/^add$/i.test(node.text)) {
+    }
+    else if (/^add$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -647,7 +661,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^addcy?$/i.test(node.text)) {
+    }
+    else if (/^addcy?$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -682,7 +697,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^sub$/i.test(node.text)) {
+    }
+    else if (/^sub$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -717,7 +733,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^subcy?$/i.test(node.text)) {
+    }
+    else if (/^subcy?$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -752,7 +769,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^and$/i.test(node.text)) {
+    }
+    else if (/^and$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -786,7 +804,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^or$/i.test(node.text)) {
+    }
+    else if (/^or$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -820,7 +839,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^xor$/i.test(node.text)) {
+    }
+    else if (/^xor$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -854,7 +874,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^test$/i.test(node.text)) {
+    }
+    else if (/^test$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -888,7 +909,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^testcy?$/i.test(node.text)) {
+    }
+    else if (/^testcy?$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -922,7 +944,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^comp(are)?$/i.test(node.text)) {
+    }
+    else if (/^comp(are)?$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -956,7 +979,8 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^comp(are)?cy$/i.test(node.text)) {
+    }
+    else if (/^comp(are)?cy$/i.test(node.text)) {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -990,77 +1014,88 @@ function assemble(parsed, context) {
         machineCode[address].hex +=
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
-    } else if (/^sl0$/i.test(node.text)) {
+    }
+    else if (/^sl0$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "06";
       address++;
-    } else if (/^sl1$/i.test(node.text)) {
+    }
+    else if (/^sl1$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "07";
       address++;
-    } else if (/^slx$/i.test(node.text)) {
+    }
+    else if (/^slx$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "04";
       address++;
-    } else if (/^sla$/i.test(node.text)) {
+    }
+    else if (/^sla$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "00";
       address++;
-    } else if (/^rl$/i.test(node.text)) {
+    }
+    else if (/^rl$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "02";
       address++;
-    } else if (/^sr0$/i.test(node.text)) {
+    }
+    else if (/^sr0$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "0e";
       address++;
-    } else if (/^sr1$/i.test(node.text)) {
+    }
+    else if (/^sr1$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "0f";
       address++;
-    } else if (/^srx$/i.test(node.text)) {
+    }
+    else if (/^srx$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "0a";
       address++;
-    } else if (/^sra$/i.test(node.text)) {
+    }
+    else if (/^sra$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "08";
       address++;
-    } else if (/^rr$/i.test(node.text)) {
+    }
+    else if (/^rr$/i.test(node.text)) {
       check_if_the_only_argument_is_register();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "0c";
       address++;
-    } else if (/^disable$/i.test(node.text)) {
+    }
+    else if (/^disable$/i.test(node.text)) {
       if (node.children.length !== 1 ||
           !/interrupt/i.test(node.children[0].text)) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -1070,7 +1105,8 @@ function assemble(parsed, context) {
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex = "28000";
       address++;
-    } else if (/^enable$/i.test(node.text)) {
+    }
+    else if (/^enable$/i.test(node.text)) {
       if (node.children.length !== 1 ||
           !/interrupt/i.test(node.children[0].text)) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
@@ -1080,7 +1116,8 @@ function assemble(parsed, context) {
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex = "28001";
       address++;
-    } else if (/^ret(urn)?i$/i.test(node.text)) {
+    }
+    else if (/^ret(urn)?i$/i.test(node.text)) {
       if (node.children.length !== 1) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
               '" should have exactly one child node!');
@@ -1098,9 +1135,11 @@ function assemble(parsed, context) {
       }
       machineCode[address].line = node.lineNumber;
       address++;
-    } else if (!isDirective(node.text)) {
+    }
+    else if (!isDirective(node.text)) {
       alert("Line #" + node.lineNumber + ': Sorry about that, the mnemonic "' +
             node.text + '" is not implemented.');
     }
   }
+  return machineCode;
 }
