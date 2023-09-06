@@ -78,11 +78,7 @@ function stopSimulation() { //TODO: Maybe use state? Probably should actually be
   if (state.playing)
     clearInterval(simulationThread);
 
-  /*FIXME: Probably shouldn't have to do this. machineCode is not actually state but an input
-     and could be handled differently*/
-  const machineCode = state.machineCode; // Save machineCode as we don't want to recompile
-  state = initialState();
-  state.machineCode = machineCode;
+  state = resetState(state);
 
   displayRegistersAndFlags(state);
   displayOutput(state.output);

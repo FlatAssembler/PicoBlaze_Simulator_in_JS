@@ -900,6 +900,13 @@ function simulateOneInstruction(state) {
           machineCode[PC].line + ".");
       stopSimulation();
     }
+    // reassigned here, we could also mutate state in place
+    state.PC = PC;
+    state.regbank = regbank;
+    state.flagIE = flagIE;
+    state.playing = playing;
+    state.is_UART_enabled = is_UART_enabled; //This one is readonly, no need to reassign here
+    state.currentlyReadCharacterInUART = currentlyReadCharacterInUART;
     displayRegistersAndFlags(state);
     document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
         "-&gt;";

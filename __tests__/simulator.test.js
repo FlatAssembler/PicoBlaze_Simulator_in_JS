@@ -117,7 +117,7 @@ describe("PicoBlaze MachineCode Simulator", () => {
         })
 
         //Reconstruct string from registers
-        const actual = state.registers[0].slice(0, str.length) //s0 to s5
+        const actual = Array.from(state.registers[0].slice(0, str.length)) //s0 to s5
             .map(charcode => String.fromCharCode(charcode))
             .join('');
 
