@@ -14,9 +14,21 @@ const clearGlobals = () => {
         document.body.appendChild(td);
     }
 
+    /* -- DOM Setup (we should refactor this out) --*/
     /* UART setup*/
     const uartInputEl = document.createElement('textarea');
     uartInputEl.setAttribute('id', 'UART_INPUT');
+
+    const appendEl = (tag, id) => {
+        const el = document.createElement(tag);
+        el.setAttribute('id', id);
+        document.body.appendChild(el);
+    }
+
+    appendEl('button', 'fastForwardButton');
+    appendEl('button', 'singleStepButton');
+    appendEl('img', 'playImage');
+    appendEl('img', 'pauseImage');
 
     const uartOutputEl = document.createElement('pre');
     uartOutputEl.setAttribute('id', 'UART_OUTPUT');
@@ -27,19 +39,6 @@ const clearGlobals = () => {
 
 describe("PicoBlaze MachineCode Simulator", () => {
     beforeEach(clearGlobals)
-
-    test("add 4 + 5 equals 9", () => {
-        const machineCode = [
-            {hex: '01005', line: 3}, //load s0, 5
-            {hex: '11004', line: 4}, //add s0, 4
-        ];
-
-        const state = {...initialState(), machineCode};
-
-        simulator.simulateOneInstruction(state); //load s0, 5
-        simulator.simulateOneInstruction(state); //add s0, 4
-        expect(state.registers[0][0]).toBe(9);
-    })
 
     test("add 4 + 5 equals 9 using state", () => {
         const machineCode = [
@@ -153,5 +152,22 @@ describe("PicoBlaze MachineCode Simulator", () => {
 
         expect(global.alert).toHaveBeenCalledWith("The program exited! Tried to return without a callstack at line 1");
     })
+
+    test('breakpoint stops the simulation when hit', () => {
+        global.alert = jest.fn();
+        const machineCode = [
+            {hex: '01005', line: 3}, //load s0, 5
+        ];
+
+        const breakpoints = [3]
+
+        const state = {...initialState(), machineCode, breakpoints};
+
+        simulator.simulateOneInstruction(state); //load s0, 5
+
+        expect(global.alert).toHaveBeenCalledWith("Reached breakpoint on the line #3.");
+        expect(state.playing).toBe(false)
+    })
+
 
 })

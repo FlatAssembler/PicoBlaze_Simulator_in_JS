@@ -5,7 +5,8 @@
 document.getElementById("assemblyCode").
        oninput=syntaxHighlighter;
 */
-setUpLineNumbers([]);
+let state = initialState();
+setUpLineNumbers();
 document.getElementById("assemblyCode").oninput = setUpLineNumbers;
 document.getElementById("assemblyCode").onscroll = () => {
   document.getElementById("lineNumbers")
@@ -13,7 +14,7 @@ document.getElementById("assemblyCode").onscroll = () => {
 };
 document.getElementById("highlightButton").onclick = (ev) => {
   syntaxHighlighter();
-  setUpLineNumbers(state.breakpoints); //FIXME: not sure here, too much drilldown of params
+  setUpLineNumbers();
 }
 document.getElementById("assembleButton").onclick = () => {
   const assembly = document.getElementById("assemblyCode").innerText;
@@ -83,8 +84,6 @@ function stopSimulation() { //TODO: Maybe use state? Probably should actually be
   displayRegistersAndFlags(state);
   displayOutput(state.output);
 }
-
-let state = initialState();
 setupLayout(state.is_UART_enabled);
 window.onresize = () => setupLayout(state.is_UART_enabled);
 drawTable(state.machineCode, state.PC, state.is_UART_enabled);

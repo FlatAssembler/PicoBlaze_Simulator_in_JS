@@ -85,7 +85,7 @@ function displayRegistersAndFlags(state) {
   document.getElementById("register_PC").innerHTML = formatAsAddress(PC);
 }
 
-function setUpLineNumbers(breakpoints) {
+function setUpLineNumbers() {
   const assemblyCode = document.getElementById("assemblyCode").innerText;
   const numberOfLines = Math.max((assemblyCode.match(/\n/g) || []).length, 1);
   let lineNumbersHTML = "";
@@ -97,15 +97,15 @@ function setUpLineNumbers(breakpoints) {
   document.getElementById("lineNumbers").innerHTML = lineNumbersHTML;
   for (let i = 1; i <= numberOfLines; i++) {
     document.getElementById("label_line_" + i).onclick = (ev) => {
-      setBreakpoint(ev, breakpoints)
+      setBreakpoint(ev, state.breakpoints)
     };
   }
-  for (let i = 0; i < breakpoints.length; i++)
-    if (breakpoints[i] <= numberOfLines)
-      document.getElementById("breakpoint_icon_" + breakpoints[i])
+  for (let i = 0; i < state.breakpoints.length; i++)
+    if (state.breakpoints[i] <= numberOfLines)
+      document.getElementById("breakpoint_icon_" + state.breakpoints[i])
           .style.display = "inline";
     else {
-      breakpoints.splice(i, 1);
+      state.breakpoints.splice(i, 1);
       i--;
     }
 }
@@ -385,7 +385,7 @@ function displayHexadecimalNumber(display, number) {
 function fetchExample(exampleName) {
   document.getElementById("assemblyCode").innerHTML =
       ";Fetching the example from GitHub...";
-  setUpLineNumbers([]);
+  setUpLineNumbers();
   fetch(URL_prefix_of_the_examples + exampleName)
       .then((response) => {
         if (!response.ok)
@@ -395,7 +395,7 @@ function fetchExample(exampleName) {
       })
       .then((text) => {
         document.getElementById("assemblyCode").innerHTML = text;
-        setUpLineNumbers([]);
+        setUpLineNumbers();
       })
       .catch((error) =>
                  alert("Fetching the example code from GitHub unsuccessful! " +

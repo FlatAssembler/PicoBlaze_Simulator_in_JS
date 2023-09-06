@@ -34,6 +34,7 @@ function resetState(prevState) {
     return {...initialState(),
         machineCode: prevState.machineCode,
         is_UART_enabled: prevState.is_UART_enabled,
+        breakpoints: prevState.breakpoints
     }
 }
 
