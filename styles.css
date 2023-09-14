@@ -23,6 +23,10 @@ footer {
 #authors {
   font-size: 0.8em;
 }
+#authors a {
+  color: blue;
+  font-weight: bold;
+}
 footer {
   width: calc(100% - 2 * 5px);
   max-width: calc(500px - 2 * 5px);
