@@ -298,7 +298,7 @@ function setupLayout() {
         910 + 2 * 210 + "px";
     document.getElementById("graphicalResults").style.top = 910 + 210 + "px";
     document.getElementsByTagName("footer")[0].style.top =
-        1380 + 2 * 210 + is_UART_enabled * 260 + 50 + "px";
+        1380 + 2 * 210 + is_UART_enabled * 260 + 50 + 20 + "px";
   }
 }
 let machineCode = [];
@@ -333,7 +333,8 @@ function drawTable() {
   for (let i = 0; i < machineCode.length; i++)
     tableHTML += `
       <tr>
-        <td id="PC_label_${formatAsAddress(i)}">${PC === i ? "-&gt;" : " "}</td>
+        <td id="PC_label_${formatAsAddress(i)}">${
+        PC === i ? "-&gt;" : " "}</td>
         <td>${formatAsAddress(i)}</td>
         <td>${machineCode[i].hex}</td>
         <td>${machineCode[i].line}</td>
