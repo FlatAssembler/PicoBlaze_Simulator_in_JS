@@ -307,7 +307,7 @@ function setupLayout() {
   if (/WebPositive/.test(
           navigator.userAgent)) { // WebPositive prints the #authors in such a
                                   // small font it's illegible.
-    document.getElementById("authors").style.fontSize = "0.9em";
+    document.getElementById("authors").style.fontSize = "1.3em";
   }
 }
 let machineCode = [];
@@ -432,6 +432,9 @@ function downloadHex() {
   Loosely based on:
   https://stackoverflow.com/a/33622881/8902065
   */
+  if (/WebPositive/.test(navigator.userAgent))
+    alert(
+        "It's detected you are using WebPositive. 'Download Hexadecimal' didn't work there when we tested it.");
   let hexadecimalString = "";
   for (let i = 0; i < 2 ** 12; i++)
     hexadecimalString += machineCode[i].hex + "\r\n";
