@@ -257,11 +257,15 @@ function setupLayout() {
   // multiple times within a
   // function leads to a race
   // condition.
-  if (windowWidth < 500)
+  if (windowWidth < 500) {
+    document.getElementsByTagName("body")[0].style.backgroundImage = "none";
     document.getElementsByTagName("main")[0].style.left = 8 + "px";
-  else
+  } else {
+    document.getElementsByTagName("body")[0].style.backgroundImage =
+        'url("Background.gif")';
     document.getElementsByTagName("main")[0].style.left =
         windowWidth / 2 - 500 / 2 + "px";
+  }
   if (windowHeight < 400) {
     document.getElementById("buttons").style.top =
         windowHeight + 200 + 3 * 4 + "px";
