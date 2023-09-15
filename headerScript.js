@@ -304,6 +304,11 @@ function setupLayout() {
     document.getElementsByTagName("footer")[0].style.top =
         1380 + 2 * 210 + is_UART_enabled * 260 + 50 + 20 + "px";
   }
+  if (/WebPositive/.test(
+          navigator.userAgent)) { // WebPositive prints the #authors in such a
+                                  // small font it's illegible.
+    document.getElementById("authors").style.fontSize = "0.9em";
+  }
 }
 let machineCode = [];
 for (let i = 0; i < 4096; i++)
