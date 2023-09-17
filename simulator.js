@@ -16,7 +16,8 @@ function simulateOneInstruction() {
       document.getElementById("playImage").style.display = "inline";
       document.getElementById("pauseImage").style.display = "none";
     }
-    document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
+    if (!playing || document.getElementById("shouldWeUpdateRegisters").checked)
+      document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
     const currentDirective = parseInt(machineCode[PC].hex, 16);
     // "bennyboy" from "atheistforums.org" thinks my program can be
     // speeded up by using a switch-case instead of the large if-else (that a
@@ -906,8 +907,9 @@ function simulateOneInstruction() {
       stopSimulation();
     }
     displayRegistersAndFlags();
-    document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
-        "-&gt;";
+    if (!playing || document.getElementById("shouldWeUpdateRegisters").checked)
+      document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
+          "-&gt;";
   } catch (error) {
     if (playing)
       clearInterval(simulationThread);
