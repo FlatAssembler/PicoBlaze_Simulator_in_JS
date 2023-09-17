@@ -1,11 +1,13 @@
 "use strict";
-let is_UART_enabled = false, areWeHighlighting = false;
+let is_UART_enabled = false, areWeHighlighting = false, playing = false;
 let registers = [ new Uint8Array(16), new Uint8Array(16) ], flagZ = [ 0, 0 ],
     flagC = [ 0, 0 ], flagIE = 1, output = new Uint8Array(256),
     memory = new Uint8Array(256), regbank = 0, callStack = [], breakpoints = [],
     currentlyReadCharacterInUART = 0;
 let simulationThread;
 function displayRegistersAndFlags() {
+  if (playing && !document.getElementById("shouldWeUpdateRegisters").checked)
+    return;
   for (let i = 0; i < 2; i++)
     for (let j = 0; j < 16; j++) {
       const tableCell = document.getElementById(
@@ -325,6 +327,12 @@ function formatAsAddress(n) {
     ret = "0" + ret;
   return ret;
 }
+function deletePCpointer() {
+  if (document.getElementById("shouldWeUpdateRegisters").checked)
+    return;
+  for (let i = 0; i < machineCode.length; i++)
+    document.getElementById("PC_label_" + formatAsAddress(i)).innerHTML = "";
+}
 function drawTable() {
   let tableHTML = `
   <button id="downloadHex">Download Hexadecimal</button>
@@ -352,6 +360,12 @@ function drawTable() {
   tableHTML += "</table>";
   document.getElementById("divWithMachineCode").innerHTML = tableHTML;
   let registersTable = `
+<table style="border: none;">
+<tr><td style="border-right: none;"><input type="checkbox" id="shouldWeUpdateRegisters" checked onchange="deletePCpointer()" /></td>
+<td style="text-align:left; border-left: none;"><label for="shouldWeUpdateRegisters">Update registers and flags on every step</label></td></tr>
+<tr><td colspan="2" style="font-family: Arial; text-align: center; font-weight: normal; border-top: none;">
+Displaying registers and flags on every step is useful for debugging, but it slows the simulation down. I would not recommend you to enable UART and updating the registers and flags at the same time.
+</td></tr></table>
 <table style="font-size:0.95em;">
 <tr>
 <th>Registers</th>

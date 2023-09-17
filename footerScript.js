@@ -85,7 +85,6 @@ setupLayout();
 window.onresize = setupLayout;
 drawTable();
 displayRegistersAndFlags();
-let playing = false;
 function onPlayPauseButton() {
   playing = !playing;
   if (!playing) {
@@ -232,7 +231,8 @@ fetch(URL_of_JSON_with_examples)
       const examplesArray = JSON.parse(jsonFromGithub);
       let examplesHTML = examplesArray
                              .map((example) => `
-    <div class="exampleCodeLink" onclick="fetchExample('${example.file_name}')">
+    <div class="exampleCodeLink" onclick="fetchExample('${
+                                      example.file_name}')">
       <img
         src="${example.image}"
         alt="${example.image_alt}"
