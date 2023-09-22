@@ -83,9 +83,43 @@ display "new-line characters in "
 display "the text-area above, and "
 display "also insert a new-line "
 display "character after the last "
-display "number."
+display "number. "
 display a ;A new-line character, see
           ;<a href="#newline_character">below</a> for more details.
+display "It is recommended that, "
+display "before starting this "
+display "program, you uncheck the "
+display "checkbox for updating "
+display "the tables with "
+display "registers and flags on "
+display "every step. "
+display a
+display "That way, "
+display "this program will run "
+display "significantly faster in "
+display "all browsers except for "
+display "WebPositive. "
+display a
+display "Namely, in "
+display "the current version of "
+display "this simulator, in most "
+display "browsers, updating the "
+display "tables with registers "
+display "and flags causes "
+display "layout trashing. "
+display a
+display "The authors think that, "
+display "in some future version "
+display "of this simulator, that "
+display "problem will be solved "
+display "using advanced CSS (by "
+display "properly setting up the "
+display "'contain' property on "
+display "various elements), but, "
+display "for the time being, "
+display "there is a checkbox to "
+display "reduce layout trashing. "
+display a
 endif
 
 ;The following code is a no-operation
