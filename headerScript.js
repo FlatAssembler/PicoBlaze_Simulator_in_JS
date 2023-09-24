@@ -5,6 +5,9 @@ let registers = [ new Uint8Array(16), new Uint8Array(16) ], flagZ = [ 0, 0 ],
     memory = new Uint8Array(256), regbank = 0, callStack = [], breakpoints = [],
     currentlyReadCharacterInUART = 0;
 let simulationThread;
+let machineCode = [];
+for (let i = 0; i < 4096; i++)
+  machineCode.push({hex : "00000", line : 0});
 function displayRegistersAndFlags() {
   if (playing && !document.getElementById("shouldWeUpdateRegisters").checked)
     return;
@@ -312,9 +315,6 @@ function setupLayout() {
     document.getElementById("authors").style.fontSize = "1.3em";
   }
 }
-let machineCode = [];
-for (let i = 0; i < 4096; i++)
-  machineCode.push({hex : "00000", line : 0});
 let PC = 0;
 function formatAsAddress(n) {
   let ret = Math.round(n).toString(16);
