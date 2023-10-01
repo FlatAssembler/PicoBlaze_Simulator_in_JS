@@ -4,7 +4,7 @@ function tokenize(input) {
   let areWeInAString = false;
   let areWeInAComment = false;
   let currentLine = 1; // Don't care about columns, lines in assembly language
-  // are always short.
+                       // are always short.
   let currentToken = "";
   for (let i = 0; i < input.length; i++) {
     if (areWeInAComment && areWeInAString) {
@@ -48,9 +48,9 @@ function tokenize(input) {
       tokenized.push(new TreeNode(currentToken, currentLine));
       currentToken = "";
       tokenized.push(new TreeNode(
-          "\n", currentLine++)); // Because it's a whitespace-sensitive
-      // language, the new-line characters are tokens
-      // visible to the parser.
+          "\n", currentLine++)); // Because assembly language is a
+                                 // whitespace-sensitive language, the new-line
+                                 // characters are tokens visible to the parser.
       continue;
     }
     if (
