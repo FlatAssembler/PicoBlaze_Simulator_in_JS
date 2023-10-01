@@ -3,8 +3,8 @@ function simulateOneInstruction() {
   try {
     PC = PC %
          4096; // If you are at the end of a program, and there is no "return"
-    // there, jump to the beginning of the program. I think that's
-    // how PicoBlaze behaves, though I haven't tried it.
+               // there, jump to the beginning of the program. I think that's
+               // how PicoBlaze behaves, though I haven't tried it.
     if (breakpoints.includes(machineCode[PC].line)) {
       alert("Reached breakpoint on the line #" + machineCode[PC].line + ".");
       if (playing)

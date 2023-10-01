@@ -256,12 +256,8 @@ function setBreakpoint(event) {
 function setupLayout() {
   const windowWidth = window.innerWidth;
   const windowHeight = window.innerHeight;
-  // Modern browsers execute
-  // JavaScript so fast that
-  // calling "window.innerWidth"
-  // multiple times within a
-  // function leads to a race
-  // condition.
+  // Modern browsers execute JavaScript so fast that calling "window.innerWidth"
+  // multiple times within a function leads to a race condition.
   if (windowWidth < 500) {
     document.getElementsByTagName("body")[0].style.backgroundImage = "none";
     document.getElementsByTagName("main")[0].style.left = 8 + "px";
@@ -302,7 +298,7 @@ function setupLayout() {
         910 + 2 * 210 + is_UART_enabled * 260 + 50 + "px";
     document.getElementById("UART_IO").style.top =
         910 + 2 * 210 + 50 + "px"; // Has no effect if the UART_IO is not shown
-    // (and it isn't shown by default).
+                                   // (and it isn't shown by default).
     document.getElementById("UART_enable_button").style.top =
         910 + 2 * 210 + "px";
     document.getElementById("graphicalResults").style.top = 910 + 210 + "px";
