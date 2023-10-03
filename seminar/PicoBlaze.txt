@@ -48,61 +48,72 @@ Teo Samaržija
 Osijek, 2023.
 
 
-Obrazac D1: Obrazac za imenovanje Povjerenstva za završni rad
-Osijek, 29. 8. 2022.
-Odboru za završne i diplomske radove
-Imenovanje Povjerenstva za završni rad
+
+Obrazac Z1P - Obrazac za ocjenu završnog rada na preddiplomskom sveučilišnom studiju
+Osijek, 29.09.2023.
+Odboru za završne i diplomske ispite
+Prijedlog ocjene završnog rada na
+preddiplomskom sveučilišnom studiju
 Ime i prezime Pristupnika:
 Teo Samaržija
 Studij, smjer:
-Preddiplomski sveučilišni studij Računarstvo
+Sveučilišni prijediplomski studij Računarstvo
 Mat. br. Pristupnika, godina upisa:
-N/A, 2018
-OIB studenta:
+R4273, 26.07.2018.
+OIB  Pristupnika:
 50107259317
 Mentor:
-Izv. prof. dr. sc. Ivan Aleksi
+izv. prof. dr. sc. Ivan Aleksi
 Sumentor:
-N/A
+,
 Sumentor iz tvrtke:
-N/A
-Predsjednik povjerenstva:
-
-Član povjerenstva 1:
-Izv. prof. dr. sc. Ivan Aleksi
-Član povjerenstva 2:
 
 Naslov završnog rada:
-Simulator PicoBlaze računala u JavaScriptu
-Znanstvena grana završnog rada:
-Arhitektura računala (zn. polje računarstvo)
-Zadatak završnog rada:
-Napraviti simulator PicoBlaze računala koji se može vrtjeti u internetskom pregledniku.
-Prijedlog ocjene pismenog dijela ispita (završnog rada):
-
+Simulator mikroprocesora PicoBlaze
+Znanstvena grana rada:
+Arhitektura računalnih sustava (zn. polje računarstvo)
+Zadatak završnog rad:
+Temu rezervirao Teo Samaržija - Zadatak ovog završnog rada je izraditi Internet aplikaciju za simulaciju rada mikroprocesora PicoBlaze.
+Prijedlog ocjene završnog rada:
+Dobar (3)
 Kratko obrazloženje ocjene prema Kriterijima za ocjenjivanje završnih i diplomskih radova:
-
+Primjena znanja stečenih na fakultetu: 2 bod/bodaPostignuti rezultati u odnosu na složenost zadatka: 2 bod/bodaJasnoća pismenog izražavanja: 1 bod/bodaRazina samostalnosti: 2 razina
 Datum prijedloga ocjene od strane mentora:
+29.09.2023.
+Datum potvrde ocjene od strane Odbora:
+02.10.2023.
 
-Potvrda mentora o predaji konačne verzije rada:
-
+Potvrda mentora o predaji  konačne verzije rada:
+Mentor elektronički potpisao predaju konačne verzije.
 
 Datum:
 
 
-IZJAVA O ORIGINALNOSTI RADA
-Osijek, 29. 8. 2022.
+
+IZJAVA O ORIGINALNOSTI   RADA
+Osijek,  03.10.2023.
+
 Ime i prezime studenta:
-Teo Samaržija
+ Teo Samaržija
 Studij:
-Preddiplomski sveučilišni studij Računarstvo
+ Sveučilišni prijediplomski studij Računarstvo
 Mat. br. studenta, godina upisa:
-N/A, 2018.
+ R4273, 26.07.2018.
 Turnitin podudaranje [%]:
-8
-Ovom izjavom izjavljujem da je rad pod nazivom: Simulator PicoBlaze računala u JavaScriptu
-izrađen pod vodstvom mentora izv. prof. dr. sc. Ivana Aleksija moj vlastiti rad i prema mom najboljem znanju ne sadrži prethodno objavljene ili neobjavljene pisane materijale drugih osoba, osim onih navedenih u literaturi i drugim izvorima znanja.
+ 1
+
+Ovom izjavom izjavljujem da je rad pod nazivom: Simulator mikroprocesora PicoBlaze
+
+
+izrađen pod vodstvom mentora izv. prof. dr. sc. Ivan Aleksi
+
+
+i sumentora ,
+
+
+moj vlastiti rad i prema mom najboljem znanju ne sadrži prethodno objavljene ili neobjavljene pisane materijale drugih osoba, osim onih koji su izričito priznati navođenjem literature i drugih izvora informacija.
 Izjavljujem da je intelektualni sadržaj navedenog rada proizvod mog vlastitog rada, osim u onom dijelu za koji mi je bila potrebna pomoć mentora, sumentora i drugih osoba, a što je izričito navedeno u radu.
+
 Potpis studenta:
 
 
@@ -125,7 +136,7 @@ Mane simuliranja PicoBlazea u JavaScriptu ......................................
 Zaključak........................................................................................................................................................ 28
 Zahvale …………………………………………………………………………………………………….. 28
 
-SAŽETAK: Autor teksta bio je frustriran nedostacima postojećih simulatora malog računala PicoBlaze, te je napravio drukčiji simulator PicoBlazea u programskom jeziku JavaScript. Taj se simulator može pokrenuti u modernim internetskim preglednicima1 (autor misli da je najstariji internetski preglednik u kojem simulator funkcionira kako treba Firefox 52, posljednja verzija Firefoxa koja se može vrtjeti na Windows XP-u, te je to također verzija Firefoxa koja se dobije uz operativni sustav Solaris 11.4, koji je danas najnovija verzija Solarisa). U tekstu slijede detalji o tome kako je autor napravio svoj simulator te koje su prednosti i mane tog simulatora u usporedbi s već postojećim simulatorima. Autor također uspoređuje dijelove simulatora s odgovarajućim dijelovima nekih drugih programa koje je prije napravio (najviše s compilerom koji prevodi njegov programski jezik na WebAssembly). Nisu korišteni nikakvi radni okviri (frameworksi), kôd je pisan uglavnom u VIM-u (za manje izmjene) i Eclipseu (za veće izmjene), za uređivanje slika korišteni su GIMP i Inkscape, za traženje pogrešaka u programu korišteni su alati za programiranje koji se dobiju uz Firefox i internetski servis LGTM. Za formatiranje koda korišteni su Prettier (za HTML i CSS) i ClangFormat (za JavaScript). Posljednja verzija koju sam sâm napravio je v2.8.3, nedugo nakon toga dobio sam suradnika koji tvrdi da koristi moj simulator PicoBlazea na sveučilištu u Argentini.
+SAŽETAK: Autor teksta bio je frustriran nedostacima postojećih simulatora malog računala PicoBlaze, te je napravio drukčiji simulator PicoBlazea u programskom jeziku JavaScript. Taj se simulator može pokrenuti u modernim internetskim preglednicima1 (autor misli da je najstariji internetski preglednik u kojem simulator funkcionira kako treba Firefox 52, posljednja verzija Firefoxa koja se može vrtjeti na Windows XP-u, te je to također verzija Firefoxa koja se dobije uz operativni sustav Solaris 11.4, koji je danas najnovija verzija Solarisa). U tekstu slijede detalji o tome kako je autor napravio svoj simulator te koje su prednosti i mane tog simulatora u usporedbi s već postojećim simulatorima. Autor također uspoređuje dijelove simulatora s odgovarajućim dijelovima nekih drugih programa koje je prije napravio (najviše s compilerom koji prevodi njegov programski jezik na WebAssembly). Nisu korišteni nikakvi radni okviri (frameworksi), kôd je pisan uglavnom u VIM-u (za manje izmjene) i Eclipseu (za veće izmjene), za uređivanje slika korišteni su GIMP i Inkscape, za traženje pogrešaka u programu korišteni su alati za programiranje koji se dobiju uz Firefox i internetski servis LGTM. Za formatiranje koda korišteni su Prettier (za HTML i CSS) i ClangFormat (za JavaScript). Posljednja verzija koju sam sâm napravio je v2.8.3, nedugo nakon toga dobio sam suradnika na GitHubu, zvan „agustiza”, koji tvrdi da koristi moj simulator PicoBlazea na sveučilištu u Argentini.
 
 Uvod
 PicoBlaze (od latinskog piccus, rupica na igli, u prenesenom značenju nešto maleno, i engleskog blaze, plamen2) je malo računalo koji proizvodi tvrtka Xilinx. Koristi se u ugrađenim sustavima te kao primjer jednostavnog računala na kolegiju Arhitektura računala na FERIT-u. Njegov je procesor dizajniran tako da se u cijelosti može implementirati programibilnim elektroničkim sklopovima (FPGA-ovima, ASIC-ima...), te je pisan u programskom jeziku VHDL (VHDL je kratica od Very High Speed Integrated Circuits Hardware Description Language, što znači jezik za opis strojne opreme (hardware) od integriranih krugova jako velike brzine. Među studentima elektrotehnike česta je šala, s kojom se i ja slažem, da je VHDL zapravo kratica od Very Hard Difficult Language – vrlo čvrsto težak jezik3). Takvi procesori, koji su namijenjeni da se sintetiziraju na FPGA-ovima ili ASIC-ima, zovu se mekani procesori (soft processor). PicoBlazeov procesor razlikuje se po mnogo čemu od procesora korištenih u stolnim računalima (koje proizvode tvrtke Intel i AMD) i procesora u mobilnim telefonima i tabletima (uglavnom ARM-ovi procesori), i potreban nam je simulator da bismo pokrenuli programe za njega na računalu na kojem programiramo. Dok programiramo za male uređaje, korisno je moći pokrenuti program na računalu na kojem programiramo radi testiranja ili traženja pogreške u programu. Simulator je program koji omogućuje računalu da se pretvara da je nekakvo drukčije računalo. Riječ simulator znači onaj koji kopira ili imitira, dolazi iz latinskog i prvi put se spominje u Ovidijevim Metamorfozama (11. poglavlje, 634. stih). Dolazi od simulare (pretvarati se), od similis (sličan). PicoBlaze vjerojatno ne može pokrenuti alate za programiranje (ako i može, oni bi bili jako spori i nepraktični za korištenje – daleko lošiji od alata za programiranje mobitela koji se pokreću na mobitelima), on bez korištenja pomoćnih uređaja može koristiti svega 0.25 KB memorije za spremanje podataka i 9 KB memorije za spremanje programa.
