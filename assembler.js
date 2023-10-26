@@ -87,7 +87,8 @@ function assemble(parsed, context) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
             '" should have exactly three child nodes (a comma is also a child node).');
-        return;
+        return; // This line causes this bug:
+                // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/18
       }
       if (node.children[1].text !== ",") {
         alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
@@ -103,8 +104,8 @@ function assemble(parsed, context) {
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         // TODO: "bennyboy" from "atheistforums.org" thinks that
-        // doing this check (whether an argument is a register) slows
-        // down the assembler significantly, it would be good to
+        // doing this check (whether an argument is a register) again and again
+        // slows down the assembler significantly, it would be good to
         // investigate whether that is true:
         // https://atheistforums.org/thread-61911-post-2112572.html#pid2112572
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
