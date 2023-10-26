@@ -82,16 +82,24 @@ function assemble(parsed, context) {
         return;
       }
     };
-    if (/^address$/i.test(node.text))
-      address =
-          node.children[0].interpretAsArithmeticExpression(context.constants);
-    else if (/^load$/i.test(node.text)) {
+    const check_if_there_are_three_child_nodes_and_the_second_one_is_comma = () => {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
             '" should have exactly three child nodes (a comma is also a child node).');
         return;
       }
+      if (node.children[1].text !== ",") {
+        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
+              node.children[1].text + '"!');
+        return;
+      }
+    };
+    if (/^address$/i.test(node.text))
+      address =
+          node.children[0].interpretAsArithmeticExpression(context.constants);
+    else if (/^load$/i.test(node.text)) {
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         // TODO: "bennyboy" from "atheistforums.org" thinks that
@@ -101,11 +109,6 @@ function assemble(parsed, context) {
         // https://atheistforums.org/thread-61911-post-2112572.html#pid2112572
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -126,21 +129,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^star$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -161,21 +154,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^store$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -208,21 +191,11 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^fetch$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -255,21 +228,11 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^input$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -302,21 +265,11 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^output$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -349,17 +302,7 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^outputk$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "2b" +
@@ -623,21 +566,11 @@ function assemble(parsed, context) {
       }
       address++;
     } else if (/^add$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -658,21 +591,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^addcy?$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -693,21 +616,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^sub$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -728,21 +641,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^subcy?$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -763,21 +666,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^and$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -797,21 +690,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^or$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -831,21 +714,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^xor$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -865,21 +738,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^test$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -899,21 +762,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^testcy?$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -933,21 +786,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^comp(are)?$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
@@ -967,21 +810,11 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^comp(are)?cy$/i.test(node.text)) {
-      if (node.children.length !== 3) {
-        alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
-            '" should have exactly three child nodes (a comma is also a child node).');
-        return;
-      }
+      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a register!');
-        return;
-      }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
         return;
       }
       machineCode[address].line = node.lineNumber;
