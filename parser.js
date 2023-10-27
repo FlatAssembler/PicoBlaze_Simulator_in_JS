@@ -183,7 +183,11 @@ function parse(tokenized) {
       if (j >= tokenized.length) {
         alert(
             "Internal compiler error: The assembly-lanaguage expression in line " +
-            tokenized[i].lineNumber + " doesn't end with a new-line token!");
+            tokenized[i].lineNumber + " doesn't end with a new-line token!\n" +
+            "Did you try writing something like `load (load s0, s1), s2`? That's invalid assembly code, assembly language doesn't support linguistic recursion. You need to write this:\n" +
+            "load s1, s2\n" +
+            "load s0, s1\n" +
+            "instead."); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/17
         return root;
       }
       if (tokenized[j].text == "\n")
