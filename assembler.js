@@ -629,7 +629,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^sub$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
