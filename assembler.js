@@ -27,7 +27,7 @@ function formatAsInstruction(n) {
   if (n < 0 || n >= 1 << 18) {
     alert("Some part of the assembler tried to format the number " + n +
           " as an instruction, which makes no sense.");
-    return "ff";
+    return "fffff";
   }
   let ret = n.toString(16);
   while (ret.length < 5)
@@ -73,34 +73,38 @@ function assemble(parsed, context) {
       if (node.children.length !== 1) {
         alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
               '" should have exactly 1 child node!');
-        return;
+        return 0;
       }
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
               '" is not a valid register name!');
-        return;
+        return 0;
       }
+      return 1;
     };
     const check_if_there_are_three_child_nodes_and_the_second_one_is_comma = () => {
       if (node.children.length !== 3) {
         alert(
             "Line #" + node.lineNumber + ': The AST node "' + node.text +
             '" should have exactly three child nodes (a comma is also a child node).');
-        return; // This line causes this bug:
-                // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/18
+        return 0; // If we just `return` (not `return 0`), it will cause this
+                  // bug:
+                  // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/18
       }
       if (node.children[1].text !== ",") {
         alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
               node.children[1].text + '"!');
-        return;
+        return 0;
       }
+      return 1;
     };
     if (/^address$/i.test(node.text))
       address =
           node.children[0].interpretAsArithmeticExpression(context.constants);
     else if (/^load$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         // TODO: "bennyboy" from "atheistforums.org" thinks that
@@ -130,7 +134,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^star$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -155,7 +160,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^store$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -192,7 +198,8 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^fetch$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -229,7 +236,8 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^input$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -266,7 +274,8 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^output$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -303,7 +312,8 @@ function assemble(parsed, context) {
                 context.constants));
       address++;
     } else if (/^outputk$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "2b" +
@@ -567,7 +577,8 @@ function assemble(parsed, context) {
       }
       address++;
     } else if (/^add$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -592,7 +603,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^addcy?$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -642,7 +654,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^subcy?$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -667,7 +680,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^and$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -691,7 +705,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^or$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -715,7 +730,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^xor$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -739,7 +755,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^test$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -763,7 +780,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^testcy?$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -787,7 +805,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^comp(are)?$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -811,7 +830,8 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^comp(are)?cy$/i.test(node.text)) {
-      check_if_there_are_three_child_nodes_and_the_second_one_is_comma();
+      if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
+        return;
       if (node.children[0].getRegisterNumber(context.namedRegisters) ===
           "none") {
         alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
@@ -835,70 +855,80 @@ function assemble(parsed, context) {
             node.children[2].getRegisterNumber(context.namedRegisters) + "0";
       address++;
     } else if (/^sl0$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "06";
       address++;
     } else if (/^sl1$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "07";
       address++;
     } else if (/^slx$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "04";
       address++;
     } else if (/^sla$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "00";
       address++;
     } else if (/^rl$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "02";
       address++;
     } else if (/^sr0$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "0e";
       address++;
     } else if (/^sr1$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "0f";
       address++;
     } else if (/^srx$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "0a";
       address++;
     } else if (/^sra$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
           "08";
       address++;
     } else if (/^rr$/i.test(node.text)) {
-      check_if_the_only_argument_is_register();
+      if (!check_if_the_only_argument_is_register())
+        return;
       machineCode[address].line = node.lineNumber;
       machineCode[address].hex =
           "14" + node.children[0].getRegisterNumber(context.namedRegisters) +
