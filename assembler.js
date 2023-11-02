@@ -3,9 +3,10 @@
  * many if-branchings. I don't know how good assemblers solve that problem.
  * I have asked that question on r/learnprogramming:
  * https://www.reddit.com/r/learnprogramming/comments/17dwo2m/what_do_the_cores_of_good_assemblers_the_things/?utm_source=share&utm_medium=web2x&context=3
- * I have also asked that on CodeReview StackExchange, thus far receiving
- * no response:
+ * I have also asked that on CodeReview StackExchange:
  * https://codereview.stackexchange.com/q/287582/219010
+ * So, maybe it would be a good idea to try to apply the suggestions I
+ * received there.
  */
 
 "use strict";
