@@ -349,7 +349,14 @@ return
 UART_RX:
   INPUT sA, UART_STATUS_PORT
   TEST  sA, U_RX_D
-  JUMP  Z , UART_RX
+  JUMP  NZ, input_not_empty
+  load s0, s0 ;Add a breakpoint here
+              ;if you want the program
+              ;to stop when it has
+              ;read to the end of the
+              ;input.
+  jump UART_RX
+input_not_empty:
   INPUT s9, UART_RX_PORT
 RETURN
 
