@@ -218,6 +218,8 @@ document.getElementById("UART_enable_button").onclick = () => {
       is_UART_enabled ? "block" : "none";
   document.getElementById("enable_or_disable_UART").innerHTML =
       is_UART_enabled ? "Disable" : "Enable";
+  if (is_UART_enabled)
+    document.getElementById("shouldWeUpdateRegisters").checked = false;
   window.onresize();
 };
 fetch(URL_of_JSON_with_examples)
