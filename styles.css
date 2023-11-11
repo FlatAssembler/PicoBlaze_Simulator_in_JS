@@ -388,3 +388,28 @@ textarea {
   padding: 10px;
   margin: 10px;
 }
+#MIT_licence {
+  background: #eeeeff;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  position: fixed;
+  bottom: 0px;
+  left: 10px;
+  width: calc(100% - 20px);
+  font-family: Arial;
+}
+#licence_message {
+  float: left;
+  padding-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  text-align: center;
+  width: calc(100% - 75px - 20px - 5px);
+}
+#closing_the_licence {
+  float: right;
+  transform: translate(0, 25%);
+  margin-right: 10px;
+  line-height: 2em;
+  width: 75px;
+}
