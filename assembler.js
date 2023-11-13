@@ -63,12 +63,12 @@ function isDirective(str) {
   return false;
 }
 
-function assemble(abstract_syntax_tree, output_of_preprocessor) {
+function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
   machineCode = [];
   for (let i = 0; i < 4096; i++)
     machineCode.push({hex : "00000", line : 0});
   let address = 0;
-  for (const node of abstract_syntax_tree.children) {
+  for (const node of root_of_abstract_syntax_tree.children) {
     const check_if_the_only_argument_is_register = () => {
       // Let's reduce the code repetition a bit by using lambda functions...
       if (node.children.length !== 1) {
