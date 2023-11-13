@@ -403,8 +403,9 @@ textarea {
   padding-left: 10px;
   padding-top: 5px;
   padding-bottom: 5px;
+  padding-right: 5px;
   text-align: center;
-  width: calc(100% - 75px - 20px - 5px);
+  width: calc(100% - 80px - 20px - 5px);
 }
 #closing_the_licence {
   float: right;
