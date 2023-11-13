@@ -416,3 +416,9 @@ textarea {
   width: 75px;
   background: #eeffee;
 }
+#warningAboutDownloadingHexadecimal {
+  text-align: justify;
+  font-family: Arial;
+  margin-left: 5px;
+  margin-right: 5px;
+}

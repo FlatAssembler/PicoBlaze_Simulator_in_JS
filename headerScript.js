@@ -331,7 +331,8 @@ function deletePCpointer() {
 }
 function drawTable() {
   let tableHTML = `
-  <button id="downloadHex">Download Hexadecimal</button>
+  <button id="downloadHex"><img src="https://icons.getbootstrap.com/assets/icons/download.svg" alt="Download Hexadecimal"></button>
+  <div id="warningAboutDownloadingHexadecimal">Clicking the button above will download the hexadecimal (<code>.HEX</code>) file, in the same format that the Xilinx PicoBlaze Assembler outputs. You need to convert it to a binary file before uploading it to PicoBlaze. I am sorry that this program is not outputting binary files, but there is no obvious way to do it since PicoBlaze instructions are 18-bit and the smallest addressable memory unit in JavaScript is byte (8 bits), and 18 bits is not divisible by bytes.</div>
   <table id="machineCode">
      <tr>
        <th colspan="4">Machine Code</th>
