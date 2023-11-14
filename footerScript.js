@@ -95,6 +95,10 @@ function onPlayPauseButton() {
     document.getElementById("playImage").style.display = "inline";
     document.getElementById("pauseImage").style.display = "none";
   } else {
+    if (!document.getElementById("shouldWeUpdateRegisters")
+             .checked) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/20
+      document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
+          " ";
     simulationThread = setInterval(simulateOneInstruction, 500);
     document.getElementById("fastForwardButton").disabled = true;
     document.getElementById("singleStepButton").disabled = true;
@@ -110,6 +114,9 @@ function onSingleStepButton() {
 }
 function fastForward() {
   playing = true;
+  if (!document.getElementById("shouldWeUpdateRegisters")
+           .checked) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/20
+    document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = " ";
   document.getElementById("fastForwardButton").disabled = true;
   document.getElementById("singleStepButton").disabled = true;
   document.getElementById("UART_INPUT").disabled = true;
