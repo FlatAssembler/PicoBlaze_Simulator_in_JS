@@ -405,7 +405,10 @@ textarea {
   padding-bottom: 5px;
   padding-right: 5px;
   text-align: center;
-  width: calc(100% - 75px /* 75px is the width of the "Close" button. */ - 2 * (10px + 5px));
+  width: calc(
+    100% - 75px /* 75px is the width of the "Close" button. */ - 2 *
+      (10px + 5px)
+  );
 }
 #closing_the_licence {
   float: right;
