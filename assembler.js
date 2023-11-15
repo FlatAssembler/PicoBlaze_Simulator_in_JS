@@ -68,978 +68,1025 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
   for (let i = 0; i < 4096; i++)
     machineCode.push({hex : "00000", line : 0});
   let address = 0;
-  for (const node of root_of_abstract_syntax_tree.children) {
+  for (const node_of_depth_1 of root_of_abstract_syntax_tree.children) {
     const check_if_the_only_argument_is_register = () => {
       // Let's reduce the code repetition a bit by using lambda functions...
-      if (node.children.length !== 1) {
-        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
-              '" should have exactly 1 child node!');
+      if (node_of_depth_1.children.length !== 1) {
+        alert("Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+              node_of_depth_1.text + '" should have exactly 1 child node!');
         return 0;
       }
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text +
               '" is not a valid register name!');
         return 0;
       }
       return 1;
     };
     const check_if_there_are_three_child_nodes_and_the_second_one_is_comma = () => {
-      if (node.children.length !== 3) {
+      if (node_of_depth_1.children.length !== 3) {
         alert(
-            "Line #" + node.lineNumber + ': The AST node "' + node.text +
+            "Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+            node_of_depth_1.text +
             '" should have exactly three child nodes (a comma is also a child node).');
         return 0; // If we just `return` (not `return 0`), it will cause this
                   // bug:
                   // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/18
       }
-      if (node.children[1].text !== ",") {
-        alert("Line #" + node.lineNumber + ': Expected a comma instead of "' +
-              node.children[1].text + '"!');
+      if (node_of_depth_1.children[1].text !== ",") {
+        alert("Line #" + node_of_depth_1.lineNumber +
+              ': Expected a comma instead of "' +
+              node_of_depth_1.children[1].text + '"!');
         return 0;
       }
       return 1;
     };
-    if (/^address$/i.test(node.text))
-      address = node.children[0].interpretAsArithmeticExpression(
+    if (/^address$/i.test(node_of_depth_1.text))
+      address = node_of_depth_1.children[0].interpretAsArithmeticExpression(
           output_of_preprocessor.constants);
-    else if (/^load$/i.test(node.text)) {
+    else if (/^load$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
         // TODO: "bennyboy" from "atheistforums.org" thinks that
         // doing this check (whether an argument is a register) again and again
         // slows down the assembler significantly, it would be good to
         // investigate whether that is true:
         // https://atheistforums.org/thread-61911-post-2112572.html#pid2112572
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         // If we are moving a constant to a register.
         machineCode[address].hex += "1";
       else
         machineCode[address].hex += "0";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^star$/i.test(node.text)) {
+    } else if (/^star$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "1";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         // If we are moving a constant to a register.
         machineCode[address].hex += "7";
       else
         machineCode[address].hex += "6";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^store$/i.test(node.text)) {
+    } else if (/^store$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "2";
-      if (node.children[2].text === "()")
+      if (node_of_depth_1.children[2].text === "()")
         machineCode[address].hex += "e";
       else
         machineCode[address].hex += "f";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].text === "()") {
-        if (node.children[2].children.length !== 1) {
-          alert("Line #" + node.lineNumber +
+      if (node_of_depth_1.children[2].text === "()") {
+        if (node_of_depth_1.children[2].children.length !== 1) {
+          alert("Line #" + node_of_depth_1.lineNumber +
                 ": The node '()' should have exactly one child!");
           return;
         }
-        if (node.children[2].children[0].getRegisterNumber(
+        if (node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) === "none") {
-          alert("Line #" + node.lineNumber + ': "' +
-                node.children[2].children[0].text + '" is not a register!');
+          alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+                node_of_depth_1.children[2].children[0].text +
+                '" is not a register!');
           return;
         }
         machineCode[address].hex +=
-            node.children[2].children[0].getRegisterNumber(
+            node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) +
             "0";
       } else
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       address++;
-    } else if (/^fetch$/i.test(node.text)) {
+    } else if (/^fetch$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].text === "()")
+      if (node_of_depth_1.children[2].text === "()")
         machineCode[address].hex += "a";
       else
         machineCode[address].hex += "b";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].text === "()") {
-        if (node.children[2].children.length !== 1) {
-          alert("Line #" + node.lineNumber +
+      if (node_of_depth_1.children[2].text === "()") {
+        if (node_of_depth_1.children[2].children.length !== 1) {
+          alert("Line #" + node_of_depth_1.lineNumber +
                 ": The node '()' should have exactly one child!");
           return;
         }
-        if (node.children[2].children[0].getRegisterNumber(
+        if (node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) === "none") {
-          alert("Line #" + node.lineNumber + ': "' +
-                node.children[2].children[0].text + '" is not a register!');
+          alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+                node_of_depth_1.children[2].children[0].text +
+                '" is not a register!');
           return;
         }
         machineCode[address].hex +=
-            node.children[2].children[0].getRegisterNumber(
+            node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) +
             "0";
       } else
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       address++;
-    } else if (/^input$/i.test(node.text)) {
+    } else if (/^input$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].text === "()")
+      if (node_of_depth_1.children[2].text === "()")
         machineCode[address].hex += "8";
       else
         machineCode[address].hex += "9";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].text === "()") {
-        if (node.children[2].children.length !== 1) {
-          alert("Line #" + node.lineNumber +
+      if (node_of_depth_1.children[2].text === "()") {
+        if (node_of_depth_1.children[2].children.length !== 1) {
+          alert("Line #" + node_of_depth_1.lineNumber +
                 ": The node '()' should have exactly one child!");
           return;
         }
-        if (node.children[2].children[0].getRegisterNumber(
+        if (node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) === "none") {
-          alert("Line #" + node.lineNumber + ': "' +
-                node.children[2].children[0].text + '" is not a register!');
+          alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+                node_of_depth_1.children[2].children[0].text +
+                '" is not a register!');
           return;
         }
         machineCode[address].hex +=
-            node.children[2].children[0].getRegisterNumber(
+            node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) +
             "0";
       } else
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       address++;
-    } else if (/^output$/i.test(node.text)) {
+    } else if (/^output$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "2";
-      if (node.children[2].text === "()")
+      if (node_of_depth_1.children[2].text === "()")
         machineCode[address].hex += "c";
       else
         machineCode[address].hex += "d";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].text === "()") {
-        if (node.children[2].children.length !== 1) {
-          alert("Line #" + node.lineNumber +
+      if (node_of_depth_1.children[2].text === "()") {
+        if (node_of_depth_1.children[2].children.length !== 1) {
+          alert("Line #" + node_of_depth_1.lineNumber +
                 ": The node '()' should have exactly one child!");
           return;
         }
-        if (node.children[2].children[0].getRegisterNumber(
+        if (node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) === "none") {
-          alert("Line #" + node.lineNumber + ': "' +
-                node.children[2].children[0].text + '" is not a register!');
+          alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+                node_of_depth_1.children[2].children[0].text +
+                '" is not a register!');
           return;
         }
         machineCode[address].hex +=
-            node.children[2].children[0].getRegisterNumber(
+            node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) +
             "0";
       } else
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       address++;
-    } else if (/^outputk$/i.test(node.text)) {
+    } else if (/^outputk$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex =
           "2b" +
-          formatAsByte(node.children[0].interpretAsArithmeticExpression(
-              output_of_preprocessor.constants)) +
-          formatAs4bits(node.children[2].interpretAsArithmeticExpression(
-              output_of_preprocessor.constants));
+          formatAsByte(
+              node_of_depth_1.children[0].interpretAsArithmeticExpression(
+                  output_of_preprocessor.constants)) +
+          formatAs4bits(
+              node_of_depth_1.children[2].interpretAsArithmeticExpression(
+                  output_of_preprocessor.constants));
       address++;
-    } else if (/^regbank$/i.test(node.text)) {
-      if (node.children.length !== 1) {
-        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
-              '" should have exactly one (1) child!');
+    } else if (/^regbank$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1) {
+        alert("Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+              node_of_depth_1.text + '" should have exactly one (1) child!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
-      if (node.children[0].text === "a" || node.children[0].text === "A")
+      machineCode[address].line = node_of_depth_1.lineNumber;
+      if (node_of_depth_1.children[0].text === "a" ||
+          node_of_depth_1.children[0].text === "A")
         machineCode[address].hex = "37000";
-      else if (node.children[0].text === "b" || node.children[0].text === "B")
+      else if (node_of_depth_1.children[0].text === "b" ||
+               node_of_depth_1.children[0].text === "B")
         machineCode[address].hex = "37001";
       else {
-        alert("Line #" + node.lineNumber +
-              ": Expected 'A' or 'B' instead of '" + node.children[0].text +
-              "'!");
+        alert("Line #" + node_of_depth_1.lineNumber +
+              ": Expected 'A' or 'B' instead of '" +
+              node_of_depth_1.children[0].text + "'!");
         return;
       }
       address++;
-    } else if (/^hwbuild$/i.test(node.text)) {
-      if (node.children.length !== 1) {
-        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
-              '" should have exactly one (1) child!');
+    } else if (/^hwbuild$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1) {
+        alert("Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+              node_of_depth_1.text + '" should have exactly one (1) child!');
         return;
       }
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "80";
       address++;
-    } else if (/^inst$/i.test(node.text)) {
-      if (node.children.length !== 1) {
-        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
-              '" should have exactly one (1) child!');
+    } else if (/^inst$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1) {
+        alert("Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+              node_of_depth_1.text + '" should have exactly one (1) child!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
-      machineCode[address].hex =
-          formatAsInstruction(node.children[0].interpretAsArithmeticExpression(
+      machineCode[address].line = node_of_depth_1.lineNumber;
+      machineCode[address].hex = formatAsInstruction(
+          node_of_depth_1.children[0].interpretAsArithmeticExpression(
               output_of_preprocessor.constants));
       address++;
-    } else if (/^jump$/i.test(node.text)) {
-      machineCode[address].line = node.lineNumber;
-      if (node.children.length === 1) {
-        if (node.children[0].getLabelAddress(
+    } else if (/^jump$/i.test(node_of_depth_1.text)) {
+      machineCode[address].line = node_of_depth_1.lineNumber;
+      if (node_of_depth_1.children.length === 1) {
+        if (node_of_depth_1.children[0].getLabelAddress(
                 output_of_preprocessor.labels,
                 output_of_preprocessor.constants) === "none") {
-          alert("Line #" + node.lineNumber + ": Label '" +
-                node.children[0].text + "' is not declared!");
+          alert("Line #" + node_of_depth_1.lineNumber + ": Label '" +
+                node_of_depth_1.children[0].text + "' is not declared!");
           return;
         }
-        machineCode[address].hex = "22" + node.children[0].getLabelAddress(
-                                              output_of_preprocessor.labels,
-                                              output_of_preprocessor.constants);
+        machineCode[address].hex =
+            "22" + node_of_depth_1.children[0].getLabelAddress(
+                       output_of_preprocessor.labels,
+                       output_of_preprocessor.constants);
       } else {
-        if (node.children.length !== 3) {
+        if (node_of_depth_1.children.length !== 3) {
           alert(
-              "Line #" + node.lineNumber + ": The '" + node.text +
+              "Line #" + node_of_depth_1.lineNumber + ": The '" +
+              node_of_depth_1.text +
               "' node should have either exactly one child node (unconditional jumping) or exactly three (3) child nodes (comma counts as a child node)!");
           return;
         }
-        if (node.children[1].text !== ",") {
-          alert("Line #" + node.lineNumber +
-                ": Expected a comma (',') instead of '" + node.text + "'!");
+        if (node_of_depth_1.children[1].text !== ",") {
+          alert("Line #" + node_of_depth_1.lineNumber +
+                ": Expected a comma (',') instead of '" + node_of_depth_1.text +
+                "'!");
           return;
         }
-        if (node.children[2].getLabelAddress(
+        if (node_of_depth_1.children[2].getLabelAddress(
                 output_of_preprocessor.labels,
                 output_of_preprocessor.constants) === "none") {
-          alert("Line #" + node.lineNumber + ": Label '" +
-                node.children[2].text + "' is not declared!");
+          alert("Line #" + node_of_depth_1.lineNumber + ": Label '" +
+                node_of_depth_1.children[2].text + "' is not declared!");
           return;
         }
-        if (/^z$/i.test(node.children[0].text))
+        if (/^z$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "32" + node.children[2].getLabelAddress(
+              "32" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
-        else if (/^nz$/i.test(node.children[0].text))
+        else if (/^nz$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "36" + node.children[2].getLabelAddress(
+              "36" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
-        else if (/^c$/i.test(node.children[0].text))
+        else if (/^c$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "3a" + node.children[2].getLabelAddress(
+              "3a" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
-        else if (/^nc$/i.test(node.children[0].text))
+        else if (/^nc$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "3e" + node.children[2].getLabelAddress(
+              "3e" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
         else {
-          alert("Line #" + node.lineNumber + ": Invalid flag name '" +
-                node.children[0].text + "'!");
+          alert("Line #" + node_of_depth_1.lineNumber +
+                ": Invalid flag name '" + node_of_depth_1.children[0].text +
+                "'!");
           return;
         }
       }
       address++;
-    } else if (/^jump@$/i.test(node.text)) {
-      if (node.children.length !== 1 || node.children[0].text !== "()") {
-        alert("Line #" + node.lineNumber + ": The '" + node.text +
+    } else if (/^jump@$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1 ||
+          node_of_depth_1.children[0].text !== "()") {
+        alert("Line #" + node_of_depth_1.lineNumber + ": The '" +
+              node_of_depth_1.text +
               "' node should have exactly one (1) child, and that is '()'");
         return;
       }
-      if (node.children[0].children.length !== 3) {
+      if (node_of_depth_1.children[0].children.length !== 3) {
         alert(
-            "Line #" + node.lineNumber +
+            "Line #" + node_of_depth_1.lineNumber +
             ": The '()' node should have exactly three children (now it has " +
-            node.children[0].children.length + ")!");
+            node_of_depth_1.children[0].children.length + ")!");
         return;
       }
-      if (node.children[0].children[1].text !== ",") {
-        alert("Line #" + node.lineNumber +
+      if (node_of_depth_1.children[0].children[1].text !== ",") {
+        alert("Line #" + node_of_depth_1.lineNumber +
               ": Expected a comma (',') instead of '" +
-              node.children[0].children[1].text + "'!");
+              node_of_depth_1.children[0].children[1].text + "'!");
         return;
       }
-      if (node.children[0].children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ": '" +
-              node.children[0].children[0].text + "' is not a register name!");
+        alert("Line #" + node_of_depth_1.lineNumber + ": '" +
+              node_of_depth_1.children[0].children[0].text +
+              "' is not a register name!");
         return;
       }
-      if (node.children[0].children[2].getRegisterNumber(
+      if (node_of_depth_1.children[0].children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ": '" +
-              node.children[0].children[2].text + "' is not a register name!");
+        alert("Line #" + node_of_depth_1.lineNumber + ": '" +
+              node_of_depth_1.children[0].children[2].text +
+              "' is not a register name!");
         return;
       }
-      machineCode[address].line = node.lineNumber;
-      machineCode[address].hex = "26" +
-                                 node.children[0].children[0].getRegisterNumber(
-                                     output_of_preprocessor.namedRegisters) +
-                                 node.children[0].children[2].getRegisterNumber(
-                                     output_of_preprocessor.namedRegisters) +
-                                 "0";
+      machineCode[address].line = node_of_depth_1.lineNumber;
+      machineCode[address].hex =
+          "26" +
+          node_of_depth_1.children[0].children[0].getRegisterNumber(
+              output_of_preprocessor.namedRegisters) +
+          node_of_depth_1.children[0].children[2].getRegisterNumber(
+              output_of_preprocessor.namedRegisters) +
+          "0";
       address++;
-    } else if (/^call@$/i.test(node.text)) {
-      if (node.children.length !== 1 || node.children[0].text !== "()") {
-        alert("Line #" + node.lineNumber + ": The '" + node.text +
+    } else if (/^call@$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1 ||
+          node_of_depth_1.children[0].text !== "()") {
+        alert("Line #" + node_of_depth_1.lineNumber + ": The '" +
+              node_of_depth_1.text +
               "' node should have exactly one (1) child, and that is '()'");
         return;
       }
-      if (node.children[0].children.length !== 3) {
+      if (node_of_depth_1.children[0].children.length !== 3) {
         alert(
-            "Line #" + node.lineNumber +
+            "Line #" + node_of_depth_1.lineNumber +
             ": The '()' node should have exactly three children (now it has " +
-            node.children[0].children.length + ")!");
+            node_of_depth_1.children[0].children.length + ")!");
         return;
       }
-      if (node.children[0].children[1].text !== ",") {
-        alert("Line #" + node.lineNumber +
+      if (node_of_depth_1.children[0].children[1].text !== ",") {
+        alert("Line #" + node_of_depth_1.lineNumber +
               ": Expected a comma (',') instead of '" +
-              node.children[0].children[1].text + "'!");
+              node_of_depth_1.children[0].children[1].text + "'!");
         return;
       }
-      if (node.children[0].children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ": '" +
-              node.children[0].children[0].text + "' is not a register name!");
+        alert("Line #" + node_of_depth_1.lineNumber + ": '" +
+              node_of_depth_1.children[0].children[0].text +
+              "' is not a register name!");
         return;
       }
-      if (node.children[0].children[2].getRegisterNumber(
+      if (node_of_depth_1.children[0].children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ": '" +
-              node.children[0].children[2].text + "' is not a register name!");
+        alert("Line #" + node_of_depth_1.lineNumber + ": '" +
+              node_of_depth_1.children[0].children[2].text +
+              "' is not a register name!");
         return;
       }
-      machineCode[address].line = node.lineNumber;
-      machineCode[address].hex = "24" +
-                                 node.children[0].children[0].getRegisterNumber(
-                                     output_of_preprocessor.namedRegisters) +
-                                 node.children[0].children[2].getRegisterNumber(
-                                     output_of_preprocessor.namedRegisters) +
-                                 "0";
+      machineCode[address].line = node_of_depth_1.lineNumber;
+      machineCode[address].hex =
+          "24" +
+          node_of_depth_1.children[0].children[0].getRegisterNumber(
+              output_of_preprocessor.namedRegisters) +
+          node_of_depth_1.children[0].children[2].getRegisterNumber(
+              output_of_preprocessor.namedRegisters) +
+          "0";
       address++;
-    } else if (/^call$/i.test(node.text)) {
-      machineCode[address].line = node.lineNumber;
-      if (node.children.length === 1) {
-        if (node.children[0].getLabelAddress(
+    } else if (/^call$/i.test(node_of_depth_1.text)) {
+      machineCode[address].line = node_of_depth_1.lineNumber;
+      if (node_of_depth_1.children.length === 1) {
+        if (node_of_depth_1.children[0].getLabelAddress(
                 output_of_preprocessor.labels,
                 output_of_preprocessor.constants) === "none") {
-          alert("Line #" + node.lineNumber + ": Label '" +
-                node.children[0].text + "' is not declared!");
+          alert("Line #" + node_of_depth_1.lineNumber + ": Label '" +
+                node_of_depth_1.children[0].text + "' is not declared!");
           return;
         }
-        machineCode[address].hex = "20" + node.children[0].getLabelAddress(
-                                              output_of_preprocessor.labels,
-                                              output_of_preprocessor.constants);
+        machineCode[address].hex =
+            "20" + node_of_depth_1.children[0].getLabelAddress(
+                       output_of_preprocessor.labels,
+                       output_of_preprocessor.constants);
       } else {
-        if (node.children.length !== 3) {
+        if (node_of_depth_1.children.length !== 3) {
           alert(
-              "Line #" + node.lineNumber + ": The '" + node.text +
+              "Line #" + node_of_depth_1.lineNumber + ": The '" +
+              node_of_depth_1.text +
               "' node should have either exactly one child node (unconditional jumping) or exactly three (3) child nodes (comma counts as a child node)!");
           return;
         }
-        if (node.children[1].text !== ",") {
-          alert("Line #" + node.lineNumber +
-                ": Expected a comma (',') instead of '" + node.text + "'!");
+        if (node_of_depth_1.children[1].text !== ",") {
+          alert("Line #" + node_of_depth_1.lineNumber +
+                ": Expected a comma (',') instead of '" + node_of_depth_1.text +
+                "'!");
           return;
         }
-        if (node.children[2].getLabelAddress(
+        if (node_of_depth_1.children[2].getLabelAddress(
                 output_of_preprocessor.labels,
                 output_of_preprocessor.constants) === "none") {
-          alert("Line #" + node.lineNumber + ": Label '" +
-                node.children[2].text + "' is not declared!");
+          alert("Line #" + node_of_depth_1.lineNumber + ": Label '" +
+                node_of_depth_1.children[2].text + "' is not declared!");
           return;
         }
-        if (/^z$/i.test(node.children[0].text))
+        if (/^z$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "30" + node.children[2].getLabelAddress(
+              "30" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
-        else if (/^nz$/i.test(node.children[0].text))
+        else if (/^nz$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "34" + node.children[2].getLabelAddress(
+              "34" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
-        else if (/^c$/i.test(node.children[0].text))
+        else if (/^c$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "38" + node.children[2].getLabelAddress(
+              "38" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
-        else if (/^nc$/i.test(node.children[0].text))
+        else if (/^nc$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex =
-              "3c" + node.children[2].getLabelAddress(
+              "3c" + node_of_depth_1.children[2].getLabelAddress(
                          output_of_preprocessor.labels,
                          output_of_preprocessor.constants);
         else {
-          alert("Line #" + node.lineNumber + ": Invalid flag name '" +
-                node.children[0].text + "'!");
+          alert("Line #" + node_of_depth_1.lineNumber +
+                ": Invalid flag name '" + node_of_depth_1.children[0].text +
+                "'!");
           return;
         }
       }
       address++;
-    } else if (/^return$/i.test(node.text)) {
-      machineCode[address].line = node.lineNumber;
-      if (!node.children.length)
+    } else if (/^return$/i.test(node_of_depth_1.text)) {
+      machineCode[address].line = node_of_depth_1.lineNumber;
+      if (!node_of_depth_1.children.length)
         machineCode[address].hex = "25000";
-      else if (node.children.length === 1) {
-        if (/^z$/i.test(node.children[0].text))
+      else if (node_of_depth_1.children.length === 1) {
+        if (/^z$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex = "31000";
-        else if (/^nz$/i.test(node.children[0].text))
+        else if (/^nz$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex = "35000";
-        else if (/^c$/i.test(node.children[0].text))
+        else if (/^c$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex = "39000";
-        else if (/^nc$/i.test(node.children[0].text))
+        else if (/^nc$/i.test(node_of_depth_1.children[0].text))
           machineCode[address].hex = "3d000";
         else {
-          alert("Line #" + node.lineNumber + ": Invalid flag name '" +
-                node.children[0].text + "'");
+          alert("Line #" + node_of_depth_1.lineNumber +
+                ": Invalid flag name '" + node_of_depth_1.children[0].text +
+                "'");
           return;
         }
       } else {
         alert(
-            "Line #" + node.lineNumber + ": The '" + node.text +
+            "Line #" + node_of_depth_1.lineNumber + ": The '" +
+            node_of_depth_1.text +
             "' node should have either exactly zero (0) child nodes or exactly one (1) child node!");
         return;
       }
       address++;
-    } else if (/^add$/i.test(node.text)) {
+    } else if (/^add$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "1";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         // If we are adding a constant to a register.
         machineCode[address].hex += "1";
       else
         machineCode[address].hex += "0";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^addcy?$/i.test(node.text)) {
+    } else if (/^addcy?$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "1";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         // If we are adding a constant to a register.
         machineCode[address].hex += "3";
       else
         machineCode[address].hex += "2";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^sub$/i.test(node.text)) {
+    } else if (/^sub$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "1";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         // If we are subtracting a constant from a register.
         machineCode[address].hex += "9";
       else
         machineCode[address].hex += "8";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^subcy?$/i.test(node.text)) {
+    } else if (/^subcy?$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "1";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         // If we are subtracting a constant from a register.
         machineCode[address].hex += "b";
       else
         machineCode[address].hex += "a";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^and$/i.test(node.text)) {
+    } else if (/^and$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         machineCode[address].hex += "3";
       else
         machineCode[address].hex += "2";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^or$/i.test(node.text)) {
+    } else if (/^or$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         machineCode[address].hex += "5";
       else
         machineCode[address].hex += "4";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^xor$/i.test(node.text)) {
+    } else if (/^xor$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         machineCode[address].hex += "7";
       else
         machineCode[address].hex += "6";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^test$/i.test(node.text)) {
+    } else if (/^test$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         machineCode[address].hex += "d";
       else
         machineCode[address].hex += "c";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^testcy?$/i.test(node.text)) {
+    } else if (/^testcy?$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "0";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         machineCode[address].hex += "f";
       else
         machineCode[address].hex += "e";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^comp(are)?$/i.test(node.text)) {
+    } else if (/^comp(are)?$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "1";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         machineCode[address].hex += "d";
       else
         machineCode[address].hex += "c";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^comp(are)?cy$/i.test(node.text)) {
+    } else if (/^comp(are)?cy$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
-      if (node.children[0].getRegisterNumber(
+      if (node_of_depth_1.children[0].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none") {
-        alert("Line #" + node.lineNumber + ': "' + node.children[0].text +
-              '" is not a register!');
+        alert("Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[0].text + '" is not a register!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "1";
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
         machineCode[address].hex += "f";
       else
         machineCode[address].hex += "e";
-      machineCode[address].hex += node.children[0].getRegisterNumber(
+      machineCode[address].hex += node_of_depth_1.children[0].getRegisterNumber(
           output_of_preprocessor.namedRegisters);
-      if (node.children[2].getRegisterNumber(
+      if (node_of_depth_1.children[2].getRegisterNumber(
               output_of_preprocessor.namedRegisters) === "none")
-        machineCode[address].hex +=
-            formatAsByte(node.children[2].interpretAsArithmeticExpression(
+        machineCode[address].hex += formatAsByte(
+            node_of_depth_1.children[2].interpretAsArithmeticExpression(
                 output_of_preprocessor.constants));
       else
-        machineCode[address].hex += node.children[2].getRegisterNumber(
-                                        output_of_preprocessor.namedRegisters) +
-                                    "0";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters) +
+            "0";
       address++;
-    } else if (/^sl0$/i.test(node.text)) {
+    } else if (/^sl0$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "06";
       address++;
-    } else if (/^sl1$/i.test(node.text)) {
+    } else if (/^sl1$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "07";
       address++;
-    } else if (/^slx$/i.test(node.text)) {
+    } else if (/^slx$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "04";
       address++;
-    } else if (/^sla$/i.test(node.text)) {
+    } else if (/^sla$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "00";
       address++;
-    } else if (/^rl$/i.test(node.text)) {
+    } else if (/^rl$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "02";
       address++;
-    } else if (/^sr0$/i.test(node.text)) {
+    } else if (/^sr0$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "0e";
       address++;
-    } else if (/^sr1$/i.test(node.text)) {
+    } else if (/^sr1$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "0f";
       address++;
-    } else if (/^srx$/i.test(node.text)) {
+    } else if (/^srx$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "0a";
       address++;
-    } else if (/^sra$/i.test(node.text)) {
+    } else if (/^sra$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "08";
       address++;
-    } else if (/^rr$/i.test(node.text)) {
+    } else if (/^rr$/i.test(node_of_depth_1.text)) {
       if (!check_if_the_only_argument_is_register())
         return;
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "14" +
-                                 node.children[0].getRegisterNumber(
+                                 node_of_depth_1.children[0].getRegisterNumber(
                                      output_of_preprocessor.namedRegisters) +
                                  "0c";
       address++;
-    } else if (/^disable$/i.test(node.text)) {
-      if (node.children.length !== 1 ||
-          !/interrupt/i.test(node.children[0].text)) {
-        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
+    } else if (/^disable$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1 ||
+          !/interrupt/i.test(node_of_depth_1.children[0].text)) {
+        alert("Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+              node_of_depth_1.text +
               '" should have exactly one child node, and that is "interrupt"!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "28000";
       address++;
-    } else if (/^enable$/i.test(node.text)) {
-      if (node.children.length !== 1 ||
-          !/interrupt/i.test(node.children[0].text)) {
-        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
+    } else if (/^enable$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1 ||
+          !/interrupt/i.test(node_of_depth_1.children[0].text)) {
+        alert("Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+              node_of_depth_1.text +
               '" should have exactly one child node, and that is "interrupt"!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       machineCode[address].hex = "28001";
       address++;
-    } else if (/^ret(urn)?i$/i.test(node.text)) {
-      if (node.children.length !== 1) {
-        alert("Line #" + node.lineNumber + ': The AST node "' + node.text +
-              '" should have exactly one child node!');
+    } else if (/^ret(urn)?i$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length !== 1) {
+        alert("Line #" + node_of_depth_1.lineNumber + ': The AST node "' +
+              node_of_depth_1.text + '" should have exactly one child node!');
         return;
       }
-      if (/^enable$/i.test(node.children[0].text))
+      if (/^enable$/i.test(node_of_depth_1.children[0].text))
         machineCode[address].hex = "29001";
-      else if (/^disable$/i.test(node.children[0].text))
+      else if (/^disable$/i.test(node_of_depth_1.children[0].text))
         machineCode[address].hex = "29000";
       else {
-        alert("Line #" + node.lineNumber +
+        alert("Line #" + node_of_depth_1.lineNumber +
               ': Expected "ENABLE" or "DISABLE" instead of "' +
-              node.children[0].text + '"!');
+              node_of_depth_1.children[0].text + '"!');
         return;
       }
-      machineCode[address].line = node.lineNumber;
+      machineCode[address].line = node_of_depth_1.lineNumber;
       address++;
-    } else if (!isDirective(node.text)) {
-      alert("Line #" + node.lineNumber + ': Sorry about that, the mnemonic "' +
-            node.text + '" is not implemented.');
+    } else if (!isDirective(node_of_depth_1.text)) {
+      alert("Line #" + node_of_depth_1.lineNumber +
+            ': Sorry about that, the mnemonic "' + node_of_depth_1.text +
+            '" is not implemented.');
     }
   }
 }
