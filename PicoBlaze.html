@@ -8,6 +8,7 @@
       content="An on-line assembler and emulator for Xilinx PicoBlaze, runnable in a modern browser (starting with Firefox 52)."
     />
     <meta name="author" content="Teo Samarzija" />
+    <meta charset="UTF-8" />
     <link rel="stylesheet" href="styles.css" />
     <script id="objectAssignPolyfill"></script>
     <script id="symbolPolyfill"></script>
@@ -30,6 +31,7 @@
     <script src="simulator.js" type="text/javascript"></script>
   </head>
   <body>
+    <svg id="emptySVG" style="display: none"></svg>
     <header>
       <h1>PicoBlaze Simulator</h1>
       <span id="authors"
@@ -141,15 +143,7 @@
           <span class="tooltip">Single Step</span>
         </button>
         <button id="stopButton">
-          <svg width="30" height="30" alt="stop">
-            <defs>
-              <radialGradient id="redGradient">
-                <stop offset="0%" stop-color="rgb(64,0,0)" />
-                <stop offset="75%" stop-color="black" />
-              </radialGradient>
-            </defs>
-            <polygon points="0,0 30,0 30,30 0,30" fill="url(#redGradient)" />
-          </svg>
+          <img src="stop.svg" alt="Stop" />
           <span class="tooltip">Stop</span>
         </button>
       </div>
