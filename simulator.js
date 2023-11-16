@@ -697,7 +697,10 @@ function simulateOneInstruction() {
       case "08": // SRA
         const oldFlagC = flagC[regbank];
         set_flags_before_shift_right();
-        registerValue = (registerValue >> 1) | oldFlagC << 7;
+        registerValue =
+            (registerValue >> 1) |
+            oldFlagC
+                << 7; // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/9
         break;
       case "0c": // RR
         set_flags_before_shift_right();

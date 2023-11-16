@@ -64,6 +64,11 @@ function isDirective(str) {
 }
 
 function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
+  if (root_of_abstract_syntax_tree.text !== "assembly") {
+    alert(
+        "Internal assembler error: The first argument of the \"assemble\" function is not the root of the abstract syntax tree (AST)!");
+    return;
+  }
   machineCode = [];
   for (let i = 0; i < 4096; i++)
     machineCode.push({hex : "00000", line : 0});
