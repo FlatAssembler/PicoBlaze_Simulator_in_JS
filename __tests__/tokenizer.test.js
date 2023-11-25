@@ -33,4 +33,12 @@ describe("PicoBlaze Tokenizer", () => {
         const tokens = tokenizer.tokenize("addr\ness 0");
         expect(tokens.map(t => t.text)).toEqual([  "addr", "\n", "ess", "0", "\n"]);
     })
+
+    test("\" \" is a single token", () => {
+    
+	const tokens = tokenizer.tokenize(
+		"load s9, \" \" ; https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/5"
+	);
+	expect(tokens.map(t => t.text)).toEqual(["load","s9",",","\" \"","\n"]);
+    })
 })
