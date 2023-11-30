@@ -417,9 +417,12 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
           return;
         }
         if (node_of_depth_1.children[1].text !== ",") {
-          alert("Line #" + node_of_depth_1.lineNumber +
-                ": Expected a comma (',') instead of '" + node_of_depth_1.text +
-                "'!");
+          alert(
+              "Line #" + node_of_depth_1.lineNumber +
+              ": Expected a comma (',') instead of '" +
+              node_of_depth_1.children[1]
+                  .text + // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/21
+              "'!");
           return;
         }
         if (node_of_depth_1.children[2].getLabelAddress(
