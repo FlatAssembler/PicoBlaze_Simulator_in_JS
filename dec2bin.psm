@@ -368,3 +368,9 @@ UART_TX:
   JUMP   NZ, UART_TX
   OUTPUT s9, UART_TX_PORT
 RETURN
+
+;By the way, you might also be interested
+;in seeing the
+;<a href="https://github.com/FlatAssembler/SimpleCalculator/blob/master/IEEE.ASM">decimal-to-IEEE754-hexadecimal converter</a>
+;I wrote in x86 assembly back when
+;I was 15.
