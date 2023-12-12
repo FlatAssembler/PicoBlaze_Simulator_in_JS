@@ -166,7 +166,8 @@ loading_the_number:
     ;the number you have got.
     jump    c , print_the_number
     compare s9, "9" + 1
-    ;Suggestion by a <a href="https://codereview.stackexchange.com/questions/253951/converting-decimal-to-binary-in-assembly/253978#253978">StackExchange user</a>.
+    ;Suggestion by a
+    ;<a href="https://codereview.stackexchange.com/questions/253951/converting-decimal-to-binary-in-assembly/253978#253978">StackExchange user called Sep Roland</a>.
     jump    nc, print_the_number
   ;If it is a digit, store it into RAM.
   store s9, (pointer)
