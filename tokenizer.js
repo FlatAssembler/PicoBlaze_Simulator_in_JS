@@ -9,7 +9,7 @@ function tokenize(input) {
   for (let i = 0; i < input.length; i++) {
     if (areWeInAComment && areWeInAString) {
       alert(
-          "Tokenizer got into a forbidden state because of some bug in it! Line " +
+          "Tokenizer got into a forbidden state because of some bug in it! Line #" +
           currentLine);
       return [];
     }
