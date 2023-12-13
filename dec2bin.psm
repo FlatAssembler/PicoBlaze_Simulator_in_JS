@@ -184,7 +184,7 @@ loading_the_number:
   ;And then add it to the number you
   ;have got.
   add s0, s9
-  call c, abort ;In case of overflow.
+  call c, number_too_big
   jump loading_the_number ;Repeat until a
                           ;non-digit is
                           ;loaded.
@@ -318,13 +318,95 @@ JUMP START
 multiply_by_10:
   load se, sf
   add  se, se
-  call c , abort
+  call c , number_too_big
   add  se, se
-  call c , abort
+  call c , number_too_big
   add  se, sf
-  call c , abort
+  call c , number_too_big
   add  se, se
-  call c , abort
+  call c , number_too_big
+return
+
+number_too_big:
+  load s9, "T"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "m"
+  call UART_TX
+  load s9, "b"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "b"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "2"
+  call UART_TX
+  load s9, "5"
+  call UART_TX
+  load s9, "5"
+  call UART_TX
+  load s9, "!"
+  call UART_TX
+  load s9, a ;newline
+  call UART_TX
+  jump infinite_loop
 return
 
 abort:
