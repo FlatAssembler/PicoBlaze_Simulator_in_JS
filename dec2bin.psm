@@ -23,6 +23,11 @@
 ;the terminal, converts them into binary,
 ;and then prints the binary
 ;representations back onto the terminal.
+;Because all registers in PicoBlaze are
+;8-bit, the numbers must be smaller than
+;2**8=256. Dealing with bigger numbers
+;would make the program much more
+;complicated.
 ;Example input would be: <span style="white-space: pre; display: block; font-size: 1em; background: black; color: aquamarine; margin-top: 0; margin-bottom: 0;">
 <span style="color: black">;</span>1
 <span style="color: black">;</span>2
@@ -86,6 +91,9 @@ display "character after the last "
 display "number. "
 display a ;A new-line character, see
           ;<a href="#newline_character">below</a> for more details.
+display "The numbers must be "
+display "smaller than 256. "
+display a
 display "It is recommended that, "
 display "before starting this "
 display "program, you uncheck the "
@@ -140,6 +148,9 @@ display "this program will "
 display "convert the decimal "
 display "integer you just entered "
 display "to binary."
+display a
+display "The numbers must be "
+display "smaller than 256."
 display a
 endif
 
