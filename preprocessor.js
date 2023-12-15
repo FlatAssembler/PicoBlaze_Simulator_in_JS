@@ -38,6 +38,14 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
   }
   let address;
   for (const node_of_depth_1 of root_of_the_abstract_syntax_tree.children) {
+    if (typeof oldCompilationContext != "undefined" &&
+        !isDirective(node_of_depth_1.text)) {
+      alert(
+          "Line #" + node_of_depth_1.lineNumber + ": \"" +
+          node_of_depth_1.text +
+          "\" appears in an if-branching or a while-loop, but it is not a preprocessor directive. Only preprocessor directives can appear in if-branching and while-loops.");
+      return context;
+    }
     if (isMnemonic(node_of_depth_1.text)) {
       if (typeof oldCompilationContext != "undefined") {
         alert(
