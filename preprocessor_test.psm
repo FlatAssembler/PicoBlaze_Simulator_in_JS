@@ -48,7 +48,7 @@ while first &lt; 1000'd
 			constant hundreds, 0
 			while counter &gt; 10'd - 1
 				constant counter, counter - 10'd
-				counter hundreds, hundreds + 1
+				constant hundreds, hundreds + 1
 			endwhile
 			display hundreds + "0"
 		endif
