@@ -4,7 +4,7 @@
 ;`<code>if</code>`-`<code>else</code>` branching and
 ;`<code>while</code>` loops, by
 ;printing the Fibonacci numbers
-;smaller than 100 on the terminal
+;smaller than 1000 on the terminal
 ;during the assembly time.
 ;This program compiles to no machine
 ;code at all, and it does nothing except
@@ -27,11 +27,11 @@
 ;         such as this one. I have opened
 ;         a <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/7">GitHub issue about that</a>.
 
-display "We are about to display Fibonacci numbers smaller than 100 in the UART terminal... "
+display "We are about to display Fibonacci numbers smaller than 1000 in the UART terminal... "
 display a ;0xa=='\n', a new-line character.
 constant first, 0
 constant second, 1
-while first &lt; 100'd
+while first &lt; 1000'd
 	if first &lt; 10'd
 		display "0" + first
 		display " " ;In case inserting a new-line character doesn't work...
@@ -44,6 +44,14 @@ while first &lt; 100'd
 			constant remainder, remainder - 10'd
 			constant counter, counter + 1
 		endwhile
+		if counter &gt; 10'd - 1
+			constant hundreds, 0
+			while counter &gt; 10'd - 1
+				constant counter, counter - 10'd
+				counter hundreds, hundreds + 1
+			endwhile
+			display hundreds + "0"
+		endif
 		display counter + "0"
 		display remainder + "0"
 		display " "
