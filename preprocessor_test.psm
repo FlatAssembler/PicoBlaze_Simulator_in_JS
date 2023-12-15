@@ -44,7 +44,7 @@ while first &lt; 1000'd
 			constant remainder, remainder - 10'd
 			constant counter, counter + 1
 		endwhile
-		if counter &gt; 10'd - 1
+		if counter &gt; 10'd - 1 ;If <code>first</code> is bigger than 99.
 			constant hundreds, 0
 			while counter &gt; 10'd - 1
 				constant counter, counter - 10'd
