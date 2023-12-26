@@ -912,7 +912,7 @@ function simulateOneInstruction() {
     displayRegistersAndFlags();
     if (!playing || document.getElementById("shouldWeUpdateRegisters").checked)
       document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
-          "-&gt;";
+          "<img src=\"https://icons.getbootstrap.com/assets/icons/arrow-right.svg\" alt=\"-&gt;\">";
   } catch (error) {
     if (playing)
       clearInterval(simulationThread);

@@ -348,7 +348,9 @@ function drawTable() {
     tableHTML += `
       <tr>
         <td id="PC_label_${formatAsAddress(i)}">${
-        PC === i ? "-&gt;" : " "}</td>
+        PC === i
+            ? "<img src=\"https://icons.getbootstrap.com/assets/icons/arrow-right.svg\" alt=\"-&gt;\">"
+            : " "}</td>
         <td>${formatAsAddress(i)}</td>
         <td>${machineCode[i].hex}</td>
         <td>${machineCode[i].line}</td>

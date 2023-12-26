@@ -64,7 +64,8 @@ function stopSimulation() {
     clearInterval(simulationThread);
   document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML = "";
   PC = 0;
-  document.getElementById("PC_label_000").innerHTML = "-&gt;";
+  document.getElementById("PC_label_000").innerHTML =
+      "<img src=\"https://icons.getbootstrap.com/assets/icons/arrow-right.svg\" alt=\"-&gt;\">";
   playing = false;
   document.getElementById("playImage").style.display = "inline";
   document.getElementById("pauseImage").style.display = "none";
@@ -250,7 +251,7 @@ fetch(URL_of_JSON_with_examples)
         `).join("") + `
     <div class="exampleCodeLink" style="display: flex">
       <div class="callForMoreExamples">
-      Maybe you'd like to try <a href="https://flatassembler.github.io/Duktape.zip">my examples of x86 assembly</a>,
+      Maybe you'd like to try <a href="https://flatassembler.github.io/Duktape.zip">my examples of x86 assembly (<img src="https://icons.getbootstrap.com/assets/icons/archive.svg" alt="ZIP" style="width:20px;height:10px;">)</a>,
       that <a href="https://flatassembler.github.io/AEC_specification.html#AEC_to_x86"><abbr title="Arithmetic Expression Compiler, my programming language">AEC</abbr> compiles</a> to?
       </div>
     </div>
@@ -259,7 +260,7 @@ fetch(URL_of_JSON_with_examples)
         Have some example you would like to add here?
         <a
           href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues"
-          >Contact me on GitHub</a
+          ><img src="https://icons.getbootstrap.com/assets/icons/chat.svg" alt="Contact" style="width:20px;height:10px;"> me on GitHub</a
         > or <a href="https://reddit.com/r/PicoBlaze">Reddit</a>!
       </div>
     </div>
