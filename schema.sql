@@ -1,0 +1,8 @@
+CREATE DATABASE assembler_db;
+USE assembler_db;
+
+CREATE TABLE programs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

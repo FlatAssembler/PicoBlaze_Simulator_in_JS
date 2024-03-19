@@ -103,6 +103,7 @@ h1 {
   top: 400px;
   position: absolute;
   width: 100%;
+  text-align: center;
 }
 .flag {
   color: #007700;
