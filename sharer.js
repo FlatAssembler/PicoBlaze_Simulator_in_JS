@@ -6,11 +6,14 @@ btn.addEventListener("click", (e) => {
 })
 
 function saveAssemblyCode() {
-    const assemblyCode = document.getElementById("assemblyCode").value;
+    const assemblyCode = document.getElementById("assemblyCode").textContent;
+
+    const formData = new FormData();
+    formData.append('code', assemblyCode);
 
     fetch('db.php', {
         method: 'POST',
-        body: assemblyCode
+        body: formData
     })
 
     .then(response => {

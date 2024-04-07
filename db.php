@@ -9,10 +9,11 @@ class Database {
         $password = getenv("DB_PASSWORD");
         $dbname = getenv("DB_NAME");
 
-        $this->connection = new mysqli($servername, $username, $password, $dbname);
-
-        if ($this->connection->connect_error) {
-            die("Connection failed: " . $this->connection->connect_error);
+        try {
+            $this->connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        } catch(PDOException $e) {
+            die("Connection failed: " . $e->getMessage());
         }
     }
 
@@ -30,41 +31,19 @@ class Database {
 
 $conn = Database::getInstance()->getConnection();
 
-if (isset($_POST)) {
-    var_dump($_POST);
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['code'])) {
+if (isset($_POST['code'])) {
     $code = $_POST['code'];
     
-    var_dump($code);
-
-    $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (?)");
-    $stmt->bind_param("s", $code);
+    error_log("Received code: " . $code);
     
-    if ($stmt->execute()) {
+    $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (:code)");
+    $stmt->bindParam(':code', $code);
+    
+    try {
+        $stmt->execute();
         echo "Program saved successfully!";
-    } else {
-        echo "Error: " . $stmt->error;
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
-
-    $stmt->close();
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['id'])) {
-    $id = $_GET['id'];
-    
-    $stmt = $conn->prepare("SELECT code FROM programs WHERE id = ?");
-    $stmt->bind_param("i", $id);
-    $stmt->execute();
-    
-    $result = $stmt->get_result();
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        echo $row['code'];
-    } else {
-        echo "Program not found!";
-    }
-    $stmt->close();
 }
 ?>
