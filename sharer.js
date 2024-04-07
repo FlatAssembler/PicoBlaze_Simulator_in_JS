@@ -20,14 +20,18 @@ function saveAssemblyCode() {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
+
         return response.text();
     })
 
     .then(data => {
-        console.log(data);
+        // data is ?id=int
+
+        const message = "Share URL: ";
+        prompt(message, `${new URL(window.location.href).origin}/PicoBlaze.html${data}`);
     })
 
     .catch(error => {
-        console.error('Error:', error);
+        console.error(error);
     });
 }

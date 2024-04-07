@@ -33,17 +33,40 @@ $conn = Database::getInstance()->getConnection();
 
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
-    
-    error_log("Received code: " . $code);
-    
+
     $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (:code)");
     $stmt->bindParam(':code', $code);
     
     try {
         $stmt->execute();
-        echo "Program saved successfully!";
+        $lastInsertedId = $conn->lastInsertId();
+        echo "?id=" . $lastInsertedId;
     } catch (PDOException $e) {
         echo "Error: " . $e->getMessage();
     }
 }
+
+if (isset($_GET['id'])) {
+    $id = $_GET['id'];
+
+    if ($id == "") {
+        echo "NO";
+        return;
+    }
+
+    $stmt = $conn->prepare("SELECT code FROM programs WHERE id = :id");
+    $stmt->bindParam(':id', $id);
+    $stmt->execute();
+
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($result) {
+        $programCode = $result['code'];
+        // mysql uses \r\n, the browser uses \n
+        $programCode = str_replace("\r\n", "\n", $programCode);
+        echo $programCode;
+    } else {
+        echo "Program not found!";
+    }
+}
+
 ?>
