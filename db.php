@@ -4,6 +4,7 @@ class Database {
     private $connection;
 
     private function __construct() {
+        system("source .env");
         $servername = getenv("DB_SERVER");
         $username = getenv("DB_USERNAME");
         $password = getenv("DB_PASSWORD");
