@@ -4,11 +4,10 @@ class Database {
     private $connection;
 
     private function __construct() {
-        system("source .env");
-        $servername = getenv("DB_SERVER");
-        $username = getenv("DB_USERNAME");
-        $password = getenv("DB_PASSWORD");
-        $dbname = getenv("DB_NAME");
+        $servername = "mysql-p";
+        $username = "p3379031admin";
+        $password = file_get_content(".env");
+        $dbname = "p3379031_assembler_db";
 
         try {
             $this->connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
