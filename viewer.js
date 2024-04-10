@@ -16,9 +16,10 @@ document.addEventListener("DOMContentLoaded", function() {
 
         .then(data => {
           const asm = document.getElementById("assemblyCode");
-          data = data.replace("\r\n", "\n")
+          data = data.replace("\r\n", "\n");
           document.getElementById('assemblyCode').innerText = data;
-          console.log(asm.textContent)
+          console.log(asm.textContent);
+          setUpLineNumbers();
         })
 
         .catch(error => { console.error('Error:', error); });
