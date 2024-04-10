@@ -1,28 +1,26 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window.location.search);
 
-    if (urlParams.has('id')) {
-        const id = urlParams.get('id');
-        const url = `db.php?id=${encodeURIComponent(id)}`;
-        console.log(url);
-        fetch(url)
+  if (urlParams.has('id')) {
+    const id = urlParams.get('id');
+    const url = `db.php?id=${encodeURIComponent(id)}`;
+    console.log(url);
+    fetch(url)
         .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            
-            return response.text();
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          return response.text();
         })
 
         .then(data => {
-            const asm = document.getElementById("assemblyCode");
-            data = data.replace("\r\n", "\n")
-            document.getElementById('assemblyCode').textContent = data;
-            console.log(asm.textContent)
+          const asm = document.getElementById("assemblyCode");
+          data = data.replace("\r\n", "\n")
+          document.getElementById('assemblyCode').innerText = data;
+          console.log(asm.textContent)
         })
 
-        .catch(error => {
-          console.error('Error:', error);
-        });
-    }
+        .catch(error => { console.error('Error:', error); });
+  }
 });

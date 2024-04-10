@@ -5,33 +5,30 @@ btn.addEventListener("click", (e) => {
     saveAssemblyCode()
 })
 
-function saveAssemblyCode() {
-    const assemblyCode = document.getElementById("assemblyCode").textContent;
+    function saveAssemblyCode() {
+      const assemblyCode = document.getElementById("assemblyCode").innerText;
 
-    const formData = new FormData();
-    formData.append('code', assemblyCode);
+      const formData = new FormData();
+      formData.append('code', assemblyCode);
 
-    fetch('db.php', {
-        method: 'POST',
-        body: formData
-    })
+      fetch('db.php', {method : 'POST', body : formData})
 
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
 
-        return response.text();
-    })
+            return response.text();
+          })
 
-    .then(data => {
-        // data is ?id=int
+          .then(data => {
+            // data is ?id=int
 
-        const message = "Share URL: ";
-        prompt(message, `${new URL(window.location.href).origin}/PicoBlaze.html${data}`);
-    })
+            const message = "Share URL: ";
+            prompt(message,
+                   `${new URL(window.location.href).origin}/PicoBlaze.html${
+                       data}`);
+          })
 
-    .catch(error => {
-        console.error(error);
-    });
-}
+          .catch(error => { console.error(error); });
+    }
