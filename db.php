@@ -6,7 +6,7 @@ class Database {
     private function __construct() {
         $servername = "mysql-p";
         $username = "p3379031rw";
-        $password = file_get_contents(".env");
+        $password = substr(file_get_contents(".env"),strlen("password="));
         $dbname = "p3379031_assembler_db";
 
         try {

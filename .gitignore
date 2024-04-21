@@ -80,3 +80,6 @@ node_modules
 
 #VisualStudio files
 .vs/*
+
+#The file containing the password.
+.env
