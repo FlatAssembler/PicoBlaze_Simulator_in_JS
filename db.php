@@ -12,6 +12,9 @@ class Database {
         if (substr($password, -1, 1) == "\n") {
             $password = substr($password, 0, strlen($password) - 1);
         }
+        if (substr($password, -1, 1) == "\r") {
+            $password = substr($password, 0, strlen($password) - 1);
+        }
         $dbname = "p3379031_assembler_db";
 
         try {
