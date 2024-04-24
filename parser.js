@@ -19,6 +19,8 @@
 
 function parse(tokenized) {
 
+  // This function is recursive, so we are going to print the argument to
+  // make it easier to debug it.
   let report = "[";
   for (let i = 0; i < tokenized.length; i++)
     if (i < tokenized.length - 1)
@@ -28,8 +30,9 @@ function parse(tokenized) {
   report += "]";
   console.log("Parsing the expression: " + report);
 
-  let root_of_abstract_syntax_tree =
-      new TreeNode("assembly", 0); // Value which will be returned.
+  let root_of_abstract_syntax_tree = new TreeNode(
+      "assembly", 0); // Value which will be returned from the parser.
+
   for (
       let i = 0; i < tokenized.length;
       i++ // First, let's deal with if-branching and while-loops...
