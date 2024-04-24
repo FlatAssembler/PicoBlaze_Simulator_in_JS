@@ -241,6 +241,12 @@ function parse(tokenized) {
       tokenized.splice(i + 1, 1);
     }
 
+  /*
+   * To better understand how the following code (for parsing arithmetic
+   * expressions) works, I'd suggest you to study the task "Izraz" from Infokup
+   * 2013: https://informatika.azoo.hr/natjecanje/dogadjaj/235/rezultati
+   */
+
   const parseBinaryOperators = (operators) => {
     for (let i = 0; i < tokenized.length; i++)
       if (operators.includes(tokenized[i].text) &&
@@ -250,7 +256,7 @@ function parse(tokenized) {
             tokenized[i + 1].text == "," || tokenized[i + 1].text == "\n") {
           alert("Line #" + tokenized[i].lineNumber + ": The binary operator '" +
                 tokenized[i].text + "' has less than two operands!");
-          return root_of_abstract_syntax_tree;
+          return false;
         }
         tokenized[i].children = [ tokenized[i - 1], tokenized[i + 1] ];
         tokenized.splice(i - 1, 1);
@@ -258,14 +264,22 @@ function parse(tokenized) {
         i--;
         continue;
       }
+    return true;
   };
 
-  parseBinaryOperators([ "^" ]); // Exponentiation.
-  parseBinaryOperators([ "*", "/" ]);
-  parseBinaryOperators([ "+", "-" ]);
-  parseBinaryOperators([ "<", ">", "=" ]);
-  parseBinaryOperators([ "&" ]);
-  parseBinaryOperators([ "|" ]);
+  const binaryOperators = [
+    [ "^" ], // Exponentiation (has the highest priority).
+    [
+      "*", "/"
+    ], // Multiplication and division have the same priority, that's why they
+       // are in the same row in the 2-dimensional array.
+    [ "+", "-" ], // So do addition and subtraction have the same priority...
+    [ "<", ">", "=" ], [ "&" ],
+    [ "|" ] // Logical "or" (has the lowest priority).
+  ];
+  for (const operators of binaryOperators)
+    if (!parseBinaryOperators(operators))
+      return root_of_abstract_syntax_tree;
 
   root_of_abstract_syntax_tree.children = tokenized;
   if (root_of_abstract_syntax_tree.checkTypes())
