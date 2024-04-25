@@ -71,4 +71,17 @@ add s0, s0
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("22002");
   });
+
+  test("Pointers and namereg work", () => {
+    const assembly = `
+address 0
+namereg sf, pointer
+store s0, (pointer)
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("2e0f0");
+  });
 });
