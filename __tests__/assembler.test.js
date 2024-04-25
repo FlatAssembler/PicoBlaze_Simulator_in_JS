@@ -30,6 +30,7 @@ inst 1 + 2 * 3
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("00007");
   });
+
   test("Loading a constant into a register works", () => {
     const assembly = `
 address 0
@@ -41,6 +42,7 @@ load s1, (1 + 2) * 3
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("01109");
   });
+
   test("Moving values between registers works", () => {
     const assembly = `
 address 0
