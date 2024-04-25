@@ -15,6 +15,8 @@ const preprocessor = require("../preprocessor.js");
 
 const headerScript = require("../headerScript.js");
 global.machineCode = headerScript.machineCode;
+global.formatAsAddress =
+    headerScript.formatAsAddress; // Or else labels won't work.
 
 const assembler = require("../assembler.js");
 
@@ -53,5 +55,20 @@ load s0, s1
         preprocessor.makeCompilationContext(abstract_syntax_tree);
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("00010");
+  });
+
+  test("Labels work", () => {
+    const assembly = `
+address 0
+jump label
+load s0, 1
+label:
+add s0, s0
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("22002");
   });
 });
