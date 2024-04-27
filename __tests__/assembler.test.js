@@ -84,4 +84,22 @@ store s0, (pointer)
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("2e0f0");
   });
+
+  test("Conditional jumps work", () => {
+    const assembly = `
+address 0
+input s0, 0
+compare s0, 200'd
+jump c, less_than_200
+sub s0, 200'd
+load s1, 2
+less_than_200:
+compare s0, 100'd
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[2].hex).toBe("3a005");
+  });
 });
