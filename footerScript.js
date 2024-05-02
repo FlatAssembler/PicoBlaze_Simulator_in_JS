@@ -264,13 +264,7 @@ fetch(URL_of_JSON_with_examples)
         > or <a href="https://reddit.com/r/PicoBlaze">Reddit</a>!
       </div>
     </div>
-    <div style="width: 1px; flex-shrink: 0">
-      <!--
-          Because, apparently, CSS ignores the right-margin on flex
-          elements that cause overflow.
-     -->
-    </div>
-      `;
+`;
       document.getElementById("examples").style.justifyContent = "initial";
       document.getElementById("examples").style.alignItems = "initial";
       document.getElementById("examples").innerHTML = examplesHTML;

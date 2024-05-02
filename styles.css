@@ -267,6 +267,9 @@ button:hover .tooltip {
 .exampleCodeLink:hover {
   background: lightGray;
 }
+.exampleCodeLink:last-child {
+  margin-right: 7.5px;
+}
 #divWithExamples {
   background: #ffffee;
   font-family: Arial;
