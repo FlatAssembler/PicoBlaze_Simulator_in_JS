@@ -155,7 +155,7 @@ display a
 endif
 
 
-ADDRESS 000
+ADDRESS 0
 START:
 ;At the beginning, the number is 0.
 load s0, 0
