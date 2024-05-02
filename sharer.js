@@ -22,14 +22,11 @@ function saveAssemblyCode() {
 
       .then((data) => {
         // data is ?id=int
-        const message = "Share URL: ";
         const shareURL =
             `${new URL(window.location.href).origin}/PicoBlaze.html${data}`;
-        if (/WebPositive/.test(navigator.userAgent))
-          // WebPositive seems not to support the "prompt" directive.
-          alert(message + shareURL);
-        else
-          prompt(message, shareURL);
+        document.getElementById("shareURL").innerText = shareURL;
+        document.getElementById("uploadSuccessfulMessage").style.display =
+            "block";
       })
 
       .catch((error) => { console.error(error); });

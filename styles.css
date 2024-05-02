@@ -427,3 +427,34 @@ textarea {
   margin-left: 5px;
   margin-right: 5px;
 }
+#uploadSuccessfulMessage {
+  display: none;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: calc(100% - 10px);
+  background: #ffffee;
+  z-index: 100;
+}
+#messageAccompanyingTheURL {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+#titleBar {
+  background: linear-gradient(to right, darkBlue, #00ffff);
+  color: white;
+  padding: 5px;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+#closeButton {
+  float: right;
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+#shareURL {
+  background: white;
+  font-family: monospace;
+  margin: 3px;
+}

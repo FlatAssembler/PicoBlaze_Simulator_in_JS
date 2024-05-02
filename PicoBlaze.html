@@ -364,5 +364,21 @@
           document.getElementById("MIT_licence").remove();
       </script>
     </div>
+    <div id="uploadSuccessfulMessage">
+      <div id="titleBar">Success!</div>
+      <div id="messageAccompanyingTheURL">
+        Your assembly language program was successfully uploaded to the
+        database. Here is the URL by which you and other people can access it:
+      </div>
+      <div id="shareURL">
+        https://picoblaze-simulator.sourceforge.io/PicoBlaze.html?id=placeholder
+      </div>
+      <button
+        onclick="document.getElementById('uploadSuccessfulMessage').style.display='none'"
+        id="closeButton"
+      >
+        Close
+      </button>
+    </div>
   </body>
 </html>
