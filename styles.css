@@ -442,6 +442,12 @@ textarea {
 }
 #uploadSuccessfulMessage {
   display: none;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  border-bottom-style: ridge;
+  border-left-style: ridge;
+  border-right-style: ridge;
   position: fixed;
   left: 50%;
   top: 50%;
@@ -449,6 +455,7 @@ textarea {
   max-width: calc(100% - 10px);
   background: #ffffee;
   z-index: 100;
+  box-shadow: 5px 5px 2.5px gray;
 }
 #messageAccompanyingTheURL {
   margin-left: 5px;
@@ -457,8 +464,10 @@ textarea {
 #titleBar {
   background: linear-gradient(to right, darkBlue, #00ffff);
   color: white;
-  padding: 5px;
-  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  padding-top: 5px;
   font-family: sans-serif;
 }
 #closeButton {
