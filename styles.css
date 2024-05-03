@@ -273,12 +273,13 @@ button:hover .tooltip {
 .exampleCodeLink:last-child::after {
   /*
   Firefox 52, apparently, ignores margin-right on the last element of the
-  flexbox.
+  flexbox. So, let's solve it somewhow differently.
   */
-  content: "";
+  content: "   ";
   display: block;
   width: 1px;
   flex-shrink: 0;
+  white-space: pre;
 }
 #divWithExamples {
   background: #ffffee;
