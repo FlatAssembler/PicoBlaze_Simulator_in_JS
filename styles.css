@@ -270,6 +270,9 @@ button:hover .tooltip {
 .exampleCodeLink:last-child {
   margin-right: 7.5px;
 }
+.exampleCodeLink:first-child {
+  margin-left: 7.5px;
+}
 .exampleCodeLink:last-child::after {
   /*
   Firefox 52, apparently, ignores margin-right on the last element of the
