@@ -31,3 +31,17 @@ function saveAssemblyCode() {
 
       .catch((error) => { console.error(error); });
 }
+
+function copyShareURLToClipboard() {
+  const shareURL = document.getElementById("shareURL").innerText;
+  if (!navigator.clipboard) {
+    alert(
+        "Your browser, for some reason, doesn't let JavaScript access the clipboard. You will need to copy the URL manually.");
+    return;
+  }
+  navigator.clipboard.writeText(shareURL)
+      .then(() => { alert("The URL is successfully copied!"); })
+      .catch(
+          () => {alert(
+              "Copying the URL to clipboard didn't succeed. You will need to copy the URL manually.")});
+}
