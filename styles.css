@@ -145,6 +145,15 @@ label {
   margin-right: 0;
   float: right;
 }
+#whyClickAssemble {
+  position: absolute;
+  top: 450px;
+  width: calc(100% - 10px);
+  text-align: justify;
+  font-family: sans-serif;
+  left: 50%;
+  transform: translateX(-50%);
+}
 #divWithMachineCode {
   position: absolute;
   width: calc(100% - 5px);

@@ -84,6 +84,13 @@
         </button>
         <button id="assembleButton">Assemble</button>
       </div>
+      <div id="whyClickAssemble">
+        Please click the
+        <a href="#assembleButton">&quot;<i>Assemble</i>&quot; button</a> before
+        proceeding, or else you will be simulating PicoBlaze that constantly
+        loops <code>load s0, s0</code> (which is <code>00000</code> in
+        hexadecimal).
+      </div>
       <div id="divWithMachineCode">
         <div id="warningAboutJavaScript">
           Your browser doesn't seem to support modern JavaScript, needed for
