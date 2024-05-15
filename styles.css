@@ -497,4 +497,7 @@ textarea {
   background: white;
   font-family: monospace;
   margin: 3px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 2px;
 }
