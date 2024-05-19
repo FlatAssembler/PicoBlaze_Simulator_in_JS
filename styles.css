@@ -272,9 +272,13 @@ button:hover .tooltip {
   height: 150px;
   background: white;
   text-align: center;
+  border-radius: 10px;
+  box-shadow: 3px 5px 5px black;
 }
 .exampleCodeLink:hover {
   background: lightGray;
+  transition-delay: 250ms;
+  transition-duration: 250ms;
 }
 .exampleCodeLink:last-child {
   margin-right: 7.5px;
@@ -307,6 +311,7 @@ button:hover .tooltip {
   position: absolute;
   top: 405px;
   padding-left: 2px;
+  border-radius: 10px;
 }
 .exampleCodeLink img {
   width: 100px;
@@ -315,6 +320,10 @@ button:hover .tooltip {
   margin-top: 5px;
   margin-right: auto;
   background: white;
+}
+#examplesSpan {
+  display: block;
+  text-align: center;
 }
 #examples {
   overflow-x: scroll;
@@ -325,6 +334,7 @@ button:hover .tooltip {
   align-items: center;
   background: gray;
   height: 173px;
+  border-radius: 10px;
 }
 .callForMoreExamples {
   margin: 5px;
