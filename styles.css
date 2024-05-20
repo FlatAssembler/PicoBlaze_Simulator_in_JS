@@ -56,6 +56,8 @@ h1 {
   position: absolute;
   overflow: hidden;
   font-size: 1em;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
 }
 #assemblyCode {
   margin: 0;
@@ -86,6 +88,8 @@ h1 {
                    * about how font size should be smaller in <pre>
                    * than in <div>.
                    */
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 .comment {
   color: #333333;
