@@ -241,13 +241,13 @@ fetch(URL_of_JSON_with_examples)
       const examplesArray = JSON.parse(jsonFromGithub);
       let examplesHTML = examplesArray
                              .map((example) => `
-    <div class="exampleCodeLink" onclick="fetchExample('${
+    <button class="exampleCodeLink" onclick="fetchExample('${
                                       example.file_name}')">
       <img
         src="${example.image}"
         alt="${example.image_alt}"
       /><br/>${example.name}
-    </div>
+    </button>
         `).join("") + `
     <div class="exampleCodeLink" style="display: flex">
       <div class="callForMoreExamples">
