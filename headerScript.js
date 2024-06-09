@@ -357,10 +357,10 @@ function drawTable() {
        <th colspan="4">Machine Code</th>
      </tr>
      <tr>
-       <th>PC</th>
-       <th>Address</th>
-       <th>Directive</th>
-       <th>Line</th>
+       <th style="position: sticky; top: 0; background-color: white;">PC</th>
+       <th style="position: sticky; top: 0; background-color: white;">Address</th>
+       <th style="position: sticky; top: 0; background-color: white;">Directive</th>
+       <th style="position: sticky; top: 0; background-color: white;">Line</th>
      </tr>
   `;
   for (let i = 0; i < machineCode.length; i++)
@@ -428,10 +428,10 @@ Displaying registers and flags on every step is useful for debugging, but it slo
   let inputOutputTable = `
 <table>
 <tr>
-<th>Address</th>
-<th>Input</th>
-<th>Output</th>
-<th>Memory</th>
+<th style="position: sticky; top: 0; background-color: white;">Address</th>
+<th style="position: sticky; top: 0; background-color: white;">Input</th>
+<th style="position: sticky; top: 0; background-color: white;">Output</th>
+<th style="position: sticky; top: 0; background-color: white;">Memory</th>
 </tr>
   `;
   for (let i = 0; i < 256; i++)
