@@ -352,7 +352,7 @@ function drawTable() {
   let tableHTML = `
   <button id="downloadHex"><img src="https://icons.getbootstrap.com/assets/icons/download.svg" alt="Download Hexadecimal"></button>
   <div id="warningAboutDownloadingHexadecimal">Clicking the button above will download the hexadecimal (<code>.HEX</code>) file, in the same format that the Xilinx PicoBlaze Assembler outputs. You need to convert it to a binary file before uploading it to PicoBlaze. I am sorry that this program is not outputting binary files, but there is no obvious way to do it since PicoBlaze instructions are 18-bit and the smallest addressable memory unit in JavaScript is byte (8 bits), and 18 bits is not divisible by bytes.</div>
-  <table id="machineCode">
+  <table id="machineCode" style="border-collapse: separate; border-spacing: 0;">
      <tr>
        <th colspan="4">Machine Code</th>
      </tr>
@@ -426,7 +426,7 @@ Displaying registers and flags on every step is useful for debugging, but it slo
   I have good reasons to think the emulation of flags is unrealistic,
   especially when it comes to <code>REGBANK</code>s.</div>`;
   let inputOutputTable = `
-<table>
+<table style="border-collapse: separate; border-spacing: 0;">
 <tr>
 <th style="position: sticky; top: 0; background-color: white;">Address</th>
 <th style="position: sticky; top: 0; background-color: white;">Input</th>
