@@ -467,7 +467,7 @@ RETURN
 
 ;By the way, you might also be interested
 ;in seeing the
-;<a href="https://github.com/FlatAssembler/SimpleCalculator/blob/master/IEEE.ASM">decimal-to-IEEE754-hexadecimal converter</a>
+;<a href="https://github.com/FlatAssembler/SimpleCalculator/blob/master/IEEE.ASM">decimal-to-IEEE754-binary converter</a>
 ;I wrote in x86 assembly back when
 ;I was 15. I am sorry that the comments
 ;and the variable names are in Croatian,
