@@ -51,22 +51,22 @@
 ;Insert PicoBlaze assembly here...
 </pre
       >
-      <div id="divWithExamples">
-        <span id="examplesSpan"
-          >Example
+      <section id="divWithExamples">
+        <h2 id="examplesSpan">
+          Example
           <img
             style="vertical-align: bottom"
             src="https://icons.getbootstrap.com/assets/icons/code-square.svg"
             alt="program"
-          />s:</span
-        >
+          />s:
+        </h2>
         <div id="examples">
           <span id="fetchingExamples">
             Fetching the examples from GitHub...
           </span>
         </div>
-      </div>
-      <div id="buttons">
+      </section>
+      <section id="buttons">
         <button id="highlightButton">
           Highlight
           <img
@@ -83,15 +83,15 @@
           />
         </button>
         <button id="assembleButton">Assemble</button>
-      </div>
-      <div id="whyClickAssemble">
+      </section>
+      <section id="whyClickAssemble">
         Please click the
         <a href="#assembleButton">&quot;<i>Assemble</i>&quot; button</a> before
         proceeding, or else you will be simulating PicoBlaze that constantly
         loops <code>load s0, s0</code> (which is <code>00000</code> in
         hexadecimal).
-      </div>
-      <div id="divWithMachineCode">
+      </section>
+      <section id="divWithMachineCode">
         <div id="warningAboutJavaScript">
           Your browser doesn't seem to support modern JavaScript, needed for
           this web-app!<br />
@@ -116,7 +116,7 @@
             >polyfilling your browser with BabelJS</a
           >.
         </div>
-      </div>
+      </section>
       <script>
         function downloadBabel() {
           document.getElementById("objectAssignPolyfill").src =
@@ -147,7 +147,7 @@
           }
         }
       </script>
-      <div id="simulationButtons">
+      <section id="simulationButtons">
         <button id="playPauseButton">
           <img
             src="play.svg"
@@ -177,8 +177,8 @@
           <img src="stop.svg" alt="Stop" />
           <span class="tooltip">Stop</span>
         </button>
-      </div>
-      <div id="graphicalResults"></div>
+      </section>
+      <section id="graphicalResults"></section>
       <button id="UART_enable_button">
         <span id="enable_or_disable_UART">Enable</span>
         <abbr title="Universal Asynchronous Receiver-Transmitter">UART</abbr>
@@ -187,15 +187,15 @@
           alt="terminal"
         />
       </button>
-      <div id="UART_IO">
+      <section id="UART_IO">
         <label for="UART_INPUT"
           >UART input (<i>enter <b>before</b> starting</i>):</label
         >
         <textarea id="UART_INPUT"></textarea>
         <label>UART output:</label>
         <pre id="UART_OUTPUT"></pre>
-      </div>
-      <div id="simulationResults"></div>
+      </section>
+      <section id="simulationResults"></section>
     </main>
     <footer>
       Not affiliated with

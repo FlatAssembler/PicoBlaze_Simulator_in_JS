@@ -243,6 +243,9 @@ input {
   color: white;
   border-color: white;
 }
+tr:last-child td.inactive {
+  border-bottom-color: black;
+}
 .changed,
 .turning_off {
   background: lightGreen;
@@ -328,6 +331,10 @@ button:hover .tooltip {
 #examplesSpan {
   display: block;
   text-align: center;
+  font-weight: normal;
+  font-size: 1em;
+  margin-bottom: 5px;
+  margin-top: 5px;
 }
 #examples {
   overflow-x: scroll;
