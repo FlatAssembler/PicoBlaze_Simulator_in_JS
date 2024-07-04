@@ -64,7 +64,7 @@ describe("PicoBlaze MachineCode Simulator", () => {
       { hex: "01005", line: 3 },
       { hex: "19004", line: 4 },
     ];
-    console.time("test");
+    console.time("test"); // @agustiza, what does this do?
     simulator.simulateOneInstruction(); //load s0, 5
     simulator.simulateOneInstruction(); //sub s0, 4
 
@@ -77,7 +77,6 @@ describe("PicoBlaze MachineCode Simulator", () => {
       { hex: "01000", line: 3 },
       { hex: "19001", line: 4 },
     ];
-    console.time("test");
     simulator.simulateOneInstruction(); //load s0, 0
     simulator.simulateOneInstruction(); //sub s0, 1
 
