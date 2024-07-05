@@ -242,7 +242,11 @@ fetch(URL_of_JSON_with_examples)
       let examplesHTML = examplesArray
                              .map((example) => `
     <button class="exampleCodeLink" onclick="fetchExample('${
-                                      example.file_name}')">
+                                      example.file_name}')"
+				      ${
+                                      / WebPositive /.test(navigator.userAgent)
+                                          ? "style=\"font-size:12px;\""
+                                          : ""}>
       <img
         src="${example.image}"
         alt="${example.image_alt}"
