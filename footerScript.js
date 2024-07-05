@@ -244,7 +244,7 @@ fetch(URL_of_JSON_with_examples)
     <button class="exampleCodeLink" onclick="fetchExample('${
                                       example.file_name}')"
 				      ${
-                                      / WebPositive /.test(navigator.userAgent)
+                                      /WebPositive/.test(navigator.userAgent)
                                           ? "style=\"font-size:12px;\""
                                           : ""}>
       <img
