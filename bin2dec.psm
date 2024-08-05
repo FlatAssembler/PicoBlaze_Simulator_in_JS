@@ -43,7 +43,13 @@ infinite_loop:
   sr0    s1
   xor    s1, s0
   output s1, 0
-jump infinite_loop
+jump infinite_loop ;You can add a
+                   ;breakpoint here
+                   ;to make the
+                   ;program stop as
+                   ;soon as it
+                   ;prints out the
+                   ;result.
 
 divideBy10:
 star    s0, sa
