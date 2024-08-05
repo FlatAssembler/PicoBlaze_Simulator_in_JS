@@ -69,10 +69,26 @@ class TreeNode {
       }
       return this.children[0].interpretAsArithmeticExpression(constants);
     }
-    if (/\'d/.test(this.text))
+    if (/\'d/.test(this.text)) {
+      for (let i = 0; i < this.text.length - 2; i++)
+        if (this.text.charCodeAt(i) < '0'.charCodeAt(0) ||
+            this.text.charCodeAt(i) > '9'.charCodeAt(0)) {
+          alert(
+              "Line #" + this.lineNumber + ": `" + this.text +
+              "` is not a valid decimal constant!"); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/27
+          return NaN;
+        }
       return parseInt(this.text.substr(0, this.text.length - 2));
-    if (/\'b/.test(this.text))
+    }
+    if (/\'b/.test(this.text)) {
+      for (let i = 0; i < this.text.length - 2; i++)
+        if (!(this.text[i] == '0' || this.text[i] == '1')) {
+          alert("Line #" + this.lineNumber + ": `" + this.text +
+                "` is not a valid binary constant!");
+          return NaN;
+        }
       return parseInt(this.text.substr(0, this.text.length - 2), 2);
+    }
     if (/^([a-f]|[0-9])*$/i.test(this.text))
       return parseInt(this.text, 16);
     if (this.text[0] === '"' && this.text.length === 3)
