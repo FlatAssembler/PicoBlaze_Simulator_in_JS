@@ -1,8 +1,12 @@
 body {
   background-color: #fff7ff;
-  background-image: url("Background.gif");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+}
+@media (min-width: 500px) {
+  body {
+    background-image: url("Background.gif");
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+  }
 }
 main {
   width: 100%;
