@@ -8,6 +8,28 @@ body {
     background-attachment: fixed;
   }
 }
+#ribbon {
+  display: none;
+}
+@media (min-width: 700px) {
+  #ribbon {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-45deg) translate(-65px, -10px) scale(0.9);
+    padding: 5px 50px;
+    color: white;
+    background: black;
+  }
+  #ribbon a {
+    color: white;
+    text-decoration: none;
+  }
+  body {
+    background-position: top right;
+  }
+}
 main {
   width: 100%;
   max-width: 500px;
