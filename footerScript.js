@@ -12,6 +12,7 @@ document.getElementById("assemblyCode").onscroll = () => {
       .scroll(0, document.getElementById("assemblyCode").scrollTop);
 };
 document.getElementById("highlightButton").onclick = syntaxHighlighter;
+let hasTheCodeBeenAssembled = false;
 document.getElementById("assembleButton").onclick = () => {
   const assembly = document.getElementById("assemblyCode").innerText;
 
@@ -55,6 +56,7 @@ document.getElementById("assembleButton").onclick = () => {
   }
   drawTable();
   stopSimulation();
+  hasTheCodeBeenAssembled = true;
 };
 function stopSimulation() {
   document.getElementById("fastForwardButton").disabled = false;
@@ -96,6 +98,11 @@ function onPlayPauseButton() {
     document.getElementById("playImage").style.display = "inline";
     document.getElementById("pauseImage").style.display = "none";
   } else {
+    if (!hasTheCodeBeenAssembled) {
+      if (!confirm(
+              "The code has not been assembled. Do you really want to proceed starting the emulation?"))
+        return;
+    }
     if (!document.getElementById("shouldWeUpdateRegisters")
              .checked) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/20
       document.getElementById("PC_label_" + formatAsAddress(PC)).innerHTML =
@@ -114,6 +121,11 @@ function onSingleStepButton() {
   simulateOneInstruction();
 }
 function fastForward() {
+  if (!hasTheCodeBeenAssembled) {
+    if (!confirm(
+            "The code has not been assembled. Do you really want to proceed starting the emulation?"))
+      return;
+  }
   playing = true;
   if (!document.getElementById("shouldWeUpdateRegisters")
            .checked) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/20
