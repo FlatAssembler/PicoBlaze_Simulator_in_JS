@@ -6,7 +6,11 @@ document.getElementById("assemblyCode").
        oninput=syntaxHighlighter;
 */
 setUpLineNumbers();
-document.getElementById("assemblyCode").oninput = setUpLineNumbers;
+let hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = false;
+document.getElementById("assemblyCode").oninput = () => {
+  setUpLineNumbers();
+  hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = true;
+};
 document.getElementById("assemblyCode").onscroll = () => {
   document.getElementById("lineNumbers")
       .scroll(0, document.getElementById("assemblyCode").scrollTop);
@@ -57,6 +61,7 @@ document.getElementById("assembleButton").onclick = () => {
   drawTable();
   stopSimulation();
   hasTheCodeBeenAssembled = true;
+  hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = false;
 };
 function stopSimulation() {
   document.getElementById("fastForwardButton").disabled = false;
@@ -102,6 +107,12 @@ function onPlayPauseButton() {
       if (!confirm(
               "The code has not been assembled. Do you really want to proceed starting the emulation?"))
         return;
+    } else if (
+        hasTheCodeBeenModifiedSinceLastSuccessfulAssembly) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/28
+    {
+      if (!confirm(
+              "The code has been modified since the last successful assembling. Are you sure you want to proceed starting the emulation?"))
+        return;
     }
     if (!document.getElementById("shouldWeUpdateRegisters")
              .checked) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/20
@@ -124,6 +135,12 @@ function fastForward() {
   if (!hasTheCodeBeenAssembled) {
     if (!confirm(
             "The code has not been assembled. Do you really want to proceed starting the emulation?"))
+      return;
+  } else if (
+      hasTheCodeBeenModifiedSinceLastSuccessfulAssembly) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/28
+  {
+    if (!confirm(
+            "The code has been modified since the last successful assembling. Are you sure you want to proceed starting the emulation?"))
       return;
   }
   playing = true;
