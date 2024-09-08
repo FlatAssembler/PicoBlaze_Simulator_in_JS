@@ -541,6 +541,8 @@ function displayHexadecimalNumber(display, number) {
                                      LED[i] === "0" ? "#333333" : "#ffaaaa");
 }
 function fetchExample(exampleName) {
+  hasTheCodeBeenModifiedSinceLastSuccessfulAssembly =
+      true; // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/29
   document.getElementById("assemblyCode").innerHTML =
       ";Fetching the example from GitHub...";
   setUpLineNumbers();
