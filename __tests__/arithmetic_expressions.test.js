@@ -77,5 +77,15 @@ test("ASCII", () => {
   expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
       .toEqual('A'.charCodeAt(0));
 })
+test("Unary operators", () => {
+  const AST = parser.parse(tokenizer.tokenize("5 + + 1"));
+  expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
+		.toEqual(5 + + 1);
+})
+test("Fake unary operator", () => {
+  const AST = parser.parse(tokenizer.tokenize("(1 + 2) + 3"));
+  expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
+	.toEqual((1 + 2) + 3);
+})
 }
 );

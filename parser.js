@@ -225,7 +225,10 @@ function parse(tokenized) {
   for (let i = 0; i < tokenized.length; i++)
     if ((tokenized[i].text == "+" || tokenized[i].text == "-") &&
         (i == 0 || tokenized[i - 1].text == "," ||
-         tokenized[i - 1].text == "(" || tokenized[i - 1].text == "\n") &&
+         tokenized[i - 1].text == "(" || tokenized[i - 1].text == "\n" ||
+         ([ "+", "-", "*", "/", "^", "&", "|", "=", "<", ">" ].includes(
+              tokenized[i - 1].text) &&
+          !tokenized[i - 1].children.length)) &&
         !tokenized[i].children.length) {
       // Unary operators
       if (tokenized.length == 1 || tokenized[i + 1].text == "," ||
