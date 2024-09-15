@@ -87,5 +87,10 @@ test("Fake unary operator", () => {
   expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
 	.toEqual((1 + 2) + 3);
 })
+test("Unary minus", () => {
+  const AST = parser.parse(tokenizer.tokenize("5*-1"));
+  expect(AST.children[0].interpretAsArithmeticExpression(new Map()))
+		.toEqual(5*-1);
+})
 }
 );
