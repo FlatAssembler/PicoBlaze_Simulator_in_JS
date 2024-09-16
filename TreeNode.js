@@ -78,7 +78,10 @@ class TreeNode {
               "` is not a valid decimal constant!"); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/27
           return NaN;
         }
-      return parseInt(this.text.substr(0, this.text.length - 2));
+      return parseInt(this.text.substring(
+          0,
+          this.text.length -
+              2)); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
     }
     if (/\'b/.test(this.text)) {
       for (let i = 0; i < this.text.length - 2; i++)
@@ -87,7 +90,9 @@ class TreeNode {
                 "` is not a valid binary constant!");
           return NaN;
         }
-      return parseInt(this.text.substr(0, this.text.length - 2), 2);
+      return parseInt(
+          this.text.substring(0, this.text.length - 2),
+          2); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
     }
     if (/^([a-f]|[0-9])*$/i.test(this.text))
       return parseInt(this.text, 16);
@@ -123,9 +128,12 @@ class TreeNode {
   }
   getRegisterNumber(registers) {
     if (registers.has(this.text))
-      return registers.get(this.text).substr(1).toLowerCase();
+      return registers.get(this.text)
+          .substring(1)
+          .toLowerCase(); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
     if (/^s(\d|[a-f])$/i.test(this.text))
-      return this.text.substr(1).toLowerCase();
+      return this.text.substring(1)
+          .toLowerCase(); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
     return "none";
   }
   getLabelAddress(labels, constants) {

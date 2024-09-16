@@ -86,7 +86,10 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
       }
       console.log("DEBUG: Dealing with a label, point #2...");
       context.labels.set(
-          node_of_depth_1.text.substr(0, node_of_depth_1.text.length - 1),
+          node_of_depth_1.text.substring(
+              0,
+              node_of_depth_1.text.length -
+                  1), // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
           address);
       console.log("DEBUG: Dealing with a label, point #3...");
     }
@@ -181,8 +184,10 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
             )) {
       if (node_of_depth_1.children[0].text[0] == '"')
         document.getElementById("UART_OUTPUT").innerText +=
-            node_of_depth_1.children[0].text.substr(
-                1, node_of_depth_1.children[0].text.length - 2);
+            node_of_depth_1.children[0]
+                .text
+                .substring( // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
+                    1, node_of_depth_1.children[0].text.length - 2 + 1);
       else {
         const ASCIIValue =
             node_of_depth_1.children[0].interpretAsArithmeticExpression(

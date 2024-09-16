@@ -37,8 +37,9 @@ function simulateOneInstruction() {
       break;
     case 0x01000:
       // LOAD register,constant
-      registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
-          parseInt(machineCode[PC].hex.substr(3), 16);
+      registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       PC++;
       //    } else if ((currentDirective & 0xff000) === 0x17000) {
       break;
@@ -47,7 +48,9 @@ function simulateOneInstruction() {
       registers[!regbank | 0 /*That is how you convert a boolean to an integer
                                               in JavaScript.*/
       ][parseInt(machineCode[PC].hex[2], 16)] =
-          parseInt(machineCode[PC].hex.substr(3), 16);
+          parseInt(
+              machineCode[PC].hex.substring(3),
+              16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       PC++;
       //    } else if ((currentDirective & 0xff000) === 0x16000) {
       break;
@@ -76,9 +79,15 @@ function simulateOneInstruction() {
       break;
     case 0x2f000:
       // STORE register,memory_address ;Copy a register onto a memory address.
-      memory[parseInt(machineCode[PC].hex.substr(3), 16)] =
+      memory[parseInt(
+          machineCode[PC].hex.substring(3),
+          16)] = // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
-      document.getElementById("memory_" + machineCode[PC].hex.substr(3))
+      document
+          .getElementById(
+              "memory_" +
+              machineCode[PC].hex.substring(
+                  3)) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
           .innerHTML = formatAsByte(
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)]);
       PC++;
@@ -95,8 +104,9 @@ function simulateOneInstruction() {
     case 0x0b000:
       // FETCH register,memory_address ;Copy the value at memory_address to the
       // register.
-      registers[regbank][parseInt(machineCode[PC].hex[2], 16)] =
-          memory[parseInt(machineCode[PC].hex.substr(3), 16)];
+      registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = memory[parseInt(
+          machineCode[PC].hex.substring(3),
+          16)]; // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       PC++;
       //    } else if ((currentDirective & 0xff000) === 0x08000) {
       break;
@@ -129,7 +139,9 @@ function simulateOneInstruction() {
       break;
     case 0x09000:
       // INPUT register, port_number
-      /*const*/ port = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ port = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       if ((port === 2 || port === 3) && is_UART_enabled) {
         if (port === 3) {
           // UART_RX_PORT
@@ -151,7 +163,11 @@ function simulateOneInstruction() {
         }
       } else
         registers[regbank][parseInt(machineCode[PC].hex[2], 16)] = parseInt(
-            document.getElementById("input_" + machineCode[PC].hex.substr(3))
+            document
+                .getElementById(
+                    "input_" +
+                    machineCode[PC].hex.substring(
+                        3)) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
                 .value,
             16);
       PC++;
@@ -185,7 +201,9 @@ function simulateOneInstruction() {
       break;
     case 0x2d000:
       // OUTPUT register, port_number
-      /*const*/ port = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ port = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ value =
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
       if ((port === 3 || port === 4) && is_UART_enabled) {
@@ -202,7 +220,9 @@ function simulateOneInstruction() {
           stopSimulation();
         }
       } else {
-        output[parseInt(machineCode[PC].hex.substr(3), 16)] =
+        output[parseInt(
+            machineCode[PC].hex.substring(3),
+            16)] = // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
             registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
         displayOutput();
       }
@@ -211,7 +231,9 @@ function simulateOneInstruction() {
       break;
     case 0x2b000:
       // OUTPUTK constant, port_number
-      /*const*/ value = parseInt(machineCode[PC].hex.substr(2, 2), 16);
+      /*const*/ value = parseInt(
+          machineCode[PC].hex.substring(2, 2 + 2),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ port = parseInt(machineCode[PC].hex[4], 16);
       if ((port === 3 || port === 4) && is_UART_enabled) {
         if (port === 3)
@@ -227,8 +249,9 @@ function simulateOneInstruction() {
           stopSimulation();
         }
       } else {
-        output[parseInt(machineCode[PC].hex[4], 16)] =
-            parseInt(machineCode[PC].hex.substr(2, 2), 16);
+        output[parseInt(machineCode[PC].hex[4], 16)] = parseInt(
+            machineCode[PC].hex.substring(2, 2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
         displayOutput();
       }
       PC++;
@@ -260,7 +283,9 @@ function simulateOneInstruction() {
       break;
     case 0x22000:
       // JUMP label
-      PC = parseInt(machineCode[PC].hex.substr(2), 16);
+      PC = parseInt(
+          machineCode[PC].hex.substring(2),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*    } else if ((currentDirective & 0xff0ff) == 0x14080) {
           // HWBUILD register
           flagC[regbank] =
@@ -293,7 +318,9 @@ function simulateOneInstruction() {
       // ADD register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       if ((firstValue + secondValue) % 256 === 0)
         flagZ[regbank] = 1;
       else
@@ -329,7 +356,9 @@ function simulateOneInstruction() {
       // ADDCY register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue + secondValue + flagC[regbank];
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -366,7 +395,9 @@ function simulateOneInstruction() {
       // SUB register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue - secondValue;
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -403,7 +434,9 @@ function simulateOneInstruction() {
       // SUBCY register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue - secondValue - flagC[regbank];
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -421,7 +454,9 @@ function simulateOneInstruction() {
       // AND register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue & secondValue;
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -477,7 +512,9 @@ function simulateOneInstruction() {
       // OR register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue | secondValue;
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -514,7 +551,9 @@ function simulateOneInstruction() {
       // XOR register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue ^ secondValue;
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -558,7 +597,9 @@ function simulateOneInstruction() {
       // TEST register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue & secondValue;
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -595,7 +636,9 @@ function simulateOneInstruction() {
       // COMPARE register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue - secondValue;
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -632,7 +675,9 @@ function simulateOneInstruction() {
       // COMPARECY register, constant
       /*const*/ firstRegister = parseInt(machineCode[PC].hex[2], 16);
       /*const*/ firstValue = registers[regbank][firstRegister];
-      /*const*/ secondValue = parseInt(machineCode[PC].hex.substr(3), 16);
+      /*const*/ secondValue = parseInt(
+          machineCode[PC].hex.substring(3),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       /*const*/ result = firstValue - secondValue - flagC[regbank];
       if (result % 256 === 0)
         flagZ[regbank] = 1;
@@ -660,7 +705,8 @@ function simulateOneInstruction() {
         flagC[regbank] = registerValue % 2;
         flagZ[regbank] = (Math.floor(registerValue / 2) === 0) | 0;
       };
-      switch (machineCode[PC].hex.substr(3)) {
+      switch (machineCode[PC].hex.substring(
+          3)) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       case "06": // SL0
         registerValue <<= 1;
         set_flags_after_shift_left();
@@ -721,7 +767,9 @@ function simulateOneInstruction() {
     case 0x32000:
       // JUMP Z, label
       if (flagZ[regbank])
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x36000) {
@@ -729,7 +777,9 @@ function simulateOneInstruction() {
     case 0x36000:
       // JUMP NZ, label
       if (!flagZ[regbank])
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x3a000) {
@@ -737,7 +787,9 @@ function simulateOneInstruction() {
     case 0x3a000:
       // JUMP C, label
       if (flagC[regbank])
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x3e000) {
@@ -745,7 +797,9 @@ function simulateOneInstruction() {
     case 0x3e000:
       // JUMP NC, label
       if (!flagC[regbank])
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x26000) {
@@ -764,14 +818,18 @@ function simulateOneInstruction() {
     case 0x20000:
       // CALL functionName
       callStack.push(PC);
-      PC = parseInt(machineCode[PC].hex.substr(2), 16);
+      PC = parseInt(
+          machineCode[PC].hex.substring(2),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       //    } else if ((currentDirective & 0xff000) === 0x30000) {
       break;
     case 0x30000:
       // CALL Z, functionName ; Call the function only if the Zero Flag is set.
       if (flagZ[regbank]) {
         callStack.push(PC);
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x34000) {
@@ -781,7 +839,9 @@ function simulateOneInstruction() {
       // set.
       if (!flagZ[regbank]) {
         callStack.push(PC);
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x38000) {
@@ -790,7 +850,9 @@ function simulateOneInstruction() {
       // CALL C, functionName ; Call the function only if the Carry Flag is set.
       if (flagC[regbank]) {
         callStack.push(PC);
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x3c000) {
@@ -800,7 +862,9 @@ function simulateOneInstruction() {
       // set.
       if (!flagC[regbank]) {
         callStack.push(PC);
-        PC = parseInt(machineCode[PC].hex.substr(2), 16);
+        PC = parseInt(
+            machineCode[PC].hex.substring(2),
+            16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
       } else
         PC++;
       //    } else if ((currentDirective & 0xff000) === 0x24000) {
