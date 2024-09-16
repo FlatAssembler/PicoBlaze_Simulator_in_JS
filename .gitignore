@@ -83,3 +83,7 @@ node_modules
 
 #The file containing the password.
 .env
+
+#The authentication files for SEO.
+BingSiteAuth.xml
+google2f3fce6b4fcc944c.html
