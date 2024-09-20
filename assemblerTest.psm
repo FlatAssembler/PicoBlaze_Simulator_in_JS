@@ -81,3 +81,5 @@ rr s9
 ;Interrupts...
 Disable interrupt
 Enable InterrupT
+;Ternary conditional operator
+load s0, 1+2=3?5:4
