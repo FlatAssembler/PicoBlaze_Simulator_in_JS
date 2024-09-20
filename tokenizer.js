@@ -103,8 +103,10 @@ function tokenize(input) {
   for (let i = 0; i < tokenized.length; i++)
     if (tokenized[i].text == ':' &&
         (tokenized[i + 1].text == '\n' ||
-         tokenized[i - 2].text ==
-             '\n')) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/31
+         (i < 2 // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/32
+          ||
+          tokenized[i - 2].text ==
+              '\n'))) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/31
       tokenized[i - 1].text += ':';
       tokenized.splice(i, 1);
       i--;
