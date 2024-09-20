@@ -61,6 +61,11 @@ class TreeNode {
     if (this.text == "|")
       return (this.children[0].interpretAsArithmeticExpression(constants) ||
               this.children[1].interpretAsArithmeticExpression(constants));
+    if (this.text == "?:")
+      return (
+          this.children[0].interpretAsArithmeticExpression(constants)
+              ? this.children[1].interpretAsArithmeticExpression(constants)
+              : this.children[2].interpretAsArithmeticExpression(constants));
     if (this.text == "()") {
       if (this.children.length != 1) {
         alert("Line #" + this.lineNumber +
@@ -69,7 +74,7 @@ class TreeNode {
       }
       return this.children[0].interpretAsArithmeticExpression(constants);
     }
-    if (/\'d/.test(this.text)) {
+    if (/\'d$/.test(this.text)) {
       for (let i = 0; i < this.text.length - 2; i++)
         if (this.text.charCodeAt(i) < '0'.charCodeAt(0) ||
             this.text.charCodeAt(i) > '9'.charCodeAt(0)) {
@@ -83,7 +88,7 @@ class TreeNode {
           this.text.length -
               2)); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
     }
-    if (/\'b/.test(this.text)) {
+    if (/\'b$/.test(this.text)) {
       for (let i = 0; i < this.text.length - 2; i++)
         if (!(this.text[i] == '0' || this.text[i] == '1')) {
           alert("Line #" + this.lineNumber + ": `" + this.text +

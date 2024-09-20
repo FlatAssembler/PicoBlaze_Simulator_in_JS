@@ -226,8 +226,9 @@ function parse(tokenized) {
     if ((tokenized[i].text == "+" || tokenized[i].text == "-") &&
         (i == 0 || tokenized[i - 1].text == "," ||
          tokenized[i - 1].text == "(" || tokenized[i - 1].text == "\n" ||
-         ([ "+", "-", "*", "/", "^", "&", "|", "=", "<", ">" ].includes(
-              tokenized[i - 1].text) &&
+         ([
+           "+", "-", "*", "/", "^", "&", "|", "=", "<", ">", "?", ":"
+         ].includes(tokenized[i - 1].text) &&
           !tokenized[i - 1].children.length)) &&
         !tokenized[i].children.length) {
       // Unary operators
@@ -283,6 +284,57 @@ function parse(tokenized) {
   for (const operators of binaryOperators)
     if (!parseBinaryOperators(operators))
       return root_of_abstract_syntax_tree;
+
+  // Ternary conditional operator...
+  let lastColon = tokenized.length - 2;
+  if (lastColon > 0)
+    while (lastColon) {
+      if (tokenized[lastColon].text == ':' &&
+          tokenized[lastColon].text != '\n') {
+        let questionMarkCorrespondingToTheLastColon = lastColon, counter = 1;
+        console.log(
+            "DEBUG: Parsing the ternary conditional operator. The colon is at the index: " +
+            lastColon);
+        while (counter) {
+          questionMarkCorrespondingToTheLastColon--;
+          if (!questionMarkCorrespondingToTheLastColon ||
+              questionMarkCorrespondingToTheLastColon < 0) {
+            alert(
+                "Line #" + tokenized[lastColon].lineNumber +
+                ": There is a colon without a matching question mark before it!");
+            return root_of_abstract_syntax_tree;
+          }
+          if (tokenized[questionMarkCorrespondingToTheLastColon].text == '?')
+            counter--;
+          else if (tokenized[questionMarkCorrespondingToTheLastColon].text ==
+                   ':')
+            counter++;
+        }
+        console.log("DEBUG: The corresponding question mark is at the index: " +
+                    questionMarkCorrespondingToTheLastColon);
+        let nodesThatRecursionDealsWith = [];
+        for (let i = questionMarkCorrespondingToTheLastColon + 1; i < lastColon;
+             i++)
+          nodesThatRecursionDealsWith.push(tokenized[i]);
+        tokenized[questionMarkCorrespondingToTheLastColon].text = "?:";
+        tokenized[questionMarkCorrespondingToTheLastColon].children.push(
+            tokenized[questionMarkCorrespondingToTheLastColon - 1]);
+        tokenized[questionMarkCorrespondingToTheLastColon].children.push(
+            parse(nodesThatRecursionDealsWith).children[0]);
+        tokenized[questionMarkCorrespondingToTheLastColon].children.push(
+            tokenized[lastColon + 1]);
+        console.log(
+            "DEBUG: The ternary conditional operator converted to LISP is: " +
+            tokenized[questionMarkCorrespondingToTheLastColon]
+                .getLispExpression());
+        tokenized.splice(questionMarkCorrespondingToTheLastColon + 1,
+                         lastColon - questionMarkCorrespondingToTheLastColon +
+                             1);
+        tokenized.splice(questionMarkCorrespondingToTheLastColon - 1, 1);
+        lastColon = questionMarkCorrespondingToTheLastColon;
+      }
+      lastColon--;
+    }
 
   root_of_abstract_syntax_tree.children = tokenized;
   if (root_of_abstract_syntax_tree.checkTypes())
