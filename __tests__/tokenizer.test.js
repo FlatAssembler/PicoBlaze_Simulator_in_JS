@@ -51,7 +51,7 @@ describe("PicoBlaze Tokenizer", () => {
     expect(tokens.map((t) => t.text)).toEqual(["load", "s9", ",", '" "', "\n"]);
   });
 
-  test("Labels are tokenized correctly", () => {
+  test("Labels are tokenized correctly 1", () => {
     const tokens = tokenizer.tokenize(
       `inst 2+2<5?1:0
             label:
@@ -76,4 +76,32 @@ describe("PicoBlaze Tokenizer", () => {
       "\n",
     ]);
   });
+  test("Labels are tokenized correctly 2",() => { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/31
+    const tokens=tokenizer.tokenize(
+      `address 0
+      label1:
+      load s0, s1
+      label2: load s1, 1`
+    );
+    expect(tokens.map((t) => t.text)).toEqual(
+      [
+        "address",
+        "0",
+        "\n",
+        "label1:",
+        "\n",
+        "load",
+        "s0",
+        ",",
+        "s1",
+        "\n",
+        "label2:",
+        "load",
+        "s1",
+        ",",
+        "1",
+        "\n",
+      ]
+    )
+  })
 });
