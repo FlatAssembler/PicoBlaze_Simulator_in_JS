@@ -112,5 +112,14 @@ function tokenize(input) {
       i--;
     }
 
+  // Functions in the preprocessor.
+  for (let i = 0; i < tokenized.length - 1; i++)
+    if ([ "invertbits", "bitand", "bitor", "mod" ].includes(
+            tokenized[i].text.toLowerCase()) &&
+        tokenized[i + 1].text == '(') {
+      tokenized[i].text += "(";
+      tokenized.splice(i + 1, 1);
+    }
+
   return tokenized;
 }

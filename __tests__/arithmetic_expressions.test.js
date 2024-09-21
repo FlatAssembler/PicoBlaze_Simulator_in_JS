@@ -122,4 +122,16 @@ describe("Evaluation of Arithmetic Expressions", () => {
       3,
     );
   });
+  test("The modulo operator", () => {
+    const AST = parser.parse(tokenizer.tokenize("mod(5, 2)"));
+    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
+      5 % 2,
+    );
+  });
+  test("The bitwise operators", () => {
+    const AST = parser.parse(tokenizer.tokenize("bitand(invertBits(a),f)"));
+    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
+      ~0xa & 0xf,
+    );
+  });
 });

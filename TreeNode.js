@@ -74,6 +74,44 @@ class TreeNode {
       }
       return this.children[0].interpretAsArithmeticExpression(constants);
     }
+    if (this.text == "invertBits()") {
+      if (this.children.length != 1) {
+        alert("Line #" + this.lineNumber +
+              ": The node 'invertBits()' doesn't have exactly 1 child.");
+        return NaN;
+      }
+      return ~this.children[0].interpretAsArithmeticExpression(constants);
+    }
+    if (this.text == "bitand()") {
+      if (this.children.length != 3 || this.children[1].text != ',') {
+        alert(
+            "Line #" + this.lineNumber +
+            ": The node 'bitand()' doesn't have exactly 3 children (a comma is also a child node).");
+        return NaN;
+      }
+      return this.children[0].interpretAsArithmeticExpression(constants) &
+             this.children[2].interpretAsArithmeticExpression(constants);
+    }
+    if (this.text == "bitor()") {
+      if (this.children.length != 3 || this.children[1].text != ',') {
+        alert(
+            "Line #" + this.lineNumber +
+            ": The node 'bitor()' doesn't have exactly 3 children (a comma is also a child node).");
+        return NaN;
+      }
+      return this.children[0].interpretAsArithmeticExpression(constants) |
+             this.children[2].interpretAsArithmeticExpression(constants);
+    }
+    if (this.text == "mod()") {
+      if (this.children.length != 3 || this.children[1].text != ',') {
+        alert(
+            "Line #" + this.lineNumber +
+            ": The node 'mod()' doesn't have exactly 3 children (a comma is also a child node).");
+        return NaN;
+      }
+      return this.children[0].interpretAsArithmeticExpression(constants) %
+             this.children[2].interpretAsArithmeticExpression(constants);
+    }
     if (/\'d$/.test(this.text)) {
       for (let i = 0; i < this.text.length - 2; i++)
         if (this.text.charCodeAt(i) < '0'.charCodeAt(0) ||

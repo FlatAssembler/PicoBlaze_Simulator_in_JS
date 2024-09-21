@@ -147,7 +147,7 @@ function parse(tokenized) {
       let i = 0; i < tokenized.length;
       i++ // Then, let's deal with the parentheses.
   ) {
-    if (tokenized[i].text == "(") {
+    if (/\($/.test(tokenized[i].text)) {
       // As far as I know, PicoBlaze Assembly uses only this type of
       // parentheses.
       let counter = 1;
@@ -158,7 +158,7 @@ function parse(tokenized) {
                 " isn't closed!");
           return root_of_abstract_syntax_tree;
         }
-        if (tokenized[j].text == "(")
+        if (/\($/.test(tokenized[j].text))
           counter++;
         if (tokenized[j].text == ")")
           counter--;
@@ -168,7 +168,7 @@ function parse(tokenized) {
       for (let k = i + 1; k < j - 1; k++)
         newArray.push(tokenized[k]);
       tokenized.splice(i + 1, j - i - 1);
-      tokenized[i].text = "()";
+      tokenized[i].text += ")";
       tokenized[i].children = parse(newArray).children;
     }
   }
@@ -225,7 +225,8 @@ function parse(tokenized) {
   for (let i = 0; i < tokenized.length; i++)
     if ((tokenized[i].text == "+" || tokenized[i].text == "-") &&
         (i == 0 || tokenized[i - 1].text == "," ||
-         tokenized[i - 1].text == "(" || tokenized[i - 1].text == "\n" ||
+         tokenized[i - 1].text.substring(tokenized[i - 1].length - 1) == "(" ||
+         tokenized[i - 1].text == "\n" ||
          ([
            "+", "-", "*", "/", "^", "&", "|", "=", "<", ">", "?", ":"
          ].includes(tokenized[i - 1].text) &&
@@ -319,8 +320,15 @@ function parse(tokenized) {
         tokenized[questionMarkCorrespondingToTheLastColon].text = "?:";
         tokenized[questionMarkCorrespondingToTheLastColon].children.push(
             tokenized[questionMarkCorrespondingToTheLastColon - 1]);
+        const whatTheRecursionReturned = parse(nodesThatRecursionDealsWith);
+        if (whatTheRecursionReturned.children.length > 1) {
+          alert("Line #" + whatTheRecursionReturned.children[1].lineNumber +
+                ": Unexpected token `" +
+                whatTheRecursionReturned.children[1].text + "`!");
+          return root_of_abstract_syntax_tree;
+        }
         tokenized[questionMarkCorrespondingToTheLastColon].children.push(
-            parse(nodesThatRecursionDealsWith).children[0]);
+            whatTheRecursionReturned.children[0]);
         tokenized[questionMarkCorrespondingToTheLastColon].children.push(
             tokenized[lastColon + 1]);
         console.log(
