@@ -93,6 +93,17 @@ setupLayout();
 window.onresize = setupLayout;
 drawTable();
 displayRegistersAndFlags();
+window.onscroll = () => {
+  if (window.innerWidth >= 700) {
+    if (window.scrollY > document.getElementById("assemblyCode").clientHeight) {
+      document.body.style.backgroundPosition = "top left";
+    } else {
+      document.body.style.backgroundPosition = "top right";
+    }
+  } else {
+    document.body.style.backgroundPosition = "top left";
+  }
+};
 function onPlayPauseButton() {
   playing = !playing;
   if (!playing) {

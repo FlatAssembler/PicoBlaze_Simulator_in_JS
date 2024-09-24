@@ -109,7 +109,7 @@ function highlightToken(token) {
     // read more about it here:
     // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/6
     return `<span class="flag">${token}</span>`;
-  if (/:$/.test(token))
+  if (/:$/.test(token) && token.length > 1)
     return `<span class="label">${token}</span>`;
   if (token[0] === '"')
     return `<span class="string">${token}</span>`;
@@ -170,7 +170,8 @@ function syntaxHighlighter(/*edit*/) {
     if ((assemblyCode[i] === " " || assemblyCode[i] === "\t" ||
          assemblyCode[i] === "," || assemblyCode[i] === "+" ||
          assemblyCode[i] === "-" || assemblyCode[i] === "*" ||
-         assemblyCode[i] === "/" || assemblyCode[i] === "^") &&
+         assemblyCode[i] === "/" || assemblyCode[i] === "^" ||
+         assemblyCode[i] === '?') &&
         !areWeInAString) {
       highlightedText += highlightToken(currentToken) + assemblyCode[i];
       currentToken = "";
@@ -326,6 +327,8 @@ function setupLayout() {
                                   // small font it's illegible.
     document.getElementById("authors").style.fontSize = "1.3em";
   }
+  if (window.onscroll)
+    window.onscroll();
 }
 let PC = 0;
 function formatAsAddress(n) {
