@@ -287,11 +287,19 @@ function parse(tokenized) {
       return root_of_abstract_syntax_tree;
 
   // Ternary conditional operator...
+  /*
+   * What is the best way of parsing right-associative operators, such as the
+   * ternary conditional `?:` operator? In both my AEC-to-WebAssembly compiler
+   * and the following code in my PicoBlaze assembler, I was using the "scan
+   * backwards" method. However, I received some comments that it is considered
+   * to be an anti-pattern. So, I opened a StackExchange question about that:
+   * https://langdev.stackexchange.com/q/4071/330
+   */
   let lastColon = tokenized.length - 2;
   if (lastColon > 0)
     while (lastColon) {
       if (tokenized[lastColon].text == ':' &&
-          tokenized[lastColon].text != '\n') {
+          tokenized[lastColon + 1].text != '\n') {
         let questionMarkCorrespondingToTheLastColon = lastColon, counter = 1;
         console.log(
             "DEBUG: Parsing the ternary conditional operator. The colon is at the index: " +
