@@ -64,7 +64,8 @@ function isDirective(str) {
 }
 
 function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
-  if (root_of_abstract_syntax_tree.text !== "assembly") {
+  if (!(root_of_abstract_syntax_tree instanceof TreeNode) ||
+      root_of_abstract_syntax_tree.text !== "assembly") {
     alert(
         "Internal assembler error: The first argument of the \"assemble\" function is not the root of the abstract syntax tree (AST)!");
     return;
