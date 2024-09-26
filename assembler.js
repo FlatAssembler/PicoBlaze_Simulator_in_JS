@@ -58,7 +58,8 @@ function isDirective(str) {
   for (const directive of preprocessor)
     if (RegExp("^" + directive + "$", "i").test(str))
       return true;
-  if (/:$/.test(str))
+  if (/:$/.test(str) && str.length > 1) // To the core of the assembler, labels
+                                        // are preprocessor directives.
     return true;
   return false;
 }
