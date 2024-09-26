@@ -277,7 +277,7 @@ call    nc     , abort
 ;in the correct order. The pointer now
 ;points at a memory location right after
 ;the binary number (not at the last digit,
-;but after it).
+;but right after it).
 beginning_of_printing_loop:
   sub   pointer, 1
   jump  c      , end_of_printing_loop
