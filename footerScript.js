@@ -275,10 +275,9 @@ fetch(URL_of_JSON_with_examples)
       if (!response.ok)
         throw new Error(response.status);
       else
-        return response.text();
+        return response.json();
     })
-    .then((jsonFromGithub) => {
-      const examplesArray = JSON.parse(jsonFromGithub);
+    .then((examplesArray) => {
       let examplesHTML = examplesArray
                              .map((example) => `
     <button class="exampleCodeLink" onclick="fetchExample('${
