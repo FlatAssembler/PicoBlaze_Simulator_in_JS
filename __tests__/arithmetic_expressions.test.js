@@ -70,6 +70,12 @@ describe("Evaluation of Arithmetic Expressions", () => {
       0b1010 / 2,
     );
   });
+  test("Octal numbers", () => {
+    const AST = parser.parse(tokenizer.tokenize("252'o"));
+    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
+      0o252,
+    );
+  });
   test("Hexadecimal numbers", () => {
     const AST = parser.parse(tokenizer.tokenize("a / 2"));
     expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(

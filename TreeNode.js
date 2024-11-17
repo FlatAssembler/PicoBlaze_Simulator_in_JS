@@ -126,6 +126,19 @@ class TreeNode {
           this.text.length -
               2)); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
     }
+    if (/\'o$/.test(this.text)) {
+      for (let i = 0; i < this.text.length - 2; i++)
+        if (this.text.charCodeAt(i) < '0'.charCodeAt(0) ||
+            this.text.charCodeAt(i) > '7'.charCodeAt(0)) {
+          alert(
+              "Line #" + this.lineNumber + ": `" + this.text +
+              "` is not a valid octal constant!"); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/27
+          return NaN;
+        }
+      return parseInt(
+          this.text.substring(0, this.text.length - 2),
+          8); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
+    }
     if (/\'b$/.test(this.text)) {
       for (let i = 0; i < this.text.length - 2; i++)
         if (!(this.text[i] == '0' || this.text[i] == '1')) {

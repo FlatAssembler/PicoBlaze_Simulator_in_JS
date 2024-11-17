@@ -12,6 +12,12 @@
     "name": "Decimal to Binary"
   },
   {
+    "file_name": "octal.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/93/Evo8glyph.svg/330px-Evo8glyph.svg.png",
+    "image_alt": "Number 8",
+    "name": "Binary to Octal"
+  },
+  {
     "file_name": "fibonacci.psm",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/FibonacciRabbit.svg/220px-FibonacciRabbit.svg.png",
     "image_alt": "Rabbit Experiment",

@@ -1,0 +1,72 @@
+;This is a program which converts binary
+;numbers entered using the switches to
+;octal, and displays the octal numbers
+;using the 7-segment displays.
+
+address 0 ;That's a message to the
+          ;preprocessor of the assembler
+          ;to start assembling from the
+          ;memory address 0. Every
+          ;PicoBlaze program starts like
+          ;that.
+
+input s0, 0 ;The switches are at the
+            ;input address 0.
+
+;The octal numbers that fit in 8 bits
+;can be up to 3 digits long. I think
+;it's easier to deal with the first
+;digit separately, storing it in the
+;register sc.
+load sc, 0
+compare s0, 300'o
+jump c, less_than_300
+  load sc, 3
+  sub s0, 300'o
+less_than_300:
+compare s0, 200'o
+jump c, less_than_200
+  load sc, 2
+  sub s0, 200'o
+less_than_200:
+compare s0, 100'o
+jump c, less_than_100
+  load sc, 1
+  sub s0, 100'o
+less_than_100:
+
+;Then we divide the number entered
+;using the switches by 8. The result
+;of the division will be stored in s1,
+;and the modulo of the division (the
+;last octal digit of the number) will
+;be stored in s0.
+load s1, 0
+beginning_of_the_first_loop:
+  compare s0, 8
+  jump c, end_of_the_first_loop
+  add s1, 1
+  sub s0, 8
+  jump beginning_of_the_first_loop
+end_of_the_first_loop:
+
+;Then we need to multiply s1 by 16,
+;because the seven-segment displays
+;display hexadecimal numbers.
+load sa, 0
+load sb, 16'd
+beginning_of_the_second_loop:
+  add sa, s1
+  sub sb, 1
+jump nz, beginning_of_the_second_loop
+
+;Now the second hexadecimal digit of
+;sa is 0. Let's add the s0 (the modulo)
+;to it. Then, let's display sa and sc on
+;the seven-segment displays.
+add sa, s0
+output sa, 2
+output sc, 1
+
+;Then run into an infinite loop...
+jump 0 ;You can add a breakpoint here.
