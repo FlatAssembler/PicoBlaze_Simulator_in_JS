@@ -6,11 +6,12 @@
 ;is supposed to use the algorithm we were
 ;taught in our Digital Electronics classes,
 ;namely, grouping the binary digits into
-;groups of three starting with the last one,
-;and then converting each group of the 
-;binary digits to octal separately.
+;groups of three starting with the last
+;digit, and then converting each group of
+;the binary digits to octal separately.
 ;As far as I've tested this program,
-;it works.
+;it works. I haven't tested it on
+;real PicoBlaze, though.
 
 address 0 ;That's a message to the
           ;preprocessor of the assembler
@@ -58,8 +59,8 @@ beginning_of_the_loop:
   compare s3, 3
   jump nz, not_the_special_case
     ;The fourth time, do nothing except
-    ;shifting sa to the left and increasing
-    ;the counter.
+    ;shifting sa to the right and
+    ;increasing the counter.
     sr0 sa
     add s3, 1
     jump beginning_of_the_loop
