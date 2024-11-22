@@ -1,7 +1,16 @@
-;This is a program which converts binary
-;numbers entered using the switches to
-;octal, and displays the octal numbers
-;using the 7-segment displays.
+;This is a program which is supposed to
+;convert binary numbers entered using the
+;switches to octal, and display the octal
+;numbers using the 7-segment displays.
+;For converting binary digits to octal, it
+;is supposed to use the algorithm we were
+;taught in our Digital Electronics classes,
+;namely, grouping the binary digits into
+;groups of three starting with the last one,
+;and then converting each group of the 
+;binary digits to octal separately.
+;As far as I've tested this program,
+;it works.
 
 address 0 ;That's a message to the
           ;preprocessor of the assembler
@@ -35,38 +44,44 @@ jump c, less_than_100
   sub s0, 100'o
 less_than_100:
 
-;Then we divide the number entered
-;using the switches by 8. The result
-;of the division will be stored in s1,
-;and the modulo of the division (the
-;last octal digit of the number) will
-;be stored in s0.
-load s1, 0
-beginning_of_the_first_loop:
-  compare s0, 8
-  jump c, end_of_the_first_loop
-  add s1, 1
-  sub s0, 8
-  jump beginning_of_the_first_loop
-end_of_the_first_loop:
-
-;Then we need to multiply s1 by 16,
-;because the seven-segment displays
-;display hexadecimal numbers.
+;So, here goes the core of the algorithm.
+;It's supposed to take s0 as the input,
+;the binary digits 00ABCDEF, and store into
+;sa the result 0ABC0DEF.
 load sa, 0
-load sb, 16'd
-beginning_of_the_second_loop:
-  add sa, s1
-  sub sb, 1
-jump nz, beginning_of_the_second_loop
+load s3, 0
+beginning_of_the_loop:
+  compare s3, 2 * 3 + 1 ;Six binary digits
+                        ;plus one step with
+                        ;the special case.
+  jump nc, end_of_the_loop
+  compare s3, 3
+  jump nz, not_the_special_case
+    ;The fourth time, do nothing except
+    ;shifting sa to the left and increasing
+    ;the counter.
+    sr0 sa
+    add s3, 1
+    jump beginning_of_the_loop
+  not_the_special_case:
+    sr0 s0
+    sra sa
+    add s3, 1
+  jump beginning_of_the_loop
+end_of_the_loop:
+sr0 sa
 
-;Now the second hexadecimal digit of
-;sa is 0. Let's add the s0 (the modulo)
-;to it. Then, let's display sa and sc on
-;the seven-segment displays.
-add sa, s0
+;And now output the octal number you have
+;got to the seven-segment displays. The
+;first two digits are the output address 1,
+;and the second two are the output
+;address 2.
 output sa, 2
 output sc, 1
 
 ;Then run into an infinite loop...
 jump 0 ;You can add a breakpoint here.
+
+;You also have another PicoBlaze assembly
+;program converting binary numbers to
+;octal, using consecutive division, <a href="https://picoblaze-simulator.sourceforge.io/PicoBlaze.html?id=61">here</a>.
