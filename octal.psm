@@ -88,4 +88,5 @@ jump 0 ;You can add a breakpoint here.
 ;program converting binary numbers to
 ;octal, using consecutive division, <a href="https://picoblaze-simulator.sourceforge.io/PicoBlaze.html?id=61">here</a>.
 
-;I've also made a <a href="https://codereview.stackexchange.com/q/294517/219010">StackExchange thread</a>.
+;I've also made a <a href="https://codereview.stackexchange.com/q/294517/219010">StackExchange thread</a>
+;about this program.
