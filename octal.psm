@@ -29,22 +29,15 @@ input s0, 0 ;The switches are at the
 ;digit separately, storing it in the
 ;register sc.
 namereg sc, first_digit
-load first_digit, 0
-compare s0, 300'o
-jump c, less_than_300
-  load first_digit, 3
-  sub s0, 300'o
-less_than_300:
-compare s0, 200'o
-jump c, less_than_200
-  load first_digit, 2
-  sub s0, 200'o
-less_than_200:
-compare s0, 100'o
-jump c, less_than_100
-  load first_digit, 1
-  sub s0, 100'o
-less_than_100:
+load first_digit, s0
+and first_digit, 300'o
+and s0, 077'o
+load s3, 0
+shifting_first_digit:
+  sr0 first_digit
+  add s3, 1
+  compare s3, 6
+  jump nc, shifting_first_digit
 
 ;So, here goes the core of the algorithm.
 ;It's supposed to take s0 as the input,
