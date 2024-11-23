@@ -36,8 +36,8 @@ load s3, 0
 shifting_first_digit:
   sr0 first_digit
   add s3, 1
-  compare s3, 6
-  jump nc, shifting_first_digit
+  compare s3, 8 - 2
+  jump c, shifting_first_digit
 
 ;So, here goes the core of the algorithm.
 ;It's supposed to take s0 as the input,
