@@ -462,13 +462,25 @@ Displaying registers and flags on every step is useful for debugging, but it slo
       document.getElementById("input_03").disabled = is_UART_enabled;
 }
 function downloadHex() {
-  /*
-  Loosely based on:
-  https://stackoverflow.com/a/33622881/8902065
-  */
+  if (!hasTheCodeBeenAssembled) {
+    if (!confirm(
+            "The code has not been assembled. Do you really want to proceed downloading the hexadecimal file?"))
+      return;
+  } else if (
+      hasTheCodeBeenModifiedSinceLastSuccessfulAssembly) // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/28
+  {
+    if (!confirm(
+            "The code has been modified since the last successful assembling. Are you sure you want to proceed downloading the hexadecimal file?"))
+      return;
+  }
   if (/WebPositive/.test(navigator.userAgent))
     alert(
         "It's detected you are using WebPositive. 'Download Hexadecimal' didn't work there when we tested it.");
+
+  /*
+  The following code is loosely based on:
+  https://stackoverflow.com/a/33622881/8902065
+  */
   let hexadecimalString = "";
   for (let i = 0; i < 2 ** 12; i++)
     hexadecimalString += machineCode[i].hex + "\r\n";
