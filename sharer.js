@@ -14,7 +14,7 @@ function saveAssemblyCode() {
   fetch("db.php", {method : "POST", body : formData})
       .then((response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          throw new Error("The server responded with error: " + response.status);
         }
 
         return response.text();
