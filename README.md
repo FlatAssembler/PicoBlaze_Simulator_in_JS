@@ -21,7 +21,9 @@ If you want to host this project yourself, you might want to edit the lines foll
 ```
 and modify them to point to where you will host the examples.
 
-**Note to the contributors**: While there are some JEST tests in this project, the test coverage is pretty low, so don't rely solely on them. Please do some manual testing. And, if possible, do that manual testing in Firefox 52 (the last version of Firefox to work on Windows XP, and it's also the version of Firefox that comes with Solaris 11.4), as it is important to me not to break the compatibility with Firefox 52. Many computers at my university are running Windows XP and are using Firefox 52 as the browser, and it is important to me that this program works on those computers.
+An example of a similar project is [FRISC JS](https://github.com/izuzak/FRISCjs). Here at the University of Osijek, we are using PicoBlaze as an example of a simple computer, but, at the University of Zagreb, they are using FRISC for that. And their students made an assembler and emulator for FRISC in JavaScript, though I guess it's not for the same reason I made PicoBlaze assembler and emulator in JavaScript (the FRISC JS project predates the pandemic by many years).
+
+**Note to the contributors**: While there are some JEST tests in this project (made mostly by @agustiza), the test coverage is pretty low, so don't rely solely on them. Please do some manual testing. And, if possible, do that manual testing in Firefox 52 (the last version of Firefox to work on Windows XP, and it's also the version of Firefox that comes with Solaris 11.4), as it is important to me not to break the compatibility with Firefox 52. Many computers at my university are running Windows XP and are using Firefox 52 as the browser, and it is important to me that this program works on those computers.
 
 **UPDATE** on 24/01/2021: I've started developing [a version of this app for Android](https://github.com/FlatAssembler/PicoBlaze_Simulator_for_Android). As I am not a skilled Android developer, any help will be appreciated.
 
