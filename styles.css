@@ -175,6 +175,20 @@ label {
   margin-right: 0;
   float: right;
 }
+@keyframes assembleButtonAnimation {
+  begin {
+    background: white;
+  }
+  50% {
+    background: lightblue;
+  }
+  end {
+    background: white;
+  }
+}
+#assembleButton:target {
+  animation: assembleButtonAnimation 2s infinite;
+}
 #whyClickAssemble {
   position: absolute;
   top: 450px;
