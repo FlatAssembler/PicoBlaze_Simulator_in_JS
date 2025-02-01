@@ -13,6 +13,8 @@ function isMnemonic(str) {
 function makeCompilationContext(root_of_the_abstract_syntax_tree,
                                 oldCompilationContext) {
   let context;
+  if (typeof oldCompilationContext == "undefined")
+    default_base_of_literals_in_assembly = 16;
   if (typeof oldCompilationContext != "undefined")
     context = oldCompilationContext;
   else
@@ -64,6 +66,10 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
                  // works for PicoBlaze (where all directives have the same
                  // size: 18 bits).
     }
+    if (/^BASE_HEXADECIMAL$/i.test(node_of_depth_1.text))
+      default_base_of_literals_in_assembly = 16;
+    if (/^BASE_DECIMAL$/i.test(node_of_depth_1.text))
+      default_base_of_literals_in_assembly = 10;
     if (/:$/.test(node_of_depth_1.text)) {
       console.log(
           "DEBUG: Dealing with a label, point #1..."); // Eh, those JavaScript

@@ -20,4 +20,6 @@ const preprocessor = [
   "ENDIF",
   "WHILE",
   "ENDWHILE",
+  "BASE_DECIMAL",
+  "BASE_HEXADECIMAL",
 ];

@@ -8,6 +8,7 @@ let simulationThread;
 let machineCode = [];
 for (let i = 0; i < 4096; i++)
   machineCode.push({hex : "00000", line : 0});
+let default_base_of_literals_in_assembly = 16;
 function displayRegistersAndFlags() {
   if (playing && !document.getElementById("shouldWeUpdateRegisters").checked)
     return;

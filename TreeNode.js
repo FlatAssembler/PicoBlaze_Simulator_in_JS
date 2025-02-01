@@ -150,8 +150,22 @@ class TreeNode {
           this.text.substring(0, this.text.length - 2),
           2); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
     }
+    if (/\'x$/.test(this.text)) {
+      if (!(/^([a-f]|[0-9])*\'x$/i.test(this.text))) {
+        alert("Line #" + this.lineNumber + ": `" + this.text +
+              "` is not a valid hexadecimal constant!");
+        return NaN;
+      }
+      return parseInt(
+          this.text.substring(0, this.text.length - 2),
+          16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
+    }
     if (/^([a-f]|[0-9])*$/i.test(this.text))
-      return parseInt(this.text, 16);
+      return parseInt(
+          this.text,
+          ((typeof default_base_of_literals_in_assembly) == "undefined")
+              ? 16
+              : default_base_of_literals_in_assembly);
     if (this.text[0] === '"' && this.text.length === 3)
       return this.text.charCodeAt(1);
     alert('Some part of the assembler tried to interpret the token "' +

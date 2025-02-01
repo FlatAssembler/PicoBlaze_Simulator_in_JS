@@ -75,6 +75,7 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
   for (let i = 0; i < 4096; i++)
     machineCode.push({hex : "00000", line : 0});
   let address = 0;
+  default_base_of_literals_in_assembly = 16;
   for (const node_of_depth_1 of root_of_abstract_syntax_tree.children) {
     const check_if_the_only_argument_is_register = () => {
       // Let's reduce the code repetition a bit by using lambda functions...
@@ -110,7 +111,11 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
       }
       return 1;
     };
-    if (/^address$/i.test(node_of_depth_1.text))
+    if (/^BASE_HEXADECIMAL$/i.test(node_of_depth_1.text))
+      default_base_of_literals_in_assembly = 16;
+    else if (/^BASE_DECIMAL$/i.test(node_of_depth_1.text))
+      default_base_of_literals_in_assembly = 10;
+    else if (/^address$/i.test(node_of_depth_1.text))
       address = node_of_depth_1.children[0].interpretAsArithmeticExpression(
           output_of_preprocessor.constants);
     else if (/^load$/i.test(node_of_depth_1.text)) {
