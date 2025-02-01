@@ -19,6 +19,21 @@
 ;them on the 7-segment displays.
 ;Also, converting them to Gray code and
 ;displaying the Gray code using LEDs.
+
+base_decimal ;By default, the numerical
+             ;literals in PicoBlaze
+	     ;assembly are treated as
+	     ;base 16 (hexadecimal),
+	     ;rather than base 10
+	     ;(decimal), as in almost
+	     ;all programming languages.
+	     ;I don't like that, so I
+	     ;added this preprocessor
+	     ;directive so that the
+	     ;users of my PicoBlaze
+	     ;assembler can change that
+	     ;behaviour.
+
 address 0
 infinite_loop:
   input   s0, 0
