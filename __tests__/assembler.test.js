@@ -102,4 +102,21 @@ compare s0, 100'd
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[2].hex).toBe("3a005");
   });
+  test("Changing the bases of the constant literals works", () => {
+    const assembly = `
+		address 0
+		inst 10
+		base_decimal
+		inst 10
+		base_hexadecimal
+		inst 10
+		`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("00010");
+    expect(machineCode[1].hex).toBe("0000a");
+    expect(machineCode[2].hex).toBe("00010");
+  });
 });
