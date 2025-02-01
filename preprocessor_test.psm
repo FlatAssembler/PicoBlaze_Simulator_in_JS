@@ -27,27 +27,29 @@
 ;         such as this one. I have opened
 ;         a <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/7">GitHub issue about that</a>.
 
+base_decimal ;The PicoBlaze assembler by default considers numerical literals to be hexadecimal.
+
 display "We are about to display Fibonacci numbers smaller than 1000 in the UART terminal... "
-display a ;0xa=='\n', a new-line character.
+display a'x ;0xa=='\n', a new-line character.
 constant first, 0
 constant second, 1
-while first &lt; 1000'd
-	if first &lt; 10'd
+while first &lt; 1000
+	if first &lt; 10
 		display "0" + first
 		display " " ;In case inserting a new-line character doesn't work...
 		            ;I have opened <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/8">a GitHub issue about that problem</a>.
-		display a
+		display a'x
 	else
 		constant remainder, first
 		constant counter, 0
-		while remainder &gt; 10'd - 1
-			constant remainder, remainder - 10'd
+		while remainder &gt; 10 - 1
+			constant remainder, remainder - 10
 			constant counter, counter + 1
 		endwhile
-		if counter &gt; 10'd - 1 ;If <code>first</code> is bigger than 99.
+		if counter &gt; 10 - 1 ;If <code>first</code> is bigger than 99.
 			constant hundreds, 0
-			while counter &gt; 10'd - 1
-				constant counter, counter - 10'd
+			while counter &gt; 10 - 1
+				constant counter, counter - 10
 				constant hundreds, hundreds + 1
 			endwhile
 			display hundreds + "0"
@@ -55,7 +57,7 @@ while first &lt; 1000'd
 		display counter + "0"
 		display remainder + "0"
 		display " "
-		display a
+		display a'x
 	endif
 	constant second, first + second
 	constant first, second - first
