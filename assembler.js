@@ -115,6 +115,9 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
       default_base_of_literals_in_assembly = 16;
     else if (/^BASE_DECIMAL$/i.test(node_of_depth_1.text))
       default_base_of_literals_in_assembly = 10;
+    // TODO: What if there is a BASE_DECIMAL or BASE_DECIMAL inside an
+    // if-statement or a while-loop? You can see a discussion on that here:
+    // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/34
     else if (/^address$/i.test(node_of_depth_1.text))
       address = node_of_depth_1.children[0].interpretAsArithmeticExpression(
           output_of_preprocessor.constants);
