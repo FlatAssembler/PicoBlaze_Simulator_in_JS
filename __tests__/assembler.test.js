@@ -18,6 +18,8 @@ global.machineCode = headerScript.machineCode;
 global.formatAsAddress =
     headerScript.formatAsAddress; // Or else labels won't work.
 
+global.default_base_of_literals_in_assembly = 16;
+
 const assembler = require("../assembler.js");
 
 describe("Assembler tests", () => {
@@ -27,7 +29,6 @@ address 0
 inst 1 + 2 * 3
 `;
     const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
-    global.default_base_of_literals_in_assembly = 16;
     const compilation_context =
         preprocessor.makeCompilationContext(abstract_syntax_tree);
     assembler.assemble(abstract_syntax_tree, compilation_context);
