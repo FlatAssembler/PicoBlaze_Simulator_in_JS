@@ -1,5 +1,7 @@
 <?php
 
+$GLOBALS['dbname'] = "p3379031_assembler_db";
+
 class Database {
 
     private static $instance;
@@ -15,7 +17,7 @@ class Database {
         if (substr($password, -1, 1) == "\r") {
             $password = substr($password, 0, strlen($password) - 1);
         }
-        $dbname = "p3379031_assembler_db";
+        $dbname = $GLOBALS['dbname'];
 
         try {
             $this->connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
@@ -73,7 +75,8 @@ if (isset($_GET['id'])) {
         $programCode = str_replace("\r\n", "\n", $programCode);
         echo $programCode;
     } else {
-        echo "Error 404:\nProgram with the ID \"$id\" not found in the database!";
+        $dbname = $GLOBALS['dbname'];
+        echo "Error 404:\nProgram with the ID \"$id\" not found\nin the database \"$dbname\"!";
     }
 }
 ?>
