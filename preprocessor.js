@@ -66,10 +66,26 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
                  // works for PicoBlaze (where all directives have the same
                  // size: 18 bits).
     }
-    if (/^BASE_HEXADECIMAL$/i.test(node_of_depth_1.text))
+    if (/^BASE_HEXADECIMAL$/i.test(node_of_depth_1.text)) {
       default_base_of_literals_in_assembly = 16;
-    if (/^BASE_DECIMAL$/i.test(node_of_depth_1.text))
+      if (node_of_depth_1.children.length == 1) {
+        default_base_of_literals_in_assembly=node_of_depth_1.children[0].interpretAsArithmeticExpression(context.constants);
+      }
+      else if (node_of_depth_1.children.length != 0) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/35
+        alert("Line " + node_of_depth_1.lineNumber + ': The "BASE_HEXADECIMAL" pseudo-mnemonic should have 0 or 1 arguments.');
+        return context;
+      }
+    }
+    if (/^BASE_DECIMAL$/i.test(node_of_depth_1.text)) {
       default_base_of_literals_in_assembly = 10;
+      if (node_of_depth_1.children.length == 1) {
+        default_base_of_literals_in_assembly=node_of_depth_1.children[0].interpretAsArithmeticExpression(context.constants);
+      }
+      else if (node_of_depth_1.children.length != 0) {
+        alert("Line " + node_of_depth_1.lineNumber + ': The "BASE_DECIMAL" pseudo-mnemonic should have 0 or 1 arguments.');
+        return context;
+      }
+    }
     if (/:$/.test(node_of_depth_1.text)) {
       console.log(
           "DEBUG: Dealing with a label, point #1..."); // Eh, those JavaScript
