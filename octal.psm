@@ -13,6 +13,15 @@
 ;it works. I haven't tested it on
 ;real PicoBlaze, though.
 
+base_decimal 8 ;We are going to use a lot
+               ;of octal numbers in this
+               ;program, so it makes sense
+               ;to switch the default base
+               ;of numerical literals to
+               ;8, so that we don't have
+               ;to append `'o` every time
+               ;we write an octal number.
+
 address 0 ;That's a message to the
           ;preprocessor of the assembler
           ;to start assembling from the
@@ -30,8 +39,8 @@ input s0, 0 ;The switches are at the
 ;register sc.
 namereg sc, first_digit
 load first_digit, s0
-and first_digit, 300'o
-and s0, 077'o
+and first_digit, 300
+and s0, 077
 ;The idea to rotate the first digit
 ;left two times instead of shifting
 ;it to the right six times was given
