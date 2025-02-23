@@ -22,22 +22,27 @@
 
 base_decimal ;By default, the numerical
              ;literals in PicoBlaze
-	     ;assembly are treated as
-	     ;base 16 (hexadecimal),
-	     ;rather than base 10
-	     ;(decimal), as in almost
-	     ;all programming languages.
-	     ;I don't like that, so I
-	     ;added this preprocessor
-	     ;directive so that the
-	     ;users of my PicoBlaze
-	     ;assembler can change that
-	     ;behaviour.
+             ;assembly are treated as
+             ;base 16 (hexadecimal),
+             ;rather than base 10
+             ;(decimal), as in almost
+             ;all programming languages.
+             ;I don't like that, so I
+             ;added this preprocessor
+             ;directive so that the
+             ;users of my PicoBlaze
+             ;assembler can change that
+             ;behaviour.
+
+constant eight_switches_input  , 0
+constant eight_LEDs_output     , 0
+constant first_two_7s_displays , 1
+constant second_two_7s_displays, 2
 
 address 0
 infinite_loop:
   namereg sc         , first_digit
-  input   s0         , 0
+  input   s0         , eight_switches_input
   load    sa         , s0
   load    first_digit, 0
   compare sa         , 200
@@ -53,13 +58,13 @@ infinite_loop:
   call   divideBy10
   call   multiplyBy16
   add    sa         , sb
-  output first_digit, 1
-  output sa         , 2
+  output first_digit, first_two_7s_displays
+  output sa         , second_two_7s_displays
   ;Now for the Gray Code...
   load   s1         , s0
   sr0    s1
   xor    s1         , s0
-  output s1         , 0
+  output s1         , eight_LEDs_output
 jump infinite_loop ;You can add a
                    ;breakpoint here
                    ;to make the
