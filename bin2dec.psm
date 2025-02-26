@@ -55,9 +55,12 @@ infinite_loop:
       sub  sa         , 100
       load first_digit, 1
   lessThan100:
-  call   divideBy10
-  call   multiplyBy16
-  add    sa         , sb
+  call   divide_sa_by_10
+  call   multiply_sa_by_16
+  add    sa         , sb ;sb contains the
+                         ;remainder of the
+			 ;division of sa by
+			 ;10.
   output first_digit, first_two_7s_displays
   output sa         , second_two_7s_displays
   ;Now for the Gray Code...
@@ -73,7 +76,7 @@ jump infinite_loop ;You can add a
                    ;prints out the
                    ;result.
 
-divideBy10:
+divide_sa_by_10:
 star    s0, sa
 regbank b
 load    s1, 0
@@ -89,7 +92,7 @@ star    sb, s0
 regbank a
 return
 
-multiplyBy16:
+multiply_sa_by_16:
 ;16=2^4
 sl0 sa
 sl0 sa
