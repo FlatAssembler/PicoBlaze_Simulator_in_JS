@@ -62,12 +62,20 @@ infinite_loop:
 			 ;division of sa by
 			 ;10.
   output first_digit, first_two_7s_displays
-  output sa         , second_two_7s_displays
-  ;Now for the Gray Code...
+  output sa         ,second_two_7s_displays
+  ;I removed the space after `,` to make
+  ;that line fit inside 43 columns, so that
+  ;the user doesn't have to scroll it
+  ;horizontally in Chrome (they didn't have
+  ;to do that in Firefox even before that).
+
+  ;Now goes the code for converting from
+  ;binary to the Gray Code...
   load   s1         , s0
   sr0    s1
   xor    s1         , s0
   output s1         , eight_LEDs_output
+
 jump infinite_loop ;You can add a
                    ;breakpoint here
                    ;to make the
