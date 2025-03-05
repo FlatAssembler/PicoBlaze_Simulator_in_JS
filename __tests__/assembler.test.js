@@ -104,6 +104,7 @@ compare s0, 100'd
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[2].hex).toBe("3a005");
   });
+
   test("Changing the bases of the constant literals works", () => {
     const assembly = `
 		address 0
@@ -120,5 +121,17 @@ compare s0, 100'd
     expect(machineCode[0].hex).toBe("00010");
     expect(machineCode[1].hex).toBe("0000a");
     expect(machineCode[2].hex).toBe("00010");
+  });
+  
+  test("Function pointers are assembled correctly", () => {
+    const assembly = `
+address 0
+call@(s1, s2)
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("24120");
   });
 });
