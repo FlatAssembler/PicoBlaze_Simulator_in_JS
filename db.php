@@ -23,7 +23,8 @@ class Database {
             $this->connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
-            die("Connection failed: " . $e->getMessage());
+            http_response_code(500);
+            die("Connection to the database failed: " . $e->getMessage());
         }
     }
 
@@ -52,6 +53,7 @@ if (isset($_POST['code'])) {
         $lastInsertedId = $conn->lastInsertId();
         echo "?id=" . $lastInsertedId;
     } catch (PDOException $e) {
+        http_response_code(500);
         echo "Error: " . $e->getMessage();
     }
 }
