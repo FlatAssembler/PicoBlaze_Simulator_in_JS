@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", function() {
     console.log(url);
     fetch(url)
         .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
+          if (!response.ok && response.status != 404) {
+            throw new Error("The server responded with error "+response.status);
           }
 
           return response.text();
@@ -24,6 +24,6 @@ document.addEventListener("DOMContentLoaded", function() {
           setUpLineNumbers();
         })
 
-        .catch((error) => { console.error("Error:", error); });
+        .catch((error) => { alert(error.message);});
   }
 });

@@ -75,6 +75,7 @@ if (isset($_GET['id'])) {
         $programCode = str_replace("\r\n", "\n", $programCode);
         echo $programCode;
     } else {
+	    http_response_code(404);
         $dbname = $GLOBALS['dbname'];
         echo "Error 404:\nProgram with the ID \"$id\" not found\nin the database \"$dbname\"!";
     }
