@@ -22,6 +22,9 @@ function saveAssemblyCode() {
 
       .then((data) => {
         // data is ?id=int
+        if (!/^\?id=\d+/.test(data)) {
+          throw new Error("The server responded with `200 OK`, but the data it sent is not formatted to be parsable by the front-end: " + data);
+        }
         const shareURL =
             `${new URL(window.location.href).origin}/PicoBlaze.html${data}`;
         document.getElementById("shareURL").innerText = shareURL;
