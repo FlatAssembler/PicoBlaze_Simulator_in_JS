@@ -1,4 +1,49 @@
 "use strict";
+
+function LevenshtainDistance(A, B) {
+  // Will be used to find the closest label to the one that the user has.
+  // Adapted from:
+  // https://github.com/royalpranjal/Interview-Bit/blob/master/DynamicProgramming/EditDistance.cpp
+
+  const row = A.length;
+  const col = B.length;
+
+  const temp = [];
+  for (let i = 0; i < row + 1; i++) {
+    let tmp = [];
+    for (let j = 0; j < col + 1; j++) {
+      tmp.push(0);
+    }
+    temp.push(tmp);
+  }
+
+  const min =
+      (a, b) => {
+        if (a < b)
+          return a;
+        else
+          return b;
+      }
+
+  for (let i = 0; i < temp.length; i++) {
+    for (let j = 0; j < temp[0].length; j++) {
+      if (j == 0) {
+        temp[i][j] = i;
+      } else if (i == 0) {
+        temp[i][j] = j;
+      } else if (A[i - 1] == B[j - 1]) {
+        temp[i][j] = temp[i - 1][j - 1];
+      } else {
+        temp[i][j] = min(temp[i - 1][j - 1], temp[i - 1][j]);
+        temp[i][j] = min(temp[i][j - 1], temp[i][j]);
+        temp[i][j] = temp[i][j] + 1;
+      }
+    }
+  }
+
+  return temp[row][col];
+}
+
 class TreeNode {
   constructor(text, lineNumber) {
     this.text = text;
@@ -168,6 +213,23 @@ class TreeNode {
               : default_base_of_literals_in_assembly);
     if (this.text[0] === '"' && this.text.length === 3)
       return this.text.charCodeAt(1);
+    let keys = [];
+    constants.forEach((value, key) => { keys.push(key); });
+    let smallest_Levenshtain_distance = keys[0];
+    for (const key of keys) {
+      if (LevenshtainDistance(key, this.text) <
+          LevenshtainDistance(smallest_Levenshtain_distance, this.text)) {
+        smallest_Levenshtain_distance = key;
+      }
+    }
+    if (confirm("Instead of \"" + this.text + "\", in the line #" +
+                this.lineNumber + ", did you perhaps mean \"" +
+                smallest_Levenshtain_distance + "\"?")) {
+      if (constants.has(smallest_Levenshtain_distance)) {
+        constants.set(this.text, constants.get(smallest_Levenshtain_distance));
+        return constants.get(this.text);
+      }
+    }
     alert('Some part of the assembler tried to interpret the token "' +
           this.text + '" in the line #' + this.lineNumber +
           " as a part of an arithmetic expression, which makes no sense.");
@@ -215,6 +277,28 @@ class TreeNode {
         [ "+", "-", "*", "/" ].includes(this.text))
       // Must not detect "()" as a label.
       return formatAsAddress(this.interpretAsArithmeticExpression(constants));
+    let keys = [];
+    labels.forEach((value, key) => { keys.push(key); });
+    constants.forEach((value, key) => { keys.push(key); });
+    let smallest_Levenshtain_distance = keys[0];
+    for (const key of keys) {
+      if (LevenshtainDistance(key, this.text) <
+          LevenshtainDistance(smallest_Levenshtain_distance, this.text)) {
+        smallest_Levenshtain_distance = key;
+      }
+    }
+    if (confirm("Instead of \"" + this.text + "\", in the line #" +
+                this.lineNumber + ", did you perhaps mean \"" +
+                smallest_Levenshtain_distance + "\"?")) {
+      if (labels.has(smallest_Levenshtain_distance)) {
+        labels.set(this.text, labels.get(smallest_Levenshtain_distance));
+        return formatAsAddress(labels.get(smallest_Levenshtain_distance));
+      }
+      if (constants.has(smallest_Levenshtain_distance)) {
+        constants.set(this.text, constants.get(smallest_Levenshtain_distance));
+        return formatAsAddress(constants.get(smallest_Levenshtain_distance));
+      }
+    }
     return "none";
   }
 }
