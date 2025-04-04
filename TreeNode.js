@@ -266,6 +266,26 @@ class TreeNode {
     if (/^s(\d|[a-f])$/i.test(this.text))
       return this.text.substring(1)
           .toLowerCase(); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
+    // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/37#issuecomment-2778246629
+    let register_name_with_Levenshtain_distance_of_one;
+    registers.forEach((value, key) => {
+      if (LevenshtainDistance(key, this.text) == 1)
+        register_name_with_Levenshtain_distance_of_one = key;
+    });
+    if (register_name_with_Levenshtain_distance_of_one) {
+      if (confirm(
+              "Instead of \"" + this.text + "\", in the line #" +
+              this.lineNumber + ", did you perhaps mean \"" +
+              register_name_with_Levenshtain_distance_of_one +
+              "\", an alternate name for the register \"" +
+              registers.get(register_name_with_Levenshtain_distance_of_one) +
+              "\"?")) {
+        registers.set(
+            this.text,
+            registers.get(register_name_with_Levenshtain_distance_of_one));
+        return registers.get(this.text).substring(1).toLowerCase();
+      }
+    }
     return "none";
   }
   getLabelAddress(labels, constants) {
