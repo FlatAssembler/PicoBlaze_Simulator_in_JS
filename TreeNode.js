@@ -294,9 +294,10 @@ class TreeNode {
     if (constants.has(this.text))
       return formatAsAddress(constants.get(this.text));
     if (/^(\d|[a-f])*$/i.test(this.text) ||
-        [ "+", "-", "*", "/" ].includes(this.text))
-      // Must not detect "()" as a label.
+        [ "+", "-", "*", "/", "^", "?:" ].includes(this.text))
       return formatAsAddress(this.interpretAsArithmeticExpression(constants));
+    if (this.text=="()")
+      return "none"; // Must not detect "()" as a label.
     let keys = [];
     labels.forEach((value, key) => { keys.push(key); });
     constants.forEach((value, key) => { keys.push(key); });
