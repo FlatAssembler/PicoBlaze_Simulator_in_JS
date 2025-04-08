@@ -168,4 +168,19 @@ describe("PicoBlaze MachineCode Simulator", () => {
 
     expect(document.getElementById("UART_OUTPUT").innerText).toBe("Hello");
   });
+
+  test("Function pointers work", () =>{
+    const machineCode = [
+      {hex: "01005", line: "2"}, //load s0, 5
+      {hex: "01100", line: "3"}, //load s1, 0
+      {hex: "26100", line: "4"}, //jump@(s1,s0)
+    ];
+    global.machineCode=machineCode;
+
+    simulator.simulateOneInstruction(); //load s0, 5
+    simulator.simulateOneInstruction(); //load s1, 0
+    simulator.simulateOneInstruction(); //jump@(s1,s0)
+    
+    expect(global.PC).toBe(5); //jump to address 5
+  })
 });
