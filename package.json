@@ -1,6 +1,6 @@
 {
   "name": "picoblaze-simulator-js",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "description": "A PicoBlaze simulator in JS",
   "main": "app.js",
   "scripts": {
