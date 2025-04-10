@@ -61,10 +61,17 @@ class TreeNode {
         ret += this.children[i].getLispExpression() + ")";
     return ret;
   }
-  interpretAsArithmeticExpression(constants) {
+  interpretAsArithmeticExpression(constants, labels) {
     if (!(constants instanceof Map)) {
       alert(
           'Internal compiler error: The "constants" argument is not of the type "Map"!');
+    }
+    if (labels && !(labels instanceof Map)) {
+      alert(
+          'Internal compiler error: The "labels" argument is not of the type "Map"!');
+    }
+    if (labels && labels.has(this.text)) {
+      return labels.get(this.text);
     }
     if (constants.has(this.text))
       return constants.get(this.text);
@@ -109,8 +116,13 @@ class TreeNode {
     if (this.text == "?:")
       return (
           this.children[0].interpretAsArithmeticExpression(constants)
-              ? this.children[1].interpretAsArithmeticExpression(constants)
-              : this.children[2].interpretAsArithmeticExpression(constants));
+              ? this.children[1].interpretAsArithmeticExpression(constants,
+                                                                 labels)
+              : this.children[2].interpretAsArithmeticExpression(
+                    constants,
+                    labels)); // We are passing "labels" in an attempt to mend
+                              // this bug:
+                              // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/38
     if (this.text == "()") {
       if (this.children.length != 1) {
         alert("Line #" + this.lineNumber +
@@ -295,8 +307,11 @@ class TreeNode {
       return formatAsAddress(constants.get(this.text));
     if (/^(\d|[a-f])*$/i.test(this.text) ||
         [ "+", "-", "*", "/", "^", "?:" ].includes(this.text))
-      return formatAsAddress(this.interpretAsArithmeticExpression(constants));
-    if (this.text=="()")
+      return formatAsAddress(this.interpretAsArithmeticExpression(
+          constants,
+          labels)); // We are passing the `labels` argument to resolve this bug:
+                    // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/38
+    if (this.text == "()")
       return "none"; // Must not detect "()" as a label.
     let keys = [];
     labels.forEach((value, key) => { keys.push(key); });
