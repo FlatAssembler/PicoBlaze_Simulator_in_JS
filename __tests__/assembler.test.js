@@ -134,4 +134,49 @@ call@(s1, s2)
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("24120");
   });
+
+  test("The ternary conditional operator inside JUMP works correctly", () => { // This was once crashing the assembler: https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/38
+    const assembly = `
+;This is an example program demonstrating
+;how the \`?:\` operator in jumps, supposedly
+;enabled in v5.2.1, doesn't really work as
+;intended.
+
+address 0
+jump PicoBlaze_Simulator_in_JS ? code_that_should_run_in_browser : code_that_should_run_on_mobile
+load s0, 0
+code_that_should_run_on_mobile:
+load s0, 1
+jump end_of_branching
+code_that_should_run_in_browser:
+load s0, 2
+jump end_of_branching
+end_of_branching:
+
+;The 7th line doesn't assemble. The assembler
+;asks the user \`Instead of 
+;"code_that_should_run_in_browser", in the
+;line #7, did you perhaps mean 
+;"PicoBlaze_Simulator_in_JS"?\`. It has to do
+;with the way the assembler is structured
+;internally. Namely, when the core of the
+;assembler sees the "jump" instruction, it
+;invokes the "getLabelAddress" method of the
+;"TreeNode" class. However, when that method
+;sees that it's being invoked on an \`?:\`
+;operator, it wrongly assumes that all of its
+;operands are arithmetic expressions, so
+;it invokes the 
+;"interpretAsArithmeticExpression" method.
+;That method takes as the only argument the
+;"constants" argument, and it has no access
+;to the labels. There doesn't seem to be
+;a simple solution.
+    `;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("22004");
+  });
 });
