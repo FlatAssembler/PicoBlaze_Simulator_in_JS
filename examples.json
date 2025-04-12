@@ -22,41 +22,48 @@
   },
   {
     "id": "3",
+    "file_name": "permutations.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4c/Permutations_RGB.svg/180px-Permutations_RGB.svg.png",
+    "image_alt": "Permutations",
+    "name": "Permutations Algorithm"
+  },
+  {
+    "id": "4",
     "file_name": "fibonacci.psm",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7a/FibonacciRabbit.svg/220px-FibonacciRabbit.svg.png",
     "image_alt": "Rabbit Experiment",
     "name": "Fibonacci Sequence"
   },
   {
-    "id": "4",
+    "id": "5",
     "file_name": "gray.psm",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Gray_code_tesseract.svg/220px-Gray_code_tesseract.svg.png",
     "image_alt": "Hamming Cube",
     "name": "Gray Code"
   },
   {
-    "id": "5",
+    "id": "6",
     "file_name": "assemblerTest.psm",
     "image": "https://flatassembler.github.io/PicoBlaze/assemblerTest.gif",
     "image_alt": "Assembly Code",
     "name": "Assembler Test"
   },
   {
-    "id": "6",
+    "id": "7",
     "file_name": "sevenSegment.psm",
     "image": "https://flatassembler.github.io/PicoBlaze/hexadecimal_counter.png",
     "image_alt": "Digital Clock",
     "name": "Hexadecimal Counter"
   },
   {
-    "id": "7",
+    "id": "8",
     "file_name": "regbanks_flags_test.psm",
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/dc/Intel_80486DX2_top.jpg/180px-Intel_80486DX2_top.jpg",
     "image_alt": "CPU",
     "name": "Regbanks-Flags Test"
   },
   {
-    "id": "8",
+    "id": "9",
     "file_name": "preprocessor_test.psm",
     "image": "https://www.theflatearthsociety.org/forum/avr/avatar_1461509_1483220545.png",
     "image_alt": "Flat Assembler showcase",
