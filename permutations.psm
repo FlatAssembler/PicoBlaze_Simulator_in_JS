@@ -2,7 +2,7 @@
 
 base_decimal
 
-constant NDEBUG, 0
+constant NDEBUG, 1
 constant address_of_the_current_attempt, 8
 constant bottom_of_the_stack, 16
 
@@ -144,6 +144,22 @@ beginning_of_the_permutations_loop:
       jump z, end_of_the_add_a_new_character_loop
       namereg sc, character_we_try_to_add
       fetch character_we_try_to_add, (s0)
+      load s7, s0
+      add s7, 1
+      load s8, 0 ;Whether we already tried adding that character.
+      check_if_we_already_tried_that_character_loop:
+        compare s7, length_of_the_input
+        jump nc, end_of_the_check_if_we_already_tried_that_character_loop
+        fetch s6, (s7)
+        compare s6, character_we_try_to_add
+        jump nz, third_characters_are_not_equal_label
+          load s8, 1
+        third_characters_are_not_equal_label:
+        add s7, 1
+        jump check_if_we_already_tried_that_character_loop
+      end_of_the_check_if_we_already_tried_that_character_loop:
+      test s8, s8
+      jump nz, dont_add_the_new_character
       jump NDEBUG ? dont_print_the_character_we_are_trying_to_add : print_the_character_we_are_trying_to_add
       print_the_character_we_are_trying_to_add:
         call print_we_are_trying_to_add_message
@@ -207,6 +223,7 @@ beginning_of_the_permutations_loop:
         load s2, length_of_the_current_attempt
         add s2, 1
         store s2, (s1)
+        add s1, 1
         load s3, address_of_the_current_attempt + 1
         copying_the_new_attempt_loop:
           load s5, address_of_the_current_attempt + 1
@@ -219,6 +236,9 @@ beginning_of_the_permutations_loop:
           add s1, 1
           jump copying_the_new_attempt_loop
         end_of_the_copying_the_new_attempt_loop:
+        load s1, top_of_the_stack
+        add s1, length_of_the_current_attempt
+        add s1, 1
         store character_we_try_to_add, (s1)
         add top_of_the_stack, length_of_the_input
         add top_of_the_stack, 1
@@ -875,13 +895,19 @@ print_found_a_solution_message:
   call UART_TX
   load s9, " "
   call UART_TX
-  load s9, "s"
+  load s9, "p"
   call UART_TX
-  load s9, "o"
+  load s9, "e"
   call UART_TX
-  load s9, "l"
+  load s9, "r"
+  call UART_TX
+  load s9, "m"
   call UART_TX
   load s9, "u"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "a"
   call UART_TX
   load s9, "t"
   call UART_TX
