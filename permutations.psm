@@ -1,0 +1,295 @@
+base_decimal
+
+constant NDEBUG, 0
+constant address_of_the_current_attempt, 8
+constant bottom_of_the_stack, 16
+
+address 0
+
+namereg sf, length_of_the_input
+
+call print_the_introduction_message
+load length_of_the_input, 0
+beginning_of_the_input_loop:
+  call UART_RX
+  compare s9, a'x ;The new-line character.
+  jump z, end_of_the_input_loop
+  store s9, (length_of_the_input)
+  add length_of_the_input, 1
+  jump beginning_of_the_input_loop
+end_of_the_input_loop:
+compare length_of_the_input, 0
+jump z, 0
+
+beginning_of_the_bubble_sort:
+  load s4, 0 ;A boolean indicating
+             ;whether a swap has been
+             ;performed.
+  load s0, 0
+  inner_bubble_sort_loop:
+    load s1, length_of_the_input
+    sub s1, 1
+    compare s0, s1
+    jump nc, end_of_the_inner_bubble_sort_loop
+    load s1, s0
+    add s1, 1
+    fetch s2, (s0)
+    fetch s3, (s1)
+    compare s3, s2
+    jump nc, do_not_swap
+      store s3, (s0)
+      store s2, (s1)
+      load s4, 1
+    do_not_swap:
+    add s0, 1
+    jump inner_bubble_sort_loop
+  end_of_the_inner_bubble_sort_loop:
+  compare s4, 0
+  jump nz, beginning_of_the_bubble_sort
+end_of_the_bubble_sort_loop:
+
+jump NDEBUG ? the_permutations_algorithm : printing_the_sorted_array
+printing_the_sorted_array:
+call print_the_sorted_array_message
+load s0, 0
+printing_the_sorted_array_loop:
+  compare s0, length_of_the_input
+  jump nc, end_of_the_printing_the_sorted_array_loop
+  fetch s9, (s0)
+  call UART_TX
+  add s0, 1
+  jump printing_the_sorted_array_loop
+end_of_the_printing_the_sorted_array_loop:
+load s9, a'x
+call UART_TX
+
+the_permutations_algorithm:
+namereg se, top_of_the_stack
+load top_of_the_stack, bottom_of_the_stack
+load s0, 0
+store s0, (top_of_the_stack)
+add top_of_the_stack, length_of_the_input
+add top_of_the_stack, 1
+beginning_of_the_permutations_loop:
+  compare top_of_the_stack, bottom_of_the_stack
+  jump z, end_of_the_permutations_loop
+  sub top_of_the_stack, length_of_the_input
+  sub top_of_the_stack, 1
+  namereg sd, length_of_the_current_attempt
+  fetch length_of_the_current_attempt, (top_of_the_stack)
+  load s0, address_of_the_current_attempt
+  store length_of_the_current_attempt, (s0)
+  load s1, 0
+  copying_the_current_attempt_from_the_stack_loop:
+    compare s1, length_of_the_current_attempt
+    jump nc, end_of_copying
+    load s0, address_of_the_current_attempt
+    add s0, s1
+    add s0, 1
+    load s3, top_of_the_stack
+    add s3, s1
+    add s3, 1
+    fetch s4, (s3)
+    store s4, (s0)
+    add s1, 1
+    jump copying_the_current_attempt_from_the_stack_loop
+  end_of_copying:
+  jump NDEBUG ? dont_print_the_current_attempt : print_the_current_attempt
+  print_the_current_attempt:
+  call print_the_current_attempt_message
+  load s0, address_of_the_current_attempt + 1
+  printing_the_current_attempt_loop:
+    load s1, address_of_the_current_attempt + 1
+    add s1, length_of_the_current_attempt
+    compare s0, s1
+    jump nc, end_of_the_printing_the_current_attempt_loop
+    fetch s9, (s0)
+    call UART_TX
+    add s0, 1
+    jump printing_the_current_attempt_loop
+  end_of_the_printing_the_current_attempt_loop:
+  load s9, a'x
+  call UART_TX
+  dont_print_the_current_attempt:
+  compare length_of_the_current_attempt, length_of_the_input
+  jump c, current_attempt_is_not_a_solution
+    call print_found_a_solution_message
+    load s0, address_of_the_current_attempt + 1
+    printing_the_solution_loop:
+      load s1, address_of_the_current_attempt + 1
+      add s1, length_of_the_current_attempt
+      compare s0, s1
+      jump nc, end_of_the_printing_the_solution_loop
+      fetch s9, (s0)
+      call UART_TX
+      add s0, 1
+      jump printing_the_solution_loop
+    end_of_the_printing_the_solution_loop:
+    load s9, a'x
+    call UART_TX
+  jump end_of_the_branching
+  current_attempt_is_not_a_solution:
+    load s0, length_of_the_input
+    sub s0, 1
+    add_a_new_character_loop:
+      compare s0, ff'x ;Overflow
+      jump z, end_of_the_add_a_new_character_loop
+      namereg sc, character_we_try_to_add
+      fetch character_we_try_to_add, (s0)
+      jump NDEBUG ? print_the_character_we_are_trying_to_add : dont_print_the_character_we_are_trying_to_add
+      print_the_character_we_are_trying_to_add:
+        call print_we_are_trying_to_add_message
+        load s9, character_we_try_to_add
+        call UART_TX
+        load s9, a'x
+        call UART_TX
+      dont_print_the_character_we_are_trying_to_add:
+      load s2, 0 ; How many of the chosen character are present in the current attempt.
+      load s1, address_of_the_current_attempt + 1
+      count_in_the_current_attempt_loop:
+        load s4, address_of_the_current_attempt + 1
+        add s4, length_of_the_current_attempt
+        compare s1, s4
+        jump z, end_of_the_count_in_the_current_attempt_loop
+        fetch s4, (s1)
+        compare s4, character_we_try_to_add
+        jump nz, first_the_characters_are_not_equal_label
+          add s2, 1
+        first_the_characters_are_not_equal_label:
+        add s1, 1
+        jump count_in_the_current_attempt_loop
+      end_of_the_count_in_the_current_attempt_loop:
+      jump NDEBUG ? dont_print_how_many_in_the_current_attempt : print_how_many_in_the_current_attempt
+      print_how_many_in_the_current_attempt:
+        call print_the_current_attempt_count_message
+        load s9, s2
+        add s9, "0"
+        call UART_TX
+        load s9, a'x
+        call UART_TX
+      dont_print_how_many_in_the_current_attempt:
+      load s3, 0 ; How many of the chosen character are present in the input.
+      load s1, 0
+      count_in_the_input_loop:
+        compare s1, length_of_the_input
+        jump z, end_of_the_count_in_the_input_loop
+        fetch s4, (s1)
+        compare s4, character_we_try_to_add
+        jump nz, second_the_characters_are_not_equal_label
+          add s3, 1
+        second_the_characters_are_not_equal_label:
+        add s1, 1
+        jump count_in_the_input_loop
+      end_of_the_count_in_the_input_loop:
+      jump NDEBUG ? dont_print_how_many_in_the_input : print_how_many_in_the_input
+      print_how_many_in_the_input:
+        call print_count_in_the_input_message
+        load s9, s3
+        add s9, "0"
+        call UART_TX
+        load s9, a'x
+        call UART_TX
+      dont_print_how_many_in_the_input:
+      compare s2, s3
+      jump nc, dont_add_the_new_character
+        load s1, NDEBUG
+        test s1, s1
+        call z, print_the_we_are_adding_the_new_character_message
+        load s1, top_of_the_stack
+        load s2, length_of_the_current_attempt
+        add s2, 1
+        store s2, (s1)
+        load s3, address_of_the_current_attempt + 1
+        copying_the_new_attempt_loop:
+          load s5, address_of_the_current_attempt + 1
+          add s5, length_of_the_current_attempt
+          compare s3, s5
+          jump z, end_of_the_copying_the_new_attempt_loop
+          fetch s4, (s3)
+          store s4, (s1)
+          add s3, 1
+          add s1, 1
+          jump copying_the_new_attempt_loop
+        end_of_the_copying_the_new_attempt_loop:
+        store character_we_try_to_add, (s1)
+        add top_of_the_stack, length_of_the_input
+        add top_of_the_stack, 1
+      dont_add_the_new_character:
+      sub s0, 1
+      jump add_a_new_character_loop
+    end_of_the_add_a_new_character_loop:
+  jump end_of_the_branching
+  end_of_the_branching:
+  jump beginning_of_the_permutations_loop
+end_of_the_permutations_loop:
+call print_the_end_message
+jump 0
+
+print_the_introduction_message:
+return
+
+print_the_sorted_array_message:
+return
+
+print_the_current_attempt_message:
+return
+
+print_we_are_trying_to_add_message:
+return
+
+print_the_current_attempt_count_message:
+return
+
+print_count_in_the_input_message:
+return
+
+print_the_we_are_adding_the_new_character_message:
+return
+
+print_found_a_solution_message:
+return
+
+print_the_end_message:
+return
+
+;Now follows some boilerplate code
+;we use in our Computer Architecture
+;classes...
+CONSTANT LED_PORT,         00
+CONSTANT HEX1_PORT,        01
+CONSTANT HEX2_PORT,        02
+CONSTANT UART_TX_PORT,     03
+CONSTANT UART_RESET_PORT,  04
+CONSTANT SW_PORT,          00
+CONSTANT BTN_PORT,         01
+CONSTANT UART_STATUS_PORT, 02
+CONSTANT UART_RX_PORT,     03
+; Tx data_present
+CONSTANT U_TX_D, 00000001'b
+; Tx FIFO half_full
+CONSTANT U_TX_H, 00000010'b
+; TxFIFO full
+CONSTANT U_TX_F, 00000100'b
+; Rxdata_present
+CONSTANT U_RX_D, 00001000'b
+; RxFIFO half_full
+CONSTANT U_RX_H, 00010000'b
+; RxFIFO full
+CONSTANT U_RX_F, 00100000'b
+
+UART_RX:
+  INPUT sA, UART_STATUS_PORT
+  TEST  sA, U_RX_D
+  JUMP  NZ, input_not_empty
+  LOAD  s0, s0
+  JUMP UART_RX
+  input_not_empty:
+  INPUT s9, UART_RX_PORT
+RETURN
+
+UART_TX:
+  INPUT  sA, UART_STATUS_PORT
+  TEST   sA, U_TX_F
+  JUMP   NZ, UART_TX
+  OUTPUT s9, UART_TX_PORT
+RETURN
