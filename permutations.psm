@@ -1,3 +1,5 @@
+;A very advanced example: Implementing the permutations algorithm in PicoBlaze assembly.
+
 base_decimal
 
 constant NDEBUG, 0
@@ -96,6 +98,12 @@ beginning_of_the_permutations_loop:
   end_of_copying:
   jump NDEBUG ? dont_print_the_current_attempt : print_the_current_attempt
   print_the_current_attempt:
+  call print_the_length_of_the_current_attempt_message
+  load s9, length_of_the_current_attempt
+  add s9, "0"
+  call UART_TX
+  load s9, a'x
+  call UART_TX
   call print_the_current_attempt_message
   load s0, address_of_the_current_attempt + 1
   printing_the_current_attempt_loop:
@@ -136,7 +144,7 @@ beginning_of_the_permutations_loop:
       jump z, end_of_the_add_a_new_character_loop
       namereg sc, character_we_try_to_add
       fetch character_we_try_to_add, (s0)
-      jump NDEBUG ? print_the_character_we_are_trying_to_add : dont_print_the_character_we_are_trying_to_add
+      jump NDEBUG ? dont_print_the_character_we_are_trying_to_add : print_the_character_we_are_trying_to_add
       print_the_character_we_are_trying_to_add:
         call print_we_are_trying_to_add_message
         load s9, character_we_try_to_add
@@ -226,30 +234,763 @@ call print_the_end_message
 jump 0
 
 print_the_introduction_message:
+  load s9, "E"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "p"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "."
+  call UART_TX
+  load s9, a'x
+  call UART_TX
 return
 
 print_the_sorted_array_message:
+  load s9, "A"
+  call UART_TX
+  load s9, "f"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "B"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "b"
+  call UART_TX
+  load s9, "b"
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "S"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "m"
+  call UART_TX
+  load s9, ","
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "p"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "k"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "k"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
 return
 
 print_the_current_attempt_message:
+  load s9, "T"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "m"
+  call UART_TX
+  load s9, "p"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
 return
 
 print_we_are_trying_to_add_message:
+  load s9, "W"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "y"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, " "
+  call UART_TX
 return
 
 print_the_current_attempt_count_message:
+  load s9, "T"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "f"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "m"
+  call UART_TX
+  load s9, "p"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
 return
 
 print_count_in_the_input_message:
+  load s9, "T"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "f"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "p"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
 return
 
 print_the_we_are_adding_the_new_character_message:
+  load s9, "W"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "w"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "y"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "."
+  call UART_TX
+  load s9, a'x
+  call UART_TX
 return
 
 print_found_a_solution_message:
+  load s9, "F"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, " "
+  call UART_TX
 return
 
 print_the_end_message:
+  load s9, "T"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "d"
+  call UART_TX
+  load s9, "!"
+  call UART_TX
+  load s9, a'x
+  call UART_TX
+return
+
+print_the_length_of_the_current_attempt_message:
+    load s9, "T"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "l"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "g"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "o"
+  call UART_TX
+  load s9, "f"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "h"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "c"
+  call UART_TX
+  load s9, "u"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "r"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "n"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "a"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, "e"
+  call UART_TX
+  load s9, "m"
+  call UART_TX
+  load s9, "p"
+  call UART_TX
+  load s9, "t"
+  call UART_TX
+  load s9, " "
+  call UART_TX
+  load s9, "i"
+  call UART_TX
+  load s9, "s"
+  call UART_TX
+  load s9, " "
+  call UART_TX
 return
 
 ;Now follows some boilerplate code
