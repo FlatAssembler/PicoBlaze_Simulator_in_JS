@@ -194,4 +194,65 @@ load s9, ":"
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("0193a");
   });
+
+test("The \"print_string\" pseudo-mnemonic works", () => {
+const assembly = `
+address 0
+print_string "Hello world!", s9, UART_TX
+load s9, a
+call UART_TX
+infinite_loop: jump infinite_loop
+
+;Now follows some boilerplate code
+;we use in our Computer Architecture
+;classes...
+CONSTANT LED_PORT,         00
+CONSTANT HEX1_PORT,        01
+CONSTANT HEX2_PORT,        02
+CONSTANT UART_TX_PORT,     03
+CONSTANT UART_RESET_PORT,  04
+CONSTANT SW_PORT,          00
+CONSTANT BTN_PORT,         01
+CONSTANT UART_STATUS_PORT, 02
+CONSTANT UART_RX_PORT,     03
+; Tx data_present
+CONSTANT U_TX_D, 00000001'b
+; Tx FIFO half_full
+CONSTANT U_TX_H, 00000010'b
+; TxFIFO full
+CONSTANT U_TX_F, 00000100'b
+; Rxdata_present
+CONSTANT U_RX_D, 00001000'b
+; RxFIFO half_full
+CONSTANT U_RX_H, 00010000'b
+; RxFIFO full
+CONSTANT U_RX_F, 00100000'b
+
+UART_RX:
+  INPUT sA, UART_STATUS_PORT
+  TEST  sA, U_RX_D
+  JUMP  NZ, input_not_empty
+  LOAD  s0, s0
+  JUMP UART_RX
+  input_not_empty:
+  INPUT s9, UART_RX_PORT
+RETURN
+
+UART_TX:
+  INPUT  sA, UART_STATUS_PORT
+  TEST   sA, U_TX_F
+  JUMP   NZ, UART_TX
+  OUTPUT s9, UART_TX_PORT
+RETURN
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("01948"); // H
+    expect(machineCode[2].hex).toBe("01965"); // e
+    expect(machineCode[4].hex).toBe("0196c"); // l
+    expect(machineCode[6].hex).toBe("0196c"); // l
+    expect(machineCode[8].hex).toBe("0196f"); // o
+  });
 });
