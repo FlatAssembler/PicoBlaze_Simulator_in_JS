@@ -22,4 +22,5 @@ const preprocessor = [
   "ENDWHILE",
   "BASE_DECIMAL",
   "BASE_HEXADECIMAL",
+  "PRINT_STRING",
 ];

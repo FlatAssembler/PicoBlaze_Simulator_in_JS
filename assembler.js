@@ -114,20 +114,27 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
     if (/^BASE_HEXADECIMAL$/i.test(node_of_depth_1.text)) {
       default_base_of_literals_in_assembly = 16;
       if (node_of_depth_1.children.length == 1) {
-        default_base_of_literals_in_assembly=node_of_depth_1.children[0].interpretAsArithmeticExpression(output_of_preprocessor.constants);
-      }
-      else if (node_of_depth_1.children.length != 0) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/35
-        alert("Line " + node_of_depth_1.lineNumber + ': The "BASE_HEXADECIMAL" pseudo-mnemonic should have 0 or 1 arguments.');
+        default_base_of_literals_in_assembly =
+            node_of_depth_1.children[0].interpretAsArithmeticExpression(
+                output_of_preprocessor.constants);
+      } else if (
+          node_of_depth_1.children.length !=
+          0) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/35
+        alert(
+            "Line " + node_of_depth_1.lineNumber +
+            ': The "BASE_HEXADECIMAL" pseudo-mnemonic should have 0 or 1 arguments.');
         return;
       }
-    }
-    else if (/^BASE_DECIMAL$/i.test(node_of_depth_1.text)) {
+    } else if (/^BASE_DECIMAL$/i.test(node_of_depth_1.text)) {
       default_base_of_literals_in_assembly = 10;
       if (node_of_depth_1.children.length == 1) {
-        default_base_of_literals_in_assembly=node_of_depth_1.children[0].interpretAsArithmeticExpression(output_of_preprocessor.constants);
-      }
-      else if (node_of_depth_1.children.length != 0) {
-        alert("Line " + node_of_depth_1.lineNumber + ': The "BASE_DECIMAL" pseudo-mnemonic should have 0 or 1 arguments.');
+        default_base_of_literals_in_assembly =
+            node_of_depth_1.children[0].interpretAsArithmeticExpression(
+                output_of_preprocessor.constants);
+      } else if (node_of_depth_1.children.length != 0) {
+        alert(
+            "Line " + node_of_depth_1.lineNumber +
+            ': The "BASE_DECIMAL" pseudo-mnemonic should have 0 or 1 arguments.');
         return;
       }
     }
@@ -137,7 +144,23 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
     else if (/^address$/i.test(node_of_depth_1.text))
       address = node_of_depth_1.children[0].interpretAsArithmeticExpression(
           output_of_preprocessor.constants);
-    else if (/^load$/i.test(node_of_depth_1.text)) {
+    else if (/^print_string$/i.test(node_of_depth_1.text)) {
+      for (let i = 1; i < node_of_depth_1.children[0].text.length - 1; i++) {
+        machineCode[address].hex = "01";
+        machineCode[address].hex +=
+            node_of_depth_1.children[2].getRegisterNumber(
+                output_of_preprocessor.namedRegisters);
+        machineCode[address].hex +=
+            formatAsByte(node_of_depth_1.children[0].text.charCodeAt(i));
+        machineCode[address].line = node_of_depth_1.lineNumber;
+        address++;
+        machineCode[address].hex = "20";
+        machineCode[address].hex += node_of_depth_1.children[4].getLabelAddress(
+            output_of_preprocessor.labels, output_of_preprocessor.constants);
+        machineCode[address].line = node_of_depth_1.lineNumber;
+        address++;
+      }
+    } else if (/^load$/i.test(node_of_depth_1.text)) {
       if (!check_if_there_are_three_child_nodes_and_the_second_one_is_comma())
         return;
       if (node_of_depth_1.children[0].getRegisterNumber(
