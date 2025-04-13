@@ -179,4 +179,19 @@ end_of_branching:
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("22004");
   });
+
+  test("Strings containing the colon tokenize correctly", () => { // This was once crashing the assembler: https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/39
+    const assembly = `
+;This is an example program showing how
+;":" doesn't tokenize correctly.
+
+address 0
+load s9, ":"
+    `;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("0193a");
+  });
 });
