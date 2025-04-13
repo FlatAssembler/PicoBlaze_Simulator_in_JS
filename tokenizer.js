@@ -74,7 +74,7 @@ function tokenize(input) {
       currentToken = "";
       continue;
     }
-    if (input[i] == ":") {
+    if (input[i] == ":" && !areWeInAString) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/39
       tokenized.push(new TreeNode(currentToken + ":", currentLine));
       currentToken = "";
       continue;
