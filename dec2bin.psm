@@ -224,20 +224,9 @@ printing_the_decimal_loop:
   add pointer, 1
   jump printing_the_decimal_loop
 end_of_printing_the_decimal:
-;After you have repeated the decimal
-;number, print the string "_(10)=".
-load s9, "_"
-call UART_TX
-load s9, "("
-call UART_TX
-load s9, "1"
-call UART_TX
-load s9, "0"
-call UART_TX
-load s9, ")"
-call UART_TX
-load s9, "="
-call UART_TX
+;The following line will only assemble
+;using v5.3.0 or newer
+print_string "_(10)=", s9, UART_TX
 ;If the number to be printed is
 ;equal to zero, print 0.
 sub  s0, 0
@@ -300,17 +289,7 @@ beginning_of_printing_loop:
   ;stored in RAM.
   jump beginning_of_printing_loop
 end_of_printing_loop:
-;After you have printed that binary
-;number, print the string "_(2)" and
-;a new-line.
-load s9, "_"
-call UART_TX
-load s9, "("
-call UART_TX
-load s9, "2"
-call UART_TX
-load s9, ")"
-call UART_TX
+print_string "_(2)", s9, UART_TX
 load s9, a ;<span id="newline_character">newline character</a>, 0xa=='\n'.
 ;The last line is being highlighted
 ;incorrectly by the syntax
@@ -339,82 +318,7 @@ multiply_by_10:
 return
 
 number_too_big:
-  load s9, "T"
-  call UART_TX
-  load s9, "h"
-  call UART_TX
-  load s9, "e"
-  call UART_TX
-  load s9, " "
-  call UART_TX
-  load s9, "e"
-  call UART_TX
-  load s9, "n"
-  call UART_TX
-  load s9, "t"
-  call UART_TX
-  load s9, "e"
-  call UART_TX
-  load s9, "r"
-  call UART_TX
-  load s9, "e"
-  call UART_TX
-  load s9, "d"
-  call UART_TX
-  load s9, " "
-  call UART_TX
-  load s9, "n"
-  call UART_TX
-  load s9, "u"
-  call UART_TX
-  load s9, "m"
-  call UART_TX
-  load s9, "b"
-  call UART_TX
-  load s9, "e"
-  call UART_TX
-  load s9, "r"
-  call UART_TX
-  load s9, " "
-  call UART_TX
-  load s9, "i"
-  call UART_TX
-  load s9, "s"
-  call UART_TX
-  load s9, " "
-  call UART_TX
-  load s9, "b"
-  call UART_TX
-  load s9, "i"
-  call UART_TX
-  load s9, "g"
-  call UART_TX
-  load s9, "g"
-  call UART_TX
-  load s9, "e"
-  call UART_TX
-  load s9, "r"
-  call UART_TX
-  load s9, " "
-  call UART_TX
-  load s9, "t"
-  call UART_TX
-  load s9, "h"
-  call UART_TX
-  load s9, "a"
-  call UART_TX
-  load s9, "n"
-  call UART_TX
-  load s9, " "
-  call UART_TX
-  load s9, "2"
-  call UART_TX
-  load s9, "5"
-  call UART_TX
-  load s9, "5"
-  call UART_TX
-  load s9, "!"
-  call UART_TX
+  print_string "The entered number is bigger than 255!", s9, UART_TX
   load s9, a ;newline
   call UART_TX
   jump infinite_loop
