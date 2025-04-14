@@ -115,7 +115,8 @@ function highlightToken(token) {
   if (token[0] === '"')
     return `<span class="string">${token}</span>`;
   if (/^(\d|[a-f])+$/i.test(token) || /\'d$/.test(token) ||
-      /\'b$/.test(token) || /\'o$/.test(token))
+      /\'b$/.test(token) || /\'o$/.test(token) ||
+      /\'x$/.test(token))
     return `<span class="number">${token}</span>`;
   return token;
 }
