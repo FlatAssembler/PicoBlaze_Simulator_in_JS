@@ -5,12 +5,14 @@ base_decimal
 
 constant NDEBUG, 1
 constant address_of_the_current_attempt, 8
-constant bottom_of_the_stack, 16
+constant digits_of_the_ordinal_number, 16
+constant bottom_of_the_stack, 24
 
 address 0
 
 namereg sf, length_of_the_input
 
+regbank a
 call print_the_introduction_message
 load length_of_the_input, 0
 beginning_of_the_input_loop:
@@ -67,6 +69,21 @@ load s9, a'x
 call UART_TX
 
 the_permutations_algorithm:
+
+;Let's set all the digits of the ordinal number of permutations to "0"
+regbank b
+load s0, digits_of_the_ordinal_number
+load s2, digits_of_the_ordinal_number ;End of the digits of the ordinal number.
+reset_ordinal_numbers_loop:
+  compare s0, bottom_of_the_stack
+  jump nc, end_of_the_reset_ordinal_numbers_loop
+  load s1, "0"
+  store s1, (s0)
+  add s0, 1
+  jump reset_ordinal_numbers_loop
+end_of_the_reset_ordinal_numbers_loop:
+regbank a
+
 namereg se, top_of_the_stack
 load top_of_the_stack, bottom_of_the_stack
 load s0, 0
@@ -136,6 +153,35 @@ beginning_of_the_permutations_loop:
     end_of_the_printing_the_solution_loop:
     load s9, a'x
     call UART_TX
+    regbank b
+    call print_the_ordinal_number_message
+    load s1, digits_of_the_ordinal_number
+    increasing_the_ordinal_number_loop:
+      fetch s0, (s1)
+      add s0, 1
+      store s0, (s1)
+      compare s0, "9" + 1
+      jump nz, end_of_increasing_the_ordinal_number_loop
+      load s0, "0"
+      store s0, (s1)
+      add s1, 1
+      jump increasing_the_ordinal_number_loop
+    end_of_increasing_the_ordinal_number_loop:
+    compare s1, s2
+    jump c, not_a_new_digit
+      load s2, s1
+    not_a_new_digit:
+    load s1, s2
+    printing_the_ordinal_number:
+      fetch s9, (s1)
+      call UART_TX
+      sub s1, 1
+      compare s1, digits_of_the_ordinal_number
+      jump nc, printing_the_ordinal_number
+    end_of_printing_the_ordinal_number:
+    load s9, a'x
+    call UART_TX
+    regbank a
   jump end_of_the_branching
   current_attempt_is_not_a_solution:
     load s0, length_of_the_input
@@ -296,6 +342,10 @@ return
 
 print_the_length_of_the_current_attempt_message:
   print_string "The length of the current attempt is: ", s9, UART_TX
+return
+
+print_the_ordinal_number_message:
+  print_string "That's the permutation #", s9, UART_TX
 return
 
 base_hexadecimal
