@@ -390,3 +390,7 @@ UART_TX:
   JUMP   NZ, UART_TX
   OUTPUT s9, UART_TX_PORT
 RETURN
+
+;You may also be interested in <a href="https://flatassembler.github.io/permutationsTest.html">my implementation of the same algorithm in WebAssembly</a>.
+;I've also opened <a href="https://codereview.stackexchange.com/q/295882/219010">a StackExchange thread about this program</a>.
+
