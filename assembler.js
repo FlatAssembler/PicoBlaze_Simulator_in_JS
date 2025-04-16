@@ -146,8 +146,9 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
           output_of_preprocessor.constants);
     else if (/^print_string$/i.test(node_of_depth_1.text)) {
       if (node_of_depth_1.children.length !== 5) {
-        alert("Line #" + node_of_depth_1.lineNumber +
-              ": The 'print_string' node should have exactly five (5) child nodes!");
+        alert(
+            "Line #" + node_of_depth_1.lineNumber +
+            ": The 'print_string' node should have exactly five (5) child nodes!");
         return;
       }
       if (node_of_depth_1.children[1].text !== ",") {
@@ -177,11 +178,13 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
       }
       for (let i = 1; i < node_of_depth_1.children[0].text.length - 1; i++) {
         if (node_of_depth_1.children[0].text.charCodeAt(i) > 255) {
-          alert("Line #" + node_of_depth_1.lineNumber + ": The character '" + node_of_depth_1.text[i] + "' is not a valid ASCII character!");
+          alert("Line #" + node_of_depth_1.lineNumber + ": The character '" +
+                node_of_depth_1.text[i] + "' is not a valid ASCII character!");
           return;
         }
         if (node_of_depth_1.children[0].text.charCodeAt(i) < 0) {
-          alert("Line #" + node_of_depth_1.lineNumber + ": The character '" + node_of_depth_1.text[i] + "' is not a valid ASCII character!");
+          alert("Line #" + node_of_depth_1.lineNumber + ": The character '" +
+                node_of_depth_1.text[i] + "' is not a valid ASCII character!");
           return;
         }
         machineCode[address].hex = "01";
@@ -190,7 +193,11 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
                 output_of_preprocessor.namedRegisters);
         machineCode[address].hex +=
             formatAsByte(node_of_depth_1.children[0].text.charCodeAt(i));
-        machineCode[address].line = node_of_depth_1.lineNumber;
+        machineCode[address].line =
+            node_of_depth_1
+                .lineNumber; // Is this actually a good idea? I've asked a
+                             // question about that at StackExchange:
+                             // https://langdev.stackexchange.com/q/4378/330
         address++;
         machineCode[address].hex = "20";
         machineCode[address].hex += node_of_depth_1.children[4].getLabelAddress(
