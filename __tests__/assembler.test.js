@@ -248,11 +248,33 @@ RETURN
     const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
     const compilation_context =
         preprocessor.makeCompilationContext(abstract_syntax_tree);
+    const call_UART_TX="20"+formatAsAddress(compilation_context.labels.get("UART_TX")); 
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("01948"); // H
+    expect(machineCode[1].hex).toBe(call_UART_TX);
     expect(machineCode[2].hex).toBe("01965"); // e
+    expect(machineCode[3].hex).toBe(call_UART_TX);
     expect(machineCode[4].hex).toBe("0196c"); // l
+    expect(machineCode[5].hex).toBe(call_UART_TX);
     expect(machineCode[6].hex).toBe("0196c"); // l
+    expect(machineCode[7].hex).toBe(call_UART_TX);
     expect(machineCode[8].hex).toBe("0196f"); // o
+    expect(machineCode[9].hex).toBe(call_UART_TX);
+    expect(machineCode[10].hex).toBe("01920"); //  (space)
+    expect(machineCode[11].hex).toBe(call_UART_TX);
+    expect(machineCode[12].hex).toBe("01977"); // w
+    expect(machineCode[13].hex).toBe(call_UART_TX);
+    expect(machineCode[14].hex).toBe("0196f"); // o
+    expect(machineCode[15].hex).toBe(call_UART_TX);
+    expect(machineCode[16].hex).toBe("01972"); // r
+    expect(machineCode[17].hex).toBe(call_UART_TX);
+    expect(machineCode[18].hex).toBe("0196c"); // l
+    expect(machineCode[19].hex).toBe(call_UART_TX);
+    expect(machineCode[20].hex).toBe("01964"); // d
+    expect(machineCode[21].hex).toBe(call_UART_TX);
+    expect(machineCode[22].hex).toBe("01921"); // !
+    expect(machineCode[23].hex).toBe(call_UART_TX);
+    expect(machineCode[24].hex).toBe("0190a"); // new-line character
+    expect(machineCode[25].hex).toBe(call_UART_TX);
   });
 });
