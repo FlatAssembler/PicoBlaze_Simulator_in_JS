@@ -73,7 +73,7 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
   }
   machineCode = [];
   for (let i = 0; i < 4096; i++)
-    machineCode.push({hex : "00000", line : 0});
+    machineCode.push({hex : "00000", line : 0, disableBreakpoint : false});
   let address = 0;
   default_base_of_literals_in_assembly = 16;
   for (const node_of_depth_1 of root_of_abstract_syntax_tree.children) {
@@ -198,11 +198,17 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
                 .lineNumber; // Is this actually a good idea? I've asked a
                              // question about that at StackExchange:
                              // https://langdev.stackexchange.com/q/4378/330
+        if (i > 1) {
+          machineCode[address].disableBreakpoint = true;
+        } else {
+          machineCode[address].disableBreakpoint = false;
+        }
         address++;
         machineCode[address].hex = "20";
         machineCode[address].hex += node_of_depth_1.children[4].getLabelAddress(
             output_of_preprocessor.labels, output_of_preprocessor.constants);
         machineCode[address].line = node_of_depth_1.lineNumber;
+        machineCode[address].disableBreakpoint = true;
         address++;
       }
     } else if (/^load$/i.test(node_of_depth_1.text)) {
