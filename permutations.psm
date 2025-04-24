@@ -26,32 +26,31 @@ end_of_the_input_loop:
 compare length_of_the_input, 0
 jump z, 0
 
+;An improved version of BubbleSort written by <a href="https://codereview.stackexchange.com/a/295950">Sep Roland</a>...
 beginning_of_the_bubble_sort:
-  load s4, 0 ;A boolean indicating
-             ;whether a swap has been
-             ;performed.
-  load s0, 0
+    load    s5, length_of_the_input
+  outer_bubble_sort_loop:
+    sub     s5, 1
+    jump    z,  end_of_the_bubble_sort
+    load    s4, 0 ; Indicates swap(s) performed.
+    load    s1, 0
   inner_bubble_sort_loop:
-    load s1, length_of_the_input
-    sub s1, 1
-    compare s0, s1
-    jump nc, end_of_the_inner_bubble_sort_loop
-    load s1, s0
-    add s1, 1
-    fetch s2, (s0)
-    fetch s3, (s1)
+    compare s1, s5
+    jump    nc, end_of_the_inner_bubble_sort_loop
+    load    s0, s1
+    add     s1, 1
+    fetch   s2, (s0)
+    fetch   s3, (s1)
     compare s3, s2
-    jump nc, do_not_swap
-      store s3, (s0)
-      store s2, (s1)
-      load s4, 1
-    do_not_swap:
-    add s0, 1
-    jump inner_bubble_sort_loop
+    jump    nc, inner_bubble_sort_loop
+    store   s3, (s0)
+    store   s2, (s1)
+    load    s4, 1
+    jump    inner_bubble_sort_loop
   end_of_the_inner_bubble_sort_loop:
-  compare s4, 0
-  jump nz, beginning_of_the_bubble_sort
-end_of_the_bubble_sort_loop:
+    test    s4, s4
+    jump    nz, outer_bubble_sort_loop
+end_of_the_bubble_sort:
 
 jump NDEBUG ? the_permutations_algorithm : printing_the_sorted_array
 printing_the_sorted_array:
