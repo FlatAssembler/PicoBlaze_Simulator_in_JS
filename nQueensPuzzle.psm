@@ -1,0 +1,293 @@
+;This is my attempt to solve the <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">Eight queens puzzle</a> in PicoBlaze assembly.
+;My guess is that it will eventually print the correct result "92", but that it is very slow.
+
+base_decimal
+
+address 0
+
+constant NDEBUG, 0
+constant size_of_the_chessboard, 8
+constant address_of_the_current_attempt, 0
+constant digits_of_the_ordinal_number, 10
+constant bottom_of_the_stack, 16
+
+;Let's set all the digits of the ordinal number of permutations to "0"
+regbank b
+load s0, digits_of_the_ordinal_number
+load s2, digits_of_the_ordinal_number ;End of the digits of the ordinal number.
+reset_ordinal_numbers_loop:
+  compare s0, bottom_of_the_stack
+  jump nc, end_of_the_reset_ordinal_numbers_loop
+  load s1, "0"
+  store s1, (s0)
+  add s0, 1
+  jump reset_ordinal_numbers_loop
+end_of_the_reset_ordinal_numbers_loop:
+regbank a
+
+namereg sf, top_of_the_stack
+
+load top_of_the_stack, bottom_of_the_stack
+load s0, 0
+store s0, (top_of_the_stack)
+add top_of_the_stack, size_of_the_chessboard + 1
+
+main_loop:
+  compare top_of_the_stack, bottom_of_the_stack
+  jump z, end_of_the_main_loop
+  sub top_of_the_stack, size_of_the_chessboard + 1
+  
+  namereg se, length_of_the_current_attempt
+  fetch length_of_the_current_attempt, (top_of_the_stack)
+  load s0, address_of_the_current_attempt
+  store length_of_the_current_attempt, (s0)
+  load s1, top_of_the_stack
+  load s2, 0
+  
+  copying_the_current_attempt_from_the_stack_loop:
+    compare s2, length_of_the_current_attempt
+    jump z, end_of_copying_the_current_attempt_from_the_stack_loop
+    add s2, 1
+    add s0, 1
+    add s1, 1
+    fetch s3, (s1)
+    store s3, (s0)
+    jump copying_the_current_attempt_from_the_stack_loop
+  end_of_copying_the_current_attempt_from_the_stack_loop:
+  
+  load s0, NDEBUG
+  test s0, s0
+  jump nz, dont_print_the_current_attempt
+  
+  print_string "The current attempt is: ", s9, UART_TX
+  call print_the_current_attempt
+  dont_print_the_current_attempt:
+  
+  compare length_of_the_current_attempt, size_of_the_chessboard
+  jump nz, not_a_solution
+    print_string "Found a solution: ", s9, UART_TX
+    call print_the_current_attempt
+    regbank b
+    print_string "That's the solution #", s9, UART_TX
+    load s1, digits_of_the_ordinal_number
+    increasing_the_ordinal_number_loop:
+      fetch s0, (s1)
+      add s0, 1
+      store s0, (s1)
+      compare s0, "9" + 1
+      jump nz, end_of_increasing_the_ordinal_number_loop
+      load s0, "0"
+      store s0, (s1)
+      add s1, 1
+      jump increasing_the_ordinal_number_loop
+    end_of_increasing_the_ordinal_number_loop:
+    compare s1, s2
+    jump c, not_a_new_digit
+      load s2, s1
+    not_a_new_digit:
+    load s1, s2
+    printing_the_ordinal_number:
+      fetch s9, (s1)
+      call UART_TX
+      sub s1, 1
+      compare s1, digits_of_the_ordinal_number
+      jump nc, printing_the_ordinal_number
+    end_of_printing_the_ordinal_number:
+    load s9, a'x
+    call UART_TX
+    regbank a
+
+    jump end_of_branching
+
+  not_a_solution:
+   
+   namereg sd, row_of_the_queen_we_are_trying_to_add
+   load row_of_the_queen_we_are_trying_to_add, size_of_the_chessboard - 1
+   
+   adding_a_new_queen_loop:
+     load s0, NDEBUG
+     test s0, s0
+     jump nz, dont_print_the_new_queen
+
+     print_string "We will try to add a queen at the field: ", s9, UART_TX
+     load s9, length_of_the_current_attempt
+     add s9, "A"
+     call UART_TX
+     load s9, row_of_the_queen_we_are_trying_to_add
+     add s9, "1"
+     call UART_TX
+     load s9, a'x
+     call UART_TX     
+
+     dont_print_the_new_queen:
+
+     load s0, address_of_the_current_attempt + 1
+     load s1, 0
+     
+     ;s2 will be the diagonal of the current attempt.
+     load s2, row_of_the_queen_we_are_trying_to_add
+     add s2, length_of_the_current_attempt
+
+     ;s3 will be the anti-diagonal of the current attempt. 
+     load s3, row_of_the_queen_we_are_trying_to_add
+     sub s3, length_of_the_current_attempt
+     
+     looping_through_current_attempt:
+       compare s1, length_of_the_current_attempt
+       jump z, end_of_looping_through_current_attempt
+       
+       fetch s4, (s0)
+       compare s4, row_of_the_queen_we_are_trying_to_add
+       jump z, queen_is_in_the_same_row
+       
+       load s5, s4
+       add s5, s1
+       compare s5, s2
+       jump z, queen_is_on_the_same_diagonal
+
+       load s6, s4
+       sub s6, s1
+       compare s6, s3
+       jump z, queen_is_on_the_same_antidiagonal       
+
+       add s0, 1
+       add s1, 1
+       jump looping_through_current_attempt
+     end_of_looping_through_current_attempt:
+     
+     jump add_the_new_queen
+     
+     queen_is_in_the_same_row:
+       load s0, NDEBUG
+       test s0, s0
+       jump nz, dont_add_the_new_queen
+       print_string "There is a queen in the same row, aborting!", s9, UART_TX
+       load s9, a'x
+       call UART_TX
+       jump dont_add_the_new_queen
+
+     queen_is_on_the_same_diagonal:
+       load s0, NDEBUG
+       test s0, s0
+       jump nz, dont_add_the_new_queen
+       print_string "There is a queen on the same diagonal, aborting!", s9, UART_TX
+       load s9, a'x
+       call UART_TX
+       jump dont_add_the_new_queen
+
+     queen_is_on_the_same_antidiagonal:
+       load s0, NDEBUG
+       test s0, s0
+       jump nz, dont_add_the_new_queen
+       print_string "There is a queen on the same anti-diagonal, aborting!", s9, UART_TX
+       load s9, a'x
+       call UART_TX
+       jump dont_add_the_new_queen     
+     
+     add_the_new_queen:
+     
+     load s0, NDEBUG
+     test s0, s0
+     jump nz, dont_print_the_debug_message
+     print_string "Nothing seems to prevent that queen from being added!", s9, UART_TX
+     load s9, a'x
+     call UART_TX    
+
+     dont_print_the_debug_message:
+     load s0, top_of_the_stack
+     load s1, length_of_the_current_attempt
+     add s1, 1
+     store s1, (s0)
+     add s0, 1
+     load s1, 0
+     copying_the_current_attempt_onto_stack:
+       compare s1, length_of_the_current_attempt
+       jump z, end_of_copying_the_current_attempt_onto_stack
+       load s2, address_of_the_current_attempt + 1
+       add s2, s1
+       fetch s3, (s2)
+       store s3, (s0)
+       add s0, 1
+       add s1, 1
+       jump copying_the_current_attempt_onto_stack
+     end_of_copying_the_current_attempt_onto_stack:
+     store row_of_the_queen_we_are_trying_to_add, (s0)
+     add top_of_the_stack, size_of_the_chessboard + 1
+     
+     dont_add_the_new_queen:
+     sub row_of_the_queen_we_are_trying_to_add, 1
+     jump nc, adding_a_new_queen_loop
+   end_of_adding_a_new_queen_loop:
+   jump end_of_branching
+  end_of_branching:
+  jump main_loop
+end_of_the_main_loop:
+print_string "The end!", s9, UART_TX
+load s9, a'x
+call UART_TX
+infinite_loop: jump infinite_loop
+
+print_the_current_attempt:
+  load s0, address_of_the_current_attempt + 1
+  load s1, 0
+  printing_the_current_attempt_loop:
+    compare s1, length_of_the_current_attempt
+    jump z, end_of_printing_the_current_attempt_loop
+    load s9, s1
+    add s9, "A"
+    call UART_TX
+    fetch s9, (s0)
+    add s9, "1"
+    call UART_TX
+    load s9, " "
+    CALL UART_TX
+    add s0, 1
+    add s1, 1
+    jump printing_the_current_attempt_loop
+  end_of_printing_the_current_attempt_loop:
+  load s9, a'x
+  call UART_TX  
+return
+
+base_hexadecimal
+;Now follows some boilerplate code
+;we use in our Computer Architecture
+;classes...
+CONSTANT LED_PORT,         00
+CONSTANT HEX1_PORT,        01
+CONSTANT HEX2_PORT,        02
+CONSTANT UART_TX_PORT,     03
+CONSTANT UART_RESET_PORT,  04
+CONSTANT SW_PORT,          00
+CONSTANT BTN_PORT,         01
+CONSTANT UART_STATUS_PORT, 02
+CONSTANT UART_RX_PORT,     03
+; Tx data_present
+CONSTANT U_TX_D, 00000001'b
+; Tx FIFO half_full
+CONSTANT U_TX_H, 00000010'b
+; TxFIFO full
+CONSTANT U_TX_F, 00000100'b
+; Rxdata_present
+CONSTANT U_RX_D, 00001000'b
+; RxFIFO half_full
+CONSTANT U_RX_H, 00010000'b
+; RxFIFO full
+CONSTANT U_RX_F, 00100000'b
+
+UART_RX:
+  INPUT sA, UART_STATUS_PORT
+  TEST  sA, U_RX_D
+  JUMP  NZ, input_not_empty
+  LOAD  s0, s0
+  JUMP UART_RX
+  input_not_empty:
+  INPUT s9, UART_RX_PORT
+RETURN
+
+UART_TX:
+  INPUT  sA, UART_STATUS_PORT
+  TEST   sA, U_TX_F
+  JUMP   NZ, UART_TX
+  OUTPUT s9, UART_TX_PORT
+RETURN

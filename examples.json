@@ -68,5 +68,12 @@
     "image": "https://www.theflatearthsociety.org/forum/avr/avatar_1461509_1483220545.png",
     "image_alt": "Flat Assembler showcase",
     "name": "Preprocessor Test"
+  },
+  {
+    "id": "10",
+    "file_name": "nQueensPuzzle.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Chessboard480.svg/330px-Chessboard480.svg.png",
+    "image_alt": "Eight Queens Puzzle",
+    "name": "N-Queens Puzzle"
   }
 ]
