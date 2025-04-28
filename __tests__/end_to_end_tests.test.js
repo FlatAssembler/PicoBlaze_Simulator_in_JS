@@ -1,0 +1,563 @@
+global.formatAsAddress = require("../headerScript.js").formatAsAddress; //referenced by simulator
+
+const simulator = require("../simulator.js");
+
+const clearGlobals = () => {
+  global.registers = [new Uint8Array(16), new Uint8Array(16)];
+  global.memory = new Uint8Array(256);
+  global.PC = 0;
+  global.machineCode = [new Array(4096).fill({ hex: "00000", line: 0 })];
+  global.regbank = 0;
+  global.flagZ = [0, 0];
+  global.flagC = [0, 0];
+  global.callStack = [];
+
+  global.breakpoints = [];
+  global.playing = false;
+  global.displayRegistersAndFlags = jest.fn();
+  global.alert = (...args) => console.log(args);
+
+  for (let i = 0; i < 4096; i++) {
+    const td = document.createElement("td");
+    td.setAttribute("id", "PC_label_" + formatAsAddress(i));
+    document.body.appendChild(td);
+  }
+
+  for (let i=0; i < 256; i++) {
+    const td = document.createElement("td");
+    td.setAttribute("id", "memory_" + formatAsByte(i));
+    document.body.appendChild(td);
+  }
+
+  /* UART setup*/
+  global.is_UART_enabled = false;
+  global.currentlyReadCharacterInUART = 0;
+  const uartInputEl = document.createElement("textarea");
+  uartInputEl.setAttribute("id", "UART_INPUT");
+
+  const uartOutputEl = document.createElement("pre");
+  uartOutputEl.setAttribute("id", "UART_OUTPUT");
+  uartOutputEl.innerText = "";
+  document.body.appendChild(uartOutputEl);
+  document.body.appendChild(uartInputEl);
+};
+
+const tree = require("../TreeNode.js");
+global.TreeNode = tree.TreeNode; // referenced by tokenizer
+
+const tokenizer =
+    require("../tokenizer.js"); // Parser depends on the tokenizer to work...
+
+const list_of_directives = require(
+    "../list_of_directives.js"); //...as well as on the list of directives.
+global.mnemonics = list_of_directives.mnemonics;
+global.preprocessor = list_of_directives.preprocessor;
+
+const parser = require("../parser.js");
+
+const preprocessor = require("../preprocessor.js");
+
+const headerScript = require("../headerScript.js");
+global.machineCode = headerScript.machineCode;
+global.formatAsAddress =
+    headerScript.formatAsAddress; // Or else labels won't work.
+
+global.default_base_of_literals_in_assembly = 16;
+
+const assembler = require("../assembler.js");
+global.formatAsByte = assembler.formatAsByte; // referenced by simulator
+
+describe("PicoBlaze MachineCode end-to-end tests", () => {
+  beforeEach(clearGlobals);
+  test ("Eight-queens problem", () => {
+    const assembly = `
+;This is my attempt to solve the Eight queens puzzle in PicoBlaze assembly.
+;It finds all the 92 solutions, it's just very slow.
+
+base_decimal
+
+address 0
+
+constant NDEBUG, 1
+constant size_of_the_chessboard, 8
+constant address_of_the_current_attempt, 0
+constant digits_of_the_ordinal_number, 10
+constant bottom_of_the_stack, 16
+
+;Let's set all the digits of the ordinal number of solutions to "0"
+regbank b
+load s0, digits_of_the_ordinal_number
+load s2, digits_of_the_ordinal_number ;End of the digits of the ordinal number.
+reset_ordinal_numbers_loop:
+  compare s0, bottom_of_the_stack
+  jump nc, end_of_the_reset_ordinal_numbers_loop
+  load s1, "0"
+  store s1, (s0)
+  add s0, 1
+  jump reset_ordinal_numbers_loop
+end_of_the_reset_ordinal_numbers_loop:
+regbank a
+
+namereg sf, top_of_the_stack
+
+load top_of_the_stack, bottom_of_the_stack
+load s0, 0
+store s0, (top_of_the_stack)
+add top_of_the_stack, size_of_the_chessboard + 1
+
+main_loop:
+  compare top_of_the_stack, bottom_of_the_stack
+  jump z, end_of_the_main_loop
+  sub top_of_the_stack, size_of_the_chessboard + 1
+  
+  namereg se, length_of_the_current_attempt
+  fetch length_of_the_current_attempt, (top_of_the_stack)
+  load s0, address_of_the_current_attempt
+  store length_of_the_current_attempt, (s0)
+  load s1, top_of_the_stack
+  load s2, 0
+  
+  copying_the_current_attempt_from_the_stack_loop:
+    compare s2, length_of_the_current_attempt
+    jump z, end_of_copying_the_current_attempt_from_the_stack_loop
+    add s2, 1
+    add s0, 1
+    add s1, 1
+    fetch s3, (s1)
+    store s3, (s0)
+    jump copying_the_current_attempt_from_the_stack_loop
+  end_of_copying_the_current_attempt_from_the_stack_loop:
+  
+  load s0, NDEBUG
+  test s0, s0
+  jump nz, dont_print_the_current_attempt
+  
+  print_string "The current attempt is: ", s9, UART_TX
+  call print_the_current_attempt
+  dont_print_the_current_attempt:
+  
+  compare length_of_the_current_attempt, size_of_the_chessboard
+  jump nz, not_a_solution
+    print_string "Found a solution: ", s9, UART_TX
+    call print_the_current_attempt
+    regbank b
+    print_string "That's the solution #", s9, UART_TX
+    load s1, digits_of_the_ordinal_number
+    increasing_the_ordinal_number_loop:
+      fetch s0, (s1)
+      add s0, 1
+      store s0, (s1)
+      compare s0, "9" + 1
+      jump nz, end_of_increasing_the_ordinal_number_loop
+      load s0, "0"
+      store s0, (s1)
+      add s1, 1
+      jump increasing_the_ordinal_number_loop
+    end_of_increasing_the_ordinal_number_loop:
+    compare s1, s2
+    jump c, not_a_new_digit
+      load s2, s1
+    not_a_new_digit:
+    load s1, s2
+    printing_the_ordinal_number:
+      fetch s9, (s1)
+      call UART_TX
+      sub s1, 1
+      compare s1, digits_of_the_ordinal_number
+      jump nc, printing_the_ordinal_number
+    end_of_printing_the_ordinal_number:
+    load s9, a'x
+    call UART_TX
+    regbank a
+
+    jump end_of_branching
+
+  not_a_solution:
+   
+   namereg sd, row_of_the_queen_we_are_trying_to_add
+   load row_of_the_queen_we_are_trying_to_add, size_of_the_chessboard - 1
+   
+   adding_a_new_queen_loop:
+     load s0, NDEBUG
+     test s0, s0
+     jump nz, dont_print_the_new_queen
+
+     print_string "We will try to add a queen at the field: ", s9, UART_TX
+     load s9, length_of_the_current_attempt
+     add s9, "A"
+     call UART_TX
+     load s9, row_of_the_queen_we_are_trying_to_add
+     add s9, "1"
+     call UART_TX
+     load s9, a'x
+     call UART_TX     
+
+     dont_print_the_new_queen:
+
+     load s0, address_of_the_current_attempt + 1
+     load s1, 0
+     
+     ;s2 will be the diagonal of the current attempt.
+     load s2, row_of_the_queen_we_are_trying_to_add
+     add s2, length_of_the_current_attempt
+
+     ;s3 will be the anti-diagonal of the current attempt. 
+     load s3, row_of_the_queen_we_are_trying_to_add
+     sub s3, length_of_the_current_attempt
+     
+     looping_through_current_attempt:
+       compare s1, length_of_the_current_attempt
+       jump z, end_of_looping_through_current_attempt
+       
+       fetch s4, (s0)
+       compare s4, row_of_the_queen_we_are_trying_to_add
+       jump z, queen_is_in_the_same_row
+       
+       load s5, s4
+       add s5, s1
+       compare s5, s2
+       jump z, queen_is_on_the_same_diagonal
+
+       load s6, s4
+       sub s6, s1
+       compare s6, s3
+       jump z, queen_is_on_the_same_antidiagonal       
+
+       add s0, 1
+       add s1, 1
+       jump looping_through_current_attempt
+     end_of_looping_through_current_attempt:
+     
+     jump add_the_new_queen
+     
+     queen_is_in_the_same_row:
+       load s0, NDEBUG
+       test s0, s0
+       jump nz, dont_add_the_new_queen
+       print_string "There is a queen in the same row, aborting!", s9, UART_TX
+       load s9, a'x
+       call UART_TX
+       jump dont_add_the_new_queen
+
+     queen_is_on_the_same_diagonal:
+       load s0, NDEBUG
+       test s0, s0
+       jump nz, dont_add_the_new_queen
+       print_string "There is a queen on the same diagonal, aborting!", s9, UART_TX
+       load s9, a'x
+       call UART_TX
+       jump dont_add_the_new_queen
+
+     queen_is_on_the_same_antidiagonal:
+       load s0, NDEBUG
+       test s0, s0
+       jump nz, dont_add_the_new_queen
+       print_string "There is a queen on the same anti-diagonal, aborting!", s9, UART_TX
+       load s9, a'x
+       call UART_TX
+       jump dont_add_the_new_queen     
+     
+     add_the_new_queen:
+     
+     load s0, NDEBUG
+     test s0, s0
+     jump nz, dont_print_the_debug_message
+     print_string "Nothing seems to prevent that queen from being added!", s9, UART_TX
+     load s9, a'x
+     call UART_TX    
+
+     dont_print_the_debug_message:
+     load s0, top_of_the_stack
+     load s1, length_of_the_current_attempt
+     add s1, 1
+     store s1, (s0)
+     add s0, 1
+     load s1, 0
+     copying_the_current_attempt_onto_stack:
+       compare s1, length_of_the_current_attempt
+       jump z, end_of_copying_the_current_attempt_onto_stack
+       load s2, address_of_the_current_attempt + 1
+       add s2, s1
+       fetch s3, (s2)
+       store s3, (s0)
+       add s0, 1
+       add s1, 1
+       jump copying_the_current_attempt_onto_stack
+     end_of_copying_the_current_attempt_onto_stack:
+     store row_of_the_queen_we_are_trying_to_add, (s0)
+     add top_of_the_stack, size_of_the_chessboard + 1
+     
+     dont_add_the_new_queen:
+     sub row_of_the_queen_we_are_trying_to_add, 1
+     jump nc, adding_a_new_queen_loop
+   end_of_adding_a_new_queen_loop:
+   jump end_of_branching
+  end_of_branching:
+  jump main_loop
+end_of_the_main_loop:
+print_string "The end!", s9, UART_TX
+load s9, a'x
+call UART_TX
+infinite_loop: jump infinite_loop
+
+print_the_current_attempt:
+  load s0, address_of_the_current_attempt + 1
+  load s1, 0
+  printing_the_current_attempt_loop:
+    compare s1, length_of_the_current_attempt
+    jump z, end_of_printing_the_current_attempt_loop
+    load s9, s1
+    add s9, "A"
+    call UART_TX
+    fetch s9, (s0)
+    add s9, "1"
+    call UART_TX
+    load s9, " "
+    CALL UART_TX
+    add s0, 1
+    add s1, 1
+    jump printing_the_current_attempt_loop
+  end_of_printing_the_current_attempt_loop:
+  load s9, a'x
+  call UART_TX  
+return
+
+base_hexadecimal
+;Now follows some boilerplate code
+;we use in our Computer Architecture
+;classes...
+CONSTANT LED_PORT,         00
+CONSTANT HEX1_PORT,        01
+CONSTANT HEX2_PORT,        02
+CONSTANT UART_TX_PORT,     03
+CONSTANT UART_RESET_PORT,  04
+CONSTANT SW_PORT,          00
+CONSTANT BTN_PORT,         01
+CONSTANT UART_STATUS_PORT, 02
+CONSTANT UART_RX_PORT,     03
+; Tx data_present
+CONSTANT U_TX_D, 00000001'b
+; Tx FIFO half_full
+CONSTANT U_TX_H, 00000010'b
+; TxFIFO full
+CONSTANT U_TX_F, 00000100'b
+; Rxdata_present
+CONSTANT U_RX_D, 00001000'b
+; RxFIFO half_full
+CONSTANT U_RX_H, 00010000'b
+; RxFIFO full
+CONSTANT U_RX_F, 00100000'b
+
+UART_RX:
+  INPUT sA, UART_STATUS_PORT
+  TEST  sA, U_RX_D
+  JUMP  NZ, input_not_empty
+  LOAD  s0, s0
+  JUMP UART_RX
+  input_not_empty:
+  INPUT s9, UART_RX_PORT
+RETURN
+
+UART_TX:
+  INPUT  sA, UART_STATUS_PORT
+  TEST   sA, U_TX_F
+  JUMP   NZ, UART_TX
+  OUTPUT s9, UART_TX_PORT
+RETURN
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    global.is_UART_enabled=true;
+    while (global.PC != compilation_context.labels.get("infinite_loop"))
+        simulator.simulateOneInstruction();
+    const output = document.getElementById("UART_OUTPUT").innerText;
+    expect(output).toBe(`Found a solution: A1 B5 C8 D6 E3 F7 G2 H4 
+That's the solution #1
+Found a solution: A1 B6 C8 D3 E7 F4 G2 H5 
+That's the solution #2
+Found a solution: A1 B7 C4 D6 E8 F2 G5 H3 
+That's the solution #3
+Found a solution: A1 B7 C5 D8 E2 F4 G6 H3 
+That's the solution #4
+Found a solution: A2 B4 C6 D8 E3 F1 G7 H5 
+That's the solution #5
+Found a solution: A2 B5 C7 D1 E3 F8 G6 H4 
+That's the solution #6
+Found a solution: A2 B5 C7 D4 E1 F8 G6 H3 
+That's the solution #7
+Found a solution: A2 B6 C1 D7 E4 F8 G3 H5 
+That's the solution #8
+Found a solution: A2 B6 C8 D3 E1 F4 G7 H5 
+That's the solution #9
+Found a solution: A2 B7 C3 D6 E8 F5 G1 H4 
+That's the solution #10
+Found a solution: A2 B7 C5 D8 E1 F4 G6 H3 
+That's the solution #11
+Found a solution: A2 B8 C6 D1 E3 F5 G7 H4 
+That's the solution #12
+Found a solution: A3 B1 C7 D5 E8 F2 G4 H6 
+That's the solution #13
+Found a solution: A3 B5 C2 D8 E1 F7 G4 H6 
+That's the solution #14
+Found a solution: A3 B5 C2 D8 E6 F4 G7 H1 
+That's the solution #15
+Found a solution: A3 B5 C7 D1 E4 F2 G8 H6 
+That's the solution #16
+Found a solution: A3 B5 C8 D4 E1 F7 G2 H6 
+That's the solution #17
+Found a solution: A3 B6 C2 D5 E8 F1 G7 H4 
+That's the solution #18
+Found a solution: A3 B6 C2 D7 E1 F4 G8 H5 
+That's the solution #19
+Found a solution: A3 B6 C2 D7 E5 F1 G8 H4 
+That's the solution #20
+Found a solution: A3 B6 C4 D1 E8 F5 G7 H2 
+That's the solution #21
+Found a solution: A3 B6 C4 D2 E8 F5 G7 H1 
+That's the solution #22
+Found a solution: A3 B6 C8 D1 E4 F7 G5 H2 
+That's the solution #23
+Found a solution: A3 B6 C8 D1 E5 F7 G2 H4 
+That's the solution #24
+Found a solution: A3 B6 C8 D2 E4 F1 G7 H5 
+That's the solution #25
+Found a solution: A3 B7 C2 D8 E5 F1 G4 H6 
+That's the solution #26
+Found a solution: A3 B7 C2 D8 E6 F4 G1 H5 
+That's the solution #27
+Found a solution: A3 B8 C4 D7 E1 F6 G2 H5 
+That's the solution #28
+Found a solution: A4 B1 C5 D8 E2 F7 G3 H6 
+That's the solution #29
+Found a solution: A4 B1 C5 D8 E6 F3 G7 H2 
+That's the solution #30
+Found a solution: A4 B2 C5 D8 E6 F1 G3 H7 
+That's the solution #31
+Found a solution: A4 B2 C7 D3 E6 F8 G1 H5 
+That's the solution #32
+Found a solution: A4 B2 C7 D3 E6 F8 G5 H1 
+That's the solution #33
+Found a solution: A4 B2 C7 D5 E1 F8 G6 H3 
+That's the solution #34
+Found a solution: A4 B2 C8 D5 E7 F1 G3 H6 
+That's the solution #35
+Found a solution: A4 B2 C8 D6 E1 F3 G5 H7 
+That's the solution #36
+Found a solution: A4 B6 C1 D5 E2 F8 G3 H7 
+That's the solution #37
+Found a solution: A4 B6 C8 D2 E7 F1 G3 H5 
+That's the solution #38
+Found a solution: A4 B6 C8 D3 E1 F7 G5 H2 
+That's the solution #39
+Found a solution: A4 B7 C1 D8 E5 F2 G6 H3 
+That's the solution #40
+Found a solution: A4 B7 C3 D8 E2 F5 G1 H6 
+That's the solution #41
+Found a solution: A4 B7 C5 D2 E6 F1 G3 H8 
+That's the solution #42
+Found a solution: A4 B7 C5 D3 E1 F6 G8 H2 
+That's the solution #43
+Found a solution: A4 B8 C1 D3 E6 F2 G7 H5 
+That's the solution #44
+Found a solution: A4 B8 C1 D5 E7 F2 G6 H3 
+That's the solution #45
+Found a solution: A4 B8 C5 D3 E1 F7 G2 H6 
+That's the solution #46
+Found a solution: A5 B1 C4 D6 E8 F2 G7 H3 
+That's the solution #47
+Found a solution: A5 B1 C8 D4 E2 F7 G3 H6 
+That's the solution #48
+Found a solution: A5 B1 C8 D6 E3 F7 G2 H4 
+That's the solution #49
+Found a solution: A5 B2 C4 D6 E8 F3 G1 H7 
+That's the solution #50
+Found a solution: A5 B2 C4 D7 E3 F8 G6 H1 
+That's the solution #51
+Found a solution: A5 B2 C6 D1 E7 F4 G8 H3 
+That's the solution #52
+Found a solution: A5 B2 C8 D1 E4 F7 G3 H6 
+That's the solution #53
+Found a solution: A5 B3 C1 D6 E8 F2 G4 H7 
+That's the solution #54
+Found a solution: A5 B3 C1 D7 E2 F8 G6 H4 
+That's the solution #55
+Found a solution: A5 B3 C8 D4 E7 F1 G6 H2 
+That's the solution #56
+Found a solution: A5 B7 C1 D3 E8 F6 G4 H2 
+That's the solution #57
+Found a solution: A5 B7 C1 D4 E2 F8 G6 H3 
+That's the solution #58
+Found a solution: A5 B7 C2 D4 E8 F1 G3 H6 
+That's the solution #59
+Found a solution: A5 B7 C2 D6 E3 F1 G4 H8 
+That's the solution #60
+Found a solution: A5 B7 C2 D6 E3 F1 G8 H4 
+That's the solution #61
+Found a solution: A5 B7 C4 D1 E3 F8 G6 H2 
+That's the solution #62
+Found a solution: A5 B8 C4 D1 E3 F6 G2 H7 
+That's the solution #63
+Found a solution: A5 B8 C4 D1 E7 F2 G6 H3 
+That's the solution #64
+Found a solution: A6 B1 C5 D2 E8 F3 G7 H4 
+That's the solution #65
+Found a solution: A6 B2 C7 D1 E3 F5 G8 H4 
+That's the solution #66
+Found a solution: A6 B2 C7 D1 E4 F8 G5 H3 
+That's the solution #67
+Found a solution: A6 B3 C1 D7 E5 F8 G2 H4 
+That's the solution #68
+Found a solution: A6 B3 C1 D8 E4 F2 G7 H5 
+That's the solution #69
+Found a solution: A6 B3 C1 D8 E5 F2 G4 H7 
+That's the solution #70
+Found a solution: A6 B3 C5 D7 E1 F4 G2 H8 
+That's the solution #71
+Found a solution: A6 B3 C5 D8 E1 F4 G2 H7 
+That's the solution #72
+Found a solution: A6 B3 C7 D2 E4 F8 G1 H5 
+That's the solution #73
+Found a solution: A6 B3 C7 D2 E8 F5 G1 H4 
+That's the solution #74
+Found a solution: A6 B3 C7 D4 E1 F8 G2 H5 
+That's the solution #75
+Found a solution: A6 B4 C1 D5 E8 F2 G7 H3 
+That's the solution #76
+Found a solution: A6 B4 C2 D8 E5 F7 G1 H3 
+That's the solution #77
+Found a solution: A6 B4 C7 D1 E3 F5 G2 H8 
+That's the solution #78
+Found a solution: A6 B4 C7 D1 E8 F2 G5 H3 
+That's the solution #79
+Found a solution: A6 B8 C2 D4 E1 F7 G5 H3 
+That's the solution #80
+Found a solution: A7 B1 C3 D8 E6 F4 G2 H5 
+That's the solution #81
+Found a solution: A7 B2 C4 D1 E8 F5 G3 H6 
+That's the solution #82
+Found a solution: A7 B2 C6 D3 E1 F4 G8 H5 
+That's the solution #83
+Found a solution: A7 B3 C1 D6 E8 F5 G2 H4 
+That's the solution #84
+Found a solution: A7 B3 C8 D2 E5 F1 G6 H4 
+That's the solution #85
+Found a solution: A7 B4 C2 D5 E8 F1 G3 H6 
+That's the solution #86
+Found a solution: A7 B4 C2 D8 E6 F1 G3 H5 
+That's the solution #87
+Found a solution: A7 B5 C3 D1 E6 F8 G2 H4 
+That's the solution #88
+Found a solution: A8 B2 C4 D1 E7 F5 G3 H6 
+That's the solution #89
+Found a solution: A8 B2 C5 D3 E1 F7 G4 H6 
+That's the solution #90
+Found a solution: A8 B3 C1 D6 E2 F5 G7 H4 
+That's the solution #91
+Found a solution: A8 B4 C1 D3 E6 F2 G7 H5 
+That's the solution #92
+The end!
+`);
+  })
+});

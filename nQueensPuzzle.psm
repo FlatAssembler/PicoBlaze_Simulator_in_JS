@@ -1,17 +1,17 @@
 ;This is my attempt to solve the <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">Eight queens puzzle</a> in PicoBlaze assembly.
-;My guess is that it will eventually print the correct result "92", but that it is very slow.
+;It finds all the 92 solutions, it's just very slow.
 
 base_decimal
 
 address 0
 
-constant NDEBUG, 0
+constant NDEBUG, 1
 constant size_of_the_chessboard, 8
 constant address_of_the_current_attempt, 0
 constant digits_of_the_ordinal_number, 10
 constant bottom_of_the_stack, 16
 
-;Let's set all the digits of the ordinal number of permutations to "0"
+;Let's set all the digits of the ordinal number of solutions to "0"
 regbank b
 load s0, digits_of_the_ordinal_number
 load s2, digits_of_the_ordinal_number ;End of the digits of the ordinal number.
@@ -291,3 +291,5 @@ UART_TX:
   JUMP   NZ, UART_TX
   OUTPUT s9, UART_TX_PORT
 RETURN
+
+;I've opened <a href="https://codereview.stackexchange.com/q/295989">a StackExchange thread about this program</a>, in case you are interested.
