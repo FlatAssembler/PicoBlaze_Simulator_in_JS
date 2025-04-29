@@ -67,7 +67,9 @@ main_loop:
   jump nz, not_a_solution
     print_string "Found a solution: ", s9, UART_TX
     call print_the_current_attempt
+
     regbank b
+
     print_string "That's the solution #", s9, UART_TX
     load s1, digits_of_the_ordinal_number
     increasing_the_ordinal_number_loop:
@@ -81,10 +83,12 @@ main_loop:
       add s1, 1
       jump increasing_the_ordinal_number_loop
     end_of_increasing_the_ordinal_number_loop:
+
     compare s1, s2
     jump c, not_a_new_digit
       load s2, s1
     not_a_new_digit:
+
     load s1, s2
     printing_the_ordinal_number:
       fetch s9, (s1)
@@ -95,6 +99,7 @@ main_loop:
     end_of_printing_the_ordinal_number:
     load s9, a'x
     call UART_TX
+
     regbank a
 
     jump end_of_branching
@@ -158,27 +163,24 @@ main_loop:
      jump add_the_new_queen
      
      queen_is_in_the_same_row:
-       load s0, NDEBUG
-       test s0, s0
-       jump nz, dont_add_the_new_queen
+       jump NDEBUG ? dont_add_the_new_queen : print_the_first_debug_message
+       print_the_first_debug_message:
        print_string "There is a queen in the same row, aborting!", s9, UART_TX
        load s9, a'x
        call UART_TX
        jump dont_add_the_new_queen
 
      queen_is_on_the_same_diagonal:
-       load s0, NDEBUG
-       test s0, s0
-       jump nz, dont_add_the_new_queen
+       jump NDEBUG ? dont_add_the_new_queen : print_the_second_debug_message
+       print_the_second_debug_message:
        print_string "There is a queen on the same diagonal, aborting!", s9, UART_TX
        load s9, a'x
        call UART_TX
        jump dont_add_the_new_queen
 
      queen_is_on_the_same_antidiagonal:
-       load s0, NDEBUG
-       test s0, s0
-       jump nz, dont_add_the_new_queen
+       jump NDEBUG ? dont_add_the_new_queen : print_the_third_debug_message
+       print_the_third_debug_message:
        print_string "There is a queen on the same anti-diagonal, aborting!", s9, UART_TX
        load s9, a'x
        call UART_TX
@@ -293,3 +295,4 @@ UART_TX:
 RETURN
 
 ;I've opened <a href="https://codereview.stackexchange.com/q/295989">a StackExchange thread about this program</a>, in case you are interested.
+;Quite a while ago, I implemented <a href="https://flatassembler.github.io/nQueensPuzzle.html">a similar program in WebAssembly</a>.
