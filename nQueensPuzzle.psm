@@ -110,9 +110,8 @@ main_loop:
    load row_of_the_queen_we_are_trying_to_add, size_of_the_chessboard - 1
    
    adding_a_new_queen_loop:
-     load s0, NDEBUG
-     test s0, s0
-     jump nz, dont_print_the_new_queen
+     jump NDEBUG ? dont_print_the_new_queen: print_the_new_queen
+     print_the_new_queen:
 
      print_string "We will try to add a queen at the field: ", s9, UART_TX
      load s9, length_of_the_current_attempt
@@ -188,14 +187,13 @@ main_loop:
      
      add_the_new_queen:
      
-     load s0, NDEBUG
-     test s0, s0
-     jump nz, dont_print_the_debug_message
+     jump NDEBUG ? dont_print_the_fourth_debug_message : print_the_fourth_debug_message
+     print_the_fourth_debug_message:
      print_string "Nothing seems to prevent that queen from being added!", s9, UART_TX
      load s9, a'x
      call UART_TX    
 
-     dont_print_the_debug_message:
+     dont_print_the_fourth_debug_message:
      load s0, top_of_the_stack
      load s1, length_of_the_current_attempt
      add s1, 1
@@ -220,13 +218,17 @@ main_loop:
      sub row_of_the_queen_we_are_trying_to_add, 1
      jump nc, adding_a_new_queen_loop
    end_of_adding_a_new_queen_loop:
+
    jump end_of_branching
   end_of_branching:
+
   jump main_loop
 end_of_the_main_loop:
+
 print_string "The end!", s9, UART_TX
 load s9, a'x
 call UART_TX
+
 infinite_loop: jump infinite_loop
 
 print_the_current_attempt:
