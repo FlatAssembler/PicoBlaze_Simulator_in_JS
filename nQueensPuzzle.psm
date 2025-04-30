@@ -1,4 +1,5 @@
 ;This is my attempt to solve the <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">Eight queens puzzle</a> in PicoBlaze assembly.
+;This is also <a href="https://leetcode.com/problems/n-queens/description/">the Leetcode problem #51</a>.
 ;It finds all the 92 solutions, it's just very slow.
 
 base_decimal
@@ -6,6 +7,7 @@ base_decimal
 address 0
 
 constant NDEBUG, 1
+constant should_we_print_chessboards, 1
 constant size_of_the_chessboard, 8
 constant address_of_the_current_attempt, 0
 constant digits_of_the_ordinal_number, 10
@@ -67,6 +69,30 @@ main_loop:
   jump nz, not_a_solution
     print_string "Found a solution: ", s9, UART_TX
     call print_the_current_attempt
+    
+    jump should_we_print_chessboards ? print_the_chessboard : dont_print_the_chessboard
+    print_the_chessboard:
+    load s6, size_of_the_chessboard - 1
+    outer_loop_for_printing_the_chessboard:
+      load s7, address_of_the_current_attempt + 1
+      inner_loop_for_printing_the_chessboard:
+        load s9, "Q"
+        fetch s8, (s7)
+        compare s8, s6
+        jump z, queen_is_on_the_field
+          load s9, "."
+        queen_is_on_the_field:
+        call UART_TX
+        add s7, 1
+        compare s7, address_of_the_current_attempt + 1 + size_of_the_chessboard
+        jump nz, inner_loop_for_printing_the_chessboard
+      end_of_inner_loop_for_printing_the_chessboard:
+      load s9, a'x
+      call UART_TX
+      sub s6, 1
+      jump nc, outer_loop_for_printing_the_chessboard
+    end_of_outer_loop_for_printing_the_chessboard:
+    dont_print_the_chessboard:
 
     regbank b
 
