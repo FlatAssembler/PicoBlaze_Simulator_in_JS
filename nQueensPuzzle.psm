@@ -1,6 +1,7 @@
 ;This is my attempt to solve the <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">Eight queens puzzle</a> in PicoBlaze assembly.
 ;This is also <a href="https://leetcode.com/problems/n-queens/description/">the Leetcode problem #51</a>.
 ;It finds all the 92 solutions, it's just very slow.
+;In case you are interested, I've also asked <a href="https://math.stackexchange.com/q/5061068/791819">a Mathematics StackExchange question about the number of solutions to this puzzle</a>.
 
 base_decimal
 
