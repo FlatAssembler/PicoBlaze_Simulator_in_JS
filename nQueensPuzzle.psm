@@ -279,7 +279,7 @@ print_the_current_attempt:
     compare s1, sb
     jump z, dont_print_the_trailing_space
       load s9, " "
-      CALL UART_TX
+      call UART_TX
     dont_print_the_trailing_space:
     add s0, 1
     add s1, 1
