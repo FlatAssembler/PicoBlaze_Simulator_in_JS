@@ -261,6 +261,10 @@ infinite_loop: jump infinite_loop
 print_the_current_attempt:
   load s0, address_of_the_current_attempt + 1
   load s1, 0
+  compare length_of_the_current_attempt, 0
+  jump nz, printing_the_current_attempt_loop
+    print_string "Empty", s9, UART_TX
+    jump end_of_printing_the_current_attempt_loop
   printing_the_current_attempt_loop:
     compare s1, length_of_the_current_attempt
     jump z, end_of_printing_the_current_attempt_loop
@@ -270,8 +274,13 @@ print_the_current_attempt:
     fetch s9, (s0)
     add s9, "1"
     call UART_TX
-    load s9, " "
-    CALL UART_TX
+    load sb, length_of_the_current_attempt
+    sub sb, 1
+    compare s1, sb
+    jump z, dont_print_the_trailing_space
+      load s9, " "
+      CALL UART_TX
+    dont_print_the_trailing_space:
     add s0, 1
     add s1, 1
     jump printing_the_current_attempt_loop
