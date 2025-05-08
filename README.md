@@ -31,5 +31,7 @@ An example of a similar project is [FRISC JS](https://github.com/izuzak/FRISCjs)
 
 **UPDATE** on 05/07/2024: I've made [a YouTube video about this program](https://youtu.be/ckAvsglxTVc).
 
+**UPDATE** on 08/05/2025: The documentation is once again available in the *seminar* folder.
+
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/FlatAssembler/PicoBlaze_Simulator_in_JS.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/FlatAssembler/PicoBlaze_Simulator_in_JS/context:javascript)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
