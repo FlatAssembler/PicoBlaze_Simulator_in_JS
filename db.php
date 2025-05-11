@@ -1,4 +1,5 @@
 <?php
+header("Content-Type: text/X-asm");
 
 $GLOBALS['dbname'] = "p3379031_assembler_db";
 
