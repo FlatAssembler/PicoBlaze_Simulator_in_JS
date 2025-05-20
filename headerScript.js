@@ -516,7 +516,7 @@ function displayOutput() {
                            output[2] % 2 ** 4);
   for (let i = 0; i < 8; i++)
     document.getElementById("LED" + i).setAttribute(
-        "fill", output[0] & (1 << i) ? "lightGreen" : "#333333");
+        "fill", output[0] & (1 << i) ? "lightGreen" : "#333");
 }
 function displayHexadecimalNumber(display, number) {
   if (!(display instanceof SVGElement) ||
