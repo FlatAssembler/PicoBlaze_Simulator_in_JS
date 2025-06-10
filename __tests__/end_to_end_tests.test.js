@@ -87,6 +87,11 @@ constant address_of_the_current_attempt, 0
 constant digits_of_the_ordinal_number, 10
 constant bottom_of_the_stack, 16
 
+
+print_string "Searching for solutions...", s9, UART_TX
+load s9, a'x
+call UART_TX
+
 ;Let's set all the digits of the ordinal number of solutions to "0"
 regbank b
 load s0, digits_of_the_ordinal_number
@@ -418,7 +423,8 @@ RETURN
         simulator.simulateOneInstruction();
     const output = document.getElementById("UART_OUTPUT").innerText;
     expect(output).toBe(
-`Found a solution: A1 B5 C8 D6 E3 F7 G2 H4
+`Searching for solutions...
+Found a solution: A1 B5 C8 D6 E3 F7 G2 H4
 ..Q.....
 .....Q..
 ...Q....
