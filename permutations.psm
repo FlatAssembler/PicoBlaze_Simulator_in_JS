@@ -377,8 +377,8 @@ UART_RX:
   INPUT sA, UART_STATUS_PORT
   TEST  sA, U_RX_D
   JUMP  NZ, input_not_empty
-  LOAD  s0, s0
-  JUMP UART_RX
+    LOAD  s0, s0
+    JUMP UART_RX
   input_not_empty:
   INPUT s9, UART_RX_PORT
 RETURN
