@@ -7,10 +7,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const id = urlParams.get("id");
     const url = `db.php?id=${encodeURIComponent(id)}`;
     console.log(url);
-    fetch(url)
+    fetch(url, {redirect : "error"})
         .then((response) => {
           if (!response.ok && response.status != 404) {
-            throw new Error("The server responded with error "+response.status);
+            throw new Error("The server responded with error " +
+                            response.status);
           }
 
           return response.text();
@@ -24,6 +25,6 @@ document.addEventListener("DOMContentLoaded", function() {
           setUpLineNumbers();
         })
 
-        .catch((error) => { alert(error.message);});
+        .catch((error) => { alert(error.message); });
   }
 });

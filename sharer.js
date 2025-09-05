@@ -11,10 +11,11 @@ function saveAssemblyCode() {
   const formData = new FormData();
   formData.append("code", assemblyCode);
 
-  fetch("db.php", {method : "POST", body : formData})
+  fetch("db.php", {method : "POST", body : formData, redirect : "error"})
       .then((response) => {
         if (!response.ok) {
-          throw new Error("The server responded with error: " + response.status);
+          throw new Error("The server responded with error: " +
+                          response.status);
         }
 
         return response.text();
@@ -22,8 +23,11 @@ function saveAssemblyCode() {
 
       .then((data) => {
         // data is ?id=int
-        if (!/^\?id=\d+/.test(data)) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/36
-          throw new Error("The server responded with `200 OK`, but the data it sent is not formatted to be parsable by the front-end: " + data);
+        if (!/^\?id=\d+/.test(
+                data)) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/36
+          throw new Error(
+              "The server responded with `200 OK`, but the data it sent is not formatted to be parsable by the front-end: " +
+              data);
         }
         const shareURL =
             `${new URL(window.location.href).origin}/PicoBlaze.html${data}`;
