@@ -233,7 +233,11 @@ function parse(tokenized) {
           !tokenized[i - 1].children.length)) &&
         !tokenized[i].children.length) {
       // Unary operators
-      if (tokenized.length == 1 || tokenized[i + 1].text == "," ||
+      if (tokenized.length == 1 ||
+          i >=
+              tokenized.length -
+                  1 || // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/42
+          tokenized[i + 1].text == "," ||
           tokenized[i + 1].text == "\n") {
         alert("Line #" + tokenized[i].lineNumber + ": The unary operator '" +
               tokenized[i].text + "' has zero operands!");
