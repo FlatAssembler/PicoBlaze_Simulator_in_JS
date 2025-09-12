@@ -186,8 +186,6 @@ beginning_of_the_permutations_loop:
     load s0, length_of_the_input
     sub s0, 1
     add_a_new_character_loop:
-      compare s0, ff'x ;Overflow
-      jump z, end_of_the_add_a_new_character_loop
       namereg sc, character_we_try_to_add
       fetch character_we_try_to_add, (s0)
       load s7, s0
@@ -288,7 +286,7 @@ beginning_of_the_permutations_loop:
         add top_of_the_stack, 1
       dont_add_the_new_character:
       sub s0, 1
-      jump add_a_new_character_loop
+      jump nc, add_a_new_character_loop
     end_of_the_add_a_new_character_loop:
   jump end_of_the_branching
   end_of_the_branching:
