@@ -292,11 +292,9 @@ beginning_of_the_permutations_loop:
       sub s0, 1
       jump nc, add_a_new_character_loop
     end_of_the_add_a_new_character_loop:
-    jump NDEBUG ? end_of_the_branching : print_the_exited_the_loop_message
-    print_the_exited_the_loop_message:
-      print_string "The 'add_a_new_character_loop' loop has exited!", s9, UART_TX
-      load s9, a'x
-      call UART_TX
+    load sb, NDEBUG
+    compare sb, 0
+    call z, print_the_exited_the_loop_message
   end_of_the_branching:
   jump beginning_of_the_permutations_loop
 end_of_the_permutations_loop:
@@ -351,6 +349,12 @@ return
 
 print_the_ordinal_number_message:
   print_string "That's the permutation #", s9, UART_TX
+return
+
+print_the_exited_the_loop_message:
+  print_string "The 'add_a_new_character_loop' loop has exited!", s9, UART_TX
+  load s9, a'x
+  call UART_TX
 return
 
 base_hexadecimal
