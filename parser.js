@@ -222,7 +222,9 @@ function parse(tokenized) {
   }
 
   // Parsing arithmetic expressions...
-  for (let i = 0; i < tokenized.length; i++)
+  for (let i = tokenized.length - 1; i >= 0;
+       i--) // We need to iterate backward rather than forward in order to parse
+            // tthe expressions such as "inst --5" correctly.
     if ((tokenized[i].text == "+" || tokenized[i].text == "-") &&
         (i == 0 || tokenized[i - 1].text == "," ||
          tokenized[i - 1].text.substring(tokenized[i - 1].length - 1) == "(" ||

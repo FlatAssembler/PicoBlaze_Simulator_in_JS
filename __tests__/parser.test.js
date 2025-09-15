@@ -131,6 +131,12 @@ returni enable
       '("assembly" ("+" ("-" "0" "1") "2"))',
     );
   });
+  test("Second unary operators test", () => {
+    const AST = parser.parse(tokenizer.tokenize("--5"));
+    expect(AST.getLispExpression()).toEqual(
+      '("assembly" ("-" "0" ("-" "0" "5")))',
+    );
+  });
   test("Ternary conditional operator", () => {
     const AST = parser.parse(tokenizer.tokenize("2+2<5?1:0"));
     expect(AST.getLispExpression()).toEqual(
