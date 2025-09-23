@@ -59,8 +59,8 @@ infinite_loop:
   call   multiply_sa_by_16
   add    sa         , sb ;sb contains the
                          ;remainder of the
-			 ;division of sa by
-			 ;10.
+                         ;division of sa by
+                         ;10.
   output first_digit, first_two_7s_displays
   output sa         ,second_two_7s_displays
   ;I removed the space after `,` to make
