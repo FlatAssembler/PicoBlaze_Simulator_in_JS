@@ -323,8 +323,13 @@ main_loop:
      sub row_of_the_queen_we_are_trying_to_add, 1
      jump nc, adding_a_new_queen_loop
    end_of_adding_a_new_queen_loop:
-
-   jump end_of_branching
+   
+   jump NDEBUG ? end_of_branching : adding_a_new_queen_exited_message
+   adding_a_new_queen_exited_message:
+     print_string "The \`adding_a_new_queen_loop\` loop exited!", s9, UART_TX
+     load s9, a'x
+     call UART_TX
+ 
   end_of_branching:
 
   jump main_loop
