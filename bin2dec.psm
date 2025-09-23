@@ -107,3 +107,6 @@ sl0 sa
 sl0 sa
 sl0 sa
 return
+
+;You might also be interested in
+;<a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/blob/master/bin2dec.cpp">this program implemented in x86</a>.
