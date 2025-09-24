@@ -8,6 +8,7 @@
  * Windows.
  * */
 
+#include <bitset>
 #include <cstdint>
 #include <iomanip>
 #include <iostream>
@@ -16,7 +17,7 @@ extern "C" {
 char binary_input[9]; // I think this does not need to be volatile because the
                       // inline assembly isn't changing it. It's only reading
                       // from it.
-volatile uint64_t first_digit,
+volatile uint64_t first_digit, Gray_code,
     binary_coded_decimal; // We cannot simply put `int` here instead of
                           // `uint64_t` because, on quite a few compilers, the
                           // default `int` size even on 64-bit systems is not 64
@@ -48,6 +49,7 @@ int main() {
           inc r9
           jmp input_loop
         end_of_the_input_loop:
+        mov r10, r8 # Saved for the Gray Code.
         
         mov qword ptr [first_digit], 0
         cmp r8, 200
@@ -74,11 +76,19 @@ int main() {
         add r9, r8
         mov qword ptr [binary_coded_decimal], r9
 
+        mov r11, r10
+        shr r11, 1
+        xor r10, r11
+        mov qword ptr [Gray_code], r10
+
         .att_syntax
 	)assembly");
   std::cout << "The number converted to decimal is: " << std::hex
             << std::setfill('0') << std::setw(2) << first_digit
             << std::setfill('0') << std::setw(2) << binary_coded_decimal
+            << std::endl;
+  std::bitset<8> Gray_code_in_binary((unsigned char)Gray_code);
+  std::cout << "The number converted to Gray code is: " << Gray_code_in_binary
             << std::endl;
   return 0;
 }
