@@ -1,7 +1,9 @@
 /*
  *  Compile on 64-bit Linux or Solaris (I guess it will probably also work on
- * FreeBSD), like this: g++ -o bin2dec bin2dec.cpp -std=c++11 #Don't put -O3
- * here, as GCC seems to ignore `volatile` in global variables. Or like this:
+ * FreeBSD), like this:
+ * g++ -o bin2dec bin2dec.cpp -std=c++11 #Don't put -O3
+ * here, as GCC seems to ignore `volatile` in global variables.
+ * Or like this:
  *  clang++ -o bin2dec bin2dec.cpp -O3
  *  Playing with inline assembly is a lot easier on UNIX-like systems than on
  * Windows.
