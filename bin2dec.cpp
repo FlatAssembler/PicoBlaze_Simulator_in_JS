@@ -1,14 +1,14 @@
 /*
  *  Compile on 64-bit Linux or Solaris (I guess it will probably also work on
  * FreeBSD), like this:
- * g++ -o bin2dec bin2dec.cpp -std=c++11 #Don't put -O3
- * here, as GCC seems to ignore `volatile` in global variables.
+ * g++ -o bin2dec bin2dec.cpp -std=c++11 -O3
  * Or like this:
  *  clang++ -o bin2dec bin2dec.cpp -O3
  *  Playing with inline assembly is a lot easier on UNIX-like systems than on
  * Windows.
  * */
 
+#include <cstdint>
 #include <iomanip>
 #include <iostream>
 
@@ -16,10 +16,11 @@ extern "C" {
 char binary_input[9]; // I think this does not need to be volatile because the
                       // inline assembly isn't changing it. It's only reading
                       // from it.
-volatile int first_digit,
-    binary_coded_decimal; // GCC (but not CLANG) clobbers the `first_digit` if
-                          // you turn on the optimizer in spite of the
-                          // `volatile`.
+volatile uint64_t first_digit,
+    binary_coded_decimal; // We cannot simply put `int` here instead of
+                          // `uint64_t` because, on quite a few compilers, the
+                          // default `int` size even on 64-bit systems is not 64
+                          // bits.
 }
 
 int main() {
