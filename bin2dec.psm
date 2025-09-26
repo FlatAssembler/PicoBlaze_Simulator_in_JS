@@ -109,4 +109,4 @@ sl0 sa
 return
 
 ;You might also be interested in
-;<a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/blob/master/bin2dec.cpp">this program implemented in x86</a>.
+;<a href="https://sourceforge.net/p/picoblaze-simulator/code/ci/master/tree/bin2dec.cpp">this program implemented in x86</a>. <!-- I linked to SourceForge instead of to GitHub because GitHub does not show code in Firefox 52, but SourceForge still does. -->

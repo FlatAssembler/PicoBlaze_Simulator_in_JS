@@ -344,3 +344,6 @@ RETURN
 
 ;I've opened <a href="https://codereview.stackexchange.com/q/295989">a StackExchange thread about this program</a>, in case you are interested.
 ;Quite a while ago, I implemented <a href="https://flatassembler.github.io/nQueensPuzzle.html">a similar program in WebAssembly</a>.
+
+;I've made <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/raw/refs/heads/master/nQueensPuzzle.mem">MEM file</a> of this program compatible with <a href="https://kevinpt.github.io/opbasm/rst/opbsim.html">OpbSim</a>, a part of <a href="https://kevinpt.github.io/opbasm/">OpbAsm</a>.
+;Just, when running it, make sure you set the scratchpad memory is set to 256 bytes, rather than to the default 64 bytes.
