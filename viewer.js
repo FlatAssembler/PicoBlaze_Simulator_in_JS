@@ -25,6 +25,16 @@ document.addEventListener("DOMContentLoaded", function() {
           setUpLineNumbers();
         })
 
-        .catch((error) => { alert(error.message); });
+        .catch((error) => {
+          document.getElementById("assemblyCode").innerHTML =
+              `;Unfortunately, fetching the example
+;program "${id}" from SourceForge failed.
+;No worries, you can still select one of
+;the example programs to fetch from
+;GitHub.
+`;
+          setUpLineNumbers();
+          alert(error.message);
+        });
   }
 });
