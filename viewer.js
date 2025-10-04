@@ -23,6 +23,24 @@ document.addEventListener("DOMContentLoaded", function() {
           document.getElementById("assemblyCode").innerText = data;
           console.log(asm.textContent);
           setUpLineNumbers();
+          document.getElementById("deleteTheProgram").style.display = "grid";
+          document.getElementById("place_in_the_button_for_id").innerHTML =
+              urlParams.get("id");
+          setupLayout();
+          document.getElementById("deleteTheProgramButton").onclick = () => {
+            fetch("deleteTheProgram.php", {
+              method : "POST",
+              redirect : "error",
+              body : new URLSearchParams({
+                id : urlParams.get("id"),
+                password : document.getElementById("input_password").value
+              })
+            })
+                .then((response) => { return response.text(); })
+                .then(
+                    (data) => { alert("The server responded with: " + data); })
+                .catch((error) => { alert(error.message); });
+          };
         })
 
         .catch((error) => {

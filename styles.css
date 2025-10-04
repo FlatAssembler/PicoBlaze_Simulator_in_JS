@@ -567,3 +567,25 @@ textarea {
   top: 0;
   background-color: white;
 }
+#deleteTheProgram {
+  display: none;
+  grid-template-areas:
+    "label label label"
+    "password password password"
+    ". . button";
+  background-color: white;
+  padding: 5px;
+}
+#label_for_input_password {
+  grid-area: label;
+}
+#input_password {
+  grid-area: password;
+  width: calc(100% - 10px);
+  margin-bottom: 5px;
+}
+#deleteTheProgramButton {
+  grid-area: button;
+  float: right;
+  display: block;
+}
