@@ -28,14 +28,15 @@ document.addEventListener("DOMContentLoaded", function() {
               urlParams.get("id");
           setupLayout();
           document.getElementById("deleteTheProgramButton").onclick = () => {
-            fetch("deleteTheProgram.php", {
-              method : "POST",
-              redirect : "error",
-              body : new URLSearchParams({
-                id : urlParams.get("id"),
-                password : document.getElementById("input_password").value
-              })
-            })
+            const formData =
+                new FormData(); // Doing it with `URLSearchParams` causes
+                                // Firefox 52 to send an empty POST request to
+                                // the server.
+            formData.append("id", urlParams.get("id"));
+            formData.append("password",
+                            document.getElementById("input_password").value);
+            fetch("deleteTheProgram.php",
+                  {method : "POST", redirect : "error", body : formData})
                 .then((response) => { return response.text(); })
                 .then(
                     (data) => { alert("The server responded with: " + data); })
