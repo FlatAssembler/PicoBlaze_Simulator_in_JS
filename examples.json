@@ -75,5 +75,12 @@
     "image": "https://flatassembler.github.io/PicoBlaze/nQueensPuzzle.jpg",
     "image_alt": "Eight Queens Puzzle",
     "name": "N-Queens Puzzle"
+  },
+  {
+    "id": "11",
+    "file_name": "sierpinski.psm",
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Sierpinski_triangle.svg/500px-Sierpinski_triangle.svg.png",
+    "image_alt": "The Sierpinski Triangle",
+    "name": "Sierpinski Triangle"
   }
 ]
