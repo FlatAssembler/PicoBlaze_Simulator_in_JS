@@ -238,9 +238,10 @@ function onSwitchPressed(event) {
   let valueOfTheFirstInput =
       parseInt(document.getElementById("input_00").value, 16);
   valueOfTheFirstInput ^= event.target.getAttribute("data-buttonValue");
-  if (valueOfTheFirstInput &
-      /* bitwise and (not a typo) */ event.target.getAttribute(
-          "data-buttonValue"))
+  // https://discord.com/channels/530598289813536771/847014270922391563/1434254492014219315
+  const isValid =
+      valueOfTheFirstInput & event.target.getAttribute("data-buttonValue");
+  if (isValid)
     event.target.setAttribute("y", 25);
   else
     event.target.setAttribute("y", 25 + 30 - 15);
