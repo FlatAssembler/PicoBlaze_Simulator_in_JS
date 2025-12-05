@@ -91,6 +91,15 @@ function displayRegistersAndFlags() {
     document.getElementById("interrupt_flag").className = "active";
   document.getElementById("interrupt_flag").innerHTML = flagIE;
   document.getElementById("register_PC").innerHTML = formatAsAddress(PC);
+  document.getElementById("callStack").innerHTML = `
+	<tr><th>Call stack</th></tr>
+	${
+      callStack
+          .map(element => {
+                   return `<tr><td>${formatAsAddress(element)}</td></tr>`})
+          .join('')}
+	<tr><td>NULL</td></tr>
+	`;
 }
 function highlightToken(token) {
   if (token[0] === ";")
@@ -115,8 +124,7 @@ function highlightToken(token) {
   if (token[0] === '"')
     return `<span class="string">${token}</span>`;
   if (/^(\d|[a-f])+$/i.test(token) || /\'d$/.test(token) ||
-      /\'b$/.test(token) || /\'o$/.test(token) ||
-      /\'x$/.test(token))
+      /\'b$/.test(token) || /\'o$/.test(token) || /\'x$/.test(token))
     return `<span class="number">${token}</span>`;
   return token;
 }
@@ -427,7 +435,8 @@ Displaying registers and flags on every step is useful for debugging, but it slo
   <b style="background: #FF7777; padding-left: 2px; padding-right:2px;">
   NOTE</b>:
   I have good reasons to think the emulation of flags is unrealistic,
-  especially when it comes to <code>REGBANK</code>s.</div>`;
+  especially when it comes to <code>REGBANK</code>s.</div>
+  <table id="callStack"></table>`;
   let inputOutputTable = `
 <table style="border-collapse: separate; border-spacing: 0;">
 <tr>
