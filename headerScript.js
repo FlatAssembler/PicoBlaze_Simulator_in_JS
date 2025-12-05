@@ -386,7 +386,7 @@ function drawTable() {
       is_UART_enabled ? "" : "checked"} onchange="deletePCpointer()" /></td>
 <td style="text-align:left; border-left: none;"><label for="shouldWeUpdateRegisters">Update registers and flags on every step</label></td></tr>
 <tr><td colspan="2" style="font-family: Arial; text-align: justify; font-weight: normal; border-top: none;">
-Displaying registers and flags on every step is useful for debugging, but it slows the simulation down. I would not recommend you to enable UART and updating the registers and flags at the same time.
+Displaying registers and flags on every step is useful for debugging, but it slows the simulation down (due to <a href="https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing#avoid_layout_thrashing">layout thrashing</a>). I would not recommend you to enable UART and updating the registers and flags at the same time.
 </td></tr></table>
 <table style="font-size:0.95em;">
 <tr>
