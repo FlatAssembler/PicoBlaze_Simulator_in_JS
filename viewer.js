@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function() {
           console.log(asm.textContent);
           setUpLineNumbers();
           document.getElementById("deleteTheProgram").style.display = "grid";
-          document.getElementById("place_in_the_button_for_id").innerHTML =
+          document.getElementById("place_in_the_button_for_id").innerText =
               urlParams.get("id");
           setupLayout();
           document.getElementById("deleteTheProgramButton").onclick = () => {
