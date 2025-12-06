@@ -91,10 +91,17 @@ function displayRegistersAndFlags() {
     document.getElementById("interrupt_flag").className = "active";
   document.getElementById("interrupt_flag").innerHTML = flagIE;
   document.getElementById("register_PC").innerHTML = formatAsAddress(PC);
+  if (typeof Array.prototype.toReversed !== "function")
+    Array.prototype.toReversed = function() {
+      const arrayToBeReturned = [];
+      for (let i = this.length - 1; i >= 0; i--)
+        arrayToBeReturned.push(this[i]);
+      return arrayToBeReturned;
+    };
   document.getElementById("callStack").innerHTML = `
 	<tr><th>Call stack</th></tr>
 	${
-      callStack
+      callStack.toReversed()
           .map(element => {
                    return `<tr><td>${formatAsAddress(element)}</td></tr>`})
           .join('')}
