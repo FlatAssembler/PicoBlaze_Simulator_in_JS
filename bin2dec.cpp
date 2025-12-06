@@ -26,6 +26,7 @@ volatile uint64_t first_digit, Gray_code,
 
 int main() {
   std::cout << "Enter a binary number containing at most 8 digits: ";
+  std::cin.width(9);
   std::cin >> binary_input;
   asm(R"assembly(
         .intel_syntax noprefix
