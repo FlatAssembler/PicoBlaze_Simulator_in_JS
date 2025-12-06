@@ -45,9 +45,22 @@ document.addEventListener("DOMContentLoaded", function() {
         })
 
         .catch((error) => {
+          // Escape user-supplied ID to prevent XSS
+          function escapeHtml(str) {
+            return str.replace(/[&<>"'`]/g, function (s) {
+              return ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;',
+                '`': '&#96;'
+              })[s];
+            });
+          }
           document.getElementById("assemblyCode").innerHTML =
               `;Unfortunately, fetching the example
-;program "${id}" from SourceForge failed.
+;program "${escapeHtml(id)}" from SourceForge failed.
 ;No worries, you can still select one of
 ;the example programs to fetch from
 ;GitHub.
