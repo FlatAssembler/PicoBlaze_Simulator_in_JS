@@ -17,13 +17,13 @@ function LevenshtainDistance(A, B) {
     temp.push(tmp);
   }
 
-  const min =
-      (a, b) => {
-        if (a < b)
-          return a;
-        else
-          return b;
-      }
+  const min = (a, b) => {
+    if (a < b)
+      return a;
+    else
+      return b;
+  }; // I am not sure whether there should be a semi-colon here or not. The code
+     // seems to somehow compile either way in both Firefox and Chrome.
 
   for (let i = 0; i < temp.length; i++) {
     for (let j = 0; j < temp[0].length; j++) {

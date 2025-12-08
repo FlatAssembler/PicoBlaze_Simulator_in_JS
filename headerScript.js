@@ -91,7 +91,9 @@ function displayRegistersAndFlags() {
     document.getElementById("interrupt_flag").className = "active";
   document.getElementById("interrupt_flag").innerHTML = flagIE;
   document.getElementById("register_PC").innerHTML = formatAsAddress(PC);
-  if (typeof Array.prototype.toReversed !== "function")
+  if (typeof Array.prototype.toReversed !==
+      "function") // Firefox 52 does not support the `toReversed` method on the
+                  // arrays, albeit we can do monkey-patching like this...
     Array.prototype.toReversed = function() {
       const arrayToBeReturned = [];
       for (let i = this.length - 1; i >= 0; i--)
