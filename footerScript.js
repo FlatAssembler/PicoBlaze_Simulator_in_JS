@@ -64,6 +64,10 @@ document.getElementById("assembleButton").onclick = () => {
   hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = false;
 };
 function stopSimulation() {
+  if (!playing) {
+    alert("You are not supposed to press the stop button unless the simulation is currently playing, and it is not right now!");
+    return;
+  }
   document.getElementById("fastForwardButton").disabled = false;
   document.getElementById("singleStepButton").disabled = false;
   document.getElementById("UART_INPUT").disabled = false;
