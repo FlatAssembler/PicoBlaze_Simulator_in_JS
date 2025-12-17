@@ -7,6 +7,7 @@ document.getElementById("assemblyCode").
 */
 setUpLineNumbers();
 let hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = false;
+let areWeCurrentlyAssembling = false;
 document.getElementById("assemblyCode").oninput = () => {
   setUpLineNumbers();
   hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = true;
@@ -59,12 +60,14 @@ document.getElementById("assembleButton").onclick = () => {
     alert("Internal assembler error: " + error.message);
   }
   drawTable();
+  areWeCurrentlyAssembling = true;
   stopSimulation();
+  areWeCurrentlyAssembling = false;
   hasTheCodeBeenAssembled = true;
   hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = false;
 };
 function stopSimulation() {
-  if (!playing) {
+  if (!playing && !areWeCurrentlyAssembling) {
     alert("You are not supposed to press the stop button unless the simulation is currently playing, and it is not right now!");
     return;
   }
