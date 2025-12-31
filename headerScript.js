@@ -405,7 +405,7 @@ function drawTable() {
 <tr><td colspan="2" style="font-family: Arial; text-align: justify; font-weight: normal; border-top: none;">
 Displaying registers and flags on every step is useful for debugging, but it slows the simulation down (due to <a href="https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing#avoid_layout_thrashing">layout thrashing</a>). I would not recommend you to enable UART and updating the registers and flags at the same time. ${
 /Firefox\/52([ \.]|$)/.test(navigator.userAgent) ?
- "" :
+ "Thank you for using Firefox 52, a browser that deals with layout thrashing well." :
  `And in case you think you are safe from the layout thrashing just because you use a modern Internet browser, reality check: <a href="https://www.reddit.com/r/firefox/comments/18icm8l/why_does_firefox_52_seem_to_run_javascript_faster/?utm_source=share&utm_medium=web2x&context=3">Modern Internet browsers deal with layout thrashing worse than Firefox 52 (the last version of Firefox runnable on Windows XP) deals with it</a>.`
 }
 </td></tr></table>
