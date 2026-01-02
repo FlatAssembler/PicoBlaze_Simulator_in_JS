@@ -5,6 +5,8 @@
  * https://www.reddit.com/r/learnprogramming/comments/17dwo2m/what_do_the_cores_of_good_assemblers_the_things/?utm_source=share&utm_medium=web2x&context=3
  * I have also asked that on CodeReview StackExchange:
  * https://codereview.stackexchange.com/q/287582/219010
+ * And on r/EngineeringStudents:
+ * https://www.reddit.com/r/EngineeringStudents/s/oIB7jzfBlj
  * So, maybe it would be a good idea to try to apply the suggestions I
  * received there.
  */
