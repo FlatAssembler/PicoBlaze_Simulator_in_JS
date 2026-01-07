@@ -114,7 +114,7 @@ display "this simulator, in most "
 display "browsers, updating the "
 display "tables with registers "
 display "and flags causes "
-display "layout trashing. "
+display "layout thrashing. "
 display a
 display "The authors think that, "
 display "in some future version "
@@ -126,7 +126,7 @@ display "'contain' property on "
 display "various elements), but, "
 display "for the time being, "
 display "there is a checkbox to "
-display "reduce layout trashing. "
+display "reduce layout thrashing. "
 display a
 endif
 
