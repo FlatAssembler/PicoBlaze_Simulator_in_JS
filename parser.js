@@ -21,13 +21,10 @@ function parse(tokenized) {
 
   // This function is recursive, so we are going to print the argument to
   // make it easier to debug it.
-  let report = "[";
-  for (let i = 0; i < tokenized.length; i++)
-    if (i < tokenized.length - 1)
-      report += tokenized[i].getLispExpression() + ",";
-    else
-      report += tokenized[i].getLispExpression();
-  report += "]";
+  let report =
+      "[" +
+      tokenized.map((node) => {return node.getLispExpression()}).join(',') +
+      "]";
   console.log("Parsing the expression: " + report);
 
   let root_of_abstract_syntax_tree = new TreeNode(

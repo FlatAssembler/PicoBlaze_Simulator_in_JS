@@ -28,17 +28,16 @@ document.getElementById("assembleButton").onclick = () => {
     alert("Internal compiler error in the tokenizer: " + error.message);
     return;
   }
-  let resultOfTokenizing = "[";
-  for (let i = 0; i < tokenized.length; i++) {
-    const token = tokenized[i];
-    if (token.text === "\n")
-      resultOfTokenizing += '"\\n"';
-    else
-      resultOfTokenizing += '"' + token.text + '"';
-    if (i !== tokenized.length - 1)
-      resultOfTokenizing += ",";
-  }
-  resultOfTokenizing += "]";
+  let resultOfTokenizing = "[" +
+                           tokenized
+                               .map((token) => {
+                                 if (token.text === '\n')
+                                   return '"\\n"';
+                                 else
+                                   return '"' + token.text + '"'
+                               })
+                               .join(",") +
+                           "]";
   console.log("Result of tokenizing: ", resultOfTokenizing);
   let parsed;
   try {
@@ -68,7 +67,8 @@ document.getElementById("assembleButton").onclick = () => {
 };
 function stopSimulation() {
   if (!playing && !areWeCurrentlyAssembling) {
-    alert("You are not supposed to press the stop button unless the simulation is currently playing, and it is not right now!");
+    alert(
+        "You are not supposed to press the stop button unless the simulation is currently playing, and it is not right now!");
     return;
   }
   document.getElementById("fastForwardButton").disabled = false;
