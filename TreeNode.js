@@ -53,10 +53,18 @@ class TreeNode {
   getLispExpression() {
     if (!this.children.length)
       return '"' + (this.text == "\n" ? "\\n" : this.text) + '"';
-    let ret = '("' + this.text + '" ' +
-              this.children.map((node) => {return node.getLispExpression()})
-                  .join(' ') +
-              ')';
+    let ret =
+        '("' + this.text + '" ' +
+        this.children
+            .map(
+                (node) => {
+                    return node
+                        .getLispExpression()}) // I've opened a Reddit thread
+                                               // about how this even compiles
+                                               // in JavaScript:
+                                               // https://www.reddit.com/r/AskProgramming/comments/1qa3hr8/how_does_this_piece_of_javascript_code_compile/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+            .join(' ') +
+        ')';
     return ret;
   }
   interpretAsArithmeticExpression(constants, labels) {
