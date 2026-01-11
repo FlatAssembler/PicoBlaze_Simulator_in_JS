@@ -53,12 +53,10 @@ class TreeNode {
   getLispExpression() {
     if (!this.children.length)
       return '"' + (this.text == "\n" ? "\\n" : this.text) + '"';
-    let ret = '("' + this.text + '" ';
-    for (let i = 0; i < this.children.length; i++)
-      if (i < this.children.length - 1)
-        ret += this.children[i].getLispExpression() + " ";
-      else
-        ret += this.children[i].getLispExpression() + ")";
+    let ret = '("' + this.text + '" ' +
+              this.children.map((node) => {return node.getLispExpression()})
+                  .join(' ') +
+              ')';
     return ret;
   }
   interpretAsArithmeticExpression(constants, labels) {
