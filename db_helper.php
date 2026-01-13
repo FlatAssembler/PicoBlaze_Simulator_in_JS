@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['dbname'] = "assembler_db";
+$GLOBALS['dbname'] = "ruap-lv3-database";
 
 class Database {
 
