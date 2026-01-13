@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['dbname'] = "p3379031_assembler_db";
+$GLOBALS['dbname'] = "assembler_db";
 
 class Database {
 
@@ -8,8 +8,9 @@ class Database {
     private $connection;
 
     private function __construct() {
-        $servername = "mysql-p";
-        $username = "p3379031rw";
+        $servername = "ruap-lv3-server.mysql.database.azure.com";
+        $username = "ayhfdamgrt";
+        $port = 3306;
         $password = substr(file_get_contents(".env"), strlen("password="));
         if (substr($password, -1, 1) == "\n") {
             $password = substr($password, 0, strlen($password) - 1);
@@ -20,7 +21,7 @@ class Database {
         $dbname = $GLOBALS['dbname'];
 
         try {
-            $this->connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+            $this->connection = new PDO("mysql:host=$servername:$port;dbname=$dbname", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             http_response_code(500);
