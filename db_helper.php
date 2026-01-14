@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['dbname'] = "ruap-lv3-database";
+$GLOBALS['dbname'] = "picoblaze-simulator-database";
 
 class Database {
 
@@ -8,8 +8,8 @@ class Database {
     private $connection;
 
     private function __construct() {
-        $servername = "ruap-lv3-server.mysql.database.azure.com";
-        $username = "ayhfdamgrt";
+        $servername = "picoblaze-simulator-server";
+        $username = "rmxsyjvmfv";
         $port = 3306;
         $password = substr(file_get_contents(".env"), strlen("password="));
         if (substr($password, -1, 1) == "\n") {
@@ -21,7 +21,7 @@ class Database {
         $dbname = $GLOBALS['dbname'];
 
         try {
-            $this->connection = new PDO("mysql:host=$servername:$port;dbname=$dbname", $username, $password);
+            $this->connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
             $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             http_response_code(500);
