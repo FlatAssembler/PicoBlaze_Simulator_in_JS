@@ -8,6 +8,16 @@ $conn = Database::getInstance()->getConnection();
 // WARNING: The following piece of code is AI-generated, and I don't know enough PHP to tell whether it is correct.
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
+    
+    $stmt = $conn->prepare(<<<SQL
+CREATE TABLE IF NOT EXISTS programs (
+    /* use UUID instead of INT AUTO_INCREMENT ? */
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    code TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+    SQL);
+    $stmt->execute();
 
     // 1. Check if the code already exists in the database
     $stmt = $conn->prepare("SELECT id FROM programs WHERE code = :code");
