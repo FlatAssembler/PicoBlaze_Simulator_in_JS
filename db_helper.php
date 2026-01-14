@@ -20,10 +20,11 @@ class Database {
         }
         $dbname = $GLOBALS['dbname'];
 
-        try {
-            $this->connection = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            $this->connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $e) {
+	try {
+$this->$connection = mysqli_init();
+mysqli_ssl_set($con,NULL,NULL, "/etc/ssl/certs/ca-certificates.crt", NULL, NULL);
+mysqli_real_connect($conn, "picoblaze-simulator-server.mysql.database.azure.com", "rmxsyjvmfv", $password, $dbname, 3306, MYSQLI_CLIENT_SSL);
+                    } catch (PDOException $e) {
             http_response_code(500);
             die("Connection to the database failed: " . $e->getMessage());
         }
