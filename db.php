@@ -9,7 +9,7 @@ $conn = Database::getInstance()->getConnection();
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
     
-    $stmt = $conn->prepare(<<<SQL
+    $conn->query(<<<SQL
 CREATE TABLE IF NOT EXISTS programs (
     /* use UUID instead of INT AUTO_INCREMENT ? */
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -17,26 +17,25 @@ CREATE TABLE IF NOT EXISTS programs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
     SQL);
-    $stmt->execute();
 
     // 1. Check if the code already exists in the database
-    $stmt = $conn->prepare("SELECT id FROM programs WHERE code = :code");
-    $stmt->bindParam(':code', $code);
+    $stmt = $conn->prepare("SELECT id FROM programs WHERE code = ?");
+    $stmt->bind_param('s', $code);
     $stmt->execute();
 
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->get_result();
 
     if ($result) {
         // 2. If exists, return the existing id
         echo "?id=" . $result['id'];
     } else {
         // 3. If not, insert the new code and return its new id
-        $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (:code)");
-        $stmt->bindParam(':code', $code);
+        $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (?)");
+        $stmt->bind_param('s', $code);
 
         try {
             $stmt->execute();
-            $lastInsertedId = $conn->lastInsertId();
+            $lastInsertedId = mysqli_insert_id($conn);
             echo "?id=" . $lastInsertedId;
         } catch (PDOException $e) {
             http_response_code(500);
@@ -54,11 +53,11 @@ if (isset($_GET['id'])) {
         return;
     }
 
-    $stmt = $conn->prepare("SELECT code FROM programs WHERE id = :id");
-    $stmt->bindParam(':id', $id);
+    $stmt = $conn->prepare("SELECT code FROM programs WHERE id = ?");
+    $stmt->bind_param('s', $id);
     $stmt->execute();
 
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->get_result();
     if ($result) {
         $programCode = $result['code'];
         // mysql uses \r\n, the browser uses \n

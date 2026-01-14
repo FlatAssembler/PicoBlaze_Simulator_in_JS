@@ -14,11 +14,11 @@ if (isset($_POST["password"])) {
 
 if (isset($_POST["id"])) {
     $conn = Database::getInstance()->getConnection();
-    $stmt = $conn->prepare("DELETE FROM programs WHERE id = :id");
-    $stmt->bindParam(':id', $_POST["id"]);
+    $stmt = $conn->prepare("DELETE FROM programs WHERE id = ?");
+    $stmt->bind_param('s', $_POST["id"]);
     $stmt->execute();
 
-    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $result = $stmt->get_result();
     echo $result;
 } else {
     http_response_code(400);
