@@ -40,7 +40,7 @@ An example of a similar project is [FRISC JS](https://github.com/izuzak/FRISCjs)
 
 Here is a sequential diagram explaining how the assembling of the assembly code into machine code is supposed to work:
 
-![The sequential diagram](sequential-diagram.jpg)
+![The sequential diagram](https://picoblaze-simulator.sourceforge.io/sequential-diagram.jpg)
 
 ## Star History
 
