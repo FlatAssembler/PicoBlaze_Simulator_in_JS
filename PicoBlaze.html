@@ -326,6 +326,12 @@
       FERIT to host the documentation here, so I did that. You can download
       <a href="PicoBlaze.doc">this Word document</a>. I will not use RTF, as I
       get problems when hosting such large files.<br /><br />
+      UPDATE on 17/01/2026: I've just made a UML sequential diagram explaining
+      how the assembling works in this program:
+      <img
+        style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
+        src="sequential-diagram.jpg"
+      />
       <a
         href="https://sourceforge.net/projects/picoblaze-simulator/files/latest/download"
         ><img
@@ -415,7 +421,15 @@
       </div>
       <button
         id="closing_the_licence"
-        onclick="document.getElementById('MIT_licence').remove(); if (!/Dolphin/.test(navigator.userAgent)) document.cookie='cookie_banner_closed=1'; else alert('It has been detected that you are using the Dolphin browser. The support for cookies in the Dolphin browser appears to be buggy, as Dolphin appears not to delete the cookies when JavaScript requests it to. For now, I decided not to use cookies in the Dolphin browser at all.');"
+        onclick="
+          document.getElementById('MIT_licence').remove();
+          if (!/Dolphin/.test(navigator.userAgent))
+            document.cookie = 'cookie_banner_closed=1';
+          else
+            alert(
+              'It has been detected that you are using the Dolphin browser. The support for cookies in the Dolphin browser appears to be buggy, as Dolphin appears not to delete the cookies when JavaScript requests it to. For now, I decided not to use cookies in the Dolphin browser at all.'
+            );
+        "
       >
         <img
           src="https://icons.getbootstrap.com/assets/icons/check-lg.svg"
@@ -445,7 +459,10 @@
         https://picoblaze-simulator.sourceforge.io/PicoBlaze.html?id=placeholder
       </div>
       <button
-        onclick="document.getElementById('uploadSuccessfulMessage').style.display='none'"
+        onclick="
+          document.getElementById('uploadSuccessfulMessage').style.display =
+            'none'
+        "
         id="closeButton"
       >
         <img
