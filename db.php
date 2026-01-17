@@ -10,12 +10,12 @@ if (isset($_POST['code'])) {
     $code = $_POST['code'];
     
     $conn->query(<<<SQL
-CREATE TABLE IF NOT EXISTS programs (
-    /* use UUID instead of INT AUTO_INCREMENT ? */
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    code TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+        CREATE TABLE IF NOT EXISTS programs (
+            /* use UUID instead of INT AUTO_INCREMENT ? */
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            code TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
     SQL);
 
     // 1. Check if the code already exists in the database
