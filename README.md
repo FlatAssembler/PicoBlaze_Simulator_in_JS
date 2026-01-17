@@ -36,6 +36,12 @@ An example of a similar project is [FRISC JS](https://github.com/izuzak/FRISCjs)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/FlatAssembler/PicoBlaze_Simulator_in_JS.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/FlatAssembler/PicoBlaze_Simulator_in_JS/context:javascript)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
+## The diagram explaining how the assembling works
+
+Here is a sequential diagram explaining how the assembling of the assembly code into machine code is supposed to work:
+
+![The sequential diagram](sequential-diagram.jpg)
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=FlatAssembler/PicoBlaze_Simulator_in_JS&type=date&legend=top-left)](https://www.star-history.com/#FlatAssembler/PicoBlaze_Simulator_in_JS&type=date&legend=top-left)
