@@ -7,6 +7,7 @@ constant NDEBUG, 1
 constant address_of_the_current_attempt, 8
 constant digits_of_the_ordinal_number, 16
 constant bottom_of_the_stack, 24
+constant rely_on_sorting_working_correctly, 1
 
 address 0
 
@@ -194,18 +195,32 @@ beginning_of_the_permutations_loop:
       fetch character_we_try_to_add, (s0)
       load s7, s0
       add s7, 1
-      load s8, 0 ;Whether we already tried adding that character.
-      check_if_we_already_tried_that_character_loop:
+      jump rely_on_sorting_working_correctly ? dont_loop_toward_the_end : loop_toward_the_end
+      loop_toward_the_end:
+        load s8, 0 ;Whether we already tried adding that character.
+        check_if_we_already_tried_that_character_loop:
+          compare s7, length_of_the_input
+          jump nc, end_of_the_check_if_we_already_tried_that_character_loop
+          fetch s6, (s7)
+          compare s6, character_we_try_to_add
+          jump nz, third_characters_are_not_equal_label
+            load s8, 1
+          third_characters_are_not_equal_label:
+          add s7, 1
+          jump check_if_we_already_tried_that_character_loop
+        end_of_the_check_if_we_already_tried_that_character_loop:
+        jump test_whether_s8_is_set_to_1
+      dont_loop_toward_the_end:
+        load s8, 0
         compare s7, length_of_the_input
-        jump nc, end_of_the_check_if_we_already_tried_that_character_loop
+        jump nc, test_whether_s8_is_set_to_1
         fetch s6, (s7)
-        compare s6, character_we_try_to_add
-        jump nz, third_characters_are_not_equal_label
-          load s8, 1
-        third_characters_are_not_equal_label:
-        add s7, 1
-        jump check_if_we_already_tried_that_character_loop
-      end_of_the_check_if_we_already_tried_that_character_loop:
+        compare character_we_try_to_add, s6
+        jump nz, fourth_characters_are_not_equal_label
+          load s8, 1 ; When "addzy" fails to assemble, for some reason.
+        fourth_characters_are_not_equal_label:
+        jump test_whether_s8_is_set_to_1
+      test_whether_s8_is_set_to_1:
       test s8, s8
       jump nz, dont_add_the_new_character
       jump NDEBUG ? dont_print_the_character_we_are_trying_to_add : print_the_character_we_are_trying_to_add
