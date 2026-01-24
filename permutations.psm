@@ -7,7 +7,7 @@ constant NDEBUG, 1
 constant address_of_the_current_attempt, 8
 constant digits_of_the_ordinal_number, 16
 constant bottom_of_the_stack, 24
-constant rely_on_sorting_working_correctly, 1
+constant rely_on_sorting_working_correctly, 1 ; <a href="https://www.reddit.com/r/asm/comments/1qlxfrw/how_it_is_that_relying_on_an_input_array_being/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button">This speeds up the program by around 11%. I don't know why the speed-up is so small.</a>
 
 address 0
 
