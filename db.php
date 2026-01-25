@@ -5,7 +5,11 @@ include 'db_helper.php';
 
 $conn = Database::getInstance()->getConnection();
 
-// WARNING: The following piece of code is AI-generated, and I don't know enough PHP to tell whether it is correct.
+// The following code is AI-generated, and I do not know enough PHP to tell if it is right...
+
+// Enable MySQLi exceptions so we can catch mysqli_sql_exception on errors
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
     
@@ -25,9 +29,10 @@ if (isset($_POST['code'])) {
 
     $result = $stmt->get_result();
 
-    if ($result) {
+    if ($result && $result->num_rows > 0) {
         // 2. If exists, return the existing id
-        echo "?id=" . $result['id'];
+        $row = $result->fetch_assoc();
+        echo "?id=" . $row['id'];
     } else {
         // 3. If not, insert the new code and return its new id
         $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (?)");
@@ -35,9 +40,9 @@ if (isset($_POST['code'])) {
 
         try {
             $stmt->execute();
-            $lastInsertedId = mysqli_insert_id($conn);
+            $lastInsertedId = $conn->insert_id;
             echo "?id=" . $lastInsertedId;
-        } catch (PDOException $e) {
+        } catch (mysqli_sql_exception $e) {
             http_response_code(500);
             echo "Error: " . $e->getMessage();
         }
@@ -48,18 +53,22 @@ if (isset($_POST['code'])) {
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    if ($id == "") {
-        echo "NO";
-        return;
+    if ($id === "" || !is_numeric($id)) {
+	    http_response_code(400);
+	    die("Error 400: The requested ID of the program does not seem to be a number!");
+            return;
     }
 
+    // Cast to int and bind as integer for safety
+    $id = (int) $id;
     $stmt = $conn->prepare("SELECT code FROM programs WHERE id = ?");
-    $stmt->bind_param('s', $id);
+    $stmt->bind_param('i', $id);
     $stmt->execute();
 
     $result = $stmt->get_result();
-    if ($result) {
-        $programCode = $result['code'];
+    if ($result && $result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $programCode = $row['code'];
         // mysql uses \r\n, the browser uses \n
         $programCode = str_replace("\r\n", "\n", $programCode);
         echo $programCode;
