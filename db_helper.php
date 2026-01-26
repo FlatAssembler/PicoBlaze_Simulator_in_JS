@@ -19,12 +19,27 @@ class Database {
             $password = substr($password, 0, strlen($password) - 1);
         }
         $dbname = $GLOBALS['dbname'];
-
-	try {
-$this->$connection = mysqli_init();
-mysqli_ssl_set($this->$connection,NULL,NULL, "/etc/ssl/certs/ca-certificates.crt", NULL, NULL);
-mysqli_real_connect($this->$connection, "picoblaze-simulator-server.mysql.database.azure.com", "rmxsyjvmfv", $password, $dbname, 3306, MYSQLI_CLIENT_SSL);
-                    } catch (PDOException $e) {
+        mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+	    try {
+            $this->$connection = mysqli_init();
+            mysqli_ssl_set(
+                $this->$connection,
+                NULL,
+                NULL,
+                "/etc/ssl/certs/ca-certificates.crt",
+                NULL,
+                NULL
+            );
+            mysqli_real_connect(
+                $this->$connection,
+                "picoblaze-simulator-server.mysql.database.azure.com",
+                "rmxsyjvmfv",
+                $password,
+                $dbname,
+                3306,
+                MYSQLI_CLIENT_SSL
+            );
+        } catch (mysqli_sql_exception $e) {
             http_response_code(500);
             die("Connection to the database failed: " . $e->getMessage());
         }
