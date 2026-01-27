@@ -2,7 +2,7 @@ const tree = require("../TreeNode.js");
 global.TreeNode = tree.TreeNode; // referenced by tokenizer
 
 const tokenizer = require("../tokenizer.js"); // Parser depends on the tokenizer to work...
-const list_of_directives = require("../list_of_directives.js");
+const list_of_directives = require("../list_of_directives.js"); // ... as well as on the list of directives (mnemonics and preprocessor directives).
 global.mnemonics = list_of_directives.mnemonics;
 global.preprocessor = list_of_directives.preprocessor;
 
