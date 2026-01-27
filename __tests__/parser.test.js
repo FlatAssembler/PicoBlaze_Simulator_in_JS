@@ -71,7 +71,7 @@ if i > 0 & i < 10'd
   endwhile
 endif
 `,
-    '("assembly" ("if" ("&" (">" "i" "0") ("<" "i" "10\'d")) ("assembly" ("while" ("<" "i" "10\'d") ("assembly" ("constant" "i" "," ("+" "i" "1")) ("display" ("+" ""0"" "i")) ("display" "a")))))'
+    '("assembly" ("if" ("&" (">" "i" "0") ("<" "i" "10\'d")) ("assembly" ("while" ("<" "i" "10\'d") ("assembly" ("constant" "i" "," ("+" "i" "1")) ("display" ("+" ""0"" "i")) ("display" "a"))))))'
   ],
   [
     "Enabling and disabling interrupts",
