@@ -1,149 +1,61 @@
 const tree = require("../TreeNode.js");
 global.TreeNode = tree.TreeNode; // referenced by tokenizer
 
-const tokenizer = require("../tokenizer.js"); // Parser depends on the tokenizer to work...
-
-const list_of_directives = require("../list_of_directives.js"); //...as well as on the list of directives.
+const tokenizer = require("../tokenizer.js"); // The parser depends on the tokenizer to work...
+const list_of_directives = require("../list_of_directives.js"); // ... and it also depends on the list of directives (preprocessor directives and mnemonics) being already loaded.
 global.mnemonics = list_of_directives.mnemonics;
 global.preprocessor = list_of_directives.preprocessor;
 
 const parser = require("../parser.js");
 
+const cases = [
+  ["Simple addition", "5+5", 5 + 5],
+  ["Addition of three numbers", "1+2+3", 1 + 2 + 3],
+  ["Subtraction", "5-2", 5 - 2],
+  ["Parentheses", "5-(5-2)", 5 - (5 - 2)],
+  ["Multiplication", "5*5", 5 * 5],
+  ["Division", "6/2", 6 / 2],
+  ["Exponentiation", "5^2", 5 ** 2],
+  ["Logical operators", "1 & 1 | 0", (1 && 1) || 0],
+  ["Decimal numbers", "10'd / 2", 10 / 2],
+  ["Binary numbers", "1010'b / 2", 0b1010 / 2],
+  ["Octal numbers", "252'o", 0o252],
+  ["Hexadecimal numbers", "a / 2", 0xa / 2],
+  ["Hexadecimal numbers composed entirely of decimal digits", "10 / 2", 0x10 / 2],
+  ["ASCII", '"A"', "A".charCodeAt(0)],
+  ["Unary operators", "5 + + 1", 5 + +1],
+  ["Fake unary operator", "(1 + 2) + 3", 1 + 2 + 3],
+  ["Unary minus", "5*-1", 5 * -1],
+  [
+    "Ternary conditional operator 1",
+    '(2+2>5?3+3<7?1:-2:2+2-4<1?0:2+2<4?-1:-3)+("A"+2="C"?0:-1)',
+    0,
+  ],
+  [
+    "Ternary conditional operator 2",
+    "1 ? 2 ? 3 : 4 : 5",
+    3,
+  ],
+  [
+    "The modulo operator",
+    "mod(5, 2)",
+    5 % 2,
+  ],
+  [
+    "The bitwise operators",
+    "bitand(invertBits(a),f)",
+    ~0xa & 0xf,
+  ],
+  [
+    "The logical operators have higher precedence than the ternary conditional operator",
+    "2+2<5 | 3-2>2 ? 5 : 3",
+    2+2<5 || 3-2>2 ? 5 : 3,
+  ]
+];
+
 describe("Evaluation of Arithmetic Expressions", () => {
-  test("Simple addition", () => {
-    const AST = parser.parse(tokenizer.tokenize("5+5"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 + 5,
-    );
-  });
-  test("Addition of three numbers", () => {
-    const AST = parser.parse(tokenizer.tokenize("1+2+3"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      1 + 2 + 3,
-    );
-  });
-  test("Subtraction", () => {
-    const AST = parser.parse(tokenizer.tokenize("5-2"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 - 2,
-    );
-  });
-  test("Parentheses", () => {
-    const AST = parser.parse(tokenizer.tokenize("5-(5-2)"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 - (5 - 2),
-    );
-  });
-  test("Multiplication", () => {
-    const AST = parser.parse(tokenizer.tokenize("5*5"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 * 5,
-    );
-  });
-  test("Division", () => {
-    const AST = parser.parse(tokenizer.tokenize("6/2"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      6 / 2,
-    );
-  });
-  test("Exponentiation", () => {
-    const AST = parser.parse(tokenizer.tokenize("5^2"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 ** 2,
-    );
-  });
-  test("Logical operators", () => {
-    const AST = parser.parse(tokenizer.tokenize("1 & 1 | 0"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      (1 && 1) || 0,
-    );
-  });
-  test("Decimal numbers", () => {
-    const AST = parser.parse(tokenizer.tokenize("10'd / 2"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      10 / 2,
-    );
-  });
-  test("Binary numbers", () => {
-    const AST = parser.parse(tokenizer.tokenize("1010'b / 2"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      0b1010 / 2,
-    );
-  });
-  test("Octal numbers", () => {
-    const AST = parser.parse(tokenizer.tokenize("252'o"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      0o252,
-    );
-  });
-  test("Hexadecimal numbers", () => {
-    const AST = parser.parse(tokenizer.tokenize("a / 2"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      0xa / 2,
-    );
-  });
-  test("Hexadecimal numbers composed entirely of decimal digits", () => {
-    const AST = parser.parse(tokenizer.tokenize("10 / 2"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      0x10 / 2,
-    );
-  });
-  test("ASCII", () => {
-    const AST = parser.parse(tokenizer.tokenize('"A"'));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      "A".charCodeAt(0),
-    );
-  });
-  test("Unary operators", () => {
-    const AST = parser.parse(tokenizer.tokenize("5 + + 1"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 + +1,
-    );
-  });
-  test("Fake unary operator", () => {
-    const AST = parser.parse(tokenizer.tokenize("(1 + 2) + 3"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      1 + 2 + 3,
-    );
-  });
-  test("Unary minus", () => {
-    const AST = parser.parse(tokenizer.tokenize("5*-1"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 * -1,
-    );
-  });
-  test("Ternary conditional operator 1", () => {
-    const AST = parser.parse(
-      tokenizer.tokenize(
-        '(2+2>5?3+3<7?1:-2:2+2-4<1?0:2+2<4?-1:-3)+("A"+2="C"?0:-1)',
-      ),
-    );
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      0,
-    );
-  });
-  test("Ternary conditional operator 2", () => {
-    const AST = parser.parse(tokenizer.tokenize("1 ? 2 ? 3 : 4 : 5"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      3,
-    );
-  });
-  test("The modulo operator", () => {
-    const AST = parser.parse(tokenizer.tokenize("mod(5, 2)"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      5 % 2,
-    );
-  });
-  test("The bitwise operators", () => {
-    const AST = parser.parse(tokenizer.tokenize("bitand(invertBits(a),f)"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      ~0xa & 0xf,
-    );
-  });
-   test("The logical operators have higher precedence than the ternary conditional operator", () => {
-    const AST = parser.parse(tokenizer.tokenize("2+2<5 | 3-2>2 ? 5 : 3"));
-    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
-      2+2<5 || 3-2>2 ? 5 : 3,
-    );
+  test.each(cases)("%s", (_name, code, expected) => {
+    const AST = parser.parse(tokenizer.tokenize(code));
+    expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(expected);
   });
 });
