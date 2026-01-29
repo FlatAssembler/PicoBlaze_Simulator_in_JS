@@ -1,3 +1,10 @@
+/*
+    This is a set of integration tests (not unit tests) testing the tokenizer and the parser together.
+    Previously, they were written in the arrange-and-assert form with all of them having the same logic.
+    Then I asked GitHub Copilot to rewrite them all from the arrange-and-assert form into the 
+    so-called data-provider form, to improve legibility.
+*/
+
 const tree = require("../TreeNode.js");
 global.TreeNode = tree.TreeNode; // referenced by tokenizer
 
