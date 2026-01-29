@@ -139,6 +139,7 @@ describe("Evaluation of Arithmetic Expressions", () => {
     expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
       ~0xa & 0xf,
     );
+  });
    test("The logical operators have higher precedence than the ternary conditional operator", () => {
     const AST = parser.parse(tokenizer.tokenize("2+2<5 | 3-2>2 ? 5 : 3"));
     expect(AST.children[0].interpretAsArithmeticExpression(new Map())).toEqual(
