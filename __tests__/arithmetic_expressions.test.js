@@ -1,3 +1,10 @@
+/*
+ * An integration test testing tokenizer, parser, and the arithmetic expressions
+ * evaluator together. Previously, it was written as a set of arrange-and-assert
+ * tests, but now I used GitHub Copilot to rewrite it into the data provider
+ * form.
+ * */
+
 const tree = require("../TreeNode.js");
 global.TreeNode = tree.TreeNode; // referenced by tokenizer
 
