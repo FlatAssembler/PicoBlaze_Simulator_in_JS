@@ -157,6 +157,18 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
         return context;
       }
       address += (node_of_depth_1.children[0].text.length - 2) * 2;
+      for (let i = 0; i < node_of_depth_1.children[0].text.length; i++) {
+        if (node_of_depth_1.children[0].text.substring(i, i + 2) == '\\n') {
+          console.log(
+              "DEBUG: Found a newline character in the string literal at line #" +
+              node_of_depth_1.lineNumber);
+          address -=
+              2; // Because "\n" is a single character, but it takes two
+                 // characters in the source code. This is a hack, but it works
+                 // for PicoBlaze (where all instructions have the same size),
+                 // and I don't care about other assembly languages.
+        }
+      }
     }
     if (/^constant$/i.test(node_of_depth_1.text) ||
         /^equ$/i.test(node_of_depth_1.text)) {

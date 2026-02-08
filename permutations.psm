@@ -317,9 +317,7 @@ call print_the_end_message
 jump 0
 
 print_the_introduction_message:
-  print_string "Enter a short string and press enter.", s9, UART_TX
-  load s9, a'x
-  call UART_TX
+  print_string "Enter a short string and press enter.\n", s9, UART_TX
 return
 
 print_the_sorted_array_message:
@@ -343,9 +341,7 @@ print_count_in_the_input_message:
 return
 
 print_the_we_are_adding_the_new_character_message:
-  print_string "We will try to add that character.", s9, UART_TX
-  load s9, a'x
-  call UART_TX
+  print_string "We will try to add that character.\n", s9, UART_TX
 return
 
 print_found_a_solution_message:
@@ -353,9 +349,7 @@ print_found_a_solution_message:
 return
 
 print_the_end_message:
-  print_string "The end!", s9, UART_TX
-  load s9, a'x
-  call UART_TX
+  print_string "The end!\n", s9, UART_TX
 return
 
 print_the_length_of_the_current_attempt_message:
@@ -367,9 +361,7 @@ print_the_ordinal_number_message:
 return
 
 print_the_exited_the_loop_message:
-  print_string "The 'add_a_new_character_loop' loop has exited!", s9, UART_TX
-  load s9, a'x
-  call UART_TX
+  print_string "The 'add_a_new_character_loop' loop has exited!\n", s9, UART_TX
 return
 
 base_hexadecimal

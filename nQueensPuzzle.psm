@@ -15,9 +15,7 @@ constant digits_of_the_ordinal_number, 10
 constant bottom_of_the_stack, 16
 
 
-print_string "Searching for solutions...", s9, UART_TX
-load s9, a'x
-call UART_TX
+print_string "Searching for solutions...\n", s9, UART_TX
 
 ;Let's set all the digits of the ordinal number of solutions to "0"
 regbank b
@@ -262,9 +260,7 @@ main_loop:
   jump main_loop
 end_of_the_main_loop:
 
-print_string "The end!", s9, UART_TX
-load s9, a'x
-call UART_TX
+print_string "The end!\n", s9, UART_TX
 
 infinite_loop: jump infinite_loop
 

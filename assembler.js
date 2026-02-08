@@ -196,8 +196,18 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
         machineCode[address].hex +=
             node_of_depth_1.children[2].getRegisterNumber(
                 output_of_preprocessor.namedRegisters);
-        machineCode[address].hex +=
-            formatAsByte(node_of_depth_1.children[0].text.charCodeAt(i));
+        if (node_of_depth_1.children[0].text.substring(i, i + 2) == '\\n') {
+          console.log(
+              "DEBUG: Found a newline character in the string literal at line #" +
+              node_of_depth_1.lineNumber);
+          machineCode[address].hex += "0a";
+          i++; // Because "\n" is a single character, but it takes two
+               // characters in the source code. This is a hack, but it works
+               // for PicoBlaze (where all instructions have the same size), and
+               // I don't care about other assembly languages.
+        } else
+          machineCode[address].hex +=
+              formatAsByte(node_of_depth_1.children[0].text.charCodeAt(i));
         machineCode[address].line =
             node_of_depth_1
                 .lineNumber; // Is this actually a good idea? I've asked a
