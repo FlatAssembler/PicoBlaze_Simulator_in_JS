@@ -213,7 +213,10 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
                 .lineNumber; // Is this actually a good idea? I've asked a
                              // question about that at StackExchange:
                              // https://langdev.stackexchange.com/q/4378/330
-        if (i > 1) {
+        if (i > 1) {         // TODO: What if the string starts with a newline
+                     // character? Then the first instruction will be "01 0a",
+                     // and that should also be a disabled breakpoint, but with
+                     // this code it won't be.
           machineCode[address].disableBreakpoint = true;
           if (typeof PicoBlaze == "object" &&
               typeof PicoBlaze.setDisabledBreakpoint == "function")
