@@ -181,6 +181,7 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
               node_of_depth_1.children[4].text + "' is not declared!");
         return;
       }
+      let isFirstCharacter = true;
       for (let i = 1; i < node_of_depth_1.children[0].text.length - 1; i++) {
         if (node_of_depth_1.children[0].text.charCodeAt(i) > 255) {
           alert("Line #" + node_of_depth_1.lineNumber + ": The character '" +
@@ -213,16 +214,14 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
                 .lineNumber; // Is this actually a good idea? I've asked a
                              // question about that at StackExchange:
                              // https://langdev.stackexchange.com/q/4378/330
-        if (i > 1) {         // TODO: What if the string starts with a newline
-                     // character? Then the first instruction will be "01 0a",
-                     // and that should also be a disabled breakpoint, but with
-                     // this code it won't be.
+        if (!isFirstCharacter) {
           machineCode[address].disableBreakpoint = true;
           if (typeof PicoBlaze == "object" &&
               typeof PicoBlaze.setDisabledBreakpoint == "function")
             PicoBlaze.setDisabledBreakpoint(address);
         } else {
           machineCode[address].disableBreakpoint = false;
+          isFirstCharacter = false;
         }
         address++;
         machineCode[address].hex = "20";
