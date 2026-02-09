@@ -277,4 +277,143 @@ RETURN
     expect(machineCode[24].hex).toBe("0190a"); // new-line character
     expect(machineCode[25].hex).toBe(call_UART_TX);
   });
+
+  test("The \"print_string\" breakpoints work when the string starts with a newline character", () => {
+    const assembly = `
+base_decimal
+
+address 0
+
+print_string "\\n This is a string which begins with a newline character.\\n", s9, UART_TX
+
+infinite_loop: jump infinite_loop
+
+base_hexadecimal
+;Now follows some boilerplate code
+;we use in our Computer Architecture
+;classes...
+CONSTANT LED_PORT,         00
+CONSTANT HEX1_PORT,        01
+CONSTANT HEX2_PORT,        02
+CONSTANT UART_TX_PORT,     03
+CONSTANT UART_RESET_PORT,  04
+CONSTANT SW_PORT,          00
+CONSTANT BTN_PORT,         01
+CONSTANT UART_STATUS_PORT, 02
+CONSTANT UART_RX_PORT,     03
+; Tx data_present
+CONSTANT U_TX_D, 00000001'b
+; Tx FIFO half_full
+CONSTANT U_TX_H, 00000010'b
+; TxFIFO full
+CONSTANT U_TX_F, 00000100'b
+; Rxdata_present
+CONSTANT U_RX_D, 00001000'b
+; RxFIFO half_full
+CONSTANT U_RX_H, 00010000'b
+; RxFIFO full
+CONSTANT U_RX_F, 00100000'b
+
+UART_RX:
+  INPUT sA, UART_STATUS_PORT
+  TEST  sA, U_RX_D
+  JUMP  NZ, input_not_empty
+  LOAD  s0, s0
+  JUMP UART_RX
+  input_not_empty:
+  INPUT s9, UART_RX_PORT
+RETURN
+
+UART_TX:
+  INPUT  sA, UART_STATUS_PORT
+  TEST   sA, U_TX_F
+  JUMP   NZ, UART_TX
+  OUTPUT s9, UART_TX_PORT
+RETURN
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    const call_UART_TX="20"+formatAsAddress(compilation_context.labels.get("UART_TX"));
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("0190a"); // new-line character
+    expect(machineCode[0].disableBreakpoint).toBe(false); // The first instruction should be breakpoint-enabled.
+    expect(machineCode[1].hex).toBe(call_UART_TX);
+    expect(machineCode[1].disableBreakpoint).toBe(true);
+    expect(machineCode[2].hex).toBe("01920"); //   (space)
+    expect(machineCode[2].disableBreakpoint).toBe(true);
+    expect(machineCode[3].hex).toBe(call_UART_TX);
+    expect(machineCode[3].disableBreakpoint).toBe(true);
+    expect(machineCode[4].hex).toBe("01954"); // T
+    expect(machineCode[4].disableBreakpoint).toBe(true);
+    expect(machineCode[5].hex).toBe(call_UART_TX);
+    expect(machineCode[5].disableBreakpoint).toBe(true);
+  });
+
+  test("The \"print_string\" breakpoints work when the string does not start with a newline character", () => {
+    const assembly = `
+address 0
+print_string "AB\\n", s9, UART_TX
+infinite_loop: jump infinite_loop
+
+;Now follows some boilerplate code
+;we use in our Computer Architecture
+;classes...
+CONSTANT LED_PORT,         00
+CONSTANT HEX1_PORT,        01
+CONSTANT HEX2_PORT,        02
+CONSTANT UART_TX_PORT,     03
+CONSTANT UART_RESET_PORT,  04
+CONSTANT SW_PORT,          00
+CONSTANT BTN_PORT,         01
+CONSTANT UART_STATUS_PORT, 02
+CONSTANT UART_RX_PORT,     03
+; Tx data_present
+CONSTANT U_TX_D, 00000001'b
+; Tx FIFO half_full
+CONSTANT U_TX_H, 00000010'b
+; TxFIFO full
+CONSTANT U_TX_F, 00000100'b
+; Rxdata_present
+CONSTANT U_RX_D, 00001000'b
+; RxFIFO half_full
+CONSTANT U_RX_H, 00010000'b
+; RxFIFO full
+CONSTANT U_RX_F, 00100000'b
+
+UART_RX:
+  INPUT sA, UART_STATUS_PORT
+  TEST  sA, U_RX_D
+  JUMP  NZ, input_not_empty
+  LOAD  s0, s0
+  JUMP UART_RX
+  input_not_empty:
+  INPUT s9, UART_RX_PORT
+RETURN
+
+UART_TX:
+  INPUT  sA, UART_STATUS_PORT
+  TEST   sA, U_TX_F
+  JUMP   NZ, UART_TX
+  OUTPUT s9, UART_TX_PORT
+RETURN
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    const call_UART_TX="20"+formatAsAddress(compilation_context.labels.get("UART_TX"));
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+    expect(machineCode[0].hex).toBe("01941"); // A
+    expect(machineCode[0].disableBreakpoint).toBe(false); // The first instruction should be breakpoint-enabled.
+    expect(machineCode[1].hex).toBe(call_UART_TX);
+    expect(machineCode[1].disableBreakpoint).toBe(true);
+    expect(machineCode[2].hex).toBe("01942"); // B
+    expect(machineCode[2].disableBreakpoint).toBe(true);
+    expect(machineCode[3].hex).toBe(call_UART_TX);
+    expect(machineCode[3].disableBreakpoint).toBe(true);
+    expect(machineCode[4].hex).toBe("0190a"); // new-line character
+    expect(machineCode[4].disableBreakpoint).toBe(true);
+    expect(machineCode[5].hex).toBe(call_UART_TX);
+    expect(machineCode[5].disableBreakpoint).toBe(true);
+  });
 });
