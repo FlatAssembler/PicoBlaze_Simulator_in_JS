@@ -194,34 +194,26 @@ main_loop:
      queen_is_in_the_same_row:
        jump NDEBUG ? dont_add_the_new_queen : print_the_first_debug_message
        print_the_first_debug_message:
-       print_string "There is a queen in the same row, aborting!", s9, UART_TX
-       load s9, a'x
-       call UART_TX
+       print_string "There is a queen in the same row, aborting!\n", s9, UART_TX
        jump dont_add_the_new_queen
 
      queen_is_on_the_same_diagonal:
        jump NDEBUG ? dont_add_the_new_queen : print_the_second_debug_message
        print_the_second_debug_message:
-       print_string "There is a queen on the same diagonal, aborting!", s9, UART_TX
-       load s9, a'x
-       call UART_TX
+       print_string "There is a queen on the same diagonal, aborting!\n", s9, UART_TX
        jump dont_add_the_new_queen
 
      queen_is_on_the_same_antidiagonal:
        jump NDEBUG ? dont_add_the_new_queen : print_the_third_debug_message
        print_the_third_debug_message:
-       print_string "There is a queen on the same anti-diagonal, aborting!", s9, UART_TX
-       load s9, a'x
-       call UART_TX
+       print_string "There is a queen on the same anti-diagonal, aborting!\n", s9, UART_TX
        jump dont_add_the_new_queen     
      
      add_the_new_queen:
      
      jump NDEBUG ? dont_print_the_fourth_debug_message : print_the_fourth_debug_message
      print_the_fourth_debug_message:
-     print_string "Nothing seems to prevent that queen from being added!", s9, UART_TX
-     load s9, a'x
-     call UART_TX    
+     print_string "Nothing seems to prevent that queen from being added!\n", s9, UART_TX
 
      dont_print_the_fourth_debug_message:
      load s0, top_of_the_stack
@@ -251,9 +243,7 @@ main_loop:
 
    jump NDEBUG ? end_of_branching : adding_a_new_queen_exited_message
    adding_a_new_queen_exited_message:
-     print_string "The `adding_a_new_queen_loop` loop exited!", s9, UART_TX
-     load s9, a'x
-     call UART_TX
+     print_string "The `adding_a_new_queen_loop` loop exited!\n", s9, UART_TX
   
   end_of_branching:
 
