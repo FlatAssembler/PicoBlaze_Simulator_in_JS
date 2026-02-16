@@ -1,6 +1,6 @@
 # PicoBlaze Assembler and Emulator in JavaScript
 
-![Picture of PicoBlaze](Background.gif)
+![Picture of PicoBlaze](https://picoblaze-simulator.sourceforge.io/Background.gif)
 
 This is my attempt to implement a [Xilinx PicoBlaze](https://en.wikipedia.org/wiki/PicoBlaze) assembler and emulator in JavaScript. My Computer Architecture professor Ivan Aleksi asked me to make it if physical laboratory exercises need to be canceled because of a pandemic, so that students can do the laboratory exercises in spite of not having access to a real PicoBlaze. Fortunately, thus far, that hasn't happened.
 
@@ -40,7 +40,7 @@ An example of a similar project is [FRISC JS](https://github.com/izuzak/FRISCjs)
 
 Here is a sequential diagram explaining how the assembling of the assembly code into machine code is supposed to work:
 
-![The sequential diagram](https://picoblaze-simulator.sourceforge.io/sequential-diagram.jpg)
+<img src="https://picoblaze-simulator.sourceforge.io/sequential-diagram.jpg" width="400" alt="The sequential diagram">
 
 ## Star History
 
