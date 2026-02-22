@@ -496,10 +496,15 @@ function downloadHex() {
             "The code has been modified since the last successful assembling. Are you sure you want to proceed downloading the hexadecimal file?"))
       return;
   }
-  if (/WebPositive/.test(navigator.userAgent))
+  if (/WebPositive/.test(navigator.userAgent)) {
+    let wantToProceed = confirm(
+        "It's detected you are using WebPositive. 'Download Hexadecimal' didn't work there when we tested it. In fact, it made the browser tab unresponsive until it was restarted. Do you want to proceed anyway?");
+    if (!wantToProceed)
+      return;
+  } else if (/Dolphin/.test(navigator.userAgent))
     alert(
-        "It's detected you are using WebPositive. 'Download Hexadecimal' didn't work there when we tested it.");
-
+        "It's detected you are using Dolphin. 'Download Hexadecimal' didn't work there when we tested it."); 
+  
   /*
   The following code is loosely based on:
   https://stackoverflow.com/a/33622881/8902065
