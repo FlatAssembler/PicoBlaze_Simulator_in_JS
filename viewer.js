@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   if (urlParams.has("id")) {
     document.getElementById("assemblyCode").innerHTML =
-        "Fetching the program from SourceForge...";
+        "Fetching the program from Azure...";
     const id = urlParams.get("id");
     const url = `db.php?id=${encodeURIComponent(id)}`;
     console.log(url);
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function() {
           }
           document.getElementById("assemblyCode").innerHTML =
               `;Unfortunately, fetching the example
-;program "${escapeHtml(id)}" from SourceForge failed.
+;program "${escapeHtml(id)}" from Azure failed.
 ;No worries, you can still select one of
 ;the example programs to fetch from
 ;GitHub.
