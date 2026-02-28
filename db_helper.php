@@ -9,7 +9,7 @@ class Database {
 
     private function __construct() {
         $servername = "picoblaze-simulator-server";
-        $username = "rmxsyjvmfv";
+        $username = "ckkbyzubna";
         $port = 3306;
         $password = substr(file_get_contents(".env"), strlen("password="));
         if (substr($password, -1, 1) == "\n") {
