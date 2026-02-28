@@ -21,9 +21,9 @@ class Database {
         $dbname = $GLOBALS['dbname'];
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 	    try {
-            $this->$connection = mysqli_init();
+            $this->connection = mysqli_init();
             mysqli_ssl_set(
-                $this->$connection,
+                $this->connection,
                 NULL,
                 NULL,
                 "/etc/ssl/certs/ca-certificates.crt",
@@ -31,9 +31,9 @@ class Database {
                 NULL
             );
             mysqli_real_connect(
-                $this->$connection,
+                $this->connection,
                 "picoblaze-simulator-server.mysql.database.azure.com",
-                "rmxsyjvmfv",
+                $username,
                 $password,
                 $dbname,
                 3306,
