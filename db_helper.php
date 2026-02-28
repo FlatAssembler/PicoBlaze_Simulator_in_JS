@@ -18,6 +18,9 @@ class Database {
         if (substr($password, -1, 1) == "\r") {
             $password = substr($password, 0, strlen($password) - 1);
         }
+        if (substr($password, -1, 1) == "\n") {
+            die("The password in the <code>.env</code> file contains a newline character at the end, which should not be possible!");
+        }
         $dbname = $GLOBALS['dbname'];
         mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 	    try {
