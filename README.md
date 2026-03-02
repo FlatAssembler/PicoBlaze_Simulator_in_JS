@@ -6,7 +6,7 @@ This is my attempt to implement a [Xilinx PicoBlaze](https://en.wikipedia.org/wi
 
 It is available live on [SourceForge](https://picoblaze-simulator.sourceforge.io/). If that doesn't work (for instance, if I got a cross-site scripting attack), the front-end-only version is available on [GitHub Pages](https://flatassembler.github.io/PicoBlaze/PicoBlaze.html). As the assembler is written in JavaScript, rather than in PHP, the basic functionality is available even in the front-end-only version. The fork of this program maintained by @agustiza (Agustin Izaguirre) is available [live on his website](https://agustiza.github.io/PicoBlaze_Simulator_in_JS/PicoBlaze.html).
 
-<del>Right now, this program has no back-end. Maybe I will add some back-end to enable users to share their own examples and comment on other users' examples later, but, for that, I will need to learn quite a bit of PHP, and it will work only on SourceForge because GitHub Pages supports no back-end scripting.</del> Abidin Durdu (known as @abdrd on GitHub) has made a simple back-end allowing the users to upload their own PicoBlaze assembly programs. It uses MySQL <del>and is running on the SourceForge servers</del>. Unfortunately, it can no longer run on SourceForge because SourceForge has dropped the support for the MySQL databses. I am trying (thus far unsuccessfully) to get it to run on the [Microsoft Azure](https://picoblaze-simulator-f0bjd5apf8bwcrdd.switzerlandnorth-01.azurewebsites.net/).
+<del>Right now, this program has no back-end. Maybe I will add some back-end to enable users to share their own examples and comment on other users' examples later, but, for that, I will need to learn quite a bit of PHP, and it will work only on SourceForge because GitHub Pages supports no back-end scripting.</del> Abidin Durdu (known as @abdrd on GitHub) has made a simple back-end allowing the users to upload their own PicoBlaze assembly programs. It uses MySQL <del>and is running on the SourceForge servers</del>. Unfortunately, it can no longer run on SourceForge because SourceForge has dropped the support for the MySQL databses. I am trying (<del>thus far unsuccessfully</del>) to get it to run on the [Microsoft Azure](https://picoblaze-simulator-f0bjd5apf8bwcrdd.switzerlandnorth-01.azurewebsites.net/).
 
 <del>The documentation, in Croatian, is available in the `seminar` folder, in DOCX, DOC, ODT, PDF and [RTF](https://flatassembler.github.io/PicoBlaze/PicoBlaze.rtf) formats.</del> (UPDATE: I received a message telling me that hosting the documentation on my website and my GitHub profile is a copyright infringement. So, the [documentation, in Croatian, is available on DABAR in the PDF format](https://repozitorij.etfos.hr/islandora/object/etfos:4489/datastream/PDF/download).)
 
@@ -41,6 +41,8 @@ An example of a similar project is [FRISC JS](https://github.com/izuzak/FRISCjs)
 Here is a sequential diagram explaining how the assembling of the assembly code into machine code is supposed to work:
 
 <img src="https://picoblaze-simulator.sourceforge.io/sequential-diagram.jpg" width="600" alt="The sequential diagram">
+
+You can see an explanation of what those terms (tokenizer, parser...) mean [in this video](https://flatassembler.github.io/compiler-theory-latin.mp4).
 
 ## Star History
 
