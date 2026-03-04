@@ -5,6 +5,11 @@ function LevenshtainDistance(A, B) {
   // Adapted from:
   // https://github.com/royalpranjal/Interview-Bit/blob/master/DynamicProgramming/EditDistance.cpp
 
+  if (typeof A != "string" || typeof B != "string") {
+    alert(
+        "Internal assembler error: Some part of the assembler tried to get the Levenshtain distance between two objects that are not both strings, which makes no sense!");
+    return Number.MAX_SAFE_INTEGER;
+  }
   const row = A.length;
   const col = B.length;
 
@@ -42,6 +47,34 @@ function LevenshtainDistance(A, B) {
   }
 
   return temp[row][col];
+}
+
+function longest_common_subsequence(A, B) {
+  if (typeof A != "string" || typeof B != "string") {
+    alert(
+        "Internal assembler error: Some part of the assembler tried to get the Longest Common Subsequence between two objects that are not both strings, which makes no sense!");
+    return -1;
+  }
+
+  let DP = new Array();
+  for (let i = 0; i < A.length; i++) {
+    let arrayOfZeros = new Array();
+    for (let i = 0; i < B.length; i++)
+      arrayOfZeros.push(0);
+    DP.push(arrayOfZeros);
+  }
+  const DP_lambda = (i, j) => {
+    if (i < 0 || j < 0)
+      return 0;
+    else
+      return DP[i][j];
+  };
+  for (let i = 0; i < A.length; i++)
+    for (let j = 0; j < B.length; j++)
+      DP[i][j] = (A[i] == B[j])
+                     ? DP_lambda(i - 1, j - 1) + 1
+                     : Math.max(DP_lambda(i - 1, j), DP_lambda(i, j - 1));
+  return DP[A.length - 1][B.length - 1];
 }
 
 class TreeNode {
@@ -240,9 +273,15 @@ class TreeNode {
         smallest_Levenshtain_distance = key;
       }
     }
-    if (confirm("Instead of \"" + this.text + "\", in the line #" +
-                this.lineNumber + ", did you perhaps mean \"" +
-                smallest_Levenshtain_distance + "\"?")) {
+    if (longest_common_subsequence(
+            this.text,
+            smallest_Levenshtain_distance) // We will not show a suggestion
+                                           // unless there is a longest common
+                                           // subsequence between the two
+                                           // strings.
+        && confirm("Instead of \"" + this.text + "\", in the line #" +
+                   this.lineNumber + ", did you perhaps mean \"" +
+                   smallest_Levenshtain_distance + "\"?")) {
       if (constants.has(smallest_Levenshtain_distance)) {
         constants.set(this.text, constants.get(smallest_Levenshtain_distance));
         return constants.get(this.text);
@@ -290,7 +329,9 @@ class TreeNode {
       if (LevenshtainDistance(key, this.text) == 1)
         register_name_with_Levenshtain_distance_of_one = key;
     });
-    if (register_name_with_Levenshtain_distance_of_one) {
+    if (register_name_with_Levenshtain_distance_of_one &&
+        longest_common_subsequence(
+            this.text, register_name_with_Levenshtain_distance_of_one)) {
       if (confirm(
               "Instead of \"" + this.text + "\", in the line #" +
               this.lineNumber + ", did you perhaps mean \"" +
@@ -329,7 +370,8 @@ class TreeNode {
         smallest_Levenshtain_distance = key;
       }
     }
-    if (confirm("Instead of \"" + this.text + "\", in the line #" +
+    if (longest_common_subsequence(this.text, smallest_Levenshtain_distance) &&
+        confirm("Instead of \"" + this.text + "\", in the line #" +
                 this.lineNumber + ", did you perhaps mean \"" +
                 smallest_Levenshtain_distance + "\"?")) {
       if (labels.has(smallest_Levenshtain_distance)) {
