@@ -44,6 +44,8 @@ function LevenshtainDistance(A, B) {
 }
 
 function longest_common_subsequence(A, B) {
+  // Adapted from the Domagoj Kusalić'es book "Napredno programiranje i
+  // algoritmi u C-u i C++-u", chapter 8.4.3, page 331 (in the 2014 edition).
   if (typeof A != "string" || typeof B != "string") {
     alert(
         "Internal assembler error: Some part of the assembler tried to get the Longest Common Subsequence between two objects that are not both strings, which makes no sense!");
