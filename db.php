@@ -20,8 +20,9 @@ if (isset($_POST['code'])) {
             code TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-        CREATE TABLE IF NOT EXISTS deleted_programs(id int auto_increment primary key, previous_id int unique);
     SQL);
+
+    $conn->query("CREATE TABLE IF NOT EXISTS deleted_programs(id int auto_increment primary key, previous_id int unique);");
 
     // 1. Check if the code already exists in the database
     $stmt = $conn->prepare("SELECT id FROM programs WHERE code = ?");
