@@ -30,7 +30,7 @@ if (isset($_POST['code'])) {
     SQL);
 
     $stmt = $conn->prepare("SELECT COUNT(*) AS number_of_inconsistencies FROM programs, deleted_programs WHERE deleted_programs.previous_id = programs.id");
-    $stmt->exectute();
+    $stmt->execute();
     $number_of_inconsistencies = $stmt->get_result()->fetch_assoc()['number_of_inconsistencies'];
 
     if ($number_of_inconsistencies)
