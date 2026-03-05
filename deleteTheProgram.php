@@ -15,7 +15,12 @@ if (isset($_POST["password"])) {
 if (isset($_POST["id"])) {
     $conn = Database::getInstance()->getConnection();
 
-    $conn->query("CREATE TABLE IF NOT EXISTS deleted_programs(id int auto_increment primary key, previous_id int unique)");
+    $conn->query(<<<SQL
+        CREATE TABLE IF NOT EXISTS deleted_programs(
+            id int auto_increment primary key,
+            previous_id int unique
+        );
+    SQL);
 
     $stmt = $conn->prepare("INSERT INTO deleted_programs(previous_id) VALUES (?)");
     $stmt->bind_param('s', $_POST["id"]);

@@ -12,7 +12,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
-    
+
     $conn->query(<<<SQL
         CREATE TABLE IF NOT EXISTS programs (
             /* use UUID instead of INT AUTO_INCREMENT ? */
@@ -22,8 +22,13 @@ if (isset($_POST['code'])) {
         );
     SQL);
 
-    $conn->query("CREATE TABLE IF NOT EXISTS deleted_programs(id int auto_increment primary key, previous_id int unique);");
-
+    $conn->query(<<<SQL
+        CREATE TABLE IF NOT EXISTS deleted_programs(
+            id int auto_increment primary key,
+            previous_id int unique
+        );
+    SQL);
+    
     // 1. Check if the code already exists in the database
     $stmt = $conn->prepare("SELECT id FROM programs WHERE code = ?");
     $stmt->bind_param('s', $code);
@@ -37,7 +42,7 @@ if (isset($_POST['code'])) {
         echo "?id=" . $row['id'];
     } else {
         // 3. If not, insert the new code and return its new id
-        
+
         $stmt = $conn->prepare("SELECT COUNT(*) AS counter FROM deleted_programs");
         $stmt->execute();
         $result = $stmt->get_result();
@@ -55,29 +60,28 @@ if (isset($_POST['code'])) {
             $stmt = $conn->prepare("INSERT INTO programs (id, code) VALUES (?, ?)");
             $stmt->bind_param('is', $empty_slot, $code);
 
-try {
-            $stmt->execute();
-            $lastInsertedId = $conn->insert_id;
-            echo "?id=" . $lastInsertedId;
-        } catch (mysqli_sql_exception $e) {
-            http_response_code(500);
-            echo "Error: " . $e->getMessage();
-        }
-
+            try {
+                $stmt->execute();
+                $lastInsertedId = $conn->insert_id;
+                echo "?id=" . $lastInsertedId;
+            } catch (mysqli_sql_exception $e) {
+                http_response_code(500);
+                echo "Error: " . $e->getMessage();
+            }
         } else {
 
-        $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (?)");
-        $stmt->bind_param('s', $code);
+            $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (?)");
+            $stmt->bind_param('s', $code);
 
-        try {
-            $stmt->execute();
-            $lastInsertedId = $conn->insert_id;
-            echo "?id=" . $lastInsertedId;
-        } catch (mysqli_sql_exception $e) {
-            http_response_code(500);
-            echo "Error: " . $e->getMessage();
+            try {
+                $stmt->execute();
+                $lastInsertedId = $conn->insert_id;
+                echo "?id=" . $lastInsertedId;
+            } catch (mysqli_sql_exception $e) {
+                http_response_code(500);
+                echo "Error: " . $e->getMessage();
+            }
         }
-}
     }
 }
 //End of the AI-generated code.
@@ -86,9 +90,9 @@ if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
     if ($id === "" || !is_numeric($id)) {
-	    http_response_code(400);
-	    die("Error 400: The requested ID of the program does not seem to be a number!");
-            return;
+        http_response_code(400);
+        die("Error 400: The requested ID of the program does not seem to be a number!");
+        return;
     }
 
     // Cast to int and bind as integer for safety
@@ -105,9 +109,8 @@ if (isset($_GET['id'])) {
         $programCode = str_replace("\r\n", "\n", $programCode);
         echo $programCode;
     } else {
-	    http_response_code(404);
+        http_response_code(404);
         $dbname = $GLOBALS['dbname'];
         echo "Error 404:\nProgram with the ID \"$id\" not found\nin the database \"$dbname\"!";
     }
 }
-?>
