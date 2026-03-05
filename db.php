@@ -53,7 +53,7 @@ if (isset($_POST['code'])) {
             $stmt->execute();
 
             $stmt = $conn->prepare("INSERT INTO programs (id, code) VALUES (?, ?)");
-            $stmt->bind_param('i', $empty_slot, 's', $code);
+            $stmt->bind_param('is', $empty_slot, $code);
 
 try {
             $stmt->execute();
