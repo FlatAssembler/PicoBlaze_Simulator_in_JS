@@ -20,6 +20,7 @@ if (isset($_POST['code'])) {
             code TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
+        CREATE TABLE IF NOT EXISTS deleted_programs(id int auto_increment primary key, previous_id int unique);
     SQL);
 
     // 1. Check if the code already exists in the database
@@ -35,6 +36,35 @@ if (isset($_POST['code'])) {
         echo "?id=" . $row['id'];
     } else {
         // 3. If not, insert the new code and return its new id
+        
+        $stmt = $conn->prepare("SELECT COUNT(*) AS counter FROM deleted_programs");
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $counter = $result->fetch_assoc()['counter'];
+        if ($counter > 0) {
+            $stmt = $conn->prepare("SELECT MIN(previous_id) AS empty_slot FROM deleted_programs");
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $empty_slot = $result->fetch_assoc()['empty_slot'];
+
+            $stmt = $conn->prepare("DELETE FROM deleted_programs WHERE previous_id = ?");
+            $stmt->bind_param('i', $empty_slot);
+            $stmt->execute();
+
+            $stmt = $conn->prepare("INSERT INTO programs (id, code) VALUES (?, ?)");
+            $stmt->bind_param('i', $empty_slot, 's', $code);
+
+try {
+            $stmt->execute();
+            $lastInsertedId = $conn->insert_id;
+            echo "?id=" . $lastInsertedId;
+        } catch (mysqli_sql_exception $e) {
+            http_response_code(500);
+            echo "Error: " . $e->getMessage();
+        }
+
+        } else {
+
         $stmt = $conn->prepare("INSERT INTO programs (code) VALUES (?)");
         $stmt->bind_param('s', $code);
 
@@ -46,6 +76,7 @@ if (isset($_POST['code'])) {
             http_response_code(500);
             echo "Error: " . $e->getMessage();
         }
+}
     }
 }
 //End of the AI-generated code.
