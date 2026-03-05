@@ -30,8 +30,12 @@ if (isset($_POST["id"])) {
     $stmt->bind_param('s', $_POST["id"]);
     $stmt->execute();
 
-    $result = $stmt->get_result();
-    echo $result;
+    $stmt = $conn->prepare("SELECT previous_id FROM deleted_programs");
+    $stmt->execute();
+    $stmt->bind_result($deleted_program_id);
+    echo "The programs marked as deleted are: ";
+    while ($stmt->fetch())
+	    echo $deleted_program_id . " ";
 } else {
     http_response_code(400);
     die("You did not specify the id of the program which should be deleted!");

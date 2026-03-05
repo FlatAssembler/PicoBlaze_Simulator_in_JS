@@ -28,6 +28,16 @@ if (isset($_POST['code'])) {
             previous_id int unique
         );
     SQL);
+
+    $stmt = $conn->prepare("SELECT COUNT(*) AS number_of_inconsistencies FROM programs, deleted_programs WHERE deleted_programs.previous_id = programs.id");
+    $stmt->exectute();
+    $number_of_inconsistencies = $stmt->get_result()->fetch_assoc()['number_of_inconsistencies'];
+
+    if ($number_of_inconsistencies)
+    {
+	    http_response_code(500);
+	    die("There seem to be $number_of_inconsistencies in the database, aborting!");
+    }
     
     // 1. Check if the code already exists in the database
     $stmt = $conn->prepare("SELECT id FROM programs WHERE code = ?");
