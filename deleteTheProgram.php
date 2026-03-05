@@ -17,7 +17,7 @@ if (isset($_POST["id"])) {
 
     $conn->query("CREATE TABLE IF NOT EXISTS deleted_programs(id int auto_increment primary key, previous_id int unique)");
 
-    $stmt = $conn->prepare("INSERT INTO deleted_programs VALUES (?)");
+    $stmt = $conn->prepare("INSERT INTO deleted_programs(previous_id) VALUES (?)");
     $stmt->bind_param('s', $_POST["id"]);
     $stmt->execute();
 
