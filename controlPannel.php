@@ -73,7 +73,6 @@ pre {
   font-weight: bold;
 }
 </style>
-<script src="headerScript.js"></script>
 <script>
 window.onload=()=>{
 const divsWithCode = document.getElementsByClassName("divWithCode");
@@ -164,6 +163,7 @@ for (const divWithCode of divsWithCode) {
 </script>
 </head>
 <body>
+<script src="headerScript.js"></script>
 <h1>Hello, <?php echo $_SESSION['username']; ?>!</h1>
 <a href="logout.php">Logout</a>
 <?php
