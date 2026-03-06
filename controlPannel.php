@@ -3,15 +3,19 @@ session_start();
 
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
+    echo "Redirecting you to the login page...";
     exit();
 }
 ?>
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 <title>PicoBlaze assembler and emulator in JavaScript - Control Pannel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+h1 {
+  text-align: center;
+}
 .divWithCode {
   --width-of-the-line-numbers: 50px;
   position: relative;
@@ -185,7 +189,7 @@ $stmt->bind_result($id, $code, $created_at);
 
 while ($stmt->fetch()) {
 echo "<section><h2>Program with the id <code>$id</code></h2>\n";
-echo "<div class=\"divWithCode\"><div class=\"divWithLineNumbers\"></div><pre>" . htmlspecialchars($code) . "</pre></div>\n" . "Created at: <code>$created_at</code></section>\n";
+echo "<div class=\"divWithCode\"><div class=\"divWithLineNumbers\"></div><pre>" . htmlspecialchars($code) . "</pre></div>\n" . "Created at: <code>$created_at</code><br/><input id=\"input_for_example_$id\" type=\"checkbox\"><label for=\"input_for_example_$id\">Store that id into the table of recently deleted programs, so that it gets replaced</label><br/><button onclick=\"alert('Stub - not implemented!')\">Delete from database</button></section>\n";
 }
 
 $stmt = $conn->prepare("SELECT COUNT(*) AS number_of_deleted_programs FROM deleted_programs");
