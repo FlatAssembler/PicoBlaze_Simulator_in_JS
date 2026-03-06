@@ -7,7 +7,7 @@ $color = "#eee";
 			$message = "Login successful! Redirecting to <code>controlPannel.php</code>...";
 			$color = "#afa";
 			session_start();
-			$_SESSION['username'] = "FlatAssembler";
+			$_SESSION['username'] = "Teo Samar&zcaron;ija";
 			header("Location: controlPannel.php");
 		}
 		else {
