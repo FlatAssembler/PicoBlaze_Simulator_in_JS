@@ -40,7 +40,40 @@ pre {
   color: #111;
   padding-left: 5px;
 }
+.string {
+  color: #770000;
+}
+.number {
+  color: #007777;
+}
+.directive {
+  color: #770077;
+  font-weight: bold;
+}
+.parenthesis {
+  font-weight: bold;
+}
+.flag {
+  color: #007700;
+  font-weight: bold;
+}
+.label {
+  color: #770077;
+}
+.comment {
+  color: #333333;
+  font-style: italic;
+}
+.mnemonic {
+  color: #000077;
+  font-weight: bold;
+}
+.register {
+  color: #773300;
+  font-weight: bold;
+}
 </style>
+<script src="headerScript.js"></script>
 <script>
 window.onload=()=>{
 const divsWithCode = document.getElementsByClassName("divWithCode");
@@ -57,6 +90,75 @@ for (const divWithCode of divsWithCode) {
     event.target.parentNode.children[0].scroll(
     0, event.target.scrollTop);
   };
+  if ((/[&<>]/.test(innerText)))
+    continue;
+  const assemblyCode = innerText;
+  let areWeInAString = false;
+  let areWeInAComment = false;
+  let currentToken = "";
+  let highlightedText = "";
+  for (let i = 0; i < assemblyCode.length; i++) {
+    if (assemblyCode[i] === ";" && !areWeInAString) {
+      highlightedText += highlightToken(currentToken);
+      currentToken = ";";
+      areWeInAComment = true;
+      continue;
+    }
+    if (areWeInAComment && assemblyCode[i] !== "\n") {
+      currentToken += assemblyCode[i];
+      continue;
+    }
+    if (assemblyCode[i] === "\n") {
+      areWeInAString = false;
+      areWeInAComment = false;
+      highlightedText += highlightToken(currentToken) + "<br/>";
+      currentToken = "";
+      continue;
+    }
+    if (assemblyCode[i] === ":" && !areWeInAString) {
+      highlightedText += highlightToken(currentToken + assemblyCode[i]);
+      currentToken = "";
+      continue;
+    }
+    if ((assemblyCode[i] === " " || assemblyCode[i] === "\t" ||
+         assemblyCode[i] === "," || assemblyCode[i] === "+" ||
+         assemblyCode[i] === "-" || assemblyCode[i] === "*" ||
+         assemblyCode[i] === "/" || assemblyCode[i] === "^" ||
+         assemblyCode[i] === '?') &&
+        !areWeInAString) {
+      highlightedText += highlightToken(currentToken) + assemblyCode[i];
+      currentToken = "";
+      continue;
+    }
+    if (assemblyCode[i] === '"' && !areWeInAString) {
+      highlightedText += highlightToken(currentToken);
+      currentToken = '"';
+      areWeInAString = true;
+      continue;
+    }
+    if ((assemblyCode[i] === "(" || assemblyCode[i] === ")" ||
+         assemblyCode[i] === "[" || assemblyCode[i] === "]" ||
+         assemblyCode[i] === "{" || assemblyCode[i] === "}") &&
+        !areWeInAString) {
+      highlightedText += highlightToken(currentToken) +
+                         '<span class="parenthesis">' + assemblyCode[i] +
+                         "</span>";
+      currentToken = "";
+      continue;
+    }
+    if (assemblyCode[i] !== '"') {
+      currentToken += assemblyCode[i];
+      continue;
+    }
+    if (assemblyCode[i] === '"' && areWeInAString) {
+      highlightedText += highlightToken(currentToken + '"');
+      currentToken = "";
+      areWeInAString = false;
+    }
+  }
+  highlightedText += highlightToken(currentToken);
+  preElement.innerHTML = highlightedText;
+
 }
 };
 </script>
