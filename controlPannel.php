@@ -18,7 +18,7 @@ pre {
   background-color: #aaa;
   color: #111;
 }
-<style>
+</style>
 </head>
 <body>
 <h1>Hello, <?php echo $_SESSION['username']; ?>!</h1>
@@ -43,6 +43,13 @@ while ($stmt->fetch()) {
 echo "<section><h2>Program with the id <code>$id</code></h2>\n";
 echo "<pre>" . htmlspecialchars($code) . "</pre>\n" . "Created at: <code>$created_at</code></section>\n";
 }
+
+$stmt = $conn->prepare("SELECT COUNT(*) AS number_of_deleted_programs FROM deleted_programs");
+$stmt->execute();
+
+$number_of_deleted_programs = $stmt->get_result()->fetch_assoc()['number_of_deleted_programs'];
+
+echo "<p>There are $number_of_deleted_programs programs that have been recently deleted from the database.</p>";
 ?>
 </body>
 </html>
