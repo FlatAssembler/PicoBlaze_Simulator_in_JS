@@ -13,10 +13,11 @@ if (!isset($_SESSION['username'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 pre {
-  width: 100%;
+  width: calc(100% - 10px);
   overflow-x: scroll;
   background-color: #aaa;
   color: #111;
+  padding: 5px;
 }
 </style>
 </head>
@@ -50,6 +51,16 @@ $stmt->execute();
 $number_of_deleted_programs = $stmt->get_result()->fetch_assoc()['number_of_deleted_programs'];
 
 echo "<p>There are $number_of_deleted_programs programs that have been recently deleted from the database.</p>";
+
+if ($number_of_deleted_programs) {
+echo "<ul>";
+$stmt = $conn->prepare("SELECT previous_id FROM deleted_programs");
+$stmt->execute();
+$stmt->bind_result($id);
+while ($stmt->fetch())
+  echo "<li>$id</li>";
+echo "</ul>";
+}
 ?>
 </body>
 </html>
