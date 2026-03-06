@@ -572,7 +572,7 @@ textarea {
   grid-template-areas:
     "label label label"
     "password password password"
-    ". . button";
+    "linkToControlPannel . button";
   background-color: white;
   padding: 5px;
 }
@@ -587,5 +587,10 @@ textarea {
 #deleteTheProgramButton {
   grid-area: button;
   float: right;
+  display: block;
+}
+#linkToControlPannel {
+  grid-area: linkToControlPannel;
+  float: left;
   display: block;
 }
