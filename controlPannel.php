@@ -30,7 +30,7 @@ if (!isset($_SESSION['username'])) {
   font-size: 1em;
 }
 pre {
-  top: -1em;
+  top: 0;
   position: absolute;
   width: calc(100% - 10px - var(--width-of-the-line-numbers));
   left: var(--width-of-the-line-numbers);
@@ -38,7 +38,7 @@ pre {
   overflow: scroll;
   background-color: #eee;
   color: #111;
-  padding: 5px;
+  padding-left: 5px;
 }
 </style>
 <script>
