@@ -23,15 +23,18 @@ if (!isset($_SESSION['username'])) {
   overflow: hidden;
   width: var(--width-of-the-line-numbers);
   left: 0;
+  top: 0;
   text-align: right;
+  background-color: #aaa;
 }
 pre {
+  top: 0;
   position: absolute;
   width: calc(100% - 10px - var(--width-of-the-line-numbers));
   left: var(--width-of-the-line-numbers);
   height: 500px;
   overflow: scroll;
-  background-color: #ccc;
+  background-color: #eee;
   color: #111;
   padding: 5px;
 }
@@ -49,8 +52,8 @@ for (const divWithCode of divsWithCode) {
     resultString += (i+1)+".<br/>";
   divWithLineNumbers.innerHTML = resultString;
   preElement.onscroll = (event) => {
-    event.target.parent.children[0].scroll(
-    0, event.target.scrollY);
+    event.target.parentNode.children[0].scroll(
+    0, event.target.scrollTop);
   };
 }
 };
