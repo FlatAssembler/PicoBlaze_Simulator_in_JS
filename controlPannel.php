@@ -6,6 +6,21 @@ if (!isset($_SESSION['username'])) {
   echo "Redirecting you to the login page...";
   exit();
 }
+
+include 'db_helper.php';
+$conn = Database::getInstance()->getConnection();
+
+if (isset($_GET['id']) && isset($_GET['permanent'])) { 
+    if ($_GET['permanent']){
+    	$stmt = $conn->prepare("INSERT INTO deleted_programs(previous_id) VALUES (?)");
+    	$stmt->bind_param('s', $_GET["id"]);
+    	$stmt->execute();
+    }
+
+    $stmt = $conn->prepare("DELETE FROM programs WHERE id = ?");
+    $stmt->bind_param('s', $_GET["id"]);
+    $stmt->execute();
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -205,10 +220,6 @@ if (!isset($_SESSION['username'])) {
   <h1>Hello, <?php echo $_SESSION['username']; ?>!</h1>
   <a href="logout.php">Logout</a>
   <?php
-  include 'db_helper.php';
-
-  $conn = Database::getInstance()->getConnection();
-
   $stmt = $conn->prepare("SELECT COUNT(*) AS number_of_programs FROM programs");
   $stmt->execute();
 
@@ -222,7 +233,7 @@ if (!isset($_SESSION['username'])) {
 
   while ($stmt->fetch()) {
     echo "<section><h2>Program with the id <code>$id</code></h2>\n";
-    echo "<div class=\"divWithCode\"><div class=\"divWithLineNumbers\"></div><pre>" . htmlspecialchars($code) . "</pre></div>\n" . "Created at: <code>$created_at</code><br/><input id=\"input_for_example_$id\" type=\"checkbox\"><label for=\"input_for_example_$id\">Store that id into the table of recently deleted programs, so that it gets replaced</label><br/><button onclick=\"alert('Stub - not implemented!')\">Delete from database</button></section>\n";
+    echo "<div class=\"divWithCode\"><div class=\"divWithLineNumbers\"></div><pre>" . htmlspecialchars($code) . "</pre></div>\n" . "Created at: <code>$created_at</code><br/><input id=\"input_for_example_$id\" type=\"checkbox\"><label for=\"input_for_example_$id\">Store that id into the table of recently deleted programs, so that it gets replaced</label><br/><button onclick=\"window.location.href='controlPannel.php?id=$id&permanent='+(document.getElementById('input_for_example_$id').checked | 0)\">Delete from database</button></section>\n";
   }
 
   $stmt = $conn->prepare("SELECT COUNT(*) AS number_of_deleted_programs FROM deleted_programs");
