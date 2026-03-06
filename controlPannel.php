@@ -26,6 +26,12 @@ if (!isset($_SESSION['username'])) {
       background-color: whitesmoke;
     }
 
+    @media (min-width: 850px) {
+      main {
+        padding: 20px;
+      }
+    }
+
     h1 {
       text-align: center;
     }
