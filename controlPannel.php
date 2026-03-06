@@ -30,7 +30,7 @@ if (!isset($_SESSION['username'])) {
   font-size: 1em;
 }
 pre {
-  top: 0;
+  top: -1em;
   position: absolute;
   width: calc(100% - 10px - var(--width-of-the-line-numbers));
   left: var(--width-of-the-line-numbers);
