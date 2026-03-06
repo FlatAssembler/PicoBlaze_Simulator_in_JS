@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 .divWithCode {
-  --width-of-the-line-numbers: 30px;
+  --width-of-the-line-numbers: 50px;
   position: relative;
   height: 500px;
 }
