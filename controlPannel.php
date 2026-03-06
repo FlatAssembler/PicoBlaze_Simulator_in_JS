@@ -89,7 +89,7 @@ for (const divWithCode of divsWithCode) {
     event.target.parentNode.children[0].scroll(
     0, event.target.scrollTop);
   };
-  // if ((/[&<>]/.test(innerText))) // The syntax highlighting crashes the JavaScript for now, so I suppose it's best to disable it
+  if ((/[&<>]/.test(innerText)))
     continue;
   const assemblyCode = innerText;
   let areWeInAString = false;
@@ -163,6 +163,7 @@ for (const divWithCode of divsWithCode) {
 </script>
 </head>
 <body>
+<script src="list_of_directives.js"></script>
 <script src="headerScript.js"></script>
 <h1>Hello, <?php echo $_SESSION['username']; ?>!</h1>
 <a href="logout.php">Logout</a>
