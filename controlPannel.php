@@ -26,9 +26,11 @@ if (!isset($_SESSION['username'])) {
   top: 0;
   text-align: right;
   background-color: #aaa;
+  font-family: Monospace;
+  font-size: 1em;
 }
 pre {
-  top: 0;
+  top: -1em;
   position: absolute;
   width: calc(100% - 10px - var(--width-of-the-line-numbers));
   left: var(--width-of-the-line-numbers);
