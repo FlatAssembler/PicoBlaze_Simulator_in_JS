@@ -12,14 +12,49 @@ if (!isset($_SESSION['username'])) {
 <title>PicoBlaze assembler and emulator in JavaScript - Control Pannel</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+.divWithCode {
+  --width-of-the-line-numbers: 30px;
+  position: relative;
+  height: 500px;
+}
+.divWithLineNumbers {
+  position: absolute;
+  height: 500px;
+  overflow: hidden;
+  width: var(--width-of-the-line-numbers);
+  left: 0;
+  text-align: right;
+}
 pre {
-  width: calc(100% - 10px);
-  overflow-x: scroll;
-  background-color: #aaa;
+  position: absolute;
+  width: calc(100% - 10px - var(--width-of-the-line-numbers));
+  left: var(--width-of-the-line-numbers);
+  height: 500px;
+  overflow: scroll;
+  background-color: #ccc;
   color: #111;
   padding: 5px;
 }
 </style>
+<script>
+window.onload=()=>{
+const divsWithCode = document.getElementsByClassName("divWithCode");
+for (const divWithCode of divsWithCode) {
+  const divWithLineNumbers = divWithCode.children[0];
+  const preElement = divWithCode.children[1];
+  const innerText = preElement.innerText;
+  const numberOfLines = (innerText.match(/\n/g) || []).length + 1;
+  let resultString = "";
+  for (let i=0; i<numberOfLines; i++)
+    resultString += (i+1)+".<br/>";
+  divWithLineNumbers.innerHTML = resultString;
+  preElement.onscroll = (event) => {
+    event.target.parent.children[0].scroll(
+    0, event.target.scrollY);
+  };
+}
+};
+</script>
 </head>
 <body>
 <h1>Hello, <?php echo $_SESSION['username']; ?>!</h1>
@@ -42,7 +77,7 @@ $stmt->bind_result($id, $code, $created_at);
 
 while ($stmt->fetch()) {
 echo "<section><h2>Program with the id <code>$id</code></h2>\n";
-echo "<pre>" . htmlspecialchars($code) . "</pre>\n" . "Created at: <code>$created_at</code></section>\n";
+echo "<div class=\"divWithCode\"><div class=\"divWithLineNumbers\"></div><pre>" . htmlspecialchars($code) . "</pre></div>\n" . "Created at: <code>$created_at</code></section>\n";
 }
 
 $stmt = $conn->prepare("SELECT COUNT(*) AS number_of_deleted_programs FROM deleted_programs");
