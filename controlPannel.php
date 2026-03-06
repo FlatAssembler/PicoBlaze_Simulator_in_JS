@@ -89,7 +89,7 @@ for (const divWithCode of divsWithCode) {
     event.target.parentNode.children[0].scroll(
     0, event.target.scrollTop);
   };
-  if ((/[&<>]/.test(innerText)))
+  // if ((/[&<>]/.test(innerText))) // The syntax highlighting crashes the JavaScript for now, so I suppose it's best to disable it
     continue;
   const assemblyCode = innerText;
   let areWeInAString = false;
