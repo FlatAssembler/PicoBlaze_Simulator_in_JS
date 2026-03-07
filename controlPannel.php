@@ -24,7 +24,7 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
 	    }
 	    else $message="The id " . htmlspecialchars($_GET['id']) . " is already present in the table with deleted programs!";
     }
-    if (!$mesage) {
+    if (!$message) {
 	    $stmt = $conn->prepare("SELECT COUNT(*) AS program_counter FROM programs WHERE id = ?");
 	    $stmt->bind_param('s', $_GET['id']);
 	    $stmt->execute();
