@@ -9,17 +9,37 @@ if (!isset($_SESSION['username'])) {
 
 include 'db_helper.php';
 $conn = Database::getInstance()->getConnection();
+$message = "";
 
-if (isset($_GET['id']) && isset($_GET['permanent'])) { 
+if (isset($_GET['id']) && isset($_GET['permanent'])) {
     if ($_GET['permanent']){
-    	$stmt = $conn->prepare("INSERT INTO deleted_programs(previous_id) VALUES (?)");
-    	$stmt->bind_param('s', $_GET["id"]);
-    	$stmt->execute();
+	    $stmt = $conn->prepare("SELECT COUNT(*) AS counter_in_deleted_programs FROM deleted_programs WHERE previous_id = ?");
+	    $stmt->bind_param('s', $_GET["id"]);
+	    $stmt->execute();
+	    $number_of_programs = $stmt->get_result()->fetch_assoc()['counter_in_deleted_programs'];
+	    if (!$number_of_programs) {
+    		$stmt = $conn->prepare("INSERT INTO deleted_programs(previous_id) VALUES (?)");
+    		$stmt->bind_param('s', $_GET["id"]);
+		$stmt->execute();
+	    }
+	    else $message="The id " . htmlspecialchars($_GET['id']) . " is already present in the table with deleted programs!";
     }
-
-    $stmt = $conn->prepare("DELETE FROM programs WHERE id = ?");
-    $stmt->bind_param('s', $_GET["id"]);
-    $stmt->execute();
+    if (!$mesage) {
+	    $stmt = $conn->prepare("SELECT COUNT(*) AS program_counter FROM programs WHERE id = ?");
+	    $stmt->bind_param('s', $_GET['id']);
+	    $stmt->execute();
+ 	    $number_of_programs = $stmt->get_result()->fetch_assoc()['program_counter'];
+	    if (!$number_of_programs) {
+	    	$message = "The program with the id " . htmlspecialchars($_GET['id']) . " does not exist in the database.";
+	    }
+	    else
+    	    {
+		$stmt = $conn->prepare("DELETE FROM programs WHERE id = ?");
+    		$stmt->bind_param('s', $_GET["id"]);
+		$stmt->execute();
+		$message = "Program successfully deleted!";
+    	    }
+    }
 }
 ?>
 <!doctype html>
@@ -129,7 +149,11 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
   <script src="list_of_directives.js"></script>
   <script src="headerScript.js"></script>
   <script>
-    window.onload = () => {
+      window.onload = () => {
+      <?php
+        if ($message)
+		echo "alert(\"$message\");";
+      ?>
       const divsWithCode = document.getElementsByClassName("divWithCode");
       for (const divWithCode of divsWithCode) {
         const divWithLineNumbers = divWithCode.children[0];
