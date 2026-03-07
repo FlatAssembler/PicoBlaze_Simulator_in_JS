@@ -62,24 +62,27 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
       height: 500px;
       overflow: hidden;
       width: var(--width-of-the-line-numbers);
-      left: 0;
+      left: 2px;
       top: 0;
       text-align: right;
       background-color: #aaa;
       font-family: Monospace;
       font-size: 1em;
+      border-radius: 5px 0 0 5px;
     }
 
     pre {
       top: -1em;
       position: absolute;
-      width: calc(100% - 10px - var(--width-of-the-line-numbers));
-      left: var(--width-of-the-line-numbers);
+      width: calc(100% - 14px - var(--width-of-the-line-numbers));
+      left: calc(var(--width-of-the-line-numbers) + 2px);
       height: 500px;
       overflow: scroll;
       background-color: #eee;
       color: #111;
       padding-left: 5px;
+      padding-right: 5px;
+      border-radius: 0 5px 5px 0;
     }
 
     .string {
