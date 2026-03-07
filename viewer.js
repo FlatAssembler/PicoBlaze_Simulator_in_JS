@@ -22,7 +22,10 @@ document.addEventListener("DOMContentLoaded", function() {
           data = data.replace("\r\n", "\n");
           document.getElementById("assemblyCode").innerText = data;
           console.log(asm.textContent);
-          setUpLineNumbers();
+	  if (!(/[&<>]/.test(data)))
+		document.getElementById("highlightButton").click();
+	  else
+          	setUpLineNumbers();
           document.getElementById("deleteTheProgram").style.display = "grid";
           document.getElementById("place_in_the_button_for_id").innerText =
               urlParams.get("id");
