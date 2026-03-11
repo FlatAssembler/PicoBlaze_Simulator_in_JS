@@ -63,10 +63,15 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
 
     @keyframes myAnimation {
       from {
-        border-radius: 0;
+	border-radius: 0;
+        border-color: whitesmoke;
+      }
+      50% {
+        border-color: darkgray;
       }
       to {
-        border-radius: 15px;
+	border-radius: 15px;
+        border-color: whitesmoke;
       }
     }
 
@@ -76,7 +81,10 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
         animation-name: myAnimation;
         animation-duration: 4s;
         animation-delay: 1s;
-        animation-iteration-count: 1;
+	animation-iteration-count: 1;
+	animation-fill-mode: forwards;
+        border-style: solid;
+        border-width: 3px;
       }
     }
 
