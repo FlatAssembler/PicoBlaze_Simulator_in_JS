@@ -84,7 +84,8 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
 	animation-iteration-count: 1;
 	animation-fill-mode: forwards;
         border-style: solid;
-        border-width: 3px;
+	border-width: 3px;
+        border-color: whitesmoke;
       }
     }
 
