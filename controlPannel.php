@@ -61,9 +61,22 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
       background-color: whitesmoke;
     }
 
+    @keyframes myAnimation {
+      from {
+        border-radius: 0;
+      }
+      to {
+        border-radius: 15px;
+      }
+    }
+
     @media (min-width: 850px) {
       main {
-        padding: 20px;
+	padding: 20px;
+        animation-name: myAnimation;
+        animation-duration: 4s;
+        animation-delay: 1s;
+        animation-iteration-count: 1;
       }
     }
 
