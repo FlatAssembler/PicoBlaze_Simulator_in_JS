@@ -333,3 +333,4 @@ RETURN
 
 ;I've made <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/raw/refs/heads/master/nQueensPuzzle.mem">MEM file</a> of this program compatible with <a href="https://kevinpt.github.io/opbasm/rst/opbsim.html">OpbSim</a>, a part of <a href="https://kevinpt.github.io/opbasm/">OpbAsm</a>.
 ;Just, when running it, make sure you set the scratchpad memory is set to 256 bytes, rather than to the default 64 bytes.
+;And I've also ported this program to <a href="https://sourceforge.net/p/picoblaze-simulator/code/ci/master/tree/nQueensPuzzle.asm">x86 assembly which can be compiled with FlatAssembler</a>.
