@@ -183,6 +183,9 @@ main_loop:
      jmp we_will_try_to_add_a_queen_at_the_field_string$
        we_will_try_to_add_a_queen_at_the_field_string db "We will try to add a queen at the field: ", 0
      we_will_try_to_add_a_queen_at_the_field_string$:
+     mov [string_to_be_printed], we_will_try_to_add_a_queen_at_the_field_string
+     call print_string
+
      mov al, [length_of_the_current_attempt]
      mov [s9], al
      add [s9], 'A'
