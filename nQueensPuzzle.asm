@@ -247,7 +247,7 @@ main_loop:
        if NDEBUG 
          jmp dont_add_the_new_queen 
        else
-         print_the_first_debug_message
+         jmp print_the_first_debug_message
        end if
        print_the_first_debug_message:
        jmp there_is_a_queen_in_the_same_row_string$
