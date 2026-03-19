@@ -193,23 +193,20 @@ function parse(tokenized) {
                                     /^disable$/i.test(tokenized[0].text))))
       continue;
     // If the current token is a mnemonic or a preprocessor directive, seek for
-    // the next new-line character. Unfortunately, we can't use the C++ find_if
-    // here...
-    let j = i;
-    while (true) {
-      if (j >= tokenized.length) {
-        alert(
-            "Internal compiler error: The assembly-lanaguage expression in line " +
-            tokenized[i].lineNumber + " doesn't end with a new-line token!\n" +
-            "Did you try writing something like `load (load s0, s1), s2`? That's invalid assembly code, assembly language doesn't support linguistic recursion. You need to write this:\n" +
-            "load s1, s2\n" +
-            "load s0, s1\n" +
-            "instead."); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/17
-        return root_of_abstract_syntax_tree;
-      }
-      if (tokenized[j].text == "\n")
-        break;
-      j++;
+    // the next new-line character. The solution to use `findIndex` is not as
+    // nice as using the C++'es `find_if` template function, but it is still
+    // way nicer than using a `while` loop for that.
+    const j =
+        tokenized.findIndex((node, index) => (index >= i && node.text == '\n'));
+    if (j == -1) {
+      alert(
+          "Internal compiler error: The assembly-lanaguage expression in line " +
+          tokenized[i].lineNumber + " doesn't end with a new-line token!\n" +
+          "Did you try writing something like `load (load s0, s1), s2`? That's invalid assembly code, assembly language doesn't support linguistic recursion. You need to write this:\n" +
+          "load s1, s2\n" +
+          "load s0, s1\n" +
+          "instead."); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/17
+      return root_of_abstract_syntax_tree;
     }
     let newArray = [];
     for (let k = i + 1; k < j; k++)
