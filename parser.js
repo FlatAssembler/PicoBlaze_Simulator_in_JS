@@ -35,6 +35,8 @@ function parse(tokenized) {
       i++ // First, let's deal with if-branching and while-loops...
   ) {
     if (/^if$/i.test(tokenized[i].text)) {
+      // TODO: Refactor the following code to use findIndex instead of while
+      // loops, like the rest of the parser does.
       let pointerToTheNextNewline = i + 1, condition = [];
       while (tokenized[pointerToTheNextNewline].text != "\n") {
         condition.push(tokenized[pointerToTheNextNewline]);
@@ -102,34 +104,33 @@ function parse(tokenized) {
             '" found without the corresponding "if" directive!');
       return root_of_abstract_syntax_tree;
     } else if (/^while$/i.test(tokenized[i].text)) {
-      let pointerToTheNextNewline = i + 1, condition = [];
-      while (tokenized[pointerToTheNextNewline].text != "\n") {
-        condition.push(tokenized[pointerToTheNextNewline]);
-        if (pointerToTheNextNewline >= tokenized.length) {
-          alert(
-              "Line #" + tokenized[i].lineNumber +
-              ': The condition after "while" doesn\'t end in a new-line character!');
-          return root_of_abstract_syntax_tree;
-        }
-        pointerToTheNextNewline++;
+      let pointerToTheNextNewline = tokenized.findIndex(
+          (node, index) => (index >= i && node.text == '\n'));
+      if (pointerToTheNextNewline == -1) {
+        alert(
+            "Line #" + tokenized[i].lineNumber +
+            ': The condition after "while" doesn\'t end in a new-line character!');
+        return root_of_abstract_syntax_tree;
       }
+      const condition = tokenized.slice(i + 1, pointerToTheNextNewline);
       tokenized[i].children.push(parse(condition).children[0]);
       tokenized.splice(i + 1, pointerToTheNextNewline - i);
-      let pointerToEndWhile = i + 1, counter = 1, loopClause = [];
-      while (counter) {
-        if (pointerToEndWhile >= tokenized.length) {
-          alert("Line #" + tokenized[i].lineNumber +
-                ': The "while" here isn\'t being closed by an "endwhile"!');
-          return root_of_abstract_syntax_tree;
-        }
-        if (/^while$/i.test(tokenized[pointerToEndWhile].text))
+      let counter = 1;
+      const pointerToEndWhile = tokenized.findIndex((node, index) => {
+        if (index <= i)
+          return false;
+        if (/^while$/i.test(node.text))
           counter++;
-        if (/^endwhile$/i.test(tokenized[pointerToEndWhile].text))
+        if (/^endwhile$/i.test(node.text))
           counter--;
-        loopClause.push(tokenized[pointerToEndWhile]);
-        pointerToEndWhile++;
+        return counter == 0;
+      }) + 1;
+      if (pointerToEndWhile == 0) {
+        alert("Line #" + tokenized[i].lineNumber +
+              ': The "while" here isn\'t being closed by an "endwhile"!');
+        return root_of_abstract_syntax_tree;
       }
-      loopClause.splice(loopClause.length - 1, 1);
+      const loopClause = tokenized.slice(i + 1, pointerToEndWhile - 1);
       tokenized[i].children.push(parse(loopClause));
       tokenized.splice(i + 1, pointerToEndWhile - i);
     } else if (/^endwhile$/i.test(tokenized[i].text)) {
@@ -147,23 +148,24 @@ function parse(tokenized) {
     if (/\($/.test(tokenized[i].text)) {
       // As far as I know, PicoBlaze Assembly uses only this type of
       // parentheses.
-      let counter = 1;
-      let j = i + 1;
-      while (counter) {
-        if (j >= tokenized.length) {
-          alert("The parenthesis on line " + tokenized[i].lineNumber +
-                " isn't closed!");
-          return root_of_abstract_syntax_tree;
-        }
-        if (/\($/.test(tokenized[j].text))
+      let counter = 1; // When JavaScript supports no static variables.
+      const j = tokenized.findIndex((node, index) => {
+        if (index <= i)
+          return false;
+        if (/\($/.test(node.text))
           counter++;
-        if (tokenized[j].text == ")")
+        if (node.text == ")")
           counter--;
-        j++;
+        return counter == 0;
+      }) + 1;
+      console.log("The parenthesis on the index " + i +
+                  " is closed at the index " + j + ".");
+      if (j == 0) {
+        alert("The parenthesis on line " + tokenized[i].lineNumber +
+              " isn't closed!");
+        return root_of_abstract_syntax_tree;
       }
-      let newArray = [];
-      for (let k = i + 1; k < j - 1; k++)
-        newArray.push(tokenized[k]);
+      const newArray = tokenized.slice(i + 1, j - 1);
       tokenized.splice(i + 1, j - i - 1);
       tokenized[i].text += ")";
       tokenized[i].children = parse(newArray).children;
@@ -208,9 +210,7 @@ function parse(tokenized) {
           "instead."); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/17
       return root_of_abstract_syntax_tree;
     }
-    let newArray = [];
-    for (let k = i + 1; k < j; k++)
-      newArray.push(tokenized[k]);
+    const newArray = tokenized.slice(i + 1, j);
     tokenized[i].children = parse(newArray).children;
     tokenized.splice(i + 1, j - i - 1);
   }
@@ -295,36 +295,45 @@ function parse(tokenized) {
    * to be an anti-pattern. So, I opened a StackExchange question about that:
    * https://langdev.stackexchange.com/q/4071/330
    */
+  if (!Array.prototype
+           .findLastIndex) // Firefox 52 (the last version of Firefox to run on
+                           // Windows XP) does not support the findLastIndex
+                           // directive on an array.
+    Array.prototype.findLastIndex = function(lambda) {
+      for (let i = this.length - 1; i >= 0; i--)
+        if (lambda(this[i], i))
+          return i;
+      return -1;
+    };
   let lastColon = tokenized.length - 2;
   if (lastColon > 0)
     while (lastColon) {
       if (tokenized[lastColon].text == ':' &&
           tokenized[lastColon + 1].text != '\n') {
-        let questionMarkCorrespondingToTheLastColon = lastColon, counter = 1;
         console.log(
             "DEBUG: Parsing the ternary conditional operator. The colon is at the index: " +
             lastColon);
-        while (counter) {
-          questionMarkCorrespondingToTheLastColon--;
-          if (!questionMarkCorrespondingToTheLastColon ||
-              questionMarkCorrespondingToTheLastColon < 0) {
-            alert(
-                "Line #" + tokenized[lastColon].lineNumber +
-                ": There is a colon without a matching question mark before it!");
-            return root_of_abstract_syntax_tree;
-          }
-          if (tokenized[questionMarkCorrespondingToTheLastColon].text == '?')
-            counter--;
-          else if (tokenized[questionMarkCorrespondingToTheLastColon].text ==
-                   ':')
-            counter++;
+        let counter = 1;
+        const questionMarkCorrespondingToTheLastColon =
+            tokenized.findLastIndex((node, index) => {
+              if (index >= lastColon)
+                return false;
+              if (node.text == '?')
+                counter--;
+              else if (node.text == ':')
+                counter++;
+              return counter == 0;
+            });
+        if (questionMarkCorrespondingToTheLastColon == -1) {
+          alert(
+              "Line #" + tokenized[lastColon].lineNumber +
+              ": There is a colon without a matching question mark before it!");
+          return root_of_abstract_syntax_tree;
         }
         console.log("DEBUG: The corresponding question mark is at the index: " +
                     questionMarkCorrespondingToTheLastColon);
-        let nodesThatRecursionDealsWith = [];
-        for (let i = questionMarkCorrespondingToTheLastColon + 1; i < lastColon;
-             i++)
-          nodesThatRecursionDealsWith.push(tokenized[i]);
+        let nodesThatRecursionDealsWith = tokenized.slice(
+            questionMarkCorrespondingToTheLastColon + 1, lastColon);
         tokenized[questionMarkCorrespondingToTheLastColon].text = "?:";
         tokenized[questionMarkCorrespondingToTheLastColon].children.push(
             tokenized[questionMarkCorrespondingToTheLastColon - 1]);
