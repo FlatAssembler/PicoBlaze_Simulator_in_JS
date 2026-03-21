@@ -15,5 +15,7 @@
 
 	$stmt = $conn->prepare("UPDATE codes_belonging_to_users SET code=? WHERE id=?");
 	$stmt->bind_param('si',$_POST['code'],$id);
+	$stmt->execute();
+
 	die("SUCCESS");
 ?>
