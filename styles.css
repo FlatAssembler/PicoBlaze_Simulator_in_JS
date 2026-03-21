@@ -596,7 +596,7 @@ textarea {
 }
 #greeting {
   background-color: white;
-  width: calc(100% - 10px);
+  width: calc(100% - 15px);
   border-radius: 5px;
   padding: 5px;
   display: grid;
@@ -629,14 +629,14 @@ textarea {
 }
 #greeting.logged_out form input[type="text"] {
   grid-area: username;
-  width: calc(100% - 10px);
+  width: calc(100% - 5px);
 }
 #greeting.logged_out form label:nth-of-type(2) {
   grid-area: second_label;
 }
 #greeting.logged_out form input[type="password"] {
   grid-area: password;
-  width: calc(100% - 10px);
+  width: calc(100% - 5px);
 }
 #greeting.logged_out form button {
   grid-area: login;
@@ -653,4 +653,11 @@ textarea {
   justify-content: center;
   border-radius: 10px;
 }
-
+#greeting.logged_in {
+  display: flex;
+  flex-wrap: wrap;
+}
+#greeting.logged_in button {
+  background-color: lightGray;
+  padding: 5px;
+}

@@ -103,7 +103,7 @@ if (isset($_POST['username'])) {
     </header>
     <main>
       <div id="greeting" class="<?php echo isset($_SESSION['username'])?"logged_in":"logged_out";?>"><?php if (isset($_SESSION['username'])):?>
-      <div id="hello">Hello, <?php echo $_SESSION['username'];?></div>
+      <div id="hello">Hello, <?php echo $_SESSION['username'];?>!</div>
 	<div id="save_the_program"><img src="https://icons.getbootstrap.com/assets/icons/floppy2-fill.svg" alt="Save the current program"></div>
 	<a href="logout.php">Logout</a>
 <?php else:?>
