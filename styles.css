@@ -657,6 +657,7 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  align-content: center;
 }
 #greeting.logged_in button {
   background-color: lightGray;
