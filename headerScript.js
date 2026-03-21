@@ -285,61 +285,66 @@ function setupLayout() {
     document.getElementsByTagName("main")[0].style.left =
         windowWidth / 2 - 500 / 2 + "px";
   }
+  const heightOfTheGreetings = document.getElementById("greeting")?document.getElementById("greeting").clientHeight + 10 :0;
   if (windowHeight < 400) {
+    document.getElementById("lineNumbers").style.top=heightOfTheGreetings+"px";
+    document.getElementById("assemblyCode").style.top=heightOfTheGreetings+"px";
     document.getElementById("buttons").style.top =
-        windowHeight + 200 + 3 * 4 + "px";
+        heightOfTheGreetings + windowHeight + 200 + 3 * 4 + "px";
     document.getElementById("whyClickAssemble").style.top =
-        windowHeight + 200 + 3 * 4 + 20 + 5 + "px";
+        heightOfTheGreetings + windowHeight + 200 + 3 * 4 + 20 + 5 + "px";
     const heightOfTheDivWithTheInstructionAboutAssembling =
         document.getElementById("whyClickAssemble").clientHeight;
     document.getElementById("divWithMachineCode").style.top =
-        windowHeight + 4 * 4 + 20 + 200 +
+        heightOfTheGreetings + windowHeight + 4 * 4 + 20 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("simulationButtons").style.top =
-        2 * windowHeight + 3 * 4 + 30 + 200 +
+        heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementsByTagName("footer")[0].style.top =
-        65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + is_UART_enabled * 260 +
+        heightOfTheGreetings + 65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + is_UART_enabled * 260 +
         50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("divWithExamples").style.top =
-        windowHeight + 4 + "px";
+        heightOfTheGreetings + windowHeight + 4 + "px";
     document.getElementById("simulationResults").style.top =
-        windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + is_UART_enabled * 260 +
+        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + is_UART_enabled * 260 +
         50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("graphicalResults").style.top =
-        windowHeight * 2 + heightOfTheDivWithTheInstructionAboutAssembling +
+        heightOfTheGreetings + windowHeight * 2 + heightOfTheDivWithTheInstructionAboutAssembling +
         200 + 65 + 50 - 30 + "px";
     document.getElementById("UART_enable_button").style.top =
-        windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
+        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
         heightOfTheDivWithTheInstructionAboutAssembling +
         "px"; // Usually has no effect, see below...
     document.getElementById("UART_IO").style.top =
-        windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + 50 +
+        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + 50 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
   } else {
-    document.getElementById("divWithExamples").style.top = 410 + "px";
-    document.getElementById("buttons").style.top = 400 + 210 + 3 * 4 + "px";
+    document.getElementById("lineNumbers").style.top=heightOfTheGreetings+"px";
+    document.getElementById("assemblyCode").style.top=heightOfTheGreetings+"px"; 
+    document.getElementById("divWithExamples").style.top = heightOfTheGreetings + 410 + "px";
+    document.getElementById("buttons").style.top = heightOfTheGreetings + 400 + 210 + 3 * 4 + "px";
     document.getElementById("whyClickAssemble").style.top =
-        400 + 210 + 3 * 4 + 30 + "px";
+        heightOfTheGreetings + 400 + 210 + 3 * 4 + 30 + "px";
     const heightOfTheDivWithTheInstructionAboutAssembling =
         document.getElementById("whyClickAssemble").clientHeight;
     document.getElementById("divWithMachineCode").style.top =
-        450 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + 450 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("simulationButtons").style.top =
-        855 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + 855 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("simulationResults").style.top =
-        910 + 2 * 210 + is_UART_enabled * 260 + 50 +
+        heightOfTheGreetings + 910 + 2 * 210 + is_UART_enabled * 260 + 50 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("UART_IO").style.top =
-        910 + 2 * 210 + 50 + heightOfTheDivWithTheInstructionAboutAssembling +
+        heightOfTheGreetings + 910 + 2 * 210 + 50 + heightOfTheDivWithTheInstructionAboutAssembling +
         "px"; // Has no effect if the UART_IO is not shown
               // (and it isn't shown by default).
     document.getElementById("UART_enable_button").style.top =
-        910 + 2 * 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + 910 + 2 * 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("graphicalResults").style.top =
-        910 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + 910 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementsByTagName("footer")[0].style.top =
-        1380 + 2 * 210 + is_UART_enabled * 260 + 50 + 20 +
+        heightOfTheGreetings + 1380 + 2 * 210 + is_UART_enabled * 260 + 50 + 20 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
   }
   if (/WebPositive/.test(

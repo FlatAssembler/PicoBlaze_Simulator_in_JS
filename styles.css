@@ -594,3 +594,63 @@ textarea {
   float: left;
   display: block;
 }
+#greeting {
+  background-color: white;
+  width: calc(100% - 10px);
+  border-radius: 5px;
+  padding: 5px;
+  display: grid;
+}
+#greeting.logged_out {
+  grid-template-areas:
+  	"hello hello hello"
+	"form form form";
+}
+#greeting.logged_out #hello {
+  grid-area: hello;
+}
+#greeting.logged_out form {
+  background-color: whitesmoke;
+  grid-area: form;
+  padding: 5px;
+  gap: 5px;
+  display: grid;
+  grid-template-areas:
+  	"first_label first_label ."
+	"username username username"
+	"second_label second_label ."
+	"password password password"
+	"register . login"
+	"message message message";
+  border-radius: 5px;
+}
+#greeting.logged_out form label:first-of-type {
+  grid-area: first_label;
+}
+#greeting.logged_out form input[type="text"] {
+  grid-area: username;
+  width: calc(100% - 10px);
+}
+#greeting.logged_out form label:nth-of-type(2) {
+  grid-area: second_label;
+}
+#greeting.logged_out form input[type="password"] {
+  grid-area: password;
+  width: calc(100% - 10px);
+}
+#greeting.logged_out form button {
+  grid-area: login;
+}
+#greeting.logged_out form a {
+  grid-area: register;
+}
+#greeting.logged_out form .loginMessage {
+  grid-area: message;
+  width: 100%;
+  height: 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+}
+

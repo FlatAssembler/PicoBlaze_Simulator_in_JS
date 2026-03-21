@@ -1,4 +1,590 @@
 <?php
-    header("Location: PicoBlaze.html");
+include 'db_helper.php';
+$message="";
+if (isset($_POST['username'])) {
+	$conn = Database::getInstance()->getConnection();
+
+	$conn->query(<<<SQL
+		CREATE TABLE IF NOT EXISTS usernames(
+			id INT AUTO_INCREMENT PRIMARY KEY,
+			username TEXT NOT NULL,
+			passwordHash TEXT NOT NULL,
+			CONSTRAINT username_unique UNIQUE (username)
+		);
+	SQL);
+
+	$stmt=$conn->prepare("SELECT COUNT(*) AS counter FROM usernames WHERE username='FlatAssembler'");
+	$stmt->execute();
+	if ($stmt->get_result()->fetch_assoc()['counter'] == 0) {
+		$conn->query(<<<SQL
+			INSERT INTO usernames(username, passwordHash)
+			VALUES("FlatAssembler", "68cb52b80a90723f4d45e768595e8733")
+		SQL);
+	}
+
+	$stmt = $conn->prepare("SELECT COUNT(passwordHash) AS counter FROM usernames WHERE username=?");
+	$stmt->bind_param('s',$_POST['username']);
+	$stmt->execute();
+	if ($stmt->get_result()->fetch_assoc()['counter'] == 0)
+	{
+		$message = "The username does not exist!";
+	}
+	else {
+		$stmt = $conn->prepare("SELECT passwordHash FROM usernames WHERE username=?");
+		$stmt->bind_param('s',$_POST['username']);
+		$stmt->execute();
+		if ($stmt->get_result()->fetch_assoc()['passwordHash']==md5($_POST['password'])) {
+			$message="Login successful!";
+			session_start();
+			$_SESSION['username']=$_POST['username'];
+		}
+		else {
+			$message="Wrong password!";
+		}
+	}
+}
 ?>
-Click <a href="PicoBlaze.html">here</a> in case your browser does not automatically redirect you.
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>PicoBlaze Simulator</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="An on-line assembler and emulator for Xilinx PicoBlaze, runnable in a modern browser (starting with Firefox 52). This version has a back-end."
+    />
+    <meta name="author" content="Teo Samarzija" />
+    <meta charset="UTF-8" />
+    <meta
+      name="google-site-verification"
+      content="cEp7FjaegdmPjHnl3hPolTiO93p3-iHTwrAKsIULOC8"
+    />
+    <link rel="stylesheet" href="styles.css" />
+    <script id="objectAssignPolyfill"></script>
+    <script id="symbolPolyfill"></script>
+    <script id="fetchPolyfill"></script>
+    <script id="BabelJS"></script>
+    <script id="BabelPolyfill"></script>
+    <script>
+      var URL_of_JSON_with_examples =
+          "https://flatassembler.github.io/PicoBlaze/examples.json",
+        URL_prefix_of_the_examples =
+          "https://raw.githubusercontent.com/FlatAssembler/PicoBlaze_Simulator_in_JS/master/";
+    </script>
+    <script src="list_of_directives.js" type="text/javascript"></script>
+    <script src="headerScript.js" type="text/javascript"></script>
+    <script src="TreeNode.js" type="text/javascript"></script>
+    <script src="tokenizer.js" type="text/javascript"></script>
+    <script src="parser.js" type="text/javascript"></script>
+    <script src="preprocessor.js" type="text/javascript"></script>
+    <script src="assembler.js" type="text/javascript"></script>
+    <script src="simulator.js" type="text/javascript"></script>
+    <script defer src="sharer.js" type="text/javascript"></script>
+    <script defer src="viewer.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <svg id="emptySVG" style="display: none"></svg>
+    <div id="ribbon">
+      <a
+        href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS.git"
+        target="_blank"
+        >Fork me on GitHub!</a
+      >
+    </div>
+    <header>
+      <h1>PicoBlaze Simulator</h1>
+      <span id="authors"
+        ><b>Front-end</b> made by
+        <a href="https://github.com/FlatAssembler">Teo Samar&#382;ija</a> and
+        <a href="https://github.com/agustiza">Agust&#x00ED;n Izaguirre</a
+        >.<br />
+        <b>Back-end</b> made by
+        <a href="https://github.com/abdrd">Abidin Durdu</a>.</span
+      >
+    </header>
+    <main>
+      <div id="greeting" class="<?php echo isset($_SESSION['username'])?"logged_in":"logged_out";?>"><?php if (isset($_SESSION['username'])):?>
+      <div id="hello">Hello, <?php echo $_SESSION['username'];?></div>
+	<div id="save_the_program"><img src="https://icons.getbootstrap.com/assets/icons/floppy2-fill.svg" alt="Save the current program"></div>
+	<a href="logout.php">Logout</a>
+<?php else:?>
+<div id="hello">Hello, guest! Would you like to log in?</div>
+<form action="/" method="post">
+	<label for="username">Username:</label>
+	<input type="text" id="username" name="username" />
+	<label for="password">Password:</label>
+	<input type="password" id="password" name="password" />
+	<a href="register.php">Register</a>
+	<button type="submit">Log in</button>
+	<div class="loginMessage" style="background-color:<?php echo $message == ""?"white":($message=="Login successful!"?"#afa":"#faa")?>"><?php echo $message;?></div>
+</form>
+<?php endif?>
+</div>
+      <div id="lineNumbers">1.</div>
+      <pre id="assemblyCode" contenteditable="true">
+<?php if (!isset($_SESSION['username'])):?>
+;Insert PicoBlaze assembly here...
+<?php else:?>
+<?php
+$conn = Database::getInstance()->getConnection();
+$conn->query(<<<SQL
+	CREATE TABLE IF NOT EXISTS codes_belonging_to_users(
+		id INT PRIMARY KEY,
+		code TEXT NOT NULL
+	);
+SQL);
+
+$stmt = $conn->prepare("SELECT COUNT(code) AS number_of_codes FROM usernames, codes_belonging_to_users WHERE usernames.id=codes_belonging_to_users.id AND usernames.username=?");
+$stmt->bind_param('s',$_SESSION['username']);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$row = $result->fetch_assoc();
+$number_of_codes=$row['number_of_codes'];
+if (!$number_of_codes) {
+	$stmt = $conn->prepare("SELECT id FROM usernames WHERE username=?");
+	$stmt->bind_param('s',$_SESSION['username']);
+	$stmt->execute();
+	$result=$stmt->get_result();
+	$row=$result->fetch_assoc();
+	$id=$row['id'];
+
+	$stmt = $conn->prepare("INSERT INTO codes_belonging_to_users(id, code) VALUES (?,\";Enter assembly code here and press\n;the \\\"save\\\" button when you want.\")");
+	$stmt->bind_param('i',$id);
+	$stmt->execute();
+}
+
+$stmt = $conn->prepare("SELECT code FROM usernames, codes_belonging_to_users WHERE usernames.id=codes_belonging_to_users.id AND usernames.username=?");
+$stmt->bind_param('s',$_SESSION['username']);
+$stmt->execute();
+
+$result = $stmt->get_result();
+$row=$result->fetch_assoc();
+echo htmlspecialchars($row['code']); 
+	
+?>
+<?php endif ?>
+</pre
+      >
+      <section id="divWithExamples">
+        <h2 id="examplesSpan">
+          Example
+          <img
+            style="vertical-align: bottom"
+            src="https://icons.getbootstrap.com/assets/icons/code-square.svg"
+            alt="program"
+          />s:
+        </h2>
+        <div id="examples">
+          <span id="fetchingExamples">
+            Fetching the examples from GitHub...
+          </span>
+        </div>
+      </section>
+      <section id="buttons">
+        <button id="highlightButton">
+          Highlight
+          <img
+            style="vertical-align: bottom"
+            src="https://icons.getbootstrap.com/assets/icons/code-square.svg"
+            alt="Assembly"
+          />
+        </button>
+        <button id="shareButton">
+          <img
+            src="https://icons.getbootstrap.com/assets/icons/cloud-upload.svg"
+            alt="Share"
+            style="vertical-align: bottom"
+          />
+        </button>
+        <button id="assembleButton">Assemble</button>
+      </section>
+      <section id="whyClickAssemble">
+        Please click the
+        <a href="#assembleButton">&quot;<i>Assemble</i>&quot; button</a> before
+        proceeding, or else you will be simulating PicoBlaze that constantly
+        loops <code>load s0, s0</code> (which is <code>00000</code> in
+	hexadecimal). <del>And, unfortunately, due to
+        <a
+          href="https://sourceforge.net/p/forge/helpwanted/misc/thread/eff767dde2/?limit=25#aa86"
+          >the recent changes in SourceForge's policy regarding project-related
+          web-pages</a
+        >, the database used for uploading PicoBlaze assembly programs no longer
+	works.</del>
+	Now that this web-app is hosted on Microsoft Azure, the database should
+	work once again. No promises, though.
+        <div id="deleteTheProgram">
+          <label for="input_password" id="label_for_input_password"
+            >If you want to delete the current program from the database, enter
+            the password known by Teo Samar&zcaron;ija:</label
+          >
+          <input type="password" id="input_password" />
+	  <a href="controlPannel.php" id="linkToControlPannel">Control Pannel</a>
+	  <button
+            id="deleteTheProgramButton"
+          >
+            Delete the program
+            <code id="place_in_the_button_for_id">placeholder</code>
+          </button>
+        </div>
+      </section>
+      <section id="divWithMachineCode">
+        <div id="warningAboutJavaScript">
+          Your browser doesn't seem to support modern JavaScript, needed for
+          this web-app!<br />
+          I would recommend you to use
+          <a href="https://www.torproject.org/">The TOR Browser</a>. Modern
+          JavaScript executes the fastest in it, as fast as in
+          <a href="https://www.mozilla.org/en-US/">Firefox</a>, but TOR Browser
+          protects privacy significantly more.<br />Please consider that, if too
+          few people use tools for protecting privacy on the Internet, using
+          them is considered suspicious. Participating in a system that does not
+          respect privacy is putting everybody in danger of mass surveillance
+          and predictive policing. Even if you think you have nothing to hide,
+          please think of others (and learn about senseless laws and red flags
+          that apply to you).<br />
+          My
+          <a href="https://flatassembler.github.io/compiler.html"
+            >web-app that converts arithmetic expressions to x86 assembly</a
+          >
+          can run in ancient browsers, in case you want to try it.<br />
+          Or, you can try
+          <a href="javascript:void(0)" onclick="downloadBabel()"
+            >polyfilling your browser with BabelJS</a
+          >.
+        </div>
+      </section>
+      <script>
+        function downloadBabel() {
+          document.getElementById("objectAssignPolyfill").src =
+            "https://cdn.jsdelivr.net/npm/object-assign-polyfill/index.min.js";
+          document.getElementById("symbolPolyfill").src =
+            "https://cdn.jsdelivr.net/npm/symbol-es6/symbol-es6.min.js";
+          document.getElementById("BabelPolyfill").src =
+            "https://unpkg.com/@babel/polyfill/dist/polyfill.js";
+          /*
+	       Do not include the minified file, because Babel Minifier
+	       transpiles "RegExp('x','y')" into "/x/y", which is a syntax
+	       error in Internet Explorer 11!
+	  */
+          document.getElementById("BabelJS").src =
+            "https://unpkg.com/@babel/standalone/babel.min.js";
+          document.getElementById("fetchPolyfill").src =
+            "https://cdn.jsdelivr.net/npm/whatwg-fetch@3.6.2/dist/fetch.umd.min.js";
+          var scripts = document.getElementsByTagName("script");
+          for (var i = 0; i < scripts.length; i++) {
+            if (scripts[i].type == "text/javascript") {
+              var newScriptTag = document.createElement("script");
+              newScriptTag.type = "text/babel";
+              newScriptTag.src = scripts[i].src;
+              newScriptTag.setAttribute("async", false);
+              newScriptTag.innerHTML = scripts[i].innerHTML;
+              document.body.appendChild(newScriptTag);
+            }
+          }
+        }
+      </script>
+      <section id="simulationButtons">
+        <button id="playPauseButton">
+          <img
+            src="play.svg"
+            alt="play"
+            id="playImage"
+            style="display: inline"
+          />
+          <img
+            src="pause.svg"
+            alt="pause"
+            id="pauseImage"
+            style="display: none"
+          />
+          <span class="tooltip">Play/Pause</span>
+          <!--Didn't know modern browsers don't display alts automatically
+              when you hover over an image.-->
+        </button>
+        <button id="fastForwardButton">
+          <img src="fastForward.svg" alt="Fast Forward" />
+          <span class="tooltip">Fast Forward</span>
+        </button>
+        <button id="singleStepButton">
+          <img src="singleStep.svg" alt="Single Step" />
+          <span class="tooltip">Single Step</span>
+        </button>
+        <button id="stopButton">
+          <img src="stop.svg" alt="Stop" />
+          <span class="tooltip">Stop</span>
+        </button>
+      </section>
+      <section id="graphicalResults"></section>
+      <button id="UART_enable_button">
+        <span id="enable_or_disable_UART">Enable</span>
+        <abbr title="Universal Asynchronous Receiver-Transmitter">UART</abbr>
+        <img
+          src="https://icons.getbootstrap.com/assets/icons/terminal.svg"
+          alt="terminal"
+        />
+      </button>
+      <section id="UART_IO">
+        <label for="UART_INPUT"
+          >UART input (<i>enter <b>before</b> starting</i>):</label
+        >
+        <textarea id="UART_INPUT"></textarea>
+        <label>UART output:</label>
+        <pre id="UART_OUTPUT"></pre>
+      </section>
+      <section id="simulationResults"></section>
+    </main>
+    <footer>
+      Not affiliated with
+      <a
+        href="https://www.xilinx.com/products/intellectual-property/picoblaze.html"
+        >Xilinx PicoBlaze</a
+      >. If you want to contribute,
+      <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS"
+        >fork me on GitHub</a
+      >
+      (it is
+      <a
+        href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/blob/master/LICENSE"
+        >MIT-licenced</a
+      >). Exceptionally helpful would be contributions to
+      <a href="https://github.com/FlatAssembler/PicoBlaze_Simulator_for_Android"
+        >the Android version of this simulator</a
+      >, as I am not an experienced Android developer. If you would like to know
+      more about me, visit my
+      <a href="https://teo-samarzija.users.sourceforge.net/">homepage</a>.<del
+        >The documentation for this simulator is available in
+        <a href="PicoBlaze.rtf"
+          >this <abbr title="Rich Text Format">RTF</abbr></a
+        >
+        (saved from Microsoft Office Word 2007, some other formats are available
+        on GitHub as well). For now, the documentation is only available in
+        Croatian. If you are willing to spend your time translating it to
+        English (better than machine translation), contact me on GitHub or
+        <a href="javascript:void(0)" onclick="sendMail('Teo')"
+          >send me an e-mail</a
+        >.</del
+      >
+      (UPDATE: My professor told me I might get into legal trouble with the
+      copyright laws unless I delete the documentation from GitHub, so I deleted
+      it.) There is <del>also</del>
+      <a href="seminar/PicoBlaze.ppt">a PowerPoint presentation about this program</a>.
+      Also, maybe it would be a good idea to implement some back-end on
+      <a href="https://picoblaze-simulator.sourceforge.io/">SourceForge</a> so
+      that people can comment on and share PicoBlaze programs, given that
+      SourceForge lets us run PHP on their servers for free. (UPDATE: Abidin
+      Durdu has done that. However, it can probably be improved.)<br /><br />
+      <span id="Bachelor_thesis"
+        >IMPORTANT: Don't take this to be an example of a good Bachelor thesis.
+        In fact, this is an example of what <b>not</b> to do for a Bachelor
+        thesis. As this is something I have put a lot of effort into and got a C
+        (<i lang="hr">dobar 3</i>), whereas most of my classmates put
+        significantly less effort into their Bachelor thesis and the average
+        mark for a Bachelor thesis at my school is somewhere between A and B (<i
+          lang="hr"
+          >vrlo dobar 4</i
+        >
+        - <i lang="hr">odli&ccaron;an 5</i>). Kind of weird that academia
+        doesn't value this type of work, when it was my Computer Architecture
+        professor who suggested me to make it... for use within academia (so
+        that the students can do the laboratory exercises without having access
+        to a real PicoBlaze, in case physical laboratory exercises are cancelled
+        due to the pandemic). But that's the reality. The ability to deliver a
+        non-trivial piece of software which actually works and which
+        <a
+          href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/9#issue-1859685751"
+          >attracts contributors from other countries</a
+        >, even if academia depends on that piece of software, is not valued in
+        academia. In academia, comprehensive documentation is valued over
+        working software (exactly the opposite of agile development). Actually,
+        it's not even comprehensive documentation, it's the sciency style of the
+        documentation that is being valued more than working software.<br /><br />
+        PicoBlaze is really a small blaze (flame, fire, &#x1F525;), it gives you
+        burns when you write (&#x270D;&#xFE0F;) a Bachelor (&#x1F3EB;) thesis
+        (&#x1F5CE;) about it. &#x1F613;!</span
+      ><br /><br />
+      EPILOGUE:
+      <a
+        href="https://repozitorij.etfos.hr/islandora/object/etfos:4489/datastream/PDF/download"
+        >The documentation for this PicoBlaze Simulator is now available on
+        DABAR in the PDF format</a
+      >
+      (I hope that linking to it isn't illegal). I was planning to learn some
+      PHP and make it possible for users to share their own PicoBlaze assembly
+      programs (in other words, to make a back-end). However, my mental health
+      has deteriorated once again (I am having anxiety attacks almost every day
+      now), so I am unlikely to be able to do that any time soon. Alprazolam
+      does help, but it does not do miracles.<br /><br />
+      UPDATE on 05/07/2024: I have made
+      <a href="https://youtu.be/ckAvsglxTVc"
+        >a YouTube video about this program</a
+      >.<br /><br />
+      UPDATE on 02/03/2025: What do you think, would it be possible, using this
+      simulator and WebAssembly, to make
+      <a href="https://github.com/gonultasbu/PicoTETRIS">PicoTETRIS</a> (a
+      Tetris-like game written in a combination of PicoBlaze assembly language
+      and Verilog) runnable in a modern Internet browser (probably not in
+      Firefox 52, where this simulator can run, but maybe in Firefox 62, which
+      supports <code>WebAssembly.Global</code>)? I've opened
+      <a
+        href="https://www.reddit.com/r/AskProgramming/comments/1iztcts/can_verilog_be_compiled_to_webassembly_can_that/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button"
+        >a Reddit thread about that idea</a
+      >.<br /><br />
+      UPDATE on 06/05/2025: I got a permission from both SRCE and the dean of
+      FERIT to host the documentation here, so I did that. You can download
+      <a href="seminar/PicoBlaze.doc">this Word document</a>. I will not use RTF, as I
+      get problems when hosting such large files.<br /><br />
+      UPDATE on 17/01/2026: I've just made a UML sequential diagram explaining
+      how the assembling works in this program:
+      <img
+        style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
+        src="sequential-diagram.jpg"
+      />
+      You can see an explanation of what those terms (tokenizer, parser...) mean in <a href="https://youtu.be/hlw72oFlKZA">this video which is in the Latin language</a> (in case you cannot open it, try downloading <a href="https://flatassembler.github.io/compiler-theory-latin.mp4">this MP4 file</a> and opening it in VLC or something similar).<br/><br/>
+      <a
+        href="https://sourceforge.net/projects/picoblaze-simulator/files/latest/download"
+        ><img
+          alt="Download PicoBlaze_Simulator_in_JS"
+          src="https://a.fsdn.com/con/app/sf-download-button"
+          width="276"
+          height="48"
+          srcset="
+            https://a.fsdn.com/con/app/sf-download-button?button_size=2x 2x
+          "
+      /></a>
+      <script>
+        //Copied from: https://flatassembler.github.io/compiler
+        //I have written that many years ago...
+        function sendMail(whom) {
+          var sifrirano;
+          if (whom == "Tomasz")
+            sifrirano = [
+              6, 2, 36, 28, 1, 42, 17, 21, 23, 50, 54, 9, 21, 17, 19, 35, 17,
+              22, 8, 16, 60, 0, 6, 75, 28, 53, 17
+            ];
+          else if (whom == "Teo")
+            sifrirano = [
+              27, 0, 36, 75, 1, 49, 8, 21, 23, 8, 57, 15, 21, 37, 21, 61, 29, 4,
+              9, 92, 51, 10, 25
+            ];
+          var tmp = sifrirano[0];
+          sifrirano[0] = sifrirano[2];
+          sifrirano[2] = tmp;
+          tmp = sifrirano[17];
+          sifrirano[17] = sifrirano[16];
+          sifrirano[16] = tmp;
+          var hash2;
+          if (whom == "Teo") hash2 = 554;
+          else if (whom == "Tomasz") hash2 = 603;
+          var kljuc = prompt(
+            "Spambot protection problem: What is the name of the fictional character who had a spell casted on him so that he couldn't grow up, and he had to fight against the pirates? His nickname is 'Pan'.",
+            "His name without 'Pan'."
+          );
+          var desifrirano = [];
+          for (var i = 0; i < sifrirano.length; i++)
+            desifrirano.push(sifrirano[i] ^ kljuc.charCodeAt(i % kljuc.length));
+          var hash1 = 0;
+          for (var i = 0; i < desifrirano.length; i++)
+            hash1 = (hash1 * 128 + desifrirano[i]) % 907;
+          if (hash1 == hash2) {
+            var email = "";
+            for (var i = 0; i < desifrirano.length; i++)
+              email += String.fromCharCode(desifrirano[i]);
+            window.location.assign("mailto:" + email);
+          } else alert("Unfortunately, you didn't give the expected answer.");
+        }
+      </script>
+    </footer>
+    <script src="footerScript.js" type="text/javascript"></script>
+    <div id="MIT_licence">
+      <div id="licence_message">
+        By using this web-app, you agree to
+        <a
+          href="https://sourceforge.net/p/picoblaze-simulator/code/ci/master/tree/LICENSE"
+          >this licence</a
+        >
+        and to the use of cookies. If you are worried about being tracked using
+        cookies, consult your browser manual on how to delete the cookies. Or,
+        better yet, use a browser which automatically deletes the cookies when
+        they are no longer needed, such as
+        <a href="https://sourceforge.net/projects/tor-browser.mirror/"
+          >TOR Browser</a
+        >.<span id="use_Firefox"
+          ><br /><br />
+          For the best experience, I recommend using a modern
+          <a href="https://en.wikipedia.org/wiki/Gecko_(software)">Gecko</a
+          >-based browser (<a href="https://firefox.com/">Firefox</a> 52 or
+          newer,
+          <a href="https://sourceforge.net/projects/tor-browser.mirror/"
+            >TOR Browser</a
+          >, <a href="http://kmeleonbrowser.org/">K-Meleon</a>...). While I try
+          my best to make this web-app work in all modern browsers, it's better
+          if the user uses the same browser as the developer. You might also
+          consider that
+          <a
+            href="https://www.reddit.com/r/firefox/comments/18icm8l/why_does_firefox_52_seem_to_run_javascript_faster/?utm_source=share&utm_medium=web2x&context=3"
+            >this web-app runs around twice as fast in Firefox 52 than in
+            Firefox 120</a
+          >.</span
+        >
+      </div>
+      <button
+        id="closing_the_licence"
+        onclick="
+          document.getElementById('MIT_licence').remove();
+          if (!/Dolphin/.test(navigator.userAgent))
+            document.cookie = 'cookie_banner_closed=1';
+          else
+            alert(
+              'It has been detected that you are using the Dolphin browser. The support for cookies in the Dolphin browser appears to be buggy, as Dolphin appears not to delete the cookies when JavaScript requests it to. For now, I decided not to use cookies in the Dolphin browser at all.'
+            );
+        "
+      >
+        <img
+          src="https://icons.getbootstrap.com/assets/icons/check-lg.svg"
+          alt="Agree!"
+        />
+      </button>
+      <script type="text/javascript">
+        if (
+          navigator.userAgent.indexOf("Gecko") != -1 &&
+          navigator.userAgent.indexOf("like Gecko") == -1
+        )
+          document.getElementById("use_Firefox").remove();
+        if (
+          !/Dolphin/.test(navigator.userAgent) &&
+          document.cookie.indexOf("cookie_banner_closed") != -1
+        )
+          document.getElementById("MIT_licence").remove();
+      </script>
+    </div>
+    <div id="uploadSuccessfulMessage">
+      <div id="titleBar">Success!</div>
+      <div id="messageAccompanyingTheURL">
+        Your assembly language program was successfully uploaded to the
+        database. Here is the URL by which you and other people can access it:
+      </div>
+      <div id="shareURL">
+        https://picoblaze-simulator-f0bjd5apf8bwcrdd.switzerlandnorth-01.azurewebsites.net/PicoBlaze.html?id=placeholder
+      </div>
+      <button
+        onclick="
+          document.getElementById('uploadSuccessfulMessage').style.display =
+            'none'
+        "
+        id="closeButton"
+      >
+        <img
+          src="https://icons.getbootstrap.com/assets/icons/x-lg.svg"
+          alt="Close"
+        />
+      </button>
+      <button onclick="copyShareURLToClipboard()" id="copyButton">
+        <img
+          src="https://icons.getbootstrap.com/assets/icons/copy.svg"
+          alt="Copy to clipboard"
+        />
+      </button>
+    </div>
+  </body>
+</html>
