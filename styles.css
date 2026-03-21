@@ -639,6 +639,9 @@ textarea {
   width: calc(100% - 5px);
 }
 #greeting.logged_out form button {
+  background-color: darkGreen;
+  color: white;
+  text-transform: uppercase;
   grid-area: login;
 }
 #greeting.logged_out form a {
@@ -657,7 +660,7 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-content: center;
+  align-items: center;
 }
 #greeting.logged_in button {
   background-color: lightGray;

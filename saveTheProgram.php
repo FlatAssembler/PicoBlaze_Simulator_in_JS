@@ -1,7 +1,7 @@
 <?php
 	session_start();
 	if (!isset($_SESSION['username']))
-		die("The username is not set in the session!");
+		die("The username is not set in the session! In case you are using Firefox 52 (the last version of Firefox runnable on Windows XP), saving the programs does not work in it, and it is not supposed to work there.");
 	if (!isset($_POST['code']))
 		die("The client has not sent the code to be saved!");
 
