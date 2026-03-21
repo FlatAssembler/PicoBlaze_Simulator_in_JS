@@ -9,7 +9,6 @@ if (isset($_POST['username'])) {
 			id INT AUTO_INCREMENT PRIMARY KEY,
 			username TEXT NOT NULL,
 			passwordHash TEXT NOT NULL,
-			CONSTRAINT username_unique UNIQUE (username)
 		);
 	SQL);
 
