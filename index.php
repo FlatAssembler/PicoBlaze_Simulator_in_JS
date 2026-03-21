@@ -1,5 +1,6 @@
 <?php
 include 'db_helper.php';
+session_start();
 $message="";
 if (isset($_POST['username'])) {
 	$conn = Database::getInstance()->getConnection();
@@ -34,7 +35,6 @@ if (isset($_POST['username'])) {
 		$stmt->execute();
 		if ($stmt->get_result()->fetch_assoc()['passwordHash']==md5($_POST['password'])) {
 			$message="Login successful!";
-			session_start();
 			$_SESSION['username']=$_POST['username'];
 		}
 		else {

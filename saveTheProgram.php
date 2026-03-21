@@ -1,4 +1,5 @@
 <?php
+	session_start();
 	if (!isset($_SESSION['username']))
 		die("The username is not set in the session!");
 	if (!isset($_POST['code']))
