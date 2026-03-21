@@ -325,7 +325,7 @@ fetch(URL_of_JSON_with_examples)
           "Failed to fetch the examples JSON from GitHub: " + error;
     });
 if (document.getElementById("save_the_program")) {
-	document.getElementById("save_the_program").onclick=>()=>{
+	document.getElementById("save_the_program").onclick=()=>{
 		const assemblyCode = document.getElementById("assemblyCode").innerText;
 
   		const formData = new FormData();
