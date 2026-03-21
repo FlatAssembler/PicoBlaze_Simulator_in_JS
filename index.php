@@ -8,7 +8,7 @@ if (isset($_POST['username'])) {
 		CREATE TABLE IF NOT EXISTS usernames(
 			id INT AUTO_INCREMENT PRIMARY KEY,
 			username TEXT NOT NULL,
-			passwordHash TEXT NOT NULL,
+			passwordHash TEXT NOT NULL
 		);
 	SQL);
 
