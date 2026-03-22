@@ -302,6 +302,23 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
       echo "<li>$id</li>";
     echo "</ul>";
   }
+
+  $stmt = $conn->prepare("SELECT COUNT(username) AS counter FROM usernames");
+  $stmt->execute();
+  $number_of_users = $stmt->get_result()->fetch_assoc()['counter'];
+  
+  echo "<p>There are $number_of_users users registered.</p>\n";
+
+  if ($number_of_users) {
+  	echo "<ul>\n";
+	$stmt = $conn->prepare("SELECT username FROM usernames");
+	$stmt->execute();
+	$stmt->bind_result($registered_user);
+	while ($stmt->fetch())
+		echo "<li>".htmlspecialchars($registered_user)."</li>\n";
+	echo "</ul>\n";
+  }
+
   ?>
   </main>
 </body>
