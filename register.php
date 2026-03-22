@@ -1,4 +1,10 @@
 <?php
+	function consists_only_of_digits($string) {
+		for ($i=0; $i<strlen($string); $i++)
+			if (!IntlChar::isdigit(substr($string, $i, 1)))
+				return false;
+		return true;
+	}
 	include 'db_helper.php';
 	$message = "";
 	$messageColor = "white";
@@ -16,7 +22,7 @@
 			$messageColor="#faa";
 		}
 		else {
-			if (preg_match("^\\d*$",$_POST['password'])) {
+			if (consists_only_of_digits($_POST['password'])) {
 				$message = "The password must not consist solely of digits!";
 				$messageColor="#fda";
 			}
@@ -38,7 +44,7 @@
 				$message = "Registration successful!";
 				$messageColor="#afa";
 				
-				$stmt = $conn->prepare("INSERT INTO usernames(username,hashedPassword) VALUES(?, ?)");
+				$stmt = $conn->prepare("INSERT INTO usernames(username,passwordHash) VALUES(?, ?)");
 				$stmt->bind_param('ss',$_POST['username'],md5($_POST['password'])); // Ideally, we should add some salt here to the hash, but this is not a seriuous project anyway.
 				$stmt->execute();
 			}
@@ -120,7 +126,7 @@ form button {
 <body>
 <form method="post">
 <label for="username">Enter your username:</label>
-<input name="username" id="username" value="<?php echo $_POST['username'] ? htmlspecialchars($_POST['username']) : ""; ?>"/>
+<input name="username" id="username" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ""; ?>"/>
 <label for="password">Enter your password:</label>
 <input type="password" name="password" id="password" />
 <label for="repeatedPassword">Repeat your password:</label>
