@@ -140,6 +140,7 @@ $stmt->execute();
 $result = $stmt->get_result();
 $row = $result->fetch_assoc();
 $number_of_codes=$row['number_of_codes'];
+$is_already_printed = false;
 if (!$number_of_codes) {
 	$stmt = $conn->prepare("SELECT id FROM usernames WHERE username=?");
 	$stmt->bind_param('s',$_SESSION['username']);
@@ -147,20 +148,26 @@ if (!$number_of_codes) {
 	$result=$stmt->get_result();
 	$row=$result->fetch_assoc();
 	$id=$row['id'];
-
-	$stmt = $conn->prepare("INSERT INTO codes_belonging_to_users(id, code) VALUES (?,\";Enter assembly code here and press\n;the \\\"save\\\" button when you want.\")");
-	$stmt->bind_param('i',$id);
-	$stmt->execute();
+	if (is_null($id)) {
+		echo ";You are not in the database of registered users!\n";
+		$is_already_printed = true;
+	}
+	else {
+		$stmt = $conn->prepare("INSERT INTO codes_belonging_to_users(id, code) VALUES (?,\";Enter assembly code here and press\n;the \\\"save\\\" button when you want.\")");
+		$stmt->bind_param('i',$id);
+		$stmt->execute();
+	}
 }
 
-$stmt = $conn->prepare("SELECT code FROM usernames, codes_belonging_to_users WHERE usernames.id=codes_belonging_to_users.id AND usernames.username=?");
-$stmt->bind_param('s',$_SESSION['username']);
-$stmt->execute();
+if (!$is_already_printed) {
+	$stmt = $conn->prepare("SELECT code FROM usernames, codes_belonging_to_users WHERE usernames.id=codes_belonging_to_users.id AND usernames.username=?");
+	$stmt->bind_param('s',$_SESSION['username']);
+	$stmt->execute();
 
-$result = $stmt->get_result();
-$row=$result->fetch_assoc();
-echo htmlspecialchars($row['code']); 
-	
+	$result = $stmt->get_result();
+	$row = $result->fetch_assoc();
+	echo htmlspecialchars($row['code']); 
+}
 ?>
 <?php endif ?>
 </pre
