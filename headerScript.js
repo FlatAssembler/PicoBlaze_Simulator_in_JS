@@ -508,7 +508,9 @@ function downloadHex() {
       return;
   } else if (/Dolphin/.test(navigator.userAgent))
     alert(
-        "It's detected you are using Dolphin. 'Download Hexadecimal' didn't work there when we tested it."); 
+        "It's detected you are using Dolphin. 'Download Hexadecimal' didn't work there when we tested it.");
+    else if (/Mobile.+OPR/.test(navigator.userAgent))
+	alert("It's detected you are using the Opera Mini browser. The last time we tested it, 'Download Hexadecimal' caused it to 'download' a corrupted file.");
   
   /*
   The following code is loosely based on:
