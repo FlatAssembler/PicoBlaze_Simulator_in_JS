@@ -35,65 +35,62 @@ function parse(tokenized) {
       i++ // First, let's deal with if-branching and while-loops...
   ) {
     if (/^if$/i.test(tokenized[i].text)) {
-      // TODO: Refactor the following code to use findIndex instead of while
-      // loops, like the rest of the parser does.
-      let pointerToTheNextNewline = i + 1, condition = [];
-      while (tokenized[pointerToTheNextNewline].text != "\n") {
-        condition.push(tokenized[pointerToTheNextNewline]);
-        if (pointerToTheNextNewline >= tokenized.length) {
-          alert(
-              "Line #" + tokenized[i].lineNumber +
-              ': The condition after "if" doesn\'t end in a new-line character!');
-          return root_of_abstract_syntax_tree;
-        }
-        pointerToTheNextNewline++;
+      const pointerToTheNextNewline =
+          tokenized.findIndex((node, index) => index > i && node.text == '\n');
+      if (pointerToTheNextNewline == -1) {
+        alert(
+            "Line #" + tokenized[i].lineNumber +
+            ': The condition after "if" doesn\'t end in a new-line character!');
+        return root_of_abstract_syntax_tree;
       }
+      const condition = tokenized.slice(i + 1, pointerToTheNextNewline);
       tokenized[i].children.push(parse(condition).children[0]);
       tokenized.splice(i + 1, pointerToTheNextNewline - i);
-      let pointerToTheEndIfOrElse = i + 1, counter = 1, thenClause = [];
-      while (true) {
-        if (pointerToTheEndIfOrElse >= tokenized.length) {
-          alert("Line #" + tokenized[i].lineNumber +
-                ': The "if" directive here isn\'t closed by an "endif"!');
-          return root_of_abstract_syntax_tree;
-        }
-        if (/^if$/i.test(tokenized[pointerToTheEndIfOrElse].text))
+      let counter = 1;
+      const pointerToTheEndIfOrElse = tokenized.findIndex((node, index) => {
+        if (index <= i)
+          return false;
+        if (/^if$/i.test(node.text))
           counter++;
-        if (/^endif$/i.test(tokenized[pointerToTheEndIfOrElse].text))
+        if (/^endif$/i.test(node.text))
           counter--;
-        if (!counter ||
-            (/^else$/i.test(tokenized[pointerToTheEndIfOrElse].text) &&
-             counter == 1))
-          break;
-        thenClause.push(tokenized[pointerToTheEndIfOrElse]);
-        pointerToTheEndIfOrElse++;
+        if (!counter || (/^else$/i.test(node.text) && counter == 1))
+          return true;
+        return counter == 0;
+      });
+      if (pointerToTheEndIfOrElse == -1) {
+        alert("Line #" + tokenized[i].lineNumber +
+              ': The "if" directive here isn\'t closed by an "endif"!');
+        return root_of_abstract_syntax_tree;
       }
+
+      const thenClause = tokenized.slice(i + 1, pointerToTheEndIfOrElse);
       let lineNumberOfElseOrEndIf =
           tokenized[pointerToTheEndIfOrElse].lineNumber;
       tokenized.splice(i + 1, pointerToTheEndIfOrElse - i);
       tokenized[i].children.push(parse(thenClause));
       if (counter) {
         // If there is an "else"-clause
-        let pointerToEndIf = i + 1, elseClause = [];
-        while (counter) {
-          if (pointerToEndIf >= tokenized.length) {
-            alert("Line #" + lineNumberOfElseOrEndIf +
-                  ': The "else" here is not followed by an "endif"!');
-            return root_of_abstract_syntax_tree;
-          }
-          if (/^if$/i.test(tokenized[pointerToEndIf].text))
+        const pointerToEndIf = tokenized.findIndex((node, index) => {
+          if (index <= i)
+            return false;
+          if (/^if$/i.test(node.text))
             counter++;
-          if (/^endif$/i.test(tokenized[pointerToEndIf].text))
+          if (/^endif$/i.test(node.text))
             counter--;
-          if (/^else$/i.test(tokenized[pointerToEndIf].text) && counter == 1) {
-            alert("Line #" + tokenized[pointerToEndIf].lineNumber +
+          if (/^else$/i.test(node.text) && counter == 1) {
+            alert("Line #" + node.lineNumber +
                   ': Found "else" when expecting "endif"!');
-            return root_of_abstract_syntax_tree;
+            return true;
           }
-          elseClause.push(tokenized[pointerToEndIf]);
-          pointerToEndIf++;
+          return counter == 0;
+        });
+        if (pointerToEndIf == -1) {
+          alert("Line #" + lineNumberOfElseOrEndIf +
+                ': The "else" here is not followed by an "endif"!');
+          return root_of_abstract_syntax_tree;
         }
-        elseClause.splice(elseClause.length - 1, 1);
+        const elseClause = tokenized.slice(i + 1, pointerToEndIf);
         tokenized.splice(i + 1, pointerToEndIf - i);
         tokenized[i].children.push(parse(elseClause));
       }
