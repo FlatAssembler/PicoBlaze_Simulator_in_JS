@@ -13,6 +13,9 @@
 	$stmt->execute();
 	$id=$stmt->get_result()->fetch_assoc()['id'];
 
+	if (is_null($id)) // A possible fix for: https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/50
+		die("You are not registered in the database!");
+
 	$stmt = $conn->prepare("UPDATE codes_belonging_to_users SET code=? WHERE id=?");
 	$stmt->bind_param('si',$_POST['code'],$id);
 	$stmt->execute();
