@@ -33,9 +33,9 @@ function LevenshtainDistance(A, B) {
       } else if (A[i - 1] == B[j - 1]) {
         temp[i][j] = temp[i - 1][j - 1];
       } else {
-        temp[i][j] = min(temp[i - 1][j - 1], temp[i - 1][j]);
-        temp[i][j] = min(temp[i][j - 1], temp[i][j]);
-        temp[i][j] = temp[i][j] + 1;
+        temp[i][j] = min(temp[i - 1][j - 1],
+                         temp[i - 1][j],
+                         temp[i][j - 1]) + 1;
       }
     }
   }
