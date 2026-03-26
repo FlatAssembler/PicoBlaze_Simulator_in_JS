@@ -122,6 +122,11 @@ form button {
 	padding: 5px;
 	border-radius: 5px;
 }
+#notice {
+	grid-area: notice;
+	max-width: 500px;
+	text-align: justify;
+}
 </style>
 </head>
 <body>
@@ -135,7 +140,7 @@ form button {
 <button onclick="history.back()">Go back</button>
 <button type="submit">Register</button>
 <div id="message" style="background-color: <?php echo $messageColor; ?>"><?php echo htmlspecialchars($message); ?></div>
-<p id="notice">Please do not set your password to be something along with &quot;<i>password</i>&quot; or &quot;<i>letmein</i>&quot;, as I have not implemented the salting of the password hashes, I am only hashing the passwords using the <code>md5</code> function. Use a password that you suppose nobody else on this website uses, or else I may easily get hacked.</p>
+<p id="notice">Please do not set your password to be something along the lines of &quot;<i>password</i>&quot; or &quot;<i>letmein</i>&quot;, as I have not implemented the salting of the password hashes, I am only hashing the passwords using the <code>md5</code> function. Use a password that you suppose nobody else on this website uses, or else I may easily get hacked.</p>
 </form>
 </body>
 </html>
