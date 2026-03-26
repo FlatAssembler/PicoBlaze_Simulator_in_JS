@@ -76,7 +76,8 @@ form {
 		"label3 label3 ."
 		"repeated repeated repeated"
 		"backbutton . registerbutton"
-		"message message message";
+		"message message message"
+                "notice notice notice";
 	background-color: #ccc;
 	padding: 10px;
 	gap: 3px;
@@ -134,6 +135,7 @@ form button {
 <button onclick="history.back()">Go back</button>
 <button type="submit">Register</button>
 <div id="message" style="background-color: <?php echo $messageColor; ?>"><?php echo htmlspecialchars($message); ?></div>
+<p id="notice">Please do not set your password to be something along with &quot;<i>password</i>&quot; or &quot;<i>letmein</i>&quot;, as I have not implemented the salting of the password hashes, I am only hashing the passwords using the <code>md5</code> function. Use a password that you suppose nobody else on this website uses, or else I may easily get hacked.</p>
 </form>
 </body>
 </html>
