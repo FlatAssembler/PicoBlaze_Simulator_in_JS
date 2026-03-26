@@ -126,6 +126,7 @@ form button {
 	grid-area: notice;
 	max-width: 500px;
 	text-align: justify;
+	font-size: small;
 }
 </style>
 </head>
