@@ -285,6 +285,7 @@ function setupLayout() {
     document.getElementsByTagName("main")[0].style.left =
         windowWidth / 2 - 500 / 2 + "px";
   }
+  document.getElementsByTagName("main")[0].style.top = document.getElementsByTagName("header")[0].clientHeight + (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight:0) + 50 + "px";
   const heightOfTheGreetings = document.getElementById("greeting")?document.getElementById("greeting").clientHeight + 10 :0;
   if (windowHeight < 400) {
     document.getElementById("lineNumbers").style.top=heightOfTheGreetings+"px";
@@ -302,6 +303,7 @@ function setupLayout() {
         heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementsByTagName("footer")[0].style.top =
+        (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight :0) + 30
         heightOfTheGreetings + 65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + is_UART_enabled * 260 +
         50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("divWithExamples").style.top =
@@ -344,6 +346,7 @@ function setupLayout() {
     document.getElementById("graphicalResults").style.top =
         heightOfTheGreetings + 910 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementsByTagName("footer")[0].style.top =
+		  (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight :0) + 30 +
         heightOfTheGreetings + 1380 + 2 * 210 + is_UART_enabled * 260 + 50 + 20 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
   }

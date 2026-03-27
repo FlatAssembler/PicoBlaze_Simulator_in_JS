@@ -101,6 +101,22 @@ if (isset($_POST['username'])) {
         <a href="https://github.com/abdrd">Abidin Durdu</a>.</span
       >
     </header>
+<nav id="mainNavigation">
+<h2>Navigation</h2>
+<ul>
+	<li><a href="#greeting">The log-in form</a></li>
+	<li><a href="#assemblyCode">Assembly code</a></li>
+	<li><a href="#divWithExamples">Example assembly language programs</a></li>
+	<li><a href="#assembleButton">The &quot;<i>Assemble</i>&quot; button</a></li>
+	<li><a href="#whyClickAssemble">Why click the &quot;<i>Assemble</i>&quot; button</a></li>
+	<li style="display: none" id="linkToDeletionForm"><a href="#deleteTheProgram">The form for deleting the program from the database</a></li>
+	<li><a href="#divWithMachineCode">Machine code (the result of assembling)</a></li>
+	<li><a href="#simulationButtons">The buttons for controlling the simulation</a></li>
+	<li><a href="#graphicalResults">Simulation results represented with SVG</a></li>
+	<li><a href="#UART_enable_button">The UART simulation</a></li>
+	<li><a href="#references_used_to_make_this">The references to the resources used to make this program</a></li>
+</ul>
+</nav>
     <main>
       <div id="greeting" class="<?php echo isset($_SESSION['username'])?"logged_in":"logged_out";?>"><?php if (isset($_SESSION['username'])):?>
       <div id="hello">Hello, <?php echo $_SESSION['username'];?>!</div>
@@ -341,6 +357,18 @@ if (!$is_already_printed) {
       <section id="simulationResults"></section>
     </main>
     <footer>
+<section id="references_used_to_make_this">
+<h2>References</h2>
+<ul>
+	<li><a href="https://www.w3schools.com/html/">W3Schools tutorial on HTML</a></li>
+	<li><a href="https://www.w3schools.com/css/default.asp">W3Schools tutorial on CSS</a></li>
+	<li><a href="https://www.w3schools.com/js/default.asp">W3Schools tutorial on JavaScript</a> (to learn basic JavaScript)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide">Mozilla Developer Network tutorial on JavaScript</a> (to learn modern JavaScript)</li>
+	<li><a href="https://www1.hs-bremerhaven.de/kmueller/VHDL/PB_Instr_Ref.pdf">PicoBlaze instruction set</a></li>
+	<li><a href="https://www.w3schools.com/php/default.asp">W3Schools PHP tutorial</a></li>
+	<li><a href="https://www.w3schools.com/sql/default.asp">W3Schools SQL tutoral</a></li>
+</ul>
+</section>
       Not affiliated with
       <a
         href="https://www.xilinx.com/products/intellectual-property/picoblaze.html"

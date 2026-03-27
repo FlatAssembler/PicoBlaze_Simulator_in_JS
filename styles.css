@@ -666,3 +666,38 @@ textarea {
   background-color: lightGray;
   padding: 5px;
 }
+#mainNavigation {
+  max-width: calc(500px - 30px);
+  width: calc(100% - 30px);
+  margin-left:auto;
+  margin-right: auto;
+  background: white;
+  padding: 10px;
+}
+#mainNavigation ul {
+  list-style-type: none;
+}
+#mainNavigation a {
+  text-decoration: none;
+  color: black;
+}
+#mainNavigation li:hover {
+  background-color: darkBlue;
+  transform: scale(1, 1.1);
+  transition: transform 1s;
+}
+#mainNavigation li:hover a {
+  color:white;
+}
+#mainNavigation li {
+  padding: 3px;
+}
+#mainNavigation li {
+  background-color: lightYellow;
+  border: 1px black solid;
+}
+#references_used_to_make_this {
+  text-align: left;
+  background: white;
+  padding: 5px;
+}

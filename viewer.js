@@ -29,6 +29,8 @@ document.addEventListener("DOMContentLoaded", function() {
           document.getElementById("deleteTheProgram").style.display = "grid";
           document.getElementById("place_in_the_button_for_id").innerText =
               urlParams.get("id");
+	  if (document.getElementById("linkToDeletionForm"))
+		document.getElementById("linkToDeletionForm").style.display = "list-item";
           setupLayout();
           document.getElementById("deleteTheProgramButton").onclick = () => {
             const formData =
