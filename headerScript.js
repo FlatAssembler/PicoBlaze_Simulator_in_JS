@@ -303,7 +303,7 @@ function setupLayout() {
         heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementsByTagName("footer")[0].style.top =
-        (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight :0) + 30
+        (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight : 0) + 30 +
         heightOfTheGreetings + 65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + is_UART_enabled * 260 +
         50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("divWithExamples").style.top =
