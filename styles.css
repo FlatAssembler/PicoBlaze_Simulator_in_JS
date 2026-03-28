@@ -681,8 +681,13 @@ textarea {
   text-decoration: none;
   color: black;
 }
-#mainNavigation li:hover {
+#mainNavigation li:hover:nth-of-type(2n + 1) {
   background-color: darkBlue;
+  transform: scale(1, 1.1);
+  transition: transform 1s;
+}
+#mainNavigation li:hover:nth-of-type(2n) {
+  background-color: #103;
   transform: scale(1, 1.1);
   transition: transform 1s;
 }
@@ -695,6 +700,9 @@ textarea {
 #mainNavigation li {
   background-color: lightYellow;
   border: 1px black solid;
+}
+#mainNavigation li:nth-of-type(2n) {
+  background-color: #fea;
 }
 #references_used_to_make_this {
   text-align: left;
