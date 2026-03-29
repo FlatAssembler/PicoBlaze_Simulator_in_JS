@@ -710,3 +710,6 @@ textarea {
   padding: 5px;
   margin-bottom: 5px;
 }
+div[data-linenumber]:target {
+  background-color: white;
+}
