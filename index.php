@@ -115,6 +115,8 @@ if (isset($_POST['username'])) {
 	<li><a href="#graphicalResults">Simulation results represented with SVG</a></li>
 	<li><a href="#UART_enable_button">The UART simulation</a></li>
 	<li><a href="#references_used_to_make_this">The references to the resources used to make this program</a></li>
+<li><a href="#UML_diagram">The UML diagram explaining how the assembler works</a></li>
+<li><a href="#powerbi_screenshot">The screenshot of the database viewed in Microsoft PowerBI</a></li>
 </ul>
 </nav>
     <main>
@@ -468,13 +470,19 @@ if (!$is_already_printed) {
       FERIT to host the documentation here, so I did that. You can download
       <a href="seminar/PicoBlaze.doc">this Word document</a>. I will not use RTF, as I
       get problems when hosting such large files.<br /><br />
-      UPDATE on 17/01/2026: I've just made a UML sequential diagram explaining
+      <span id="UML_diagram">UPDATE on 17/01/2026: I've just made a UML sequential diagram explaining
       how the assembling works in this program:
       <img
         style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
         src="sequential-diagram.jpg"
       />
-      You can see an explanation of what those terms (tokenizer, parser...) mean in <a href="https://youtu.be/hlw72oFlKZA">this video which is in the Latin language</a> (in case you cannot open it, try downloading <a href="https://flatassembler.github.io/compiler-theory-latin.mp4">this MP4 file</a> and opening it in VLC or something similar).<br/><br/>
+      You can see an explanation of what those terms (tokenizer, parser...) mean in <a href="https://youtu.be/hlw72oFlKZA">this video which is in the Latin language</a> (in case you cannot open it, try downloading <a href="https://flatassembler.github.io/compiler-theory-latin.mp4">this MP4 file</a> and opening it in VLC or something similar).</span><br/><br/>
+      <span id="powerbi_screenshot">UPDATE on 29/03/2026: Here is the screenshot of the MySQL database from PowerBI:
+<img
+style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
+src="powerbi-screenshot.png" 
+/>
+Here you can see that there are 4 tables in the database.</span><br/><br/>
       <a
         href="https://sourceforge.net/projects/picoblaze-simulator/files/latest/download"
         ><img
