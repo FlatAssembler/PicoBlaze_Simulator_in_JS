@@ -295,7 +295,7 @@ function setupLayout() {
     document.getElementById("whyClickAssemble").style.top =
         heightOfTheGreetings + windowHeight + 200 + 3 * 4 + 20 + 5 + "px";
     const heightOfTheDivWithTheInstructionAboutAssembling =
-        document.getElementById("whyClickAssemble").clientHeight;
+        document.getElementById("whyClickAssemble").clientHeight + ((document.getElementById("deleteTheProgram") && document.getElementById("deleteTheProgram").style.display=="grid")?10:0);
     document.getElementById("divWithMachineCode").style.top =
         heightOfTheGreetings + windowHeight + 4 * 4 + 20 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
