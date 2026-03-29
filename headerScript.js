@@ -290,6 +290,10 @@ function setupLayout() {
   if (windowHeight < 400) {
     document.getElementById("lineNumbers").style.top=heightOfTheGreetings+"px";
     document.getElementById("assemblyCode").style.top=heightOfTheGreetings+"px";
+
+document.getElementById("lineNumbers").style.height = windowHeight + "px";
+
+document.getElementById("assemblyCode").style.height = windowHeight + "px";
     document.getElementById("buttons").style.top =
         heightOfTheGreetings + windowHeight + 200 + 3 * 4 + "px";
     document.getElementById("whyClickAssemble").style.top =
@@ -299,6 +303,8 @@ function setupLayout() {
     document.getElementById("divWithMachineCode").style.top =
         heightOfTheGreetings + windowHeight + 4 * 4 + 20 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
+
+document.getElementById("divWithMachineCode").style.height = windowHeight +"px";
     document.getElementById("simulationButtons").style.top =
         heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
@@ -311,6 +317,8 @@ function setupLayout() {
     document.getElementById("simulationResults").style.top =
         heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + is_UART_enabled * 260 +
         50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+
+document.getElementById("simulationResults").style.height = windowHeight + "px";
     document.getElementById("graphicalResults").style.top =
         heightOfTheGreetings + windowHeight * 2 + heightOfTheDivWithTheInstructionAboutAssembling +
         200 + 65 + 50 - 30 + "px";
@@ -324,6 +332,10 @@ function setupLayout() {
   } else {
     document.getElementById("lineNumbers").style.top=heightOfTheGreetings+"px";
     document.getElementById("assemblyCode").style.top=heightOfTheGreetings+"px"; 
+
+document.getElementById("lineNumbers").style.height = "400px";
+
+document.getElementById("assemblyCode").style.height = "400px";
     document.getElementById("divWithExamples").style.top = heightOfTheGreetings + 410 + "px";
     document.getElementById("buttons").style.top = heightOfTheGreetings + 400 + 210 + 3 * 4 + "px";
     document.getElementById("whyClickAssemble").style.top =
@@ -332,11 +344,15 @@ function setupLayout() {
         document.getElementById("whyClickAssemble").clientHeight;
     document.getElementById("divWithMachineCode").style.top =
         heightOfTheGreetings + 450 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+
+document.getElementById("divWithMachineCode").style.height = "400px";
     document.getElementById("simulationButtons").style.top =
         heightOfTheGreetings + 855 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("simulationResults").style.top =
         heightOfTheGreetings + 910 + 2 * 210 + is_UART_enabled * 260 + 50 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
+
+document.getElementById("simulationResults").style.height = "400px";
     document.getElementById("UART_IO").style.top =
         heightOfTheGreetings + 910 + 2 * 210 + 50 + heightOfTheDivWithTheInstructionAboutAssembling +
         "px"; // Has no effect if the UART_IO is not shown
