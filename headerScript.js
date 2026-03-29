@@ -285,86 +285,118 @@ function setupLayout() {
     document.getElementsByTagName("main")[0].style.left =
         windowWidth / 2 - 500 / 2 + "px";
   }
-  document.getElementsByTagName("main")[0].style.top = document.getElementsByTagName("header")[0].clientHeight + (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight:0) + 50 + "px";
-  const heightOfTheGreetings = document.getElementById("greeting")?document.getElementById("greeting").clientHeight + 10 :0;
+  document.getElementsByTagName("main")[0].style.top =
+      document.getElementsByTagName("header")[0].clientHeight +
+      (document.getElementById("mainNavigation")
+           ? document.getElementById("mainNavigation").clientHeight
+           : 0) +
+      50 + "px";
+  const heightOfTheGreetings =
+      document.getElementById("greeting")
+          ? document.getElementById("greeting").clientHeight + 10
+          : 0;
   if (windowHeight < 400) {
-    document.getElementById("lineNumbers").style.top=heightOfTheGreetings+"px";
-    document.getElementById("assemblyCode").style.top=heightOfTheGreetings+"px";
+    document.getElementById("lineNumbers").style.top =
+        heightOfTheGreetings + "px";
+    document.getElementById("assemblyCode").style.top =
+        heightOfTheGreetings + "px";
 
-document.getElementById("lineNumbers").style.height = windowHeight + "px";
+    document.getElementById("lineNumbers").style.height = windowHeight + "px";
 
-document.getElementById("assemblyCode").style.height = windowHeight + "px";
+    document.getElementById("assemblyCode").style.height = windowHeight + "px";
     document.getElementById("buttons").style.top =
         heightOfTheGreetings + windowHeight + 200 + 3 * 4 + "px";
     document.getElementById("whyClickAssemble").style.top =
         heightOfTheGreetings + windowHeight + 200 + 3 * 4 + 20 + 5 + "px";
     const heightOfTheDivWithTheInstructionAboutAssembling =
-        document.getElementById("whyClickAssemble").clientHeight + ((document.getElementById("deleteTheProgram") && document.getElementById("deleteTheProgram").style.display=="grid")?10:0);
+        document.getElementById("whyClickAssemble").clientHeight +
+        ((document.getElementById("deleteTheProgram") &&
+          document.getElementById("deleteTheProgram").style.display == "grid")
+             ? 10
+             : 0);
     document.getElementById("divWithMachineCode").style.top =
         heightOfTheGreetings + windowHeight + 4 * 4 + 20 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
 
-document.getElementById("divWithMachineCode").style.height = windowHeight +"px";
+    document.getElementById("divWithMachineCode").style.height =
+        windowHeight + "px";
     document.getElementById("simulationButtons").style.top =
         heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementsByTagName("footer")[0].style.top =
-        (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight : 0) + 30 +
-        heightOfTheGreetings + 65 + 4 + 2 * 50 + 3 * windowHeight + 200 + 210 + is_UART_enabled * 260 +
-        50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        (document.getElementById("mainNavigation")
+             ? document.getElementById("mainNavigation").clientHeight
+             : 0) +
+        30 + heightOfTheGreetings + 65 + 4 + 2 * 50 + 3 * windowHeight + 200 +
+        210 + is_UART_enabled * 260 + 50 +
+        heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("divWithExamples").style.top =
         heightOfTheGreetings + windowHeight + 4 + "px";
     document.getElementById("simulationResults").style.top =
-        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + is_UART_enabled * 260 +
-        50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
+        is_UART_enabled * 260 + 50 +
+        heightOfTheDivWithTheInstructionAboutAssembling + "px";
 
-document.getElementById("simulationResults").style.height = windowHeight + "px";
+    document.getElementById("simulationResults").style.height =
+        windowHeight + "px";
     document.getElementById("graphicalResults").style.top =
-        heightOfTheGreetings + windowHeight * 2 + heightOfTheDivWithTheInstructionAboutAssembling +
-        200 + 65 + 50 - 30 + "px";
+        heightOfTheGreetings + windowHeight * 2 +
+        heightOfTheDivWithTheInstructionAboutAssembling + 200 + 65 + 50 - 30 +
+        "px";
     document.getElementById("UART_enable_button").style.top =
         heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
         heightOfTheDivWithTheInstructionAboutAssembling +
         "px"; // Usually has no effect, see below...
     document.getElementById("UART_IO").style.top =
-        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 + 50 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
+        50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
   } else {
-    document.getElementById("lineNumbers").style.top=heightOfTheGreetings+"px";
-    document.getElementById("assemblyCode").style.top=heightOfTheGreetings+"px"; 
+    document.getElementById("lineNumbers").style.top =
+        heightOfTheGreetings + "px";
+    document.getElementById("assemblyCode").style.top =
+        heightOfTheGreetings + "px";
 
-document.getElementById("lineNumbers").style.height = "400px";
+    document.getElementById("lineNumbers").style.height = "400px";
 
-document.getElementById("assemblyCode").style.height = "400px";
-    document.getElementById("divWithExamples").style.top = heightOfTheGreetings + 410 + "px";
-    document.getElementById("buttons").style.top = heightOfTheGreetings + 400 + 210 + 3 * 4 + "px";
+    document.getElementById("assemblyCode").style.height = "400px";
+    document.getElementById("divWithExamples").style.top =
+        heightOfTheGreetings + 410 + "px";
+    document.getElementById("buttons").style.top =
+        heightOfTheGreetings + 400 + 210 + 3 * 4 + "px";
     document.getElementById("whyClickAssemble").style.top =
         heightOfTheGreetings + 400 + 210 + 3 * 4 + 30 + "px";
     const heightOfTheDivWithTheInstructionAboutAssembling =
         document.getElementById("whyClickAssemble").clientHeight;
     document.getElementById("divWithMachineCode").style.top =
-        heightOfTheGreetings + 450 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + 450 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + "px";
 
-document.getElementById("divWithMachineCode").style.height = "400px";
+    document.getElementById("divWithMachineCode").style.height = "400px";
     document.getElementById("simulationButtons").style.top =
-        heightOfTheGreetings + 855 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + 855 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + "px";
     document.getElementById("simulationResults").style.top =
         heightOfTheGreetings + 910 + 2 * 210 + is_UART_enabled * 260 + 50 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
 
-document.getElementById("simulationResults").style.height = "400px";
+    document.getElementById("simulationResults").style.height = "400px";
     document.getElementById("UART_IO").style.top =
-        heightOfTheGreetings + 910 + 2 * 210 + 50 + heightOfTheDivWithTheInstructionAboutAssembling +
+        heightOfTheGreetings + 910 + 2 * 210 + 50 +
+        heightOfTheDivWithTheInstructionAboutAssembling +
         "px"; // Has no effect if the UART_IO is not shown
               // (and it isn't shown by default).
     document.getElementById("UART_enable_button").style.top =
-        heightOfTheGreetings + 910 + 2 * 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
-    document.getElementById("graphicalResults").style.top =
-        heightOfTheGreetings + 910 + 210 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
-    document.getElementsByTagName("footer")[0].style.top =
-		  (document.getElementById("mainNavigation")?document.getElementById("mainNavigation").clientHeight :0) + 30 +
-        heightOfTheGreetings + 1380 + 2 * 210 + is_UART_enabled * 260 + 50 + 20 +
+        heightOfTheGreetings + 910 + 2 * 210 +
         heightOfTheDivWithTheInstructionAboutAssembling + "px";
+    document.getElementById("graphicalResults").style.top =
+        heightOfTheGreetings + 910 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+    document.getElementsByTagName("footer")[0].style.top =
+        (document.getElementById("mainNavigation")
+             ? document.getElementById("mainNavigation").clientHeight
+             : 0) +
+        30 + heightOfTheGreetings + 1380 + 2 * 210 + is_UART_enabled * 260 +
+        50 + 20 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
   }
   if (/WebPositive/.test(
           navigator.userAgent)) { // WebPositive prints the #authors in such a
@@ -428,7 +460,7 @@ function drawTable() {
 <td style="text-align:left; border-left: none;"><label for="shouldWeUpdateRegisters">Update registers and flags on every step</label></td></tr>
 <tr><td colspan="2" style="font-family: Arial; text-align: justify; font-weight: normal; border-top: none;">
 Displaying registers and flags on every step is useful for debugging, but it slows the simulation down (due to <a href="https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing#avoid_layout_thrashing">layout thrashing</a>). I would not recommend you to enable UART and updating the registers and flags at the same time. ${
-      /Firefox\/52([ \.]|$)/.test(navigator.userAgent)
+      / Firefox\/ 52([ \.] | $) /.test(navigator.userAgent)
           ? "Thank you for using Firefox 52, a browser that deals with layout thrashing well."
           : `And in case you think you are safe from the layout thrashing just because you use a modern Internet browser, reality check: <a href="https://www.reddit.com/r/firefox/comments/18icm8l/why_does_firefox_52_seem_to_run_javascript_faster/?utm_source=share&utm_medium=web2x&context=3">Modern Internet browsers deal with layout thrashing worse than Firefox 52 (the last version of Firefox runnable on Windows XP) deals with it</a>.`}
 </td></tr></table>
@@ -528,9 +560,10 @@ function downloadHex() {
   } else if (/Dolphin/.test(navigator.userAgent))
     alert(
         "It's detected you are using Dolphin. 'Download Hexadecimal' didn't work there when we tested it.");
-    else if (/Mobile.+OPR/.test(navigator.userAgent))
-	alert("It's detected you are using the Opera Mini browser. The last time we tested it, 'Download Hexadecimal' caused it to 'download' a corrupted file.");
-  
+  else if (/Mobile.+OPR/.test(navigator.userAgent))
+    alert(
+        "It's detected you are using the Opera Mini browser. The last time we tested it, 'Download Hexadecimal' caused it to 'download' a corrupted file.");
+
   /*
   The following code is loosely based on:
   https://stackoverflow.com/a/33622881/8902065

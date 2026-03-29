@@ -325,23 +325,27 @@ fetch(URL_of_JSON_with_examples)
           "Failed to fetch the examples JSON from GitHub: " + error;
     });
 if (document.getElementById("save_the_program")) {
-	document.getElementById("save_the_program").onclick=()=>{
-		const assemblyCode = document.getElementById("assemblyCode").innerText;
+  document.getElementById("save_the_program").onclick = () => {
+    const assemblyCode = document.getElementById("assemblyCode").innerText;
 
-  		const formData = new FormData();
-  		formData.append("code", assemblyCode);
-		fetch("saveTheProgram.php", {method : "POST", body : formData, redirect : "error"}).then((response)=>{
-		        if (!response.ok) {
-          			throw new Error("The server responded with error: " +
-                          response.status);
-        		}
+    const formData = new FormData();
+    formData.append("code", assemblyCode);
+    fetch("saveTheProgram.php",
+          {method : "POST", body : formData, redirect : "error"})
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("The server responded with error: " +
+                            response.status);
+          }
 
-        		return response.text();
-		}).then((data)=>{
-			if (data=="SUCCESS")
-				alert("The program is successfully saved!");
-			else
-				alert("The server responded with: " + data);
-		}).catch(alert);
-	}
+          return response.text();
+        })
+        .then((data) => {
+          if (data == "SUCCESS")
+            alert("The program is successfully saved!");
+          else
+            alert("The server responded with: " + data);
+        })
+        .catch(alert);
+  }
 }
