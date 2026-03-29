@@ -77,8 +77,8 @@ h1 {
   display: inline-block;
   text-align: right;
   background: #aaaaaa;
-  height: 100vh;
-  max-height: 400px;
+  height: 400px;
+  max-height: 100vh;
   position: absolute;
   overflow: hidden;
   font-size: 1em;
@@ -103,8 +103,8 @@ h1 {
   text-align: left;
   display: inline-block;
   background: #eeeeee;
-  height: 100vh;
-  max-height: 400px;
+  height: 400px;
+  max-height: 100vh;
   position: absolute;
   left: 60px;
   left: var(--lineNumbersWidth);
@@ -202,10 +202,10 @@ label {
   position: absolute;
   width: calc(100% - 5px);
   background: white;
-  height: 100vh;
+  height: 400px;
   top: 450px;
   overflow: scroll;
-  max-height: 400px;
+  max-height: 100vh;
   margin-bottom: 10px;
 }
 #warningAboutJavaScript {
@@ -262,8 +262,8 @@ table {
   top: 910px;
   position: absolute;
   width: calc(100% - 8px);
-  height: 100vh;
-  max-height: 400px;
+  height: 400px;
+  max-height: 100vh;
   overflow: scroll;
   background-color: white;
   margin-bottom: 15px;
