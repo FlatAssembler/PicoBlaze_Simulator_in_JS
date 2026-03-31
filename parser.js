@@ -302,11 +302,16 @@ function parse(tokenized) {
           return i;
       return -1;
     };
-  let lastColon = tokenized.length - 2;
-  if (lastColon > 0)
-    while (lastColon) {
-      if (tokenized[lastColon].text == ':' &&
-          tokenized[lastColon + 1].text != '\n') {
+
+  let lastColon;
+  while ((lastColon = tokenized.findLastIndex((node, index) => {
+  if (index > tokenized.length - 2)
+    return false;
+  if (node.text == ':' && tokenized[index + 1] != '\n')
+    return true;
+  return false;
+})) != -1)
+      {
         console.log(
             "DEBUG: Parsing the ternary conditional operator. The colon is at the index: " +
             lastColon);
@@ -353,10 +358,7 @@ function parse(tokenized) {
                          lastColon - questionMarkCorrespondingToTheLastColon +
                              1);
         tokenized.splice(questionMarkCorrespondingToTheLastColon - 1, 1);
-        lastColon = questionMarkCorrespondingToTheLastColon;
       }
-      lastColon--;
-    }
 
   root_of_abstract_syntax_tree.children = tokenized;
   if (root_of_abstract_syntax_tree.checkTypes())
