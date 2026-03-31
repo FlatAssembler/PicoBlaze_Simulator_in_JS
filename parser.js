@@ -305,60 +305,56 @@ function parse(tokenized) {
 
   let lastColon;
   while ((lastColon = tokenized.findLastIndex((node, index) => {
-  if (index > tokenized.length - 2)
-    return false;
-  if (node.text == ':' && tokenized[index + 1].text != '\n')
-    return true;
-  return false;
-})) != -1)
-      {
-        console.log(
-            "DEBUG: Parsing the ternary conditional operator. The colon is at the index: " +
-            lastColon);
-        let counter = 1;
-        const questionMarkCorrespondingToTheLastColon =
-            tokenized.findLastIndex((node, index) => {
-              if (index >= lastColon)
-                return false;
-              if (node.text == '?')
-                counter--;
-              else if (node.text == ':')
-                counter++;
-              return counter == 0;
-            });
-        if (questionMarkCorrespondingToTheLastColon == -1) {
-          alert(
-              "Line #" + tokenized[lastColon].lineNumber +
-              ": There is a colon without a matching question mark before it!");
-          return root_of_abstract_syntax_tree;
-        }
-        console.log("DEBUG: The corresponding question mark is at the index: " +
-                    questionMarkCorrespondingToTheLastColon);
-        let nodesThatRecursionDealsWith = tokenized.slice(
-            questionMarkCorrespondingToTheLastColon + 1, lastColon);
-        tokenized[questionMarkCorrespondingToTheLastColon].text = "?:";
-        tokenized[questionMarkCorrespondingToTheLastColon].children.push(
-            tokenized[questionMarkCorrespondingToTheLastColon - 1]);
-        const whatTheRecursionReturned = parse(nodesThatRecursionDealsWith);
-        if (whatTheRecursionReturned.children.length > 1) {
-          alert("Line #" + whatTheRecursionReturned.children[1].lineNumber +
-                ": Unexpected token `" +
-                whatTheRecursionReturned.children[1].text + "`!");
-          return root_of_abstract_syntax_tree;
-        }
-        tokenized[questionMarkCorrespondingToTheLastColon].children.push(
-            whatTheRecursionReturned.children[0]);
-        tokenized[questionMarkCorrespondingToTheLastColon].children.push(
-            tokenized[lastColon + 1]);
-        console.log(
-            "DEBUG: The ternary conditional operator converted to LISP is: " +
-            tokenized[questionMarkCorrespondingToTheLastColon]
-                .getLispExpression());
-        tokenized.splice(questionMarkCorrespondingToTheLastColon + 1,
-                         lastColon - questionMarkCorrespondingToTheLastColon +
-                             1);
-        tokenized.splice(questionMarkCorrespondingToTheLastColon - 1, 1);
-      }
+           if (index > tokenized.length - 2)
+             return false;
+           if (node.text == ':' && tokenized[index + 1].text != '\n')
+             return true;
+           return false;
+         })) != -1) {
+    console.log(
+        "DEBUG: Parsing the ternary conditional operator. The colon is at the index: " +
+        lastColon);
+    let counter = 1;
+    const questionMarkCorrespondingToTheLastColon =
+        tokenized.findLastIndex((node, index) => {
+          if (index >= lastColon)
+            return false;
+          if (node.text == '?')
+            counter--;
+          else if (node.text == ':')
+            counter++;
+          return counter == 0;
+        });
+    if (questionMarkCorrespondingToTheLastColon == -1) {
+      alert("Line #" + tokenized[lastColon].lineNumber +
+            ": There is a colon without a matching question mark before it!");
+      return root_of_abstract_syntax_tree;
+    }
+    console.log("DEBUG: The corresponding question mark is at the index: " +
+                questionMarkCorrespondingToTheLastColon);
+    let nodesThatRecursionDealsWith =
+        tokenized.slice(questionMarkCorrespondingToTheLastColon + 1, lastColon);
+    tokenized[questionMarkCorrespondingToTheLastColon].text = "?:";
+    tokenized[questionMarkCorrespondingToTheLastColon].children.push(
+        tokenized[questionMarkCorrespondingToTheLastColon - 1]);
+    const whatTheRecursionReturned = parse(nodesThatRecursionDealsWith);
+    if (whatTheRecursionReturned.children.length > 1) {
+      alert("Line #" + whatTheRecursionReturned.children[1].lineNumber +
+            ": Unexpected token `" + whatTheRecursionReturned.children[1].text +
+            "`!");
+      return root_of_abstract_syntax_tree;
+    }
+    tokenized[questionMarkCorrespondingToTheLastColon].children.push(
+        whatTheRecursionReturned.children[0]);
+    tokenized[questionMarkCorrespondingToTheLastColon].children.push(
+        tokenized[lastColon + 1]);
+    console.log(
+        "DEBUG: The ternary conditional operator converted to LISP is: " +
+        tokenized[questionMarkCorrespondingToTheLastColon].getLispExpression());
+    tokenized.splice(questionMarkCorrespondingToTheLastColon + 1,
+                     lastColon - questionMarkCorrespondingToTheLastColon + 1);
+    tokenized.splice(questionMarkCorrespondingToTheLastColon - 1, 1);
+  }
 
   root_of_abstract_syntax_tree.children = tokenized;
   if (root_of_abstract_syntax_tree.checkTypes())
