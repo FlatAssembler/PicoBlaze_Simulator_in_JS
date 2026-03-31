@@ -307,7 +307,7 @@ function parse(tokenized) {
   while ((lastColon = tokenized.findLastIndex((node, index) => {
   if (index > tokenized.length - 2)
     return false;
-  if (node.text == ':' && tokenized[index + 1] != '\n')
+  if (node.text == ':' && tokenized[index + 1].text != '\n')
     return true;
   return false;
 })) != -1)
