@@ -332,6 +332,13 @@ function parse(tokenized) {
     }
     console.log("DEBUG: The corresponding question mark is at the index: " +
                 questionMarkCorrespondingToTheLastColon);
+    if (questionMarkCorrespondingToTheLastColon == 0) {
+      alert(
+          "Line #" +
+          tokenized[questionMarkCorrespondingToTheLastColon].lineNumber +
+          ": The ternary conditional operator has no first argument (the condition).");
+      return root_of_abstract_syntax_tree;
+    }
     let nodesThatRecursionDealsWith =
         tokenized.slice(questionMarkCorrespondingToTheLastColon + 1, lastColon);
     tokenized[questionMarkCorrespondingToTheLastColon].text = "?:";
