@@ -301,7 +301,7 @@ function setupLayout() {
     document.getElementById("assemblyCode").style.top =
         heightOfTheGreetings + "px";
 
-    document.getElementById("lineNumbers").style.height = windowHeight + "px";
+    document.getElementById("lineNumbers").style.height = windowHeight + "px"; // This is necessary because all mobile browsers I've tried this program in except for Dolphin and Opera Mini (seriously, Opera Mini is doing something right) are ignoring the CSS `max-height: 100vh` directive if the user puts the device in the landscape mode and then scrolls upwards, thus breaking the layout. It took me 5 years to diagnoze the issue, then this fix is relatively trivial. https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/3
 
     document.getElementById("assemblyCode").style.height = windowHeight + "px";
     document.getElementById("buttons").style.top =
