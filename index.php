@@ -483,6 +483,13 @@ style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
 src="powerbi-screenshot.png" 
 />
 Here you can see that there are 4 tables in the database.</span><br/><br/>
+      UPDATE on 03/04/2026: I've finally tweaked
+      <a
+        href="https://sourceforge.net/projects/picoblaze-android/files/latest/download"
+        >the Android version of this simulator</a
+      >
+      into working somewhat, at least on my mobile phone Samsung Galaxy S23.
+      Maybe it will come useful to somebody.<br /><br /> 
       <a
         href="https://sourceforge.net/projects/picoblaze-simulator/files/latest/download"
         ><img
