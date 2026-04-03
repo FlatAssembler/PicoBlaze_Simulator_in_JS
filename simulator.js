@@ -251,7 +251,7 @@ function simulateOneInstruction() {
         }
       } else {
         output[parseInt(machineCode[PC].hex[4], 16)] = parseInt(
-            machineCode[PC].hex.substring(2, 2),
+            machineCode[PC].hex.substring(2, 2 + 2),
             16); // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/30
         displayOutput();
       }
