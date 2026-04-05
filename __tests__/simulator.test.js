@@ -1,5 +1,7 @@
 global.formatAsAddress = require("../headerScript.js").formatAsAddress; //referenced by simulator
 
+global.displayOutput = ()=>{}; // A stub.
+
 const simulator = require("../simulator.js");
 
 const clearGlobals = () => {
@@ -9,6 +11,7 @@ const clearGlobals = () => {
   global.regbank = 0;
   global.flagZ = [0, 0];
   global.flagC = [0, 0];
+  global.output = new Uint8Array(256);
 
   global.breakpoints = [];
   global.playing = false;
@@ -182,5 +185,14 @@ describe("PicoBlaze MachineCode Simulator", () => {
     simulator.simulateOneInstruction(); //jump@(s1,s0)
     
     expect(global.PC).toBe(5); //jump to address 5
-  })
+  });
+
+  test("OUTPUTK works on non-UART ports", () => {
+    const machineCode = [
+    	{hex: "2b180", line: "2"} //OUTPUTK 24'd, 0
+    ];
+    global.machineCode = machineCode;
+    simulator.simulateOneInstruction();
+    expect(output[0]).toBe(24);
+  });
 });
