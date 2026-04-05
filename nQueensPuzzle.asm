@@ -58,6 +58,9 @@ main_loop:
   sub [top_of_the_stack], size_of_the_chessboard + 1
 
   fetch length_of_the_current_attempt, top_of_the_stack
+  movzx ebx, [length_of_the_current_attempt]
+  inc [counters_of_specific_length + 4 * ebx]
+        
   mov [s0], address_of_the_current_attempt
   store length_of_the_current_attempt, s0
   mov al, [top_of_the_stack]
@@ -357,8 +360,22 @@ call print_string
 
 push the_long_output
 call [puts]
-invoke system,_pause
-invoke exit,0
+mov ebx, 0
+printing_the_lengths_of_the_attempts_loop:
+  cmp ebx, 8 + 1
+  jnc end_of_the_printing_the_lengths_of_the_attempts_loop
+  push ebx
+  push [counters_of_specific_length + 4 * ebx]
+  jmp statistics_message_string$
+    statistics_message_string db "There were %d attempts of the length %d.", 10, 0
+  statistics_message_string$:
+  push statistics_message_string
+  call [printf]
+  inc ebx
+  jmp printing_the_lengths_of_the_attempts_loop
+end_of_the_printing_the_lengths_of_the_attempts_loop:   
+invoke system, _pause
+invoke exit, 0
 
 print_the_current_attempt:
   mov [s0], address_of_the_current_attempt + 1
@@ -467,6 +484,7 @@ se db ?
 sf db ?
 length_of_the_current_attempt db ?
 row_of_the_queen_we_are_trying_to_add db ?
+counters_of_specific_length dd 8 + 1 DUP(0)
 
 section '.idata' data readable import
 library msvcrt,'msvcrt.dll' ;Microsoft Visual C Runtime Library
