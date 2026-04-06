@@ -489,7 +489,9 @@ Here you can see that there are 4 tables in the database.</span><br/><br/>
         >the Android version of this simulator</a
       >
       into working somewhat, at least on my mobile phone Samsung Galaxy S23.
-      Maybe it will come useful to somebody.<br /><br /> 
+      Maybe it will come useful to somebody.<br /><br />
+      The following link will <b>not</b> download the Android app, it will
+      download you the source code of this web-app:<br/><br/>
       <a
         href="https://sourceforge.net/projects/picoblaze-simulator/files/latest/download"
         ><img
