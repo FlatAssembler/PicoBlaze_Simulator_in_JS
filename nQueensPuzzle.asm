@@ -362,10 +362,12 @@ push the_long_output
 call [puts]
 mov ebx, 0
 printing_the_lengths_of_the_attempts_loop:
-  cmp ebx, 8 + 1
+  cmp ebx, size_of_the_chessboard + 1
   jnc end_of_the_printing_the_lengths_of_the_attempts_loop
   push ebx
-  push [counters_of_specific_length + 4 * ebx]
+  mov eax, [counters_of_specific_length + 4 * ebx]
+  add [total_number_of_attempts], eax
+  push eax
   jmp statistics_message_string$
     statistics_message_string db "There were %d attempts of the length %d.", 10, 0
   statistics_message_string$:
@@ -373,7 +375,13 @@ printing_the_lengths_of_the_attempts_loop:
   call [printf]
   inc ebx
   jmp printing_the_lengths_of_the_attempts_loop
-end_of_the_printing_the_lengths_of_the_attempts_loop:   
+end_of_the_printing_the_lengths_of_the_attempts_loop:
+jmp total_number_of_attempts_string$
+  total_number_of_attempts_string db "The total number of attempts was: %d.", 10, 0
+total_number_of_attempts_string$:
+push [total_number_of_attempts]
+push total_number_of_attempts_string
+call [printf]
 invoke system, _pause
 invoke exit, 0
 
@@ -484,7 +492,8 @@ se db ?
 sf db ?
 length_of_the_current_attempt db ?
 row_of_the_queen_we_are_trying_to_add db ?
-counters_of_specific_length dd 8 + 1 DUP(0)
+counters_of_specific_length dd size_of_the_chessboard + 1 DUP(0)
+total_number_of_attempts dd 0
 
 section '.idata' data readable import
 library msvcrt,'msvcrt.dll' ;Microsoft Visual C Runtime Library
