@@ -760,6 +760,8 @@ function simulateOneInstruction() {
         alert('The instruction "' + machineCode[PC].hex +
               '", assembled from line #' + machineCode[PC].line +
               ", hasn't been implemented yet, sorry about that!");
+        stopSimulation();
+        return;
       }
       registers[regbank][registerIndex] = registerValue;
       PC++;
