@@ -29,6 +29,26 @@ body {
   body {
     background-position: top right;
   }
+  div#scrollToTop {
+    display: block;
+    position: fixed;
+    bottom: 75px;
+    right: 20px;
+  }
+  div#scrollToTop:hover {
+    animation: jumpingArrow 1s infinite;
+  }
+}
+@keyframes jumpingArrow {
+  from {
+    bottom: 75px;
+  }
+  50% {
+    bottom: 80px;
+  }
+  to {
+    bottom: 75px;
+  }
 }
 main {
   width: 100%;
@@ -603,8 +623,8 @@ textarea {
 }
 #greeting.logged_out {
   grid-template-areas:
-  	"hello hello hello"
-	"form form form";
+    "hello hello hello"
+    "form form form";
 }
 #greeting.logged_out #hello {
   grid-area: hello;
@@ -616,12 +636,12 @@ textarea {
   gap: 5px;
   display: grid;
   grid-template-areas:
-  	"first_label first_label ."
-	"username username username"
-	"second_label second_label ."
-	"password password password"
-	"register . login"
-	"message message message";
+    "first_label first_label ."
+    "username username username"
+    "second_label second_label ."
+    "password password password"
+    "register . login"
+    "message message message";
   border-radius: 5px;
 }
 #greeting.logged_out form label:first-of-type {
@@ -669,7 +689,7 @@ textarea {
 #mainNavigation {
   max-width: calc(500px - 30px);
   width: calc(100% - 30px);
-  margin-left:auto;
+  margin-left: auto;
   margin-right: auto;
   background: white;
   padding: 10px;
@@ -693,7 +713,7 @@ textarea {
   transition: transform 1s;
 }
 #mainNavigation li:hover a {
-  color:white;
+  color: white;
 }
 #mainNavigation li {
   padding: 3px;
@@ -713,4 +733,7 @@ textarea {
 }
 div[data-linenumber]:target {
   background-color: white;
+}
+#scrollToTop {
+  display: none;
 }

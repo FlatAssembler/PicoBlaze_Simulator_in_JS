@@ -82,6 +82,7 @@ if (isset($_POST['username'])) {
     <script defer src="viewer.js" type="text/javascript"></script>
   </head>
   <body>
+    <span id="top"></span>
     <svg id="emptySVG" style="display: none"></svg>
     <div id="ribbon">
       <a
@@ -547,6 +548,7 @@ Here you can see that there are 4 tables in the database.</span><br/><br/>
       </script>
     </footer>
     <script src="footerScript.js" type="text/javascript"></script>
+    <div id="scrollToTop"><a href="#top"><img src="https://icons.getbootstrap.com/assets/icons/shift.svg" alt="Scroll to top"></a></div>
     <div id="MIT_licence">
       <div id="licence_message">
         By using this web-app, you agree to
