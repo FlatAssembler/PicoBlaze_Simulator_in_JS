@@ -32,8 +32,8 @@ body {
   div#scrollToTop {
     display: block;
     position: fixed;
-    bottom: 75px;
-    right: 20px;
+    bottom: 10vh;
+    right: 50px;
   }
   div#scrollToTop:hover {
     animation: jumpingArrow 1s infinite;
