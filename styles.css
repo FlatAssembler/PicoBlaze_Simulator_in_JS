@@ -680,6 +680,7 @@ textarea {
 #mainNavigation a {
   text-decoration: none;
   color: black;
+  display: block;
 }
 #mainNavigation li:hover:nth-of-type(2n + 1) {
   background-color: darkBlue;
