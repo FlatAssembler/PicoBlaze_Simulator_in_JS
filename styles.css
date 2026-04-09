@@ -41,13 +41,13 @@ body {
 }
 @keyframes jumpingArrow {
   from {
-    bottom: 75px;
+    bottom: 10vh;
   }
   50% {
-    bottom: 80px;
+    bottom: calc(10vh + 10px);
   }
   to {
-    bottom: 75px;
+    bottom: 10vh;
   }
 }
 main {
