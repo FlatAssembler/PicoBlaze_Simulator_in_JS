@@ -34,6 +34,9 @@ body {
     position: fixed;
     bottom: 10vh;
     right: 50px;
+    background: whitesmoke;
+    padding: 25px;
+    border-radius: 50%;
   }
   div#scrollToTop:hover {
     animation: jumpingArrow 1s infinite;
