@@ -119,6 +119,7 @@ if (isset($_POST['username'])) {
 <li><a href="#UML_diagram">The UML diagram explaining how the assembler works</a></li>
 <li><a href="#powerbi_screenshot">The screenshot of the database viewed in Microsoft PowerBI</a></li>
 </ul>
+      <p id="instructionOnScrollingToTop">To quickly return to top, press the shift icon (<img src="https://icons.getbootstrap.com/assets/icons/shift.svg">) in the bottom-right corner.</p>
 </nav>
     <main>
       <div id="greeting" class="<?php echo isset($_SESSION['username'])?"logged_in":"logged_out";?>"><?php if (isset($_SESSION['username'])):?>

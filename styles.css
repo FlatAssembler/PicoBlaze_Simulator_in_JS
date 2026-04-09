@@ -41,6 +41,13 @@ body {
   div#scrollToTop:hover {
     animation: jumpingArrow 1s infinite;
   }
+  p#instructionOnScrollingToTop {
+    display: block;
+  }
+}
+#instructionOnScrollingToTop {
+  display: none;
+  text-align: justify;
 }
 @keyframes jumpingArrow {
   from {
