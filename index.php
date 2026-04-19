@@ -422,7 +422,7 @@ if (!$is_already_printed) {
           lang="hr"
           >vrlo dobar 4</i
         >
-        - <i lang="hr">odli&ccaron;an 5</i>). Kind of weird that academia
+        - <i lang="hr">odli&ccaron;an 5</i>). And in case you are under any delusion I am the only one who tried doing this for my Bachelor thesis and got a bad mark, reality check: <a href="https://repozitorij.etfos.hr/object/etfos:5437/FILE0">here is another attempt at pretty much the same thing that got an even worse mark</a>.ss Kind of weird that academia
         doesn't value this type of work, when it was my Computer Architecture
         professor who suggested me to make it... for use within academia (so
         that the students can do the laboratory exercises without having access
