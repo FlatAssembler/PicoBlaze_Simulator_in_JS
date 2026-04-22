@@ -21,7 +21,8 @@ const clearGlobals = () => {
   for (let i = 0; i < 10; i++) {
     const td = document.createElement("td");
     td.setAttribute("id", "PC_label_" + formatAsAddress(i));
-    document.body.appendChild(td);
+    if (!document.getElementById("PC_label_"+formatAsAddress(i)))
+    	document.body.appendChild(td);
   }
 
   /* UART setup*/
@@ -33,8 +34,12 @@ const clearGlobals = () => {
   const uartOutputEl = document.createElement("pre");
   uartOutputEl.setAttribute("id", "UART_OUTPUT");
   uartOutputEl.innerText = "";
-  document.body.appendChild(uartOutputEl);
-  document.body.appendChild(uartInputEl);
+  if (!document.getElementById("UART_OUTPUT"))
+  	document.body.appendChild(uartOutputEl);
+  else
+	document.getElementById("UART_OUTPUT").innerHTML = "";
+  if (!document.getElementById("UART_INPUT"))
+  	document.body.appendChild(uartInputEl);
 };
 
 describe("PicoBlaze MachineCode Simulator", () => {

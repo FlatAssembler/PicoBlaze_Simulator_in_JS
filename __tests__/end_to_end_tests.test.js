@@ -20,7 +20,8 @@ const clearGlobals = () => {
   for (let i = 0; i < 4096; i++) {
     const td = document.createElement("td");
     td.setAttribute("id", "PC_label_" + formatAsAddress(i));
-    document.body.appendChild(td);
+    if (!document.getElementById("PC_label_"+formatAsAddress(i)))
+    	document.body.appendChild(td);
   }
 
   for (let i=0; i < 256; i++) {
@@ -38,8 +39,12 @@ const clearGlobals = () => {
   const uartOutputEl = document.createElement("pre");
   uartOutputEl.setAttribute("id", "UART_OUTPUT");
   uartOutputEl.innerText = "";
-  document.body.appendChild(uartOutputEl);
-  document.body.appendChild(uartInputEl);
+	if (document.getElementById("UART_OUTPUT"))
+		document.getElementById("UART_OUTPUT").innerHTML = "";
+	else
+  		document.body.appendChild(uartOutputEl);
+  if (!document.getElementById("UART_INPUT"))
+  	document.body.appendChild(uartInputEl);
 };
 
 const tree = require("../TreeNode.js");
@@ -412,8 +417,8 @@ RETURN
     global.is_UART_enabled=true;
     while (global.PC != compilation_context.labels.get("infinite_loop"))
         simulator.simulateOneInstruction();
-    const output = document.getElementById("UART_OUTPUT").innerText;
-    expect(output).toBe(
+    const output = document.getElementById("UART_OUTPUT")[(typeof Bun !== "undefined") ? "innerHTML" : "innerText"];
+    let expectedOutput =
 `Searching for solutions...
 Found a solution: A1 B5 C8 D6 E3 F7 G2 H4
 ..Q.....
@@ -1336,6 +1341,9 @@ Q.......
 ..Q.....
 That's the solution #92
 The end!
-`);
+`;
+	  if (typeof Bun !== "undefined")
+		  expectedOutput = expectedOutput.replace(/\n/g,"<br>");
+  expect(output).toBe(expectedOutput);
   })
 });

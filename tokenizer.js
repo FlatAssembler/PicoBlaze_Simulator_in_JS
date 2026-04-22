@@ -123,3 +123,7 @@ function tokenize(input) {
 
   return tokenized;
 }
+
+if (typeof Bun !== "undefined") {
+	module.exports = { tokenize };
+}

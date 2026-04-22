@@ -10,6 +10,11 @@ function isMnemonic(str) {
       return true;
   return false;
 }
+
+if (typeof Bun !== "undefined") {
+	module.exports.isMnemonic = isMnemonic;
+}
+
 function makeCompilationContext(root_of_the_abstract_syntax_tree,
                                 oldCompilationContext) {
   let context;
@@ -310,4 +315,8 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
     }
   }
   return context;
+}
+
+if (typeof Bun !== "undefined") {
+	module.exports.makeCompilationContext = makeCompilationContext;
 }

@@ -382,3 +382,7 @@ class TreeNode {
     return "none";
   }
 }
+
+if (typeof Bun !== "undefined") {
+	module.exports = {TreeNode, LevenshtainDistance, longest_common_subsequence};
+}

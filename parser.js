@@ -369,3 +369,7 @@ function parse(tokenized) {
 
   return new TreeNode("assembly", 0);
 }
+
+if (typeof Bun !== "undefined") {
+	module.exports = {parse};
+}
