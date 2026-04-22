@@ -74,7 +74,8 @@ function tokenize(input) {
       currentToken = "";
       continue;
     }
-    if (input[i] == ":" && !areWeInAString) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/39
+    if (input[i] == ":" &&
+        !areWeInAString) { // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/39
       tokenized.push(new TreeNode(currentToken + ":", currentLine));
       currentToken = "";
       continue;
@@ -125,5 +126,5 @@ function tokenize(input) {
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports = { tokenize };
+  module.exports = {tokenize};
 }

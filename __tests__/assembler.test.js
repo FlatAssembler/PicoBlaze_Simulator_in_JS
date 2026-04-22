@@ -122,7 +122,7 @@ compare s0, 100'd
     expect(machineCode[1].hex).toBe("0000a");
     expect(machineCode[2].hex).toBe("00010");
   });
-  
+
   test("Function pointers are assembled correctly", () => {
     const assembly = `
 address 0
@@ -135,8 +135,11 @@ call@(s1, s2)
     expect(machineCode[0].hex).toBe("24120");
   });
 
-  test("The ternary conditional operator inside JUMP works correctly", () => { // This was once crashing the assembler: https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/38
-    const assembly = `
+  test(
+      "The ternary conditional operator inside JUMP works correctly",
+      () => { // This was once crashing the assembler:
+              // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/38
+        const assembly = `
 ;This is an example program demonstrating
 ;how the \`?:\` operator in jumps, supposedly
 ;enabled in v5.2.1, doesn't really work as
@@ -173,30 +176,33 @@ end_of_branching:
 ;to the labels. There doesn't seem to be
 ;a simple solution.
     `;
-    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
-    const compilation_context =
-        preprocessor.makeCompilationContext(abstract_syntax_tree);
-    assembler.assemble(abstract_syntax_tree, compilation_context);
-    expect(machineCode[0].hex).toBe("22004");
-  });
+        const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+        const compilation_context =
+            preprocessor.makeCompilationContext(abstract_syntax_tree);
+        assembler.assemble(abstract_syntax_tree, compilation_context);
+        expect(machineCode[0].hex).toBe("22004");
+      });
 
-  test("Strings containing the colon tokenize correctly", () => { // This was once crashing the assembler: https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/39
-    const assembly = `
+  test(
+      "Strings containing the colon tokenize correctly",
+      () => { // This was once crashing the assembler:
+              // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/39
+        const assembly = `
 ;This is an example program showing how
 ;":" doesn't tokenize correctly.
 
 address 0
 load s9, ":"
     `;
-    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
-    const compilation_context =
-        preprocessor.makeCompilationContext(abstract_syntax_tree);
-    assembler.assemble(abstract_syntax_tree, compilation_context);
-    expect(machineCode[0].hex).toBe("0193a");
-  });
+        const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+        const compilation_context =
+            preprocessor.makeCompilationContext(abstract_syntax_tree);
+        assembler.assemble(abstract_syntax_tree, compilation_context);
+        expect(machineCode[0].hex).toBe("0193a");
+      });
 
-test("The \"print_string\" pseudo-mnemonic works", () => {
-const assembly = `
+  test("The \"print_string\" pseudo-mnemonic works", () => {
+    const assembly = `
 address 0
 print_string "Hello world!", s9, UART_TX
 load s9, a
@@ -248,7 +254,8 @@ RETURN
     const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
     const compilation_context =
         preprocessor.makeCompilationContext(abstract_syntax_tree);
-    const call_UART_TX="20"+formatAsAddress(compilation_context.labels.get("UART_TX")); 
+    const call_UART_TX =
+        "20" + formatAsAddress(compilation_context.labels.get("UART_TX"));
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("01948"); // H
     expect(machineCode[1].hex).toBe(call_UART_TX);
@@ -278,8 +285,10 @@ RETURN
     expect(machineCode[25].hex).toBe(call_UART_TX);
   });
 
-  test("The \"print_string\" breakpoints work when the string starts with a newline character", () => {
-    const assembly = `
+  test(
+      "The \"print_string\" breakpoints work when the string starts with a newline character",
+      () => {
+        const assembly = `
 base_decimal
 
 address 0
@@ -331,27 +340,31 @@ UART_TX:
   OUTPUT s9, UART_TX_PORT
 RETURN
 `;
-    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
-    const compilation_context =
-        preprocessor.makeCompilationContext(abstract_syntax_tree);
-    const call_UART_TX="20"+formatAsAddress(compilation_context.labels.get("UART_TX"));
-    assembler.assemble(abstract_syntax_tree, compilation_context);
-    expect(machineCode[0].hex).toBe("0190a"); // new-line character
-    expect(machineCode[0].disableBreakpoint).toBe(false); // The first instruction should be breakpoint-enabled.
-    expect(machineCode[1].hex).toBe(call_UART_TX);
-    expect(machineCode[1].disableBreakpoint).toBe(true);
-    expect(machineCode[2].hex).toBe("01920"); //   (space)
-    expect(machineCode[2].disableBreakpoint).toBe(true);
-    expect(machineCode[3].hex).toBe(call_UART_TX);
-    expect(machineCode[3].disableBreakpoint).toBe(true);
-    expect(machineCode[4].hex).toBe("01954"); // T
-    expect(machineCode[4].disableBreakpoint).toBe(true);
-    expect(machineCode[5].hex).toBe(call_UART_TX);
-    expect(machineCode[5].disableBreakpoint).toBe(true);
-  });
+        const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+        const compilation_context =
+            preprocessor.makeCompilationContext(abstract_syntax_tree);
+        const call_UART_TX =
+            "20" + formatAsAddress(compilation_context.labels.get("UART_TX"));
+        assembler.assemble(abstract_syntax_tree, compilation_context);
+        expect(machineCode[0].hex).toBe("0190a"); // new-line character
+        expect(machineCode[0].disableBreakpoint)
+            .toBe(false); // The first instruction should be breakpoint-enabled.
+        expect(machineCode[1].hex).toBe(call_UART_TX);
+        expect(machineCode[1].disableBreakpoint).toBe(true);
+        expect(machineCode[2].hex).toBe("01920"); //   (space)
+        expect(machineCode[2].disableBreakpoint).toBe(true);
+        expect(machineCode[3].hex).toBe(call_UART_TX);
+        expect(machineCode[3].disableBreakpoint).toBe(true);
+        expect(machineCode[4].hex).toBe("01954"); // T
+        expect(machineCode[4].disableBreakpoint).toBe(true);
+        expect(machineCode[5].hex).toBe(call_UART_TX);
+        expect(machineCode[5].disableBreakpoint).toBe(true);
+      });
 
-  test("The \"print_string\" breakpoints work when the string does not start with a newline character", () => {
-    const assembly = `
+  test(
+      "The \"print_string\" breakpoints work when the string does not start with a newline character",
+      () => {
+        const assembly = `
 address 0
 print_string "AB\\n", s9, UART_TX
 infinite_loop: jump infinite_loop
@@ -398,22 +411,24 @@ UART_TX:
   OUTPUT s9, UART_TX_PORT
 RETURN
 `;
-    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
-    const compilation_context =
-        preprocessor.makeCompilationContext(abstract_syntax_tree);
-    const call_UART_TX="20"+formatAsAddress(compilation_context.labels.get("UART_TX"));
-    assembler.assemble(abstract_syntax_tree, compilation_context);
-    expect(machineCode[0].hex).toBe("01941"); // A
-    expect(machineCode[0].disableBreakpoint).toBe(false); // The first instruction should be breakpoint-enabled.
-    expect(machineCode[1].hex).toBe(call_UART_TX);
-    expect(machineCode[1].disableBreakpoint).toBe(true);
-    expect(machineCode[2].hex).toBe("01942"); // B
-    expect(machineCode[2].disableBreakpoint).toBe(true);
-    expect(machineCode[3].hex).toBe(call_UART_TX);
-    expect(machineCode[3].disableBreakpoint).toBe(true);
-    expect(machineCode[4].hex).toBe("0190a"); // new-line character
-    expect(machineCode[4].disableBreakpoint).toBe(true);
-    expect(machineCode[5].hex).toBe(call_UART_TX);
-    expect(machineCode[5].disableBreakpoint).toBe(true);
-  });
+        const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+        const compilation_context =
+            preprocessor.makeCompilationContext(abstract_syntax_tree);
+        const call_UART_TX =
+            "20" + formatAsAddress(compilation_context.labels.get("UART_TX"));
+        assembler.assemble(abstract_syntax_tree, compilation_context);
+        expect(machineCode[0].hex).toBe("01941"); // A
+        expect(machineCode[0].disableBreakpoint)
+            .toBe(false); // The first instruction should be breakpoint-enabled.
+        expect(machineCode[1].hex).toBe(call_UART_TX);
+        expect(machineCode[1].disableBreakpoint).toBe(true);
+        expect(machineCode[2].hex).toBe("01942"); // B
+        expect(machineCode[2].disableBreakpoint).toBe(true);
+        expect(machineCode[3].hex).toBe(call_UART_TX);
+        expect(machineCode[3].disableBreakpoint).toBe(true);
+        expect(machineCode[4].hex).toBe("0190a"); // new-line character
+        expect(machineCode[4].disableBreakpoint).toBe(true);
+        expect(machineCode[5].hex).toBe(call_UART_TX);
+        expect(machineCode[5].disableBreakpoint).toBe(true);
+      });
 });

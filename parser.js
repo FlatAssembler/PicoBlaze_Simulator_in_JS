@@ -371,5 +371,5 @@ function parse(tokenized) {
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports = {parse};
+  module.exports = {parse};
 }

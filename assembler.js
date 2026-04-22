@@ -26,7 +26,7 @@ function formatAsByte(n) {
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports.formatAsByte = formatAsByte;
+  module.exports.formatAsByte = formatAsByte;
 }
 
 function formatAsInstruction(n) {
@@ -43,7 +43,7 @@ function formatAsInstruction(n) {
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports.formatAsInstruction = formatAsInstruction;
+  module.exports.formatAsInstruction = formatAsInstruction;
 }
 
 function formatAs4bits(n) {
@@ -60,7 +60,7 @@ function formatAs4bits(n) {
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports.formatAs4bits = formatAs4bits;
+  module.exports.formatAs4bits = formatAs4bits;
 }
 
 function isDirective(str) {
@@ -79,7 +79,7 @@ function isDirective(str) {
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports.isDirective = isDirective;
+  module.exports.isDirective = isDirective;
 }
 
 function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
@@ -1239,6 +1239,6 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
   }
 }
 
-if (typeof Bun !== "undefined"){
-	module.exports.assemble = assemble;
+if (typeof Bun !== "undefined") {
+  module.exports.assemble = assemble;
 }

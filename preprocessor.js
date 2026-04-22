@@ -12,7 +12,7 @@ function isMnemonic(str) {
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports.isMnemonic = isMnemonic;
+  module.exports.isMnemonic = isMnemonic;
 }
 
 function makeCompilationContext(root_of_the_abstract_syntax_tree,
@@ -318,5 +318,5 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
 }
 
 if (typeof Bun !== "undefined") {
-	module.exports.makeCompilationContext = makeCompilationContext;
+  module.exports.makeCompilationContext = makeCompilationContext;
 }

@@ -674,7 +674,6 @@ function fetchExample(exampleName) {
                        error));
 }
 
-if (typeof Bun !== "undefined")
-{
-	module.exports = {formatAsAddress};
+if (typeof Bun !== "undefined") {
+  module.exports = {formatAsAddress};
 }

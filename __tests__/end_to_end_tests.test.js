@@ -1,15 +1,16 @@
-global.formatAsAddress = require("../headerScript.js").formatAsAddress; //referenced by simulator
+global.formatAsAddress =
+    require("../headerScript.js").formatAsAddress; // referenced by simulator
 
 const simulator = require("../simulator.js");
 
 const clearGlobals = () => {
-  global.registers = [new Uint8Array(16), new Uint8Array(16)];
+  global.registers = [ new Uint8Array(16), new Uint8Array(16) ];
   global.memory = new Uint8Array(256);
   global.PC = 0;
-  global.machineCode = [new Array(4096).fill({ hex: "00000", line: 0 })];
+  global.machineCode = [ new Array(4096).fill({hex : "00000", line : 0}) ];
   global.regbank = 0;
-  global.flagZ = [0, 0];
-  global.flagC = [0, 0];
+  global.flagZ = [ 0, 0 ];
+  global.flagC = [ 0, 0 ];
   global.callStack = [];
 
   global.breakpoints = [];
@@ -20,11 +21,11 @@ const clearGlobals = () => {
   for (let i = 0; i < 4096; i++) {
     const td = document.createElement("td");
     td.setAttribute("id", "PC_label_" + formatAsAddress(i));
-    if (!document.getElementById("PC_label_"+formatAsAddress(i)))
-    	document.body.appendChild(td);
+    if (!document.getElementById("PC_label_" + formatAsAddress(i)))
+      document.body.appendChild(td);
   }
 
-  for (let i=0; i < 256; i++) {
+  for (let i = 0; i < 256; i++) {
     const td = document.createElement("td");
     td.setAttribute("id", "memory_" + formatAsByte(i));
     document.body.appendChild(td);
@@ -39,12 +40,12 @@ const clearGlobals = () => {
   const uartOutputEl = document.createElement("pre");
   uartOutputEl.setAttribute("id", "UART_OUTPUT");
   uartOutputEl.innerText = "";
-	if (document.getElementById("UART_OUTPUT"))
-		document.getElementById("UART_OUTPUT").innerHTML = "";
-	else
-  		document.body.appendChild(uartOutputEl);
+  if (document.getElementById("UART_OUTPUT"))
+    document.getElementById("UART_OUTPUT").innerHTML = "";
+  else
+    document.body.appendChild(uartOutputEl);
   if (!document.getElementById("UART_INPUT"))
-  	document.body.appendChild(uartInputEl);
+    document.body.appendChild(uartInputEl);
 };
 
 const tree = require("../TreeNode.js");
@@ -74,7 +75,7 @@ global.formatAsByte = assembler.formatAsByte; // referenced by simulator
 
 describe("PicoBlaze MachineCode end-to-end tests", () => {
   beforeEach(clearGlobals);
-  test ("Eight-queens problem", () => {
+  test("Eight-queens problem", () => {
     const assembly = `
 ;This is my attempt to solve the <a href="https://en.wikipedia.org/wiki/Eight_queens_puzzle">Eight queens puzzle</a> in PicoBlaze assembly.
 ;This is also <a href="https://leetcode.com/problems/n-queens/description/">the Leetcode problem #51</a>.
@@ -414,12 +415,13 @@ RETURN
     const compilation_context =
         preprocessor.makeCompilationContext(abstract_syntax_tree);
     assembler.assemble(abstract_syntax_tree, compilation_context);
-    global.is_UART_enabled=true;
+    global.is_UART_enabled = true;
     while (global.PC != compilation_context.labels.get("infinite_loop"))
-        simulator.simulateOneInstruction();
-    const output = document.getElementById("UART_OUTPUT")[(typeof Bun !== "undefined") ? "innerHTML" : "innerText"];
-    let expectedOutput =
-`Searching for solutions...
+      simulator.simulateOneInstruction();
+    const output = document.getElementById(
+        "UART_OUTPUT")[(typeof Bun !== "undefined") ? "innerHTML"
+                                                    : "innerText"];
+    let expectedOutput = `Searching for solutions...
 Found a solution: A1 B5 C8 D6 E3 F7 G2 H4
 ..Q.....
 .....Q..
@@ -1342,8 +1344,8 @@ Q.......
 That's the solution #92
 The end!
 `;
-	  if (typeof Bun !== "undefined")
-		  expectedOutput = expectedOutput.replace(/\n/g,"<br>");
-  expect(output).toBe(expectedOutput);
+    if (typeof Bun !== "undefined")
+      expectedOutput = expectedOutput.replace(/\n/g, "<br>");
+    expect(output).toBe(expectedOutput);
   })
 });

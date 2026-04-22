@@ -22,15 +22,16 @@ document.addEventListener("DOMContentLoaded", function() {
           data = data.replace("\r\n", "\n");
           document.getElementById("assemblyCode").innerText = data;
           console.log(asm.textContent);
-	  if (!(/[&<>]/.test(data)))
-		document.getElementById("highlightButton").click();
-	  else
-          	setUpLineNumbers();
+          if (!(/[&<>]/.test(data)))
+            document.getElementById("highlightButton").click();
+          else
+            setUpLineNumbers();
           document.getElementById("deleteTheProgram").style.display = "grid";
           document.getElementById("place_in_the_button_for_id").innerText =
               urlParams.get("id");
-	  if (document.getElementById("linkToDeletionForm"))
-		document.getElementById("linkToDeletionForm").style.display = "list-item";
+          if (document.getElementById("linkToDeletionForm"))
+            document.getElementById("linkToDeletionForm").style.display =
+                "list-item";
           setupLayout();
           document.getElementById("deleteTheProgramButton").onclick = () => {
             const formData =
@@ -52,14 +53,14 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch((error) => {
           // Escape user-supplied ID to prevent XSS
           function escapeHtml(str) {
-            return str.replace(/[&<>"'`]/g, function (s) {
+            return str.replace(/[&<>"'`]/g, function(s) {
               return ({
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#39;',
-                '`': '&#96;'
+                '&' : '&amp;',
+                '<' : '&lt;',
+                '>' : '&gt;',
+                '"' : '&quot;',
+                "'" : '&#39;',
+                '`' : '&#96;'
               })[s];
             });
           }
