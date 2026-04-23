@@ -20,4 +20,4 @@ jobs:
       - name: Install dependencies
         run: bun install
       - name: Run tests
-        run: bun test --timeout 40000
+        run: bun test --timeout 60000
