@@ -182,10 +182,17 @@ function simulateOneInstruction() {
           registers[regbank][parseInt(machineCode[PC].hex[2], 16)];
       if ((port === 3 || port === 4) && is_UART_enabled) {
         if (port === 3)
-          // UART_TX_PORT
-          document.getElementById("UART_OUTPUT").innerText +=
-              String.fromCharCode(value);
-        else if (port === 4)
+        // UART_TX_PORT
+        {
+          if (typeof Bun == "undefined")
+            document.getElementById("UART_OUTPUT").innerText +=
+                String.fromCharCode(value);
+          else if (value == 0xa) // The new-line character.
+            document.getElementById("UART_OUTPUT").innerHTML += "<br/>";
+          else
+            document.getElementById("UART_OUTPUT").innerHTML +=
+                String.fromCharCode(value);
+        } else if (port === 4)
           // UART_RESET_PORT
           document.getElementById("UART_OUTPUT").innerText = "";
         else {
@@ -245,10 +252,17 @@ function simulateOneInstruction() {
       /*const*/ port = parseInt(machineCode[PC].hex[4], 16);
       if ((port === 3 || port === 4) && is_UART_enabled) {
         if (port === 3)
-          // UART_TX_PORT
-          document.getElementById("UART_OUTPUT").innerText +=
-              String.fromCharCode(value);
-        else if (port === 4)
+        // UART_TX_PORT
+        {
+          if (typeof Bun == "undefined")
+            document.getElementById("UART_OUTPUT").innerText +=
+                String.fromCharCode(value);
+          else if (value == 0xa) // The new-line character.
+            document.getElementById("UART_OUTPUT").innerHTML += "<br/>";
+          else
+            document.getElementById("UART_OUTPUT").innerHTML +=
+                String.fromCharCode(value);
+        } else if (port === 4)
           // UART_RESET_PORT
           document.getElementById("UART_OUTPUT").innerText = "";
         else {
