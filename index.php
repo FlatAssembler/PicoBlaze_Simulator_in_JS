@@ -130,7 +130,10 @@ if (isset($_POST['username'])) {
 <div id="hello">Hello, guest! Would you like to log in?</div>
 <form action="/" method="post">
 	<label for="username">Username:</label>
-	<input type="text" id="username" name="username" />
+	<input type="text" id="username" name="username" <?php
+if (isset($_POST["username"]))
+	echo "value=\"" . htmlspecialchars($_POST["username"]) . "\"";
+?> />
 	<label for="password">Password:</label>
 	<input type="password" id="password" name="password" />
 	<a href="register.php">Register</a>
