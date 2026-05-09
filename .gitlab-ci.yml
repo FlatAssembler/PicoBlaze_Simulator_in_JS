@@ -1,11 +1,10 @@
 javascript:
-  image: node:latest
+  image: oven/bun:alpine
   stage: test
   before_script:
-    - 'yarn global add jest'
-    - 'yarn add --dev jest-junit'
+    - 'bun install'
   script:
-    - 'jest --ci --reporters=default --reporters=jest-junit'
+    - 'bun test --reporter=junit --reporter-outfile=./junit.xml --timeout 120000'
   artifacts:
     when: always
     reports:
