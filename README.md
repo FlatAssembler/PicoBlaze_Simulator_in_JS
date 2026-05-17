@@ -44,6 +44,8 @@ Here is a sequential diagram explaining how the assembling of the assembly code 
 
 You can see an explanation of what those terms (tokenizer, parser...) mean [in this video](https://flatassembler.github.io/compiler-theory-latin.mp4).
 
+So, all in all, the assembler mostly uses the pipe-and-filter architecture, as you can see by the active portions of the lifelines in the sequential diagram forming a visible diagonal. Two of the most significant deviances from the pipe-and-filter architecture are the fact that <code>TreeNode</code>'s <code>interpretAsAritmeticExpression</code> method gets regularly called by both the assembler and the preprocessor and that it's the tokenizer which determines which <code>:</code> (colon) belongs to a label and which one belongs to the ternary conditional <code>?:</code>, when it arguably should be the parser that is determining that. The emulator mostly, of course, uses the repository architecture, with the exception that it determines which registers and flags have recently been changed (to color them red or green) using the <i>DOM as a state</i> technique (which is considered to be an anti-pattern in the field of front-end development).
+
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=FlatAssembler/PicoBlaze_Simulator_in_JS&type=date&legend=top-left)](https://www.star-history.com/#FlatAssembler/PicoBlaze_Simulator_in_JS&type=date&legend=top-left)

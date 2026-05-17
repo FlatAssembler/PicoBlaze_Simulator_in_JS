@@ -99,7 +99,7 @@ if (isset($_POST['username'])) {
         <a href="https://github.com/agustiza">Agust&#x00ED;n Izaguirre</a
         >.<br />
         <b>Back-end</b> made by
-        <a href="https://github.com/abdrd">Abidin Durdu</a>.</span
+        <a href="https://github.com/abdrd">Abidin Durdu</a> and Teo Samar&zcaron;ija.</span
       >
     </header>
 <nav id="mainNavigation">
@@ -481,7 +481,8 @@ if (!$is_already_printed) {
         style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
         src="sequential-diagram.jpg"
       />
-      You can see an explanation of what those terms (tokenizer, parser...) mean in <a href="https://youtu.be/hlw72oFlKZA">this video which is in the Latin language</a> (in case you cannot open it, try downloading <a href="https://flatassembler.github.io/compiler-theory-latin.mp4">this MP4 file</a> and opening it in VLC or something similar).</span><br/><br/>
+      You can see an explanation of what those terms (tokenizer, parser...) mean in <a href="https://youtu.be/hlw72oFlKZA">this video which is in the Latin language</a> (in case you cannot open it, try downloading <a href="https://flatassembler.github.io/compiler-theory-latin.mp4">this MP4 file</a> and opening it in VLC or something similar).<br/>
+	So, all in all, the assembler mostly uses the pipe-and-filter architecture, as you can see by the active portions of the lifelines in the sequential diagram forming a visible diagonal. Two of the most significant deviances from the pipe-and-filter architecture are the fact that <code>TreeNode</code>'s <code>interpretAsAritmeticExpression</code> method gets regularly called by both the assembler and the preprocessor and that it's the tokenizer which determines which <code>:</code> (colon) belongs to a label and which one belongs to the ternary conditional <code>?:</code>, when it arguably should be the parser that is determining that. The emulator mostly, of course, uses the repository architecture, with the exception that it determines which registers and flags have recently been changed (to color them red or green) using the <i>DOM as a state</i> technique (which is considered to be an anti-pattern in the field of front-end development).</span><br/><br/>
       <span id="powerbi_screenshot">UPDATE on 29/03/2026: Here is the screenshot of the MySQL database from PowerBI:
 <img
 style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
