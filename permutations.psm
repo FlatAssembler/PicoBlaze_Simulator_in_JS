@@ -28,28 +28,34 @@ compare length_of_the_input, 0
 jump z, 0
 
 ;An improved version of BubbleSort written by <a href="https://codereview.stackexchange.com/a/295950">Sep Roland</a>...
+namereg s0, first_pointer_in_BubbleSort
+namereg s1, second_pointer_in_BubbleSort
+namereg s2, value_at_the_first_pointer_in_BubbleSort
+namereg s3, value_at_the_second_pointer_in_BubbleSort
+namereg s4, has_a_swap_been_performed_in_BubbleSort
+namereg s5, retracting_limit_of_the_second_pointer_in_BubbleSort
 beginning_of_the_bubble_sort:
-    load    s5, length_of_the_input
+    load    retracting_limit_of_the_second_pointer_in_BubbleSort, length_of_the_input
   outer_bubble_sort_loop:
-    sub     s5, 1
+    sub     retracting_limit_of_the_second_pointer_in_BubbleSort, 1
     jump    z,  end_of_the_bubble_sort
-    load    s4, 0 ; Indicates swap(s) performed.
-    load    s1, 0
+    load    has_a_swap_been_performed_in_BubbleSort, 0
+    load    second_pointer_in_BubbleSort, 0
   inner_bubble_sort_loop:
-    compare s1, s5
+    compare second_pointer_in_BubbleSort, retracting_limit_of_the_second_pointer_in_BubbleSort
     jump    nc, end_of_the_inner_bubble_sort_loop
-    load    s0, s1
-    add     s1, 1
-    fetch   s2, (s0)
-    fetch   s3, (s1)
-    compare s3, s2
+    load    first_pointer_in_BubbleSort, second_pointer_in_BubbleSort
+    add     second_pointer_in_BubbleSort, 1
+    fetch   value_at_the_first_pointer_in_BubbleSort, (first_pointer_in_BubbleSort)
+    fetch   value_at_the_second_pointer_in_BubbleSort, (second_pointer_in_BubbleSort)
+    compare value_at_the_second_pointer_in_BubbleSort, value_at_the_first_pointer_in_BubbleSort
     jump    nc, inner_bubble_sort_loop
-    store   s3, (s0)
-    store   s2, (s1)
-    load    s4, 1
+    store   value_at_the_second_pointer_in_BubbleSort, (first_pointer_in_BubbleSort)
+    store   value_at_the_first_pointer_in_BubbleSort, (second_pointer_in_BubbleSort)
+    load    has_a_swap_been_performed_in_BubbleSort, 1
     jump    inner_bubble_sort_loop
   end_of_the_inner_bubble_sort_loop:
-    test    s4, s4
+    test    has_a_swap_been_performed_in_BubbleSort, has_a_swap_been_performed_in_BubbleSort
     jump    nz, outer_bubble_sort_loop
 end_of_the_bubble_sort:
 
