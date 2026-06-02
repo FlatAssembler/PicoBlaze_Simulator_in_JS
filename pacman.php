@@ -115,8 +115,8 @@ CSS - https://www.w3schools.com/css/default.asp
 
             #instructions {
                 position: absolute;
-                top: -webkit-calc(458px + 50px + 5px);
-                top: calc(458px + 50px + 5px);
+                top: -webkit-calc(458px + 50px + 50px + 5px);
+                top: calc(458px + 50px + 50px + 5px);
                 width: -webkit-calc(100% - 2 * 16px);
                 width: calc(100% - 2 * 16px);
                 left: 16px;
