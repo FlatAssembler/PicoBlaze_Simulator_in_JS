@@ -84,7 +84,7 @@ if (isset($_POST['username'])) {
   <body>
     <span id="top"></span>
     <svg id="emptySVG" style="display: none"></svg>
-    <div id="ribbon" style="top:20px">
+    <div id="ribbon">
       <a
         href="https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS.git"
         target="_blank"
