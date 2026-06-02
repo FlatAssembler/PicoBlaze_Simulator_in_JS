@@ -91,17 +91,6 @@ if (isset($_POST['username'])) {
         >Fork me on GitHub!</a
       >
     </div>
-    <header>
-      <h1>PicoBlaze Simulator</h1>
-      <span id="authors"
-        ><b>Front-end</b> made by
-        <a href="https://github.com/FlatAssembler">Teo Samar&#382;ija</a> and
-        <a href="https://github.com/agustiza">Agust&#x00ED;n Izaguirre</a
-        >.<br />
-        <b>Back-end</b> made by
-        <a href="https://github.com/abdrd">Abidin Durdu</a> and Teo Samar&zcaron;ija.</span
-      >
-    </header>
 <nav id="mainNavigation">
 <h2>Navigation</h2>
 <ul>
@@ -121,6 +110,18 @@ if (isset($_POST['username'])) {
 </ul>
       <p id="instructionOnScrollingToTop">To quickly return to top, press <a href="#scrollToTop">the shift icon (<img src="https://icons.getbootstrap.com/assets/icons/shift.svg">) in the bottom-right corner</a>.</p>
 </nav>
+
+    <header>
+      <h1>PicoBlaze Simulator</h1>
+      <span id="authors"
+        ><b>Front-end</b> made by
+        <a href="https://github.com/FlatAssembler">Teo Samar&#382;ija</a> and
+        <a href="https://github.com/agustiza">Agust&#x00ED;n Izaguirre</a
+        >.<br />
+        <b>Back-end</b> made by
+        <a href="https://github.com/abdrd">Abidin Durdu</a> and Teo Samar&zcaron;ija.</span
+      >
+    </header>
     <main>
       <div id="greeting" class="<?php echo isset($_SESSION['username'])?"logged_in":"logged_out";?>"><?php if (isset($_SESSION['username'])):?>
       <div id="hello">Hello, <?php echo $_SESSION['username'];?>!</div>

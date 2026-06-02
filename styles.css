@@ -15,7 +15,7 @@ body {
   #ribbon {
     display: inline-block;
     position: absolute;
-    top: 64px;
+    top: 256px;
     left: 0;
     transform: rotate(-45deg) translate(-65px, -10px) scale(0.9);
     padding: 5px 50px;
@@ -759,7 +759,7 @@ div[data-linenumber]:target {
 /* Large screen: make navigation horizontal and sticky to top */
 @media (min-width: 700px) {
   #mainNavigation {
-    position: sticky;
+    position: fixed;
     top: 0;
     z-index: 100;
     width: 100%;
@@ -772,7 +772,7 @@ div[data-linenumber]:target {
   #mainNavigation ul {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
     align-items: center;
     gap: 12px;

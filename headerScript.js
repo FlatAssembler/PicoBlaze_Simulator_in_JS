@@ -285,6 +285,10 @@ function setupLayout() {
     document.getElementsByTagName("main")[0].style.left =
         windowWidth / 2 - 500 / 2 + "px";
   }
+  document.getElementsByTagName("header")[0].style.top = (document.getElementById("mainNavigation")
+           ? document.getElementById("mainNavigation").clientHeight
+           : 0) + 25 + "px";
+  document.getElementsByTagName("header")[0].style.position = "absolute";
   document.getElementsByTagName("main")[0].style.top =
       document.getElementsByTagName("header")[0].clientHeight +
       (document.getElementById("mainNavigation")
@@ -338,7 +342,7 @@ function setupLayout() {
              : 0) +
         30 + heightOfTheGreetings + 65 + 4 + 2 * 50 + 3 * windowHeight + 200 +
         210 + is_UART_enabled * 260 + 50 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheDivWithTheInstructionAboutAssembling + 30 + "px";
     document.getElementById("divWithExamples").style.top =
         heightOfTheGreetings + windowHeight + 4 + "px";
     document.getElementById("simulationResults").style.top =
@@ -405,7 +409,7 @@ function setupLayout() {
              ? document.getElementById("mainNavigation").clientHeight
              : 0) +
         30 + heightOfTheGreetings + 1380 + 2 * 210 + is_UART_enabled * 260 +
-        50 + 20 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        50 + 20 + heightOfTheDivWithTheInstructionAboutAssembling + 30 + "px";
   }
   if (/WebPositive/.test(
           navigator.userAgent)) { // WebPositive prints the #authors in such a
