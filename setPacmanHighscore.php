@@ -8,7 +8,7 @@ if (substr($browser, 0, strlen("Opera")) !== "Opera" &&
         substr($browser, 0, strlen("Mozilla/5.0")) !== "Mozilla/5.0") {
     exit("Please access this URL with a proper browser! As far as I know, no browser in which you can actually play that PacMan has User Agent that does not start either with \"Opera\" or with \"Mozilla/5.0\". Your browser identified itself to this server as \"$browser\".\n");
 }
-$pacman_url = ((empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === 'off') ? 'http://' : 'https://') . $_SERVER['SERVER_NAME'] . "/pacman.php";
+$pacman_url = "https://picoblaze-simulator-f0bjd5apf8bwcrdd.switzerlandnorth-01.azurewebsites.net/pacman.php";
 if (!array_key_exists('HTTP_REFERER', $_SERVER) || $_SERVER['HTTP_REFERER'] != $pacman_url) {
     exit("Your browser did not set the HTTP referer header to the URL of the PacMan game, so we cannot save your highscore. Sorry about that! The expected HTTP referer header was \"$pacman_url\", whereas your browser sent \"" . (!array_key_exists('HTTP_REFERER', $_SERVER) ? "" : $_SERVER['HTTP_REFERER']) . "\".\n");
 }
