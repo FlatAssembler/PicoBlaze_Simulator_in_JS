@@ -10,7 +10,7 @@
 		$stmt->execute();
 		$counter = $stmt->get_result()->fetch_assoc()['counter'];
 		if ($counter == 0) {
-			$messageColor = "lightred";
+			$messageColor = "red";
 			$message = "Username does not exist!";
 		}
 		else {
@@ -19,7 +19,7 @@
 			$stmt->execute();
 			$passwordHash = $stmt->get_result()->fetch_assoc()['passwordHash'];
 			if ($passwordHash != md5($_POST['password'])) {
-				$messageColor = "lightyellow";
+				$messageColor = "orange";
 				$message = "Wrong password!";
 			}
 			else
@@ -56,7 +56,8 @@ form {
 		"label2 label2 ."
 		"password password password"
 		"backbutton . registerbutton"
-		"message message message";
+		"message message message"
+                "notice notice notice";
 	background-color: #ccc;
 	padding: 10px;
 	gap: 3px;
@@ -86,6 +87,9 @@ form button {
 	color: white;
 	text-transform: uppercase;
 }
+p {
+   grid-area: notice;
+}
 #message {
 	display: flex;
 	grid-area: message;
@@ -112,6 +116,7 @@ form button {
 <button onclick="history.back()">Go back</button>
 <button type="submit">Log in</button>
 <div id="message" style="background-color: <?php echo $messageColor; ?>"><?php echo htmlspecialchars($message); ?></div>
+<p>Not registered yet? <a href="register.php">Register</a>.</p>
 </form>
 </body>
 </html>

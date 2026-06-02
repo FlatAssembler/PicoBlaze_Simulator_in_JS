@@ -217,7 +217,8 @@ CSS - https://www.w3schools.com/css/default.asp
             manual of your browser on how to delete those cookies. Or, better yet, use a browser that
             automatically deletes cookies when they are no longer needed, such as the
             <a href="https://torproject.org">TOR Browser</a> (which protects from far more than just cookies).
-            Remember, it is much better to protect yourself using technology than to rely on laws.
+	    Remember, it is much better to protect yourself using technology than to rely on laws.<br/><br/>
+After you've finished playing this game, <a href="index.php">let's get back to the serious work of assembly language programming</a>.
             <?php if ($highscore_cannot_be_opened): ?>
                 <br/>
                 <b>Server error</b>: We were not able to create the highscore file, so highscores will probably not work!
