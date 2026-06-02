@@ -269,7 +269,7 @@ CSS - https://www.w3schools.com/css/default.asp
             echo $random_number . " - " . ($random_number - $_SESSION['second_random_number']);
             ?>;
         var sessionID = <?php echo "\"" . htmlspecialchars(SID) . "\""; ?>;
-        var highscore = <?php echo "\"" . $highscore . "\";"; ?> //Ove podatke u JavaScript kod umece PHP program koji se vrti na serveru.
+        var highscore = <?php echo "\"" . $local_highscore . "\";"; ?> //Ove podatke u JavaScript kod umece PHP program koji se vrti na serveru.
         var kolikoJePacmanuPreostaloZivota = 3,
                 time1 = 0,
                 time2 = 0,
