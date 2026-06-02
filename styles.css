@@ -755,3 +755,40 @@ div[data-linenumber]:target {
 #scrollToTop {
   display: none;
 }
+
+/* Large screen: make navigation horizontal and sticky to top */
+@media (min-width: 700px) {
+  #mainNavigation {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 8px 16px;
+    background: white;
+  }
+  #mainNavigation ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+  }
+  #mainNavigation li {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+  }
+  #mainNavigation a {
+    display: inline-block;
+    padding: 8px 12px;
+  }
+}
+
