@@ -15,7 +15,7 @@ body {
   #ribbon {
     display: inline-block;
     position: absolute;
-    top: 256px;
+    top: 0; /*Will be moved downward in case the screen is large.*/
     left: 0;
     transform: rotate(-45deg) translate(-65px, -10px) scale(0.9);
     padding: 5px 50px;
@@ -757,7 +757,7 @@ div[data-linenumber]:target {
 }
 
 /* Large screen: make navigation horizontal and sticky to top */
-@media (min-width: 900px) {
+@media screen and (min-width: 900px) and (min-height: 700px) {
   #mainNavigation {
     position: fixed;
     top: 0;
@@ -789,6 +789,9 @@ div[data-linenumber]:target {
   #mainNavigation a {
     display: inline-block;
     padding: 8px 12px;
+  }
+  div#ribbon { /*The "div" is added to increase the specificity.*/
+    top: 245px;
   }
 }
 
