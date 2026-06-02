@@ -72,12 +72,7 @@ session_destroy();
                         <?php
                     }
                 }
-            } else {
-                ?>
-                Server error!
-                <?php
-            }
-        }
+	}
         ?>
     </body>
 </html>
