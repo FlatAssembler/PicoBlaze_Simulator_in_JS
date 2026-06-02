@@ -762,8 +762,8 @@ div[data-linenumber]:target {
     position: fixed;
     top: 0;
     z-index: 100;
-    width: calc(100% - 10px); /*I think this looks slightly better in Safari than if we set width to 100%.*/
-    left: 5px;
+    width: calc(100% - 20px); /*I think this looks slightly better in Safari than if we set width to 100%.*/
+    left: 10px;
     max-width: none;
     margin-left: 0;
     margin-right: 0;
