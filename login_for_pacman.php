@@ -27,7 +27,7 @@
 				header("Location: pacman.php");
 				$messageColor = "lightgreen";
 				$message = "Redirecting you to PacMan...";
-				start_session();
+				session_start();
 				$_SESSION['username'] = $_POST['username'];
 			}
 		}
