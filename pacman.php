@@ -30,7 +30,7 @@ SQL);
 	$stmt->execute();
 	$id=$stmt->get_result()->fetch_assoc()['id'];
 
-	$stmt = $conn->prepare("SELECT COUNT(highscore) AS counter FROM highscores_in_pacman WHERE used_id = ?");
+	$stmt = $conn->prepare("SELECT COUNT(highscore) AS counter FROM highscores_in_pacman WHERE user_id = ?");
 	$stmt->bind_param('i', $id);
 	$stmt->execute();
 	$counter=$stmt->get_result()->fetch_assoc()['counter'];
