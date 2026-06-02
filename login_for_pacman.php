@@ -17,7 +17,7 @@
 			$stmt = $conn->prepare("SELECT passwordHash FROM usernames WHERE username = ?");
 			$stmt->bind_param('s', $_POST['username']);
 			$stmt->execute();
-			$passwordHash = $stmt->->get_result()->fetch_assoc()['passwordHash'];
+			$passwordHash = $stmt->get_result()->fetch_assoc()['passwordHash'];
 			if ($passwordHash != md5($_POST['password'])) {
 				$messageColor = "lightyellow";
 				$message = "Wrong password!";
