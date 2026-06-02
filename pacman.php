@@ -248,7 +248,7 @@ CSS - https://www.w3schools.com/css/default.asp
                 var bodovi = document.getElementById("bodovi");
                 bodovi.style.left = sredinaEkrana - 150 + "px";
                 var instructions = document.getElementById("instructions");
-                instructions.style.top = 458 + 50 + 5 + "px";
+                instructions.style.top = 458 + 50 + 50 + 5 + "px";
                 instructions.style.width = sredinaEkrana * 2 - 2 * 16 + "px";
             };
             window.onresize();
@@ -897,7 +897,7 @@ CSS - https://www.w3schools.com/css/default.asp
                                 return;
                             }; //Safari 5.
                             document.getElementById("instructions").style.top =
-                                    458 + 2 * 50 + 5 + "px";
+                                    458 + 3 * 50 + 5 + "px";
                             var player;
                             do {
                                 player = "<?php echo $_SESSION['username']; ?>"
