@@ -279,6 +279,10 @@ function setupLayout() {
   const windowHeight = window.innerHeight;
   // Modern browsers execute JavaScript so fast that calling "window.innerWidth"
   // multiple times within a function leads to a race condition.
+  if (windowWidth >= 900 && windowHeight >= 700)
+	  document.getElementById("ribbon").style.top = (document.getElementById("mainNavigation")
+           ? document.getElementById("mainNavigation").clientHeight
+           : 0) + "px";
   if (windowWidth < 500) {
     document.getElementsByTagName("main")[0].style.left = 8 + "px";
   } else {
