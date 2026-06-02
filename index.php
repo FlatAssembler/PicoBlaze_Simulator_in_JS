@@ -107,6 +107,7 @@ if (isset($_POST['username'])) {
 	<li><a href="#references_used_to_make_this">The references to the resources used to make this program</a></li>
 <li><a href="#UML_diagram">The UML diagram explaining how the assembler works</a></li>
 <li><a href="#powerbi_screenshot">The screenshot of the database viewed in Microsoft PowerBI</a></li>
+<li><a href="pacman.php">PacMan Game</a></li>
 </ul>
       <p id="instructionOnScrollingToTop">To quickly return to top, press <a href="#scrollToTop">the shift icon (<img src="https://icons.getbootstrap.com/assets/icons/shift.svg">) in the bottom-right corner</a>.</p>
 </nav>
