@@ -283,6 +283,8 @@ function setupLayout() {
 	  document.getElementById("ribbon").style.top = (document.getElementById("mainNavigation")
            ? document.getElementById("mainNavigation").clientHeight
            : 0) + "px";
+	else
+		document.getElementById("ribbon").style.top = "0px";
   if (windowWidth < 500) {
     document.getElementsByTagName("main")[0].style.left = 8 + "px";
   } else {
