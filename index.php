@@ -478,7 +478,7 @@ if (!$is_already_printed) {
 style="display: block; width: 100%; margin-top: 5px; margin-bottom: 5px"
 src="powerbi-screenshot.png" 
 />
-Here you can see that there are 4 tables in the database.</span><br/><br/>
+Here you can see that there are five tables in the database (four related to PicoBlaze assembly programs, and one related to PacMan highscores).</span><br/><br/>
       UPDATE on 03/04/2026: I've finally tweaked
       <a
         href="https://sourceforge.net/projects/picoblaze-android/files/latest/download"
