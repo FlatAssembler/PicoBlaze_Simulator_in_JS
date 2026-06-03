@@ -10,6 +10,16 @@ $conn = Database::getInstance()->getConnection();
 // Enable MySQLi exceptions so we can catch mysqli_sql_exception on errors
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
+// Support JSON POST (application/json) as well as traditional form POST
+$rawInput = file_get_contents('php://input');
+$contentType = $_SERVER['CONTENT_TYPE'] ?? '';
+if (strpos($contentType, 'application/json') !== false) {
+    $json = json_decode($rawInput, true);
+    if (json_last_error() === JSON_ERROR_NONE && isset($json['code'])) {
+        $_POST['code'] = $json['code'];
+    }
+}
+
 if (isset($_POST['code'])) {
     $code = $_POST['code'];
 

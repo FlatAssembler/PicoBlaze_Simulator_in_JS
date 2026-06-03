@@ -328,10 +328,13 @@ if (document.getElementById("save_the_program")) {
   document.getElementById("save_the_program").onclick = () => {
     const assemblyCode = document.getElementById("assemblyCode").innerText;
 
-    const formData = new FormData();
-    formData.append("code", assemblyCode);
-    fetch("saveTheProgram.php",
-          {method : "POST", body : formData, redirect : "error"})
+    const payload = { code: assemblyCode };
+    fetch("saveTheProgram.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      redirect: "error"
+    })
         .then((response) => {
           if (!response.ok) {
             throw new Error("The server responded with error: " +
