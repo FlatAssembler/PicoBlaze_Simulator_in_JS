@@ -796,3 +796,6 @@ div[data-linenumber]:target {
   }
 }
 
+#assemblyCodeHeader, #machineCodeHeader, #emulationHeader {
+   position: absolute;
+}

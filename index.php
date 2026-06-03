@@ -95,19 +95,15 @@ if (isset($_POST['username'])) {
 <h2>Navigation</h2>
 <ul>
 	<li><a href="#greeting">The log-in form</a></li>
-	<li><a href="#assemblyCode">Assembly code</a></li>
-	<li><a href="#divWithExamples">Example assembly language programs</a></li>
-	<li><a href="#assembleButton">The &quot;<i>Assemble</i>&quot; button</a></li>
-	<li><a href="#whyClickAssemble">Why click the &quot;<i>Assemble</i>&quot; button</a></li>
-	<li style="display: none" id="linkToDeletionForm"><a href="#deleteTheProgram">The form for deleting the program from the database</a></li>
-	<li><a href="#divWithMachineCode">Machine code (the result of assembling)</a></li>
-	<li><a href="#simulationButtons">The buttons for controlling the simulation</a></li>
-	<li><a href="#graphicalResults">Simulation results represented with SVG</a></li>
-	<li><a href="#UART_enable_button">The UART simulation</a></li>
-	<li><a href="#references_used_to_make_this">The references to the resources used to make this program</a></li>
-<li><a href="#UML_diagram">The UML diagram explaining how the assembler works</a></li>
-<li><a href="#powerbi_screenshot">The screenshot of the database viewed in Microsoft PowerBI</a></li>
-<li><a href="pacman.php">PacMan Game</a></li>
+	<li><a href="#assemblyCodeHeader">Assembly code</a></li>
+        <li style="display: none" id="linkToDeletionForm"><a href="#deleteTheProgram">The form for deleting the program from the database</a></li>
+	<li><a href="#machineCodeHeader">Machine code</a></li>
+	<li><a href="#emulationHeader">Emulation</a></li>
+<li><a href="#contributingHeader">Contributing</a></li>
+<li><a href="#UML_diagram">The UML sequential diagram of the assembler</a></li>
+<li><a href="#powerbi_screenshot">The screenshot of the database</a></li>
+        <li><a href="#references_used_to_make_this">References</a></li>
+<li><a href="pacman.php">PacMan in JavaScript</a></li>
 </ul>
       <p id="instructionOnScrollingToTop">To quickly return to top, press <a href="#scrollToTop">the shift icon (<img src="https://icons.getbootstrap.com/assets/icons/shift.svg">) in the bottom-right corner</a>.</p>
 </nav>
@@ -144,6 +140,7 @@ if (isset($_POST["username"]))
 </form>
 <?php endif?>
 </div>
+      <h3 id="assemblyCodeHeader">Assembly code</h3>
       <div id="lineNumbers">1.</div>
       <pre id="assemblyCode" contenteditable="true">
 <?php if (!isset($_SESSION['username'])):?>
@@ -259,6 +256,7 @@ if (!$is_already_printed) {
           </button>
         </div>
       </section>
+      <h3 id="machineCodeHeader">Machine code</h3>
       <section id="divWithMachineCode">
         <div id="warningAboutJavaScript">
           Your browser doesn't seem to support modern JavaScript, needed for
@@ -315,6 +313,7 @@ if (!$is_already_printed) {
           }
         }
       </script>
+      <h3 id="emulationHeader">Emulation</h3>
       <section id="simulationButtons">
         <button id="playPauseButton">
           <img
@@ -366,18 +365,7 @@ if (!$is_already_printed) {
       <section id="simulationResults"></section>
     </main>
     <footer>
-<section id="references_used_to_make_this">
-<h2>References</h2>
-<ul>
-	<li><a href="https://www.w3schools.com/html/">W3Schools tutorial on HTML</a></li>
-	<li><a href="https://www.w3schools.com/css/default.asp">W3Schools tutorial on CSS</a></li>
-	<li><a href="https://www.w3schools.com/js/default.asp">W3Schools tutorial on JavaScript</a> (to learn basic JavaScript)</li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide">Mozilla Developer Network tutorial on JavaScript</a> (to learn modern JavaScript)</li>
-	<li><a href="https://www1.hs-bremerhaven.de/kmueller/VHDL/PB_Instr_Ref.pdf">PicoBlaze instruction set</a></li>
-	<li><a href="https://www.w3schools.com/php/default.asp">W3Schools PHP tutorial</a></li>
-	<li><a href="https://www.w3schools.com/sql/default.asp">W3Schools SQL tutoral</a></li>
-</ul>
-</section>
+      <h2 id="contributingHeader">Contributing</h2>
       Not affiliated with
       <a
         href="https://www.xilinx.com/products/intellectual-property/picoblaze.html"
@@ -511,6 +499,19 @@ Here you can see that there are 4 tables in the database.</span><br/><br/>
             https://a.fsdn.com/con/app/sf-download-button?button_size=2x 2x
           "
       /></a>
+<section id="references_used_to_make_this">
+<h2>References</h2>
+<ul>
+	<li><a href="https://www.w3schools.com/html/">W3Schools tutorial on HTML</a></li>
+	<li><a href="https://www.w3schools.com/css/default.asp">W3Schools tutorial on CSS</a></li>
+	<li><a href="https://www.w3schools.com/js/default.asp">W3Schools tutorial on JavaScript</a> (to learn basic JavaScript)</li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide">Mozilla Developer Network tutorial on JavaScript</a> (to learn modern JavaScript)</li>
+	<li><a href="https://www1.hs-bremerhaven.de/kmueller/VHDL/PB_Instr_Ref.pdf">PicoBlaze instruction set</a></li>
+	<li><a href="https://www.w3schools.com/php/default.asp">W3Schools PHP tutorial</a></li>
+	<li><a href="https://www.w3schools.com/sql/default.asp">W3Schools SQL tutoral</a></li>
+</ul>
+</section>
+
       <script>
         //Copied from: https://flatassembler.github.io/compiler
         //I have written that many years ago...

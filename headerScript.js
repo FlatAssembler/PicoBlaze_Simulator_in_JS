@@ -304,10 +304,11 @@ function setupLayout() {
           ? document.getElementById("greeting").clientHeight + 10
           : 0;
   if (windowHeight < 400) {
+    document.getElementById("assemblyCodeHeader").style.top = heightOfTheGreetings + "px";
     document.getElementById("lineNumbers").style.top =
-        heightOfTheGreetings + "px";
+        heightOfTheGreetings + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     document.getElementById("assemblyCode").style.top =
-        heightOfTheGreetings + "px";
+        heightOfTheGreetings + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
 
     document.getElementById("lineNumbers").style.height =
         windowHeight +
@@ -322,98 +323,109 @@ function setupLayout() {
 
     document.getElementById("assemblyCode").style.height = windowHeight + "px";
     document.getElementById("buttons").style.top =
-        heightOfTheGreetings + windowHeight + 200 + 3 * 4 + "px";
+        heightOfTheGreetings + windowHeight + 200 + 3 * 4 + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     document.getElementById("whyClickAssemble").style.top =
-        heightOfTheGreetings + windowHeight + 200 + 3 * 4 + 20 + 5 + "px";
+        heightOfTheGreetings + windowHeight + 200 + 3 * 4 + 20 + 5 + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     const heightOfTheDivWithTheInstructionAboutAssembling =
         document.getElementById("whyClickAssemble").clientHeight +
         ((document.getElementById("deleteTheProgram") &&
           document.getElementById("deleteTheProgram").style.display == "grid")
              ? 10
              : 0);
+    document.getElementById("machineCodeHeader").style.top=
+		  20 +  heightOfTheGreetings + windowHeight + 4 * 4 + 20 + 200 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + "px";
     document.getElementById("divWithMachineCode").style.top =
-        heightOfTheGreetings + windowHeight + 4 * 4 + 20 + 200 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        40 + heightOfTheGreetings + windowHeight + 4 * 4 + 20 + 200 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + "px";
 
     document.getElementById("divWithMachineCode").style.height =
         windowHeight + "px";
+    document.getElementById("emulationHeader").style.top = heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + 40 + "px";
     document.getElementById("simulationButtons").style.top =
-        heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        60 + heightOfTheGreetings + 2 * windowHeight + 3 * 4 + 30 + 200 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
     document.getElementsByTagName("footer")[0].style.top =
         (document.getElementById("mainNavigation")
              ? document.getElementById("mainNavigation").clientHeight
              : 0) +
         30 + heightOfTheGreetings + 65 + 4 + 2 * 50 + 3 * windowHeight + 200 +
-        210 + is_UART_enabled * 260 + 50 +
-        heightOfTheDivWithTheInstructionAboutAssembling + 30 + "px";
-    document.getElementById("divWithExamples").style.top =
-        heightOfTheGreetings + windowHeight + 4 + "px";
+        210 + is_UART_enabled * 260 + 50 + 60 +
+        heightOfTheDivWithTheInstructionAboutAssembling + 30 + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
+    document.getElementById("divWithExamples").style.top = 20 +
+        heightOfTheGreetings + windowHeight + 4 + document.getElementById("assemblyCodeHeader").clientHeight + "px";
     document.getElementById("simulationResults").style.top =
-        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
+        60 + heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
         is_UART_enabled * 260 + 50 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
 
     document.getElementById("simulationResults").style.height =
         windowHeight + "px";
     document.getElementById("graphicalResults").style.top =
-        heightOfTheGreetings + windowHeight * 2 +
+        60 + heightOfTheGreetings + windowHeight * 2 +
         heightOfTheDivWithTheInstructionAboutAssembling + 200 + 65 + 50 - 30 +
+document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight +
         "px";
     document.getElementById("UART_enable_button").style.top =
-        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
-        heightOfTheDivWithTheInstructionAboutAssembling +
+        60 + heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight +
         "px"; // Usually has no effect, see below...
     document.getElementById("UART_IO").style.top =
-        heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
-        50 + heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        60 + heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 + 210 +
+        50 + heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
   } else {
+    document.getElementById("assemblyCodeHeader").style.top = heightOfTheGreetings + "px";
     document.getElementById("lineNumbers").style.top =
-        heightOfTheGreetings + "px";
+        heightOfTheGreetings + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     document.getElementById("assemblyCode").style.top =
-        heightOfTheGreetings + "px";
+        heightOfTheGreetings + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
 
     document.getElementById("lineNumbers").style.height = "400px";
 
     document.getElementById("assemblyCode").style.height = "400px";
     document.getElementById("divWithExamples").style.top =
-        heightOfTheGreetings + 410 + "px";
+        heightOfTheGreetings + 410 + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     document.getElementById("buttons").style.top =
-        heightOfTheGreetings + 400 + 210 + 3 * 4 + "px";
+        heightOfTheGreetings + 400 + 210 + 3 * 4 + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     document.getElementById("whyClickAssemble").style.top =
-        heightOfTheGreetings + 400 + 210 + 3 * 4 + 30 + "px";
+        heightOfTheGreetings + 400 + 210 + 3 * 4 + 30 + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     const heightOfTheDivWithTheInstructionAboutAssembling =
         document.getElementById("whyClickAssemble").clientHeight;
+    document.getElementById("machineCodeHeader").style.top = heightOfTheGreetings + 450 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + 20 + "px";
     document.getElementById("divWithMachineCode").style.top =
         heightOfTheGreetings + 450 + 210 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + 40 + "px";
 
     document.getElementById("divWithMachineCode").style.height = "400px";
+    document.getElementById("emulationHeader").style.top = 20 + heightOfTheGreetings + 855 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + 20 + "px";
     document.getElementById("simulationButtons").style.top =
-        heightOfTheGreetings + 855 + 210 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
-    document.getElementById("simulationResults").style.top =
-        heightOfTheGreetings + 910 + 2 * 210 + is_UART_enabled * 260 + 50 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+        heightOfTheGreetings + 40 + 20 + 855 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
+    document.getElementById("simulationResults").style.top = 40 +
+        heightOfTheGreetings + 20 + 910 + 2 * 210 + is_UART_enabled * 260 + 50 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
 
     document.getElementById("simulationResults").style.height = "400px";
-    document.getElementById("UART_IO").style.top =
-        heightOfTheGreetings + 910 + 2 * 210 + 50 +
-        heightOfTheDivWithTheInstructionAboutAssembling +
+    document.getElementById("UART_IO").style.top = 40 +
+        heightOfTheGreetings + 20 + 910 + 2 * 210 + 50 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + 
         "px"; // Has no effect if the UART_IO is not shown
               // (and it isn't shown by default).
-    document.getElementById("UART_enable_button").style.top =
-        heightOfTheGreetings + 910 + 2 * 210 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
-    document.getElementById("graphicalResults").style.top =
-        heightOfTheGreetings + 910 + 210 +
-        heightOfTheDivWithTheInstructionAboutAssembling + "px";
+    document.getElementById("UART_enable_button").style.top = 40 +
+        heightOfTheGreetings + 20 + 910 + 2 * 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
+    document.getElementById("graphicalResults").style.top = 40 +
+        heightOfTheGreetings + 20 + 910 + 210 +
+        heightOfTheDivWithTheInstructionAboutAssembling + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
     document.getElementsByTagName("footer")[0].style.top =
         (document.getElementById("mainNavigation")
              ? document.getElementById("mainNavigation").clientHeight
              : 0) +
-        30 + heightOfTheGreetings + 1380 + 2 * 210 + is_UART_enabled * 260 +
-        50 + 20 + heightOfTheDivWithTheInstructionAboutAssembling + 30 + "px";
+        20 + 40 + 30 + heightOfTheGreetings + 1380 + 2 * 210 + is_UART_enabled * 260 +
+        50 + 20 + heightOfTheDivWithTheInstructionAboutAssembling + 30 + document.getElementById("assemblyCodeHeader").clientHeight + document.getElementById("machineCodeHeader").clientHeight + document.getElementById("emulationHeader").clientHeight + "px";
   }
   if (/WebPositive/.test(
           navigator.userAgent)) { // WebPositive prints the #authors in such a
