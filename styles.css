@@ -791,6 +791,9 @@ div[data-linenumber]:target {
     display: inline-block;
     padding: 8px 12px;
   }
+  #mainNavigation p a {
+    padding: 0;
+  }
   div#ribbon { /*The "div" is added to increase the specificity.*/
     top: 245px;
   }
