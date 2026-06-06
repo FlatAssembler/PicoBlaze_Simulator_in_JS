@@ -758,6 +758,9 @@ div[data-linenumber]:target {
 
 /* Large screen: make navigation horizontal and sticky to top */
 @media screen and (min-width: 900px) and (min-height: 700px) {
+	#mainNavigation h2 {
+	  display: none;
+	}
   #mainNavigation {
     position: fixed;
     top: 0;
