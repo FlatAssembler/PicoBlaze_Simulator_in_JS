@@ -196,10 +196,10 @@ CSS - https://www.w3schools.com/css/default.asp
             Global highscore: <i><?php echo $global_highscore; ?></i> by <i><?php echo $global_highscore_user; ?></i>
         </div>
         <div id="instructions">
-            The game does NOT respond to keyboard buttons. On smartphones, the
+            The game responds to keyboard arrow keys, mouse clicks and touch. On smartphones, the
             Pacman is supposed to follow your finger, to go in the direction
             where you last tapped. In case that doesn't work, you have buttons
-            below the maze. On computers, it's playable by mouse.<br />You can
+            below the maze. On computers, it's playable by mouse or the arrow keys.<br />You can
             see the source code, with the comments in Croatian, <a
                 href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.<br/>
                 <?php if (strpos($browser, "Firefox") !== FALSE): ?>
@@ -1366,6 +1366,28 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                 time2 = window.setInterval(animationLoop, 100);
             }, 2000); //Neka se glavna i animacijska petlja pocnu vrtiti nakon 2000 milisekunda od trenutka kada prijedemo na novi level.
         }
+
+        // Enable arrow-key controls (also prevent page scrolling when arrows are used)
+        window.addEventListener('keydown', function (e) {
+            switch (e.key) {
+                case 'ArrowUp':
+                    e.preventDefault();
+                    onButtonUp();
+                    break;
+                case 'ArrowDown':
+                    e.preventDefault();
+                    onButtonDown();
+                    break;
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    onButtonLeft();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    onButtonRight();
+                    break;
+            }
+        }, false);
     </script>
 </body>
 </html>
