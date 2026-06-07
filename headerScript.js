@@ -286,11 +286,14 @@ function setupLayout() {
 		document.getElementById("assemblyCodeHeader").style.scrollMarginTop = document.getElementById("machineCodeHeader").style.scrollMarginTop = document.getElementById("emulationHeader").style.scrollMarginTop = (document.getElementById("mainNavigation")
            ? document.getElementById("mainNavigation").clientHeight
            : 0) + "px";
-
+	  if (document.getElementById("greeting"))
+		  document.getElementById("greeting").style.scrollMarginTop = document.getElementById("mainNavigation").clientHeight + "px";
   }
 	else {
 		document.getElementById("ribbon").style.top = "0px";
 		document.getElementById("assemblyCodeHeader").style.scrollMarginTop = document.getElementById("machineCodeHeader").style.scrollMarginTop = document.getElementById("emulationHeader").style.scrollMarginTop = "0px";
+		if (document.getElementById("greeting"))
+			document.getElementById("greeting").style.scrollMarginTop = "0px";
 	}
   if (windowWidth < 500) {
     document.getElementsByTagName("main")[0].style.left = 8 + "px";
