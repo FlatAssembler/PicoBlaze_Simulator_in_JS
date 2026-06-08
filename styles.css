@@ -758,14 +758,16 @@ div[data-linenumber]:target {
 
 /* Large screen: make navigation horizontal and sticky to top */
 @media screen and (min-width: 900px) and (min-height: 700px) {
-	#mainNavigation h2 {
-	  display: none;
-	}
+  #mainNavigation h2 {
+    display: none;
+  }
   #mainNavigation {
     position: fixed;
     top: 0;
     z-index: 100;
-    width: calc(100vw - 58px); /*I think this looks slightly better in Safari than if we set width to 100%.*/
+    width: calc(
+      100vw - 58px
+    ); /*I think this looks slightly better in Safari than if we set width to 100%.*/
     left: 5px;
     max-width: none;
     margin-left: 0;
@@ -797,11 +799,14 @@ div[data-linenumber]:target {
   #mainNavigation p a {
     padding: 0;
   }
-  div#ribbon { /*The "div" is added to increase the specificity.*/
+  div#ribbon {
+    /*The "div" is added to increase the specificity.*/
     top: 245px;
   }
 }
 
-#assemblyCodeHeader, #machineCodeHeader, #emulationHeader {
-   position: absolute;
+#assemblyCodeHeader,
+#machineCodeHeader,
+#emulationHeader {
+  position: absolute;
 }
