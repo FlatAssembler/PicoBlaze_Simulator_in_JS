@@ -120,7 +120,7 @@ Ovo bi trebala biti očita šala svakome tko je položio biologiju u prvom razre
 </ol>
 Iz ta dva razloga ta bi tvrdnja trebala biti očita neistina.
 <?php else: ?>
-<input type="radio" name="mitochondria" value="true" id="mitochondria_yes"><label for="mitochondria_yes">True/Istina</label> <input type="radio" name="mitochondria" value="false" id="mitochondria_no"><label for="vegetarian_no">False/Laž</label>
+<input type="radio" name="mitochondria" value="true" id="mitochondria_yes"><label for="mitochondria_yes">True/Istina</label> <input type="radio" name="mitochondria" value="false" id="mitochondria_no"><label for="mitochondria_no">False/Laž</label>
 <?php endif; ?>
 </section>
 <section><div>
