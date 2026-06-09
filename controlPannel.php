@@ -339,7 +339,7 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
   while ($asocijativni_niz = $result->fetch_assoc()) {
     echo "<table>";
     foreach ($asocijativni_niz as $kljuc => $vrijednost) {
-       echo "<tr><th>" . htmlspecialchars($kljuc) . "</th><td>" . htmlspecialchars($vrijednost) . "</td></tr>";
+       echo "<tr><th>" . htmlspecialchars($kljuc) . "</th><td>" . ($vrijednost == '' ? '<i>Left empty</i>' : htmlspecialchars($vrijednost)) . "</td></tr>";
 }
     echo "</table>";
   }
