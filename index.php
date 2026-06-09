@@ -138,7 +138,7 @@ if (isset($_POST["username"]))
 	<button type="submit">Log in</button>
 	<div class="loginMessage" style="background-color:<?php echo $message == ""?"white":($message=="Login successful!"?"#afa":"#faa")?>"><?php echo $message;?></div>
 </form>
-Maybe you are willing to <a href="survey.php">fill my survey about vegetarianism</a>?
+<div>Maybe you are willing to <a href="survey.php" target="_blank">fill my survey about vegetarianism</a>?</div>
 <?php endif?>
 </div>
       <h3 id="assemblyCodeHeader">Assembly code</h3>
