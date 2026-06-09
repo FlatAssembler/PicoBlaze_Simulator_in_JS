@@ -42,6 +42,7 @@ section > div {
   color: #aaa;
 }
 </style>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
 <body>
 <main>
@@ -50,7 +51,7 @@ section > div {
 Ovo je anonimna anketa o razmišljanjima vegetarijanaca i njihovih protivnika o raznim stvarima. Molim Vas da odgovorite ili na hrvatskom jeziku ili na engleskom jeziku.
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
 <strong>Ovo su očekivani odgovori./Those are the expected answers.</strong>
-<?pho endif;?></header>
+<?php endif;?></header>
 <form method="POST">
 <section><div>Jeste li vegetarijanac/vegetarijanka?<br/>
 Are you a vegetarian?</div>
