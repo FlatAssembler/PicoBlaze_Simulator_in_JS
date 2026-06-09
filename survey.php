@@ -35,7 +35,7 @@ main {
   max-width: 500px;
   margin-left: auto;
   margin-right: auto;
-  backround-color: #aaa;
+  background-color: #aaa;
   padding: 5px;
 }
 form {
