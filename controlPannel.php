@@ -168,6 +168,18 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
       color: #773300;
       font-weight: bold;
     }
+    
+    table {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
+    
+    tr, td, th {
+      border: 1px solid black;
+      border-collapse: collapse;
+    }
   </style>
   <script src="list_of_directives.js"></script>
   <script src="headerScript.js"></script>
