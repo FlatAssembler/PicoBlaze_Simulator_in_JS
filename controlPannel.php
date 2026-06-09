@@ -318,8 +318,20 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
 		echo "<li>".htmlspecialchars($registered_user)."</li>\n";
 	echo "</ul>\n";
   }
-
   ?>
+<p>Here are the results of the survey about vegetarianism:</p>
+<?php
+  $stmt = $conn->prepare("SELECT * FROM survey");
+  $stmt->execute();
+  $result = $stmt->get_result();
+  while ($asocijativni_niz = $result->fetch_assoc()) {
+    echo "<table>";
+    foreach ($asocijativni_niz as $kljuc => $vrijednost) {
+       echo "<tr><th>" . htmlspecialchars($kljuc) . "</th><td>" . htmlspecialchars($vrijednost) . "</td></tr>";
+}
+    echo "</table>";
+  }
+?>
   </main>
 </body>
 
