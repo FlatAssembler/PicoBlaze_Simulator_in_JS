@@ -104,7 +104,7 @@ Smatrate li da ljudi s ozbiljnom mentalnom bolesti (kao, recimo, šizofrenijom) 
 <blockquote>I expect any informed person to answer no, because, aside from perhaps mild lead poisoning, there is no good evidence that any mental illness makes you more likely to become a mass shooter. And mass shooters are actually less likely to be diagnozed with schizophrenia than an average person is, although they are more likely to be diagnozed with anxiety.<br/>
 Ja bih očekivao da bi bilo koja informirana osoba odgovorila ne na ovo pitanje, jer, osim možda za blago trovanje olovom, nema dobre evidencije da te ijedna mentalna bolest čini vjerojatnijim da počiniš masovnu pucnjavu. I zapravo je za počinitelje masivnih pucnjava manje vjerojatno da budu dijagnosticirani šizofrenijom nego što je za prosječnu osobu, iako je veća vjerojatnost da imaju dijagnozu anksioznog poremećaja.</blockquote>
 <?php else: ?>
-<input type="radio" name="carry_wapons" value="yes" id="carry_weapons_yes"><label for="carry_weapons_yes">Yes/Da</label> <input type="radio" name="carry_weapons" value="no" id="carry_weapons_no"><label for="carry_weapons_no">No/Ne</label>
+<input type="radio" name="carry_weapons" value="yes" id="carry_weapons_yes"><label for="carry_weapons_yes">Yes/Da</label> <input type="radio" name="carry_weapons" value="no" id="carry_weapons_no"><label for="carry_weapons_no">No/Ne</label>
 <?php endif; ?>
 </section>
 <section><div>Smoking sterilizes the air by giving bacteria &quot;<i>mitochondrial cancer</i>&quot; (causing mitochondria inside the bacteria to divide uncontrollably until the bacterium dies).<br/>
