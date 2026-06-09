@@ -165,6 +165,10 @@ Nemojte ovdje ništa upisati (zaštita od botova):</div>
 <button type="submit">Submit/Predaj</button>
 <?php endif; ?>
 </form>
+<?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
+<footer>I made this survey in order to win a debate on the PhilosophicalVegan forum (after my ban there is lifted in a few months). I claimed that a common misconception about physiology is that Vitamin K prevents heart attacks by slightly lowering the amount of calcium in the blood (because Vitamin K is necessary for the osteoblasts to extract calcium from the blood into the bones), that lower calcium means the cholesterol is less likely to calcify. I claimed that nothing else can be concluded from the way the Vitamin K physiology is explained in our 9th-grade biology textbooks. The moderator of that forum told me that he does not see anybody who does not have psychosis like I do making that fallacious conclusion. And I also got stuck in a debate on Discord about whether habilitism is positively or negatively correlated with being against animal rights.<br/>
+Napravio sam ovu anketu radi rasprave na PhilosophicalVegan forumu (kada mi za nekoliko mjeseci prođe zabrana tamo). Tvrdio sam tamo da je česta kriva predodžba o fiziologiji ta da Vitamin K smanjuje rizik od srčanog udara tako što malo smanjuje količinu kalcija u krvi (jer je Vitamin K potreban osteoblastima da ekstrahiraju kalcij iz krvi u kosti), da manje kalcija znači da je manje vjerojatno da će se kolesterol kalcificirati. I tvrdio sam da se iz načina na koji se fiziologija Vitamina K objašnjava u udžbeniku biologije za prvi razred srednje škole ništa drugo ni ne može zaključiti. Moderator tog foruma rekao mi je da on naprosto ne vidi da bi itko tko ne boluje od psihoze, kao što ja bolujem, izveo tako neobičan zaključak. I također sam ušao u raspravu na Discordu o tome je li habilitizam pozitivno ili negativno koreliran sa zalaganjem protiv životinjskih prava.</footer>
+<?php endif; ?>
 </main>
 </body>
 </html>
