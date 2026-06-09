@@ -114,12 +114,14 @@ Dim sterilizira zrak tako što kod bakterija uzrokuje &quot;<i>mitohondrijski ra
 <ol><li>Bacteria do not have mitochondria, in fact, most bacteria are smaller than mitochondria and mitochondria therefore would not fit in them. Mitochondria are also widely considered to have evolved from aerobic bacteria, that's called endosymbiotic hypothesis.</li>
 <li>A mitochondrial cancer would not be dangerous since mitochondria have no mechanism to use the energy stored as ATP that's not produced by themselves. Unlike cancer cells which can use external glucose.</li>
 </ol>
-For those two reasons, that statement should be obviously false.<br/><br/>
+For those two reasons, that statement should be obviously false.<br/>
+Idea for this joke <a href="https://www.reddit.com/r/AskReddit/comments/1oq832q/comment/nnhch2p/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button">taken from Reddit</a>.<br/><br/>
 Ovo bi trebala biti očita šala svakome tko je položio biologiju u prvom razredu srednje škole, iz dva razloga:
 <ol><li>Bakterije nemaju mitohondrije, zapravo, većina je bakterija manja od mitohondrija, pa mitohondriji u većinu bakterija ne bi ni stali. Također se naširoko smatra da su mitohondriji evoluirali tako što su nastali od aerobnih bakterija, to se zove endosimbiotska hipoteza.</li>
 <li>Mitohondrijski rak ne bi bio pretjerano opasan po organizam jer mitohondriji nemaju mehanizam kojim mogu koristiti energiju pohranjenu u obliku adenozin-tri-fosfata (ATP-a) koju nisu oni sami proizveli. Za razliku od stanica raka koje mogu koristiti vanjsku glukozu.</li>
 </ol>
-Iz ta dva razloga ta bi tvrdnja trebala biti očita neistina.
+Iz ta dva razloga ta bi tvrdnja trebala biti očita neistina.<br/>
+Ideja za ovo <a href="https://www.reddit.com/r/AskReddit/comments/1oq832q/comment/nnhch2p/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button">preuzeta s Reddita</a>.
 <?php else: ?>
 <input type="radio" name="mitochondria" value="true" id="mitochondria_yes"><label for="mitochondria_yes">True/Istina</label> <input type="radio" name="mitochondria" value="false" id="mitochondria_no"><label for="mitochondria_no">False/Laž</label>
 <?php endif; ?>
