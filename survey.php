@@ -53,6 +53,32 @@ textarea {
 input[type=text] {
   width: calc(100% - 10px);
 }
+@keyframes zaokruziObrube {
+  from {
+    border-radius: 0px;
+  }
+  to {
+    border-radius: 50px;
+  }
+}
+@media (min-width: 750px) {
+  main {
+    padding: 30px;
+    animation-name: zaokruziObrube;
+    animation-duration: 4s;
+    animation-delay: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    border: solid darkred 3px;
+  }
+}
+button[type=submit] {
+  width: 100%;
+  line-height: 50px;
+  background-color: lightgreen;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
 </style>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
