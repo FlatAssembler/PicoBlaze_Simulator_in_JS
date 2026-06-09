@@ -120,7 +120,7 @@ Nemojte ovdje ništa upisati (zaštita od botova):<br/>
 <input type="text" name="donotenter">
 <?php endif; ?>
 </section>
-<?php id ($_SERVER['REQUEST_METHOD'] == "GET"): ?>
+<?php if ($_SERVER['REQUEST_METHOD'] == "GET"): ?>
 <button type="submit">Submit/Predaj</button>
 <?php endif; ?>
 </form>
