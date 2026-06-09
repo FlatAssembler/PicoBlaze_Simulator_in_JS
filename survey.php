@@ -13,7 +13,7 @@ mitochondria TEXT)
 SQL
 );
      $stmt = $conn->prepare("INSERT INTO survey(vegetarian, vitamin_k, heme_iron, carry_weapons, mitochondria) VALUES (?, ?, ?, ?, ?)");
-     $stmt->bind_params("sssss", $_POST['vegetarian'], $_POST['vitamin_k'], $_POST['heme_iron'], $_POST['carry_weapons'], $_POST['mitochondria']);
+     $stmt->bind_param("sssss", $_POST['vegetarian'], $_POST['vitamin_k'], $_POST['heme_iron'], $_POST['carry_weapons'], $_POST['mitochondria']);
      $stmt->execute();
   }
   else {
