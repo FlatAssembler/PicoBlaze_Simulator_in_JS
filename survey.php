@@ -62,6 +62,7 @@ input[type=text] {
 <header>This is an anonymous survey about the opinions of vegetarians and non-vegetarians on various topics. Please respond either in English or Croatian.<br/>
 Ovo je anonimna anketa o razmišljanjima vegetarijanaca i njihovih protivnika o raznim stvarima. Molim Vas da odgovorite ili na hrvatskom jeziku ili na engleskom jeziku.
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
+<br/>
 <strong>Ovo su očekivani odgovori./Those are the expected answers.</strong>
 <?php endif;?></header>
 <form method="POST">
