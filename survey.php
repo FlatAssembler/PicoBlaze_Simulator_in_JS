@@ -9,7 +9,7 @@ vegetarian TEXT,
 vitamin_k TEXT,
 heme_iron TEXT,
 carry_weapons TEXT,
-mitochondria TEXT
+mitochondria TEXT)
 SQL
 );
      $stmt = $conn->prepare("INSERT INTO survey(vegetarian, vitamin_k, heme_iron, carry_weapons, mitochondria) VALUES (?, ?, ?, ?, ?)");
