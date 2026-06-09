@@ -18,7 +18,7 @@ SQL
   }
   else {
     die("I think you are a bot!");
-}
+}}
 ?>
 <!doctype html>
 <html>
