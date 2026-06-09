@@ -42,15 +42,16 @@ form {
   background-color: #ccc;
 }
 section > div {
-  background-color: #335;
-  color: #aaa;
+  background-color: #334;
+  color: #eee;
+  padding: 3px;
 }
 textarea {
-  width: 100%;
+  width: calc(100% - 20px);
   height: 300px;
 }
 input[type=text] {
-  width: 100%;
+  width: calc(100% - 20px);
 }
 </style>
 <meta name="viewport" content="width=device-width,initial-scale=1">
