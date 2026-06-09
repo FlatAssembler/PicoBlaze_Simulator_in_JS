@@ -25,6 +25,9 @@ SQL
 <head>
 <title>Survey about the opinions on various things among vegetarians and non-vegetarians</title>
 <style>
+body {
+  background-color: black;
+}
 blockquote {
   background-color: #ffc;
 }
@@ -33,6 +36,7 @@ main {
   margin-left: auto;
   margin-right: auto;
   backround-color: #aaa;
+  padding: 5px;
 }
 form {
   background-color: #ccc;
@@ -40,6 +44,13 @@ form {
 section > div {
   background-color: #335;
   color: #aaa;
+}
+textarea {
+  width: 100%;
+  height: 300px;
+}
+input[type=text] {
+  width: 100%;
 }
 </style>
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -111,9 +122,9 @@ Iz ta dva razloga ta bi tvrdnja trebala biti očita neistina.
 <input type="radio" name="mitochondria" value="true" id="mitochondria_yes"><label for="mitochondria_yes">True/Istina</label> <input type="radio" name="mitochondria" value="false" id="mitochondria_no"><label for="vegetarian_no">False/Laž</label>
 <?php endif; ?>
 </section>
-<section>
+<section><div>
 Do not enter anything here (spambot protection):<br/>
-Nemojte ovdje ništa upisati (zaštita od botova):<br/>
+Nemojte ovdje ništa upisati (zaštita od botova):</div>
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
 <blockquote>Empty/Prazno</blockquote>
 <?php else: ?>
