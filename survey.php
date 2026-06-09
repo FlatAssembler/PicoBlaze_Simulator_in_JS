@@ -47,11 +47,11 @@ section > div {
   padding: 3px;
 }
 textarea {
-  width: calc(100% - 20px);
+  width: calc(100% - 10px);
   height: 300px;
 }
 input[type=text] {
-  width: calc(100% - 20px);
+  width: calc(100% - 10px);
 }
 </style>
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -97,7 +97,7 @@ Ne čini se da postoji takva substanca.</blockquote>
 <?php endif; ?>
 </section>
 <section>
-<div>Do you think that people with a serious mental illness (such as schozophrenia) should be banned from owning firearms?<br/>
+<div>Do you think that people with a serious mental illness (such as schizophrenia) should be banned from owning firearms?<br/>
 Smatrate li da ljudi s ozbiljnom mentalnom bolesti (kao, recimo, šizofrenijom) ne bi smjeli posjedovati vatreno oružje?</div>
 <?php if ($_SERVER['REQUEST_METHOD'] === 'POST'): ?>
 <blockquote>I expect any informed person to answer no, because, aside from perhaps mild lead poisoning, there is no good evidence that any mental illness makes you more likely to become a mass shooter. And mass shooters are actually less likely to be diagnozed with schizophrenia than an average person is, although they are more likely to be diagnozed with anxiety.<br/>
