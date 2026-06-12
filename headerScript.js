@@ -298,6 +298,10 @@ function setupLayout() {
     if (document.getElementById("greeting"))
       document.getElementById("greeting").style.scrollMarginTop =
           document.getElementById("mainNavigation").clientHeight + "px";
+    if (/Firefox\/5\d[\. ]/.test(navigator.userAgent)) {
+      const arrayWithLiElements = document.querySelectorAll("#mainNavigation li");
+      arrayWithLiElements.forEach(el => { el.style.margin = "10px"; });
+    }
   } else {
     document.getElementById("ribbon").style.top = "0px";
     document.getElementById("assemblyCodeHeader").style.scrollMarginTop =
@@ -307,6 +311,10 @@ function setupLayout() {
                     .style.scrollMarginTop = "0px";
     if (document.getElementById("greeting"))
       document.getElementById("greeting").style.scrollMarginTop = "0px";
+  if (/Firefox\/5\d[\. ]/.test(navigator.userAgent)) {
+      const arrayWithLiElements = document.querySelectorAll("#mainNavigation li");
+      arrayWithLiElements.forEach(el => { el.style.margin = "0px"; });
+    }
   }
   if (windowWidth < 500) {
     document.getElementsByTagName("main")[0].style.left = 8 + "px";
