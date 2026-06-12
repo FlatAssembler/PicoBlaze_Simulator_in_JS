@@ -280,6 +280,10 @@ function setupLayout() {
   // Modern browsers execute JavaScript so fast that calling "window.innerWidth"
   // multiple times within a function leads to a race condition.
   if (windowWidth >= 900 && windowHeight >= 700) {
+    if (/Firefox\/5\d[\. ]/.test(navigator.userAgent)) {
+      const arrayWithLiElements = document.querySelectorAll("#mainNavigation li");
+      arrayWithLiElements.forEach(el => { el.style.margin = "10px"; });
+    }
     document.getElementById("ribbon").style.top =
         (document.getElementById("mainNavigation")
              ? document.getElementById("mainNavigation").clientHeight
@@ -298,10 +302,6 @@ function setupLayout() {
     if (document.getElementById("greeting"))
       document.getElementById("greeting").style.scrollMarginTop =
           document.getElementById("mainNavigation").clientHeight + "px";
-    if (/Firefox\/5\d[\. ]/.test(navigator.userAgent)) {
-      const arrayWithLiElements = document.querySelectorAll("#mainNavigation li");
-      arrayWithLiElements.forEach(el => { el.style.margin = "10px"; });
-    }
   } else {
     document.getElementById("ribbon").style.top = "0px";
     document.getElementById("assemblyCodeHeader").style.scrollMarginTop =
