@@ -201,7 +201,7 @@ CSS - https://www.w3schools.com/css/default.asp
             where you last tapped. In case that doesn't work, you have buttons
             below the maze. On computers, it's playable by mouse or the arrow keys.<br />You can
             see the source code, with the comments in Croatian, <a
-                href="https://github.com/FlatAssembler/SVG-Pacman/blob/master/pacman.php">here</a>.<br/>
+                href="https://gitlab.com/FlatAssembler/picoblaze_simulator_in_js/-/blob/master/pacman.php?ref_type=heads">here</a>.<br/>
                 <?php if (strpos($browser, "Firefox") !== FALSE): ?>
                 <b>UPDATE</b> on 24/03/2021: I have added eyes on the ghosts.<br/>
             <?php else: ?>
