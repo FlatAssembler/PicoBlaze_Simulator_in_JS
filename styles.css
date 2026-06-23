@@ -758,6 +758,15 @@ div[data-linenumber]:target {
 
 /* Large screen: make navigation horizontal and sticky to top */
 @media screen and (min-width: 900px) and (min-height: 700px) {
+  header {
+    /*To make the "Fork me on GitHub" ribbon clickable.*/
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%);
+  }
   #mainNavigation h2 {
     display: none;
   }
