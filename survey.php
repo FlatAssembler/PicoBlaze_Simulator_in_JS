@@ -27,6 +27,9 @@ SQL
 <style>
 body {
   background-color: black;
+  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/FoodMeat.jpg/960px-FoodMeat.jpg);
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 blockquote {
   background-color: #ffc;
@@ -78,6 +81,11 @@ button[type=submit] {
   background-color: lightgreen;
   margin-top: 5px;
   margin-bottom: 5px;
+}
+img {
+  display: block;
+  margin: 5px;
+  max-width: calc(100% - 10px);
 }
 </style>
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -167,7 +175,12 @@ Nemojte ovdje ništa upisati (zaštita od botova):</div>
 </form>
 <?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
 <footer>I made this survey in order to win a debate on the PhilosophicalVegan forum (after my ban there is lifted in a few months). I claimed that a common misconception about physiology is that Vitamin K prevents heart attacks by slightly lowering the amount of calcium in the blood (because Vitamin K is necessary for the osteoblasts to extract calcium from the blood into the bones), that lower calcium means the cholesterol is less likely to calcify. I claimed that nothing else can be concluded from the way the Vitamin K physiology is explained in our 9th-grade biology textbooks. The moderator of that forum told me that he does not see anybody who does not have psychosis like I do making that fallacious conclusion. And I also got stuck in a debate on Discord about whether habilitism is positively or negatively correlated with being against animal rights.<br/>
-Napravio sam ovu anketu radi rasprave na PhilosophicalVegan forumu (kada mi za nekoliko mjeseci prođe zabrana tamo). Tvrdio sam tamo da je česta kriva predodžba o fiziologiji ta da Vitamin K smanjuje rizik od srčanog udara tako što malo smanjuje količinu kalcija u krvi (jer je Vitamin K potreban osteoblastima da ekstrahiraju kalcij iz krvi u kosti), da manje kalcija znači da je manje vjerojatno da će se kolesterol kalcificirati. I tvrdio sam da se iz načina na koji se fiziologija Vitamina K objašnjava u udžbeniku biologije za prvi razred srednje škole ništa drugo ni ne može zaključiti. Moderator tog foruma rekao mi je da on naprosto ne vidi da bi itko tko ne boluje od psihoze, kao što ja bolujem, izveo tako neobičan zaključak. I također sam ušao u raspravu na Discordu o tome je li habilitizam pozitivno ili negativno koreliran sa zalaganjem protiv životinjskih prava.</footer>
+Napravio sam ovu anketu radi rasprave na PhilosophicalVegan forumu (kada mi za nekoliko mjeseci prođe zabrana tamo). Tvrdio sam tamo da je česta kriva predodžba o fiziologiji ta da Vitamin K smanjuje rizik od srčanog udara tako što malo smanjuje količinu kalcija u krvi (jer je Vitamin K potreban osteoblastima da ekstrahiraju kalcij iz krvi u kosti), da manje kalcija znači da je manje vjerojatno da će se kolesterol kalcificirati. I tvrdio sam da se iz načina na koji se fiziologija Vitamina K objašnjava u udžbeniku biologije za prvi razred srednje škole ništa drugo ni ne može zaključiti. Moderator tog foruma rekao mi je da on naprosto ne vidi da bi itko tko ne boluje od psihoze, kao što ja bolujem, izveo tako neobičan zaključak. I također sam ušao u raspravu na Discordu o tome je li habilitizam pozitivno ili negativno koreliran sa zalaganjem protiv životinjskih prava.<br/>
+<br/>
+Here are the screenshots of the first few responses, just so you can get a general idea of how people tended to respond:
+<img src="survey_results/screeshot-1.png">
+<img src="survey_results/sreenshot-2.png">
+</footer>
 <?php endif; ?>
 </main>
 </body>
