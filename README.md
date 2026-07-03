@@ -49,3 +49,7 @@ So, all in all, the assembler mostly uses the pipe-and-filter architecture, as y
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=FlatAssembler/PicoBlaze_Simulator_in_JS&type=date&legend=top-left)](https://www.star-history.com/#FlatAssembler/PicoBlaze_Simulator_in_JS&type=date&legend=top-left)
+
+## DeepWiki Page
+
+Here is [a DeepWiki page about this page](https://deepwiki.com/FlatAssembler/PicoBlaze_Simulator_in_JS).
