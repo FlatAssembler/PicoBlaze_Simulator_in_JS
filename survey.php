@@ -180,6 +180,7 @@ Napravio sam ovu anketu radi rasprave na PhilosophicalVegan forumu (kada mi za n
 Here are the screenshots of the first few responses, just so you can get a general idea of how people tended to respond:
 <img src="survey_results/screenshot-1.png">
 <img src="survey_results/screenshot-2.png">
+<img src="survey_results/screenshot-3.png">
 </footer>
 <?php endif; ?>
 </main>
