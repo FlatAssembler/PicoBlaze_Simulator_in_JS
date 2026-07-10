@@ -318,27 +318,12 @@ multiply_by_10:
 return
 
 number_too_big:
-  print_string "The entered number is bigger than 255!", s9, UART_TX
-  load s9, a ;newline
-  call UART_TX
+  print_string "The entered number is bigger than 255!\n", s9, UART_TX
   jump infinite_loop
 return
 
 abort:
-  load s9, "E"
-  call UART_TX
-  load s9, "R"
-  call UART_TX
-  load s9, "R"
-  call UART_TX
-  load s9, "O"
-  call UART_TX
-  load s9, "R"
-  call UART_TX
-  load s9, "!"
-  call UART_TX
-  load s9, a ;newline
-  call UART_TX
+  print_string "ERROR!\n", s9, UART_TX
   infinite_loop:
   jump infinite_loop
 return
