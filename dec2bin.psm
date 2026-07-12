@@ -318,6 +318,8 @@ multiply_by_10:
 return
 
 number_too_big:
+  ; The following line will only correctly assemble as of the versions v6.1.1
+  ; and newer, because of the `<code>\n</code>` at the end of the string.
   print_string "The entered number is bigger than 255!\n", s9, UART_TX
   jump infinite_loop
 return
