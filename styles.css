@@ -819,3 +819,10 @@ div[data-linenumber]:target {
 #emulationHeader {
   position: absolute;
 }
+
+blockquote {
+  background-color: lightyellow;
+  border-left: 5px double brown;
+  box-shadow: -5px 3px 3px 2px yellow;
+  padding: 2px;
+}

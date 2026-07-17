@@ -500,6 +500,43 @@ Here you can see that there are five tables in the database (four related to Pic
             https://a.fsdn.com/con/app/sf-download-button?button_size=2x 2x
           "
       /></a>
+<br/><br/>
+	UPDATE on 16/07/2026: I've tried to make an English-language poem
+	describing the situation the engineers are in these days:
+	<blockquote>
+		What about all of those who did what they were told?<br/>
+		When will you admit those are lies that you sold?<br/><br/>
+You poke fun at humanities,<br/>
+who tried to into careers turn their hobbies,<br/>
+you say that's why they are working for Starbucks,<br/>
+and that's why they aren't making bucks.<br/><br/>
+But what about all of those who did what they were told?<br/>
+What about all who gave in to study engineering,<br/>
+ended up in psychiatric ward for they were bleeding,<br/>
+please tell me where is their success,<br/>
+in this world that's such a mess.<br/><br/>
+You poke fun at trades,<br/>
+the societies survival ways,<br/>
+you say with brain one makes money, not with hands,<br/>
+go ask Hans Moravec how well this statement stands.<br/><br/>
+You said in school we should ace,<br/>
+That we should have straight As,<br/>
+But where is the straight-As student success,<br/>
+in this world that's such a mess?<br/><br/>
+You told us learn how to drive,<br/>
+Now there are robotaxies,<br/>
+without drivers they thrive.<br/>
+You told us learn to code,<br/>
+Now all computers have natural language mode.<br/>
+When will you admit you sold us lies?<br/><br/>
+I gave all of my youth for the grades,<br/>
+But now the value of my diploma fades.<br/>
+How much could I have had fun,<br/>
+During my youth that's wasted on the young?<br/>
+Now I am taking psychiatric medication,<br/>
+and alcohol and drugs would only give me bad sensation.
+	</blockquote>
+	I hope you find it funny.
 <section id="references_used_to_make_this">
 <h2>References</h2>
 <ul>
