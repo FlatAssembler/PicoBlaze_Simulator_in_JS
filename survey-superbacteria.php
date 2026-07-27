@@ -12,7 +12,7 @@ conjugation TEXT,
 lab_grown_eggs TEXT)
 SQL
 );
-     $stmt = $conn->prepare("INSERT INTO survey_superbacteria(eggs_more_important, ionophores_percentage, where_genes_are_stored, conjugation, lab_grown_eggs) VALUES (?, ?, ?, ?)");
+     $stmt = $conn->prepare("INSERT INTO survey_superbacteria(eggs_more_important, ionophores_percentage, where_genes_are_stored, conjugation, lab_grown_eggs) VALUES (?, ?, ?, ?, ?)");
      $stmt->bind_param("sdsss", $_POST['eggs_more_important'], $_POST['ionophores_percentage'], $_POST['where_genes_are_stored'], $_POST['conjugation'], $_POST['lab_grown_eggs']);
      $stmt->execute();
   }
