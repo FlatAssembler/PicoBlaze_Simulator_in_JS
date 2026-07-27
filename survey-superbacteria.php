@@ -115,7 +115,17 @@ Ionophores are antibiotics which are effective in birds, but are toxic to mammal
 <?php if ($_SERVER['REQUEST_METHOD'] === "POST"): ?>
 <blockquote>
 <?php
-$stmt = $conn->prepare("SELECT MEDIAN(ionophores_percentage) as median FROM survey_superbacteria");
+// https://stackoverflow.com/a/7263925/8902065
+$stmt = $conn->prepare(<<<SQL
+SELECT AVG(dd.ionophores_percentage) as median_val
+FROM (
+SELECT d.ionophores_percentage, @rownum:=@rownum+1 as `row_number`, @total_rows:=@rownum
+  FROM survey_superbacteria d, (SELECT @rownum:=0) r
+  WHERE d.ionophores_percentage is NOT NULL
+  ORDER BY d.ionophores_percentage
+) as dd
+WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );
+SQL);
 $stmt->execute();
 $median = $stmt->get_result()->fetch_assoc()['median'];
 ?>
