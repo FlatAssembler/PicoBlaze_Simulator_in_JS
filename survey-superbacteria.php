@@ -127,7 +127,7 @@ SELECT d.ionophores_percentage, @rownum:=@rownum+1 as `row_number`, @total_rows:
 WHERE dd.row_number IN ( FLOOR((@total_rows+1)/2), FLOOR((@total_rows+2)/2) );
 SQL);
 $stmt->execute();
-$median = $stmt->get_result()->fetch_assoc()['median'];
+$median = $stmt->get_result()->fetch_assoc()['median_val'];
 ?>
 	Točan odgovor je, <a href="https://www.nationalchickencouncil.org/questions-answers-antibiotics-chicken-production/">prema National Chicken Councilu</a>, 45%. Kao zanimljivost, srednje nagađanje u ovoj anketi je <?=$median?>%.
 <br/>
