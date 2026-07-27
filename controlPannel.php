@@ -344,6 +344,19 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
     echo "</table>";
   }
 ?>
+<p>Here are the results of the survey about superbacteria:</p>
+<?php
+  $stmt = $conn->prepare("SELECT * FROM survey_superbacteria");
+  $stmt->execute();
+  $result = $stmt->get_result();
+  while ($asocijativni_niz = $result->fetch_assoc()) {
+    echo "<table>";
+    foreach ($asocijativni_niz as $kljuc => $vrijednost) {
+       echo "<tr><th>" . htmlspecialchars($kljuc) . "</th><td>" . ($vrijednost == '' ? '<i>Left empty</i>' : htmlspecialchars($vrijednost)) . "</td></tr>";
+}
+    echo "</table>";
+  }
+?>
   </main>
 </body>
 

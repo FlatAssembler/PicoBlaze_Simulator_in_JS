@@ -156,6 +156,7 @@ Ovo bi trebala biti očita šala svakome tko je položio biologiju u prvom razre
 </ol>
 Iz ta dva razloga ta bi tvrdnja trebala biti očita neistina.<br/>
 Ideja za ovo <a href="https://www.reddit.com/r/AskReddit/comments/1oq832q/comment/nnhch2p/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button">preuzeta s Reddita</a>.
+</blockquote>
 <?php else: ?>
 <input type="radio" name="mitochondria" value="true" id="mitochondria_yes"><label for="mitochondria_yes">True/Istina</label> <input type="radio" name="mitochondria" value="false" id="mitochondria_no"><label for="mitochondria_no">False/Laž</label>
 <?php endif; ?>
