@@ -13,7 +13,7 @@ lab_grown_eggs TEXT)
 SQL
 );
      $stmt = $conn->prepare("INSERT INTO survey_superbacteria(eggs_more_important, ionophores_percentage, where_genes_are_stored, conjugation, lab_grown_eggs) VALUES (?, ?, ?, ?)");
-     $stmt->bind_param("sdsss", $_POST['eggs_more_important'], $_POST['ionophores_percentage'], $_POST['where_genes_are_stored'], $_POST['conjugation'] $_POST['lab_grown_eggs']);
+     $stmt->bind_param("sdsss", $_POST['eggs_more_important'], $_POST['ionophores_percentage'], $_POST['where_genes_are_stored'], $_POST['conjugation'], $_POST['lab_grown_eggs']);
      $stmt->execute();
   }
   else {
@@ -108,7 +108,7 @@ Odgovorite kako želite, to je kontroverzno pitanje. Ja tvrdo vjerujem da je odg
 Answer as you want it, this is a controversial question. I strongly suspect that the answer is yes, and that the reason people think otherwise is that they have certain misconceptions about bacteriology and modern agriculture.
 </blockquote>
 <?php else: ?>
-<input type="radio" name="eggs_more_important" value="eggs_more_important" id="eggs_more_important_yes"><label for="eggs_more_important_yes">Yes/Da</label> <input type="radio" name="eggs_more_important" value="eggs_not_more_important" id="eggs_not_more_impoetant"><label for="eggs_not_more_important">No/Ne</label>
+<input type="radio" name="eggs_more_important" value="eggs_more_important" id="eggs_more_important_yes"><label for="eggs_more_important_yes">Yes/Da</label> <input type="radio" name="eggs_more_important" value="eggs_not_more_important" id="eggs_not_more_important"><label for="eggs_not_more_important">No/Ne</label>
 <?php endif; ?></section>
 <section><div>Ionofori su antibiotici koji su djelotvorni u pticama, ali su otrovni za sisavce. Što mislite, koliki postotak antibiotika koji se danas koriste pripada skupini ionofora?<br/>
 Ionophores are antibiotics which are effective in birds, but are toxic to mammals. What do you think, what percentage of antibiotics which are used today are ionophores?</div>
