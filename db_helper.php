@@ -10,8 +10,9 @@ class Database {
     private function __construct() {
         $servername = "picoblaze-simulator-server";
         $username = "ckkbyzubna";
-        $port = 3306;
-        $password = substr(file_get_contents(".env"), strlen("password="));
+	$port = 3306;
+	$env_file_content = file_exists(".env") ? file_get_contents(".env") : file_get_contents("../.env");
+        $password = substr($env_file_content, strlen("password="));
         if (substr($password, -1, 1) == "\n") {
             $password = substr($password, 0, strlen($password) - 1);
         }
