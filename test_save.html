@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test spremanja programa</title>
+</head>
+<body>
+
+<h1>Test spremanja assembler programa</h1>
+
+<textarea id="code" rows="12" cols="70">LOAD s0, 00
+ADD s0, 01</textarea>
+
+<br><br>
+
+<button onclick="saveProgram()">Spremi program</button>
+
+<pre id="result"></pre>
+
+<script>
+async function saveProgram() {
+    const code = document.getElementById("code").value;
+    const result = document.getElementById("result");
+
+    try {
+        const response = await fetch("db.php", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                code: code
+            })
+        });
+
+        const text = await response.text();
+
+        result.textContent =
+            "HTTP status: " + response.status + "\n" +
+            "Odgovor: " + text;
+    } catch (error) {
+        result.textContent = "Greška: " + error.message;
+    }
+}
+</script>
+
+</body>
+</html>

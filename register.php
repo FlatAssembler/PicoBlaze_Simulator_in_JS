@@ -1,16 +1,29 @@
 <?php
-	function consists_only_of_digits($string) {
-		for ($i=0; $i<strlen($string); $i++)
-			if (!IntlChar::isdigit(substr($string, $i, 1)))
-				return false;
-		return true;
+	// function consists_only_of_digits($string) {
+	// 	for ($i=0; $i<strlen($string); $i++)
+	// 		if (!IntlChar::isdigit(substr($string, $i, 1)))
+	// 			return false;
+	// 	return true;
+	// }
+	function consists_only_of_digits($string)
+	{
+		return ctype_digit($string);
 	}
+
 	include 'db_helper.php';
 	$message = "";
 	$messageColor = "white";
 	
 	if (isset($_POST['username'])) {
 		$conn = Database::getInstance()->getConnection();
+
+		$conn->query(<<<SQL
+		CREATE TABLE IF NOT EXISTS usernames(
+			id INT AUTO_INCREMENT PRIMARY KEY,
+			username TEXT NOT NULL,
+			passwordHash TEXT NOT NULL
+		);
+		SQL);
 
 		$stmt = $conn->prepare("SELECT COUNT(*) AS counter FROM usernames WHERE username = ?");
 		$stmt->bind_param('s', $_POST['username']);
@@ -45,8 +58,13 @@
 				$messageColor="#afa";
 				
 				$stmt = $conn->prepare("INSERT INTO usernames(username,passwordHash) VALUES(?, ?)");
-				$stmt->bind_param('ss',$_POST['username'],md5($_POST['password'])); // Ideally, we should add some salt here to the hash, but this is not a seriuous project anyway.
+				$username = $_POST['username'];
+				$passwordHash = md5($_POST['password']);
+
+				$stmt->bind_param('ss', $username, $passwordHash);
 				$stmt->execute();
+
+				header("refresh: 1; url=index.php");
 			}
 		}
 	}

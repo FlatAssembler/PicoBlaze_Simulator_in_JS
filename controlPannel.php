@@ -3,7 +3,7 @@ session_start();
 
 if (!isset($_SESSION['username']) ||
        	$_SESSION['username'] != "Teo Samar&zcaron;ija") {
-  header("Location: login.php");
+  header("Location: admin_login.php");
   echo "Redirecting you to the login page...";
   exit();
 }
