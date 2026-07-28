@@ -91,6 +91,23 @@ $expiresAt = date(
 /*
  * Po želji brišemo istekle tokene ovog korisnika.
  */
+
+$conn->query(<<<SQL
+CREATE TABLE IF NOT EXISTS api_tokens (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    token_hash CHAR(64) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME NOT NULL,
+
+    CONSTRAINT fk_api_tokens_user
+        FOREIGN KEY (user_id)
+        REFERENCES usernames(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+)
+SQL);
+
 $stmt = $conn->prepare(
     'DELETE FROM api_tokens
      WHERE user_id = ? AND expires_at <= NOW()'
