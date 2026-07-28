@@ -107,6 +107,24 @@ if ($method === 'POST') {
         error('The title may not be longer than 255 characters.', 422);
     }
 
+    $conn->query(<<<SQL
+CREATE TABLE IF NOT EXISTS user_programs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    code TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_user_programs_user
+        FOREIGN KEY (user_id)
+        REFERENCES usernames(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+SQL);
+
     $stmt = $conn->prepare(
         'INSERT INTO user_programs (user_id, title, code)
          VALUES (?, ?, ?)'
