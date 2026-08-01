@@ -280,9 +280,9 @@ function setupLayout() {
   // Modern browsers execute JavaScript so fast that calling "window.innerWidth"
   // multiple times within a function leads to a race condition.
   if (windowWidth >= 900 && windowHeight >= 700) {
-    if (/Firefox\/5\d[\. ]/.test(navigator.userAgent)) {
+    if (/Firefox\/5[2-9][\. ]/.test(navigator.userAgent)) {
       const arrayWithLiElements = document.querySelectorAll("#mainNavigation li");
-      arrayWithLiElements.forEach(el => { el.style.margin = "10px"; });
+      arrayWithLiElements.forEach(el => { el.style.margin = "5px"; });
     }
     document.getElementById("ribbon").style.top =
         (document.getElementById("mainNavigation")
