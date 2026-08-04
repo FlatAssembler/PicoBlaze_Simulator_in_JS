@@ -311,7 +311,7 @@ function setupLayout() {
                     .style.scrollMarginTop = "0px";
     if (document.getElementById("greeting"))
       document.getElementById("greeting").style.scrollMarginTop = "0px";
-  if (/Firefox\/5\d[\. ]/.test(navigator.userAgent)) {
+  if (/Firefox\/5[2-9][\. ]/.test(navigator.userAgent)) {
       const arrayWithLiElements = document.querySelectorAll("#mainNavigation li");
       arrayWithLiElements.forEach(el => { el.style.margin = "0px"; });
     }
