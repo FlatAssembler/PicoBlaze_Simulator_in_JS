@@ -129,9 +129,9 @@ SQL);
 $stmt->execute();
 $median = $stmt->get_result()->fetch_assoc()['median_val'];
 ?>
-	Točan odgovor je, <a href="https://www.nationalchickencouncil.org/questions-answers-antibiotics-chicken-production/">prema National Chicken Councilu</a>, 45%. Kao zanimljivost, srednje nagađanje u ovoj anketi je <?=$median?>%.
+	Točan odgovor je, <a href="https://www.nationalchickencouncil.org/questions-answers-antibiotics-chicken-production/">prema National Chicken Councilu</a>, 45%. Kao zanimljivost, srednje nagađanje u ovoj anketi je <?=$median?>%. Pretpostavljao sam da je česta kriva predodžba da većina antibiotika odlazi na krave i svinje.
 <br/>
-The correct answer is, <a href="https://www.nationalchickencouncil.org/questions-answers-antibiotics-chicken-production/">according to National Chicken Council</a>, 45%. As an interesting thing, the median guess in this survey is <?=$median?>%.
+The correct answer is, <a href="https://www.nationalchickencouncil.org/questions-answers-antibiotics-chicken-production/">according to National Chicken Council</a>, 45%. As an interesting thing, the median guess in this survey is <?=$median?>%. I guess that it is a common misconception that most antibiotics go to cows and pigs.
 </blockquote>
 <?php else: ?>
 <input type="number" name="ionophores_percentage" min="0" max="100">
