@@ -1,0 +1,281 @@
+{
+  "repo_notes": [
+    {
+      "content": ""
+    }
+  ],
+  "pages": [
+    {
+      "title": "Project Overview",
+      "purpose": "High-level introduction to the PicoBlaze Simulator in JS: what it is, why it was built, how to access it, and how the major subsystems relate. Links to child pages for architecture, the assembler pipeline, the emulator, example programs, the backend, and testing.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Getting Started",
+      "purpose": "How to run the project locally (Node ≥ 16, npm ≥ 8, Bun), how to open the web IDE, how to configure example URLs, and how to run the test suite. Covers package.json scripts, babel.config.js, jest.config.js, and the bun/happydom setup.",
+      "parent": "Project Overview",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "PicoBlaze Architecture Reference",
+      "purpose": "Background on the Xilinx PicoBlaze (KCPSM) soft-core microcontroller: instruction set, register banks, flags, scratchpad RAM, hardware stack, I/O port system, and interrupt handling. Drawn from the seminar documentation. Serves as the hardware reference for understanding what the simulator emulates.",
+      "parent": "Project Overview",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Assembler Pipeline",
+      "purpose": "Overview of the four-stage pipe-and-filter assembly process (tokenize → parse → preprocess → assemble) and how the stages share the TreeNode AST. Links to child pages for each stage and the shared AST data structure.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Tokenizer",
+      "purpose": "Detailed documentation of tokenizer.js: character-scanning loop, state flags (areWeInAString, areWeInAComment), delimiter handling, label-colon merging, preprocessor-function normalization, and error reporting via alert().",
+      "parent": "Assembler Pipeline",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Parser",
+      "purpose": "Detailed documentation of parser.js: multi-pass token-to-AST conversion, control-flow block handling (if/else/endif, while/endwhile), parenthesis recursion, operator-precedence hierarchy, ternary operator resolution, and type checking via TreeNode.checkTypes().",
+      "parent": "Assembler Pipeline",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "TreeNode — AST Data Structure and Expression Evaluator",
+      "purpose": "Detailed documentation of TreeNode.js: the TreeNode class constructor, getLispExpression(), interpretAsArithmeticExpression(), getRegisterNumber(), getLabelAddress(), checkTypes(), supported literal bases ('b/'o/'d/'x), built-in functions (bitand/bitor/invertBits/mod), and the fuzzy-matching error-correction system (LevenshteinDistance + LCS). The literal bases are, unlike in most programming languages, suffixes rather than prefixes. The `getRegisterNumber()` usually applies to tokens matching the regular expression `/^s(\\d|[a-f])$/i`, but it is also used for the nameregs (the preprocessor directive adding alternate names to registers).",
+      "parent": "Assembler Pipeline",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Preprocessor",
+      "purpose": "Detailed documentation of preprocessor.js: makeCompilationContext(), the compilation context object (constants, namedRegisters, labels), supported directives (constant/equ, namereg, address/org, BASE_DECIMAL/BASE_HEXADECIMAL, PRINT_STRING, display, if, while), address tracking, and environment detection (PicoBlaze_Simulator_in_JS vs Android).",
+      "parent": "Assembler Pipeline",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Assembler — Machine Code Generation",
+      "purpose": "Detailed documentation of assembler.js: the assemble() function, single-pass AST traversal, instruction encoding (opcode selection, register resolution, immediate values, label resolution), special handling for print_string macro expansion, address directive, BASE_HEXADECIMAL/BASE_DECIMAL toggling, breakpoint metadata, and error handling.",
+      "parent": "Assembler Pipeline",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Simulator (Emulator Engine)",
+      "purpose": "Overview of the PicoBlaze emulator: how simulateOneInstruction() drives the fetch-decode-execute cycle, global state layout, and links to child pages covering the instruction execution logic and the UI integration.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Instruction Execution and Processor State",
+      "purpose": "Deep dive into simulator.js: the simulateOneInstruction() function, switch-case opcode decoding, ALU emulation (ADD/SUB/AND/OR/XOR/TEST/COMPARE), shift and rotate operations, register banking (REGBANK A/B), scratchpad memory (STORE/FETCH), call stack (CALL/RETURN/RETURNI), interrupt enable/disable, and indirect addressing (JUMP@/CALL@).",
+      "parent": "Simulator (Emulator Engine)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "I/O Subsystems — UART, LEDs, and 7-Segment Displays",
+      "purpose": "How the simulator maps PicoBlaze I/O ports to browser UI elements: UART_TX/UART_RX port simulation, UART_STATUS_PORT flags (U_TX_F, U_RX_D), LED output (port 00), 7-segment display output (ports 01/02), switch input, and the is_UART_enabled toggle.",
+      "parent": "Simulator (Emulator Engine)",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Web IDE — Frontend Architecture",
+      "purpose": "Overview of the browser-based IDE: how PicoBlaze.html, headerScript.js, footerScript.js, and styles.css work together to provide the code editor, assembly pipeline trigger, simulation controls, and visual output. Links to child pages for layout/styling and the simulation control loop.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Layout, Styling, and Syntax Highlighting",
+      "purpose": "Details of styles.css and headerScript.js UI responsibilities: fixed-width mobile-first layout, absolute-positioned panes (assemblyCode editor, machineCode table, simulationResults, UART_IO), CSS classes for syntax highlighting (.mnemonic, .register, .flag, .label, .directive, .comment), simulation feedback classes (.changed, .turning_off, .active, .inactive), responsive navigation ribbon, and the syntaxHighlighter() function.",
+      "parent": "Web IDE — Frontend Architecture",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Simulation Control Loop and UI Orchestration",
+      "purpose": "Details of footerScript.js: the assembleButton onclick pipeline, setInterval-based simulationThread, onPlayPauseButton()/fastForward()/onSingleStepButton(), stopSimulation() hard reset, hasTheCodeBeenAssembled and hasTheCodeBeenModifiedSinceLastSuccessfulAssembly flags, displayRegistersAndFlags(), drawTable(), setUpLineNumbers(), breakpoint management, downloadHex(), and the example-loading fetch mechanism.",
+      "parent": "Web IDE — Frontend Architecture",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Code Sharing and Persistence (Frontend)",
+      "purpose": "How viewer.js and sharer.js handle program persistence from the browser side: URL id parameter parsing on load, saveAssemblyCode() POST to db.php, share URL construction, copyShareURLToClipboard(), deleteTheProgramButton handler, XSS mitigation in error display, and the uploadSuccessfulMessage modal.",
+      "parent": "Web IDE — Frontend Architecture",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Backend — PHP/MySQL Persistence Layer",
+      "purpose": "Overview of the server-side components: PHP endpoints, MySQL schema, authentication, the REST API layer, and Azure deployment. Links to child pages for the database layer, the admin/user management interfaces, and the REST API.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Database Layer — Programs Storage and Schema",
+      "purpose": "Details of db.php, db_helper.php, schema.sql, and deleteTheProgram.php: the Database singleton (SSL MySQLi connection, .env credential loading), the programs table schema, the deleted_programs ID-reuse mechanism, deduplication logic, GET retrieval with newline normalization, POST insertion workflow, deleteTheProgram.php authentication (MD5), and the text/X-asm Content-Type.",
+      "parent": "Backend — PHP/MySQL Persistence Layer",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "User Authentication and Admin Panel",
+      "purpose": "Details of index.php, login.php, logout.php, register.php, saveTheProgram.php, and controlPannel.php: session-based authentication, usernames and codes_belonging_to_users tables, MD5 password hashing, save-on-login flow, the control panel for program management, and the Babel polyfill compatibility layer for Firefox 52.",
+      "parent": "Backend — PHP/MySQL Persistence Layer",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "REST API Layer",
+      "purpose": "Documentation of the api/ directory: the JSON REST API endpoints (api/login.php, api/logout.php, api/register.php, api/me.php, api/programs.php, api/program.php), Bearer token authentication via api/auth.php, the api_tokens table schema, the user_programs table, api/response.php helper functions (success()/error()), and how the API coexists with the legacy session-based auth.",
+      "parent": "Backend — PHP/MySQL Persistence Layer",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "CI/CD and Deployment",
+      "purpose": "How the project is built and deployed: the GitHub Actions workflow (master_picoblaze-simulator.yml) for Azure Web Apps deployment using PHP 8.4, the GitLab CI pipeline (.gitlab-ci.yml), the Bun workflow (bun.yml) for running tests, and the .gitignore rules that protect .env credentials.",
+      "parent": "Backend — PHP/MySQL Persistence Layer",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Test Suite",
+      "purpose": "Overview of the testing infrastructure and what is covered. Links to child pages for unit/integration tests of the pipeline stages and end-to-end simulation tests.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Unit and Integration Tests — Pipeline Stages",
+      "purpose": "Coverage of tokenizer.test.js, parser.test.js, arithmetic_expressions.test.js, assembler.test.js, and Levenshtain_distance.test.js: test patterns (test.each data-provider), global setup (TreeNode, mnemonics, preprocessor), tokenizer edge cases (comments, labels, string literals), parser AST structure verification via getLispExpression(), arithmetic expression evaluation (precedence, ternary, built-in functions), assembler instruction encoding, print_string expansion, and Levenshtein/LCS string metric tests.",
+      "parent": "Test Suite",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "End-to-End Simulation Tests",
+      "purpose": "Coverage of end_to_end_tests.test.js and simulator.test.js: the clearGlobals() setup pattern, DOM mock elements (PC_label_*, memory_*, UART_INPUT/OUTPUT), the full compile-and-run pipeline (tokenize→parse→preprocess→assemble→simulateOneInstruction loop), verification of UART output for the N-Queens puzzle (92 solutions), and the list_of_directives.js mnemonics/preprocessor arrays used as shared configuration.",
+      "parent": "Test Suite",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Example Assembly Programs",
+      "purpose": "Overview of the bundled .psm example programs and the examples.json manifest that the IDE uses to populate the examples gallery. Links to child pages covering the algorithmic examples and the hardware-interface/test programs.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Algorithmic Examples",
+      "purpose": "Walkthrough of the algorithmic .psm programs: dec2bin.psm (decimal-to-binary via UART, multiply_by_10, successive shifting), permutations.psm (bubble sort, manual stack DFS, ordinal number tracking), nQueensPuzzle.psm (iterative backtracking, diagonal/anti-diagonal collision detection, scratchpad stack), fibonacci.psm, gray.psm (Gray code via XOR+shift), sierpinski.psm (XOR cellular automaton, scratchpad double-buffer), and octal.psm (bit-rotation grouping algorithm).",
+      "parent": "Example Assembly Programs",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Hardware Interface and Preprocessor Test Programs",
+      "purpose": "Walkthrough of the hardware-focused and diagnostic .psm programs: bin2dec.psm (switch-to-7-segment BCD conversion, Gray code, divide_sa_by_10), sevenSegment.psm (hexadecimal counter), assemblerTest.psm (assembler feature coverage), regbanks_flags_test.psm (flag independence across register banks), and preprocessor_test.psm (compile-time Fibonacci via while/constant directives, display directive).",
+      "parent": "Example Assembly Programs",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
+      "title": "Glossary",
+      "purpose": "Definitions of all codebase-specific terms, jargon, abbreviations, and domain concepts that an onboarding engineer needs to know, with code pointers to the relevant files and functions.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    }
+  ]
+}
