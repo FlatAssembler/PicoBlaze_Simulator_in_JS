@@ -912,6 +912,8 @@ function simulateOneInstruction() {
         if (playing)
           clearInterval(simulationThread);
         alert("The program exited!");
+	playing = false;
+//      displayRegistersAndFlags();
       }
       //    } else if ((currentDirective & 0xff000) === 0x31000) {
       break;
