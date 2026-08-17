@@ -926,6 +926,7 @@ function simulateOneInstruction() {
           if (playing)
             clearInterval(simulationThread);
           alert("The program exited!");
+	  playing = false;
         }
       } else
         PC++;
@@ -940,6 +941,7 @@ function simulateOneInstruction() {
           if (playing)
             clearInterval(simulationThread);
           alert("The program exited!");
+	  playing = false;
         }
       } else
         PC++;
@@ -954,6 +956,7 @@ function simulateOneInstruction() {
           if (playing)
             clearInterval(simulationThread);
           alert("The program exited!");
+	  playing = false;
         }
       } else
         PC++;
@@ -968,6 +971,7 @@ function simulateOneInstruction() {
           if (playing)
             clearInterval(simulationThread);
           alert("The program exited!");
+	  playing = false;
         }
       } else
         PC++;
@@ -988,6 +992,7 @@ function simulateOneInstruction() {
         if (playing)
           clearInterval(simulationThread);
         alert("The program exited!");
+	playing = false;
       }
       //    } else {
       break;
