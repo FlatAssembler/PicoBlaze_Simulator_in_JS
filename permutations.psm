@@ -322,11 +322,11 @@ end_of_the_permutations_loop:
 call print_the_end_message
 ;Let's test whether we are on real PicoBlaze, or on the PicoBlaze assembler and emulator in JavaScript made by Teo Samaržija et aliis.
 regbank a
-load s0, 0
-sub  s0, 0
+load sa, 0
+sub  sa, 0
 regbank b
-load s0, 1
-sub  s0, 0
+load sa, 1
+sub  sa, 0
 regbank a
 jump z , we_are_in_the_simulator
 jump nz, we_are_on_a_real_PicoBlaze
