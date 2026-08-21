@@ -320,7 +320,26 @@ beginning_of_the_permutations_loop:
   jump beginning_of_the_permutations_loop
 end_of_the_permutations_loop:
 call print_the_end_message
+;Let's test whether we are on real PicoBlaze, or on the PicoBlaze assembler and emulator in JavaScript made by Teo Samaržija et aliis.
+regbank a
+load s0, 0
+sub  s0, 0
+regbank b
+load s0, 1
+sub  s0, 0
+regbank a
+jump z , we_are_in_the_simulator
+jump nz, we_are_on_a_real_PicoBlaze
+jump cannot_determine_the_environment
+we_are_on_a_real_PicoBlaze:
+;If we are on a real PicoBlaze, let's form an infinite loop.
 jump 0
+we_are_in_the_simulator:
+;Then, let's exit the program.
+return z
+cannot_determine_the_environment:
+print_string "Cannot determine the environment this program is run in, aborting!\n", s9, UART_TX
+infinite_loop: jump infinite_loop
 
 print_the_introduction_message:
   print_string "Enter a short string and press enter.\n", s9, UART_TX
