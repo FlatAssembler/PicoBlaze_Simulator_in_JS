@@ -43,7 +43,10 @@ zero_counts_done:
 zero_used_loop:
   compare s1, 10
   jump z, zero_used_done
-  store s0, (30 + s1)
+  ; compute pointer = 30 + s1 into s7
+  load s7, 30
+  add s7, s1
+  store s0, (s7)
   add s1, 1
   jump zero_used_loop
 zero_used_done:
@@ -52,8 +55,14 @@ zero_used_done:
 zero_nt_loop:
   compare s1, 6
   jump z, zero_nt_done
-  store s1, (20 + s1)   ; next_try[d] = 0
-  store s1, (10 + s1)   ; attempt[d] = 0
+  ; store 0 into next_try[ s1 ] at address 20 + s1
+  load s7, 20
+  add s7, s1
+  store s1, (s7)   ; next_try[d] = 0
+  ; store 0 into attempt[ s1 ] at address 10 + s1
+  load s7, 10
+  add s7, s1
+  store s1, (s7)   ; attempt[d] = 0
   add s1, 1
   jump zero_nt_loop
 zero_nt_done:
@@ -91,14 +100,9 @@ read_six_loop:
   jump z, read_six_done
   call READ_DIGIT    ; s0 = digit
   ; increment counts[s0]
-  ; address = 0 + s0 -> use register pointer
-  load s1, 0
-  ; add s1, s0 not supported directly, so loop add
-  load s3, s0
-  add s4, 0
-  ; build pointer in s5 starting from base 0
+  ; compute pointer = 0 + s0 into s5
   load s5, 0
-  ; add s5, s3 times
+  load s3, s0
   compare s3, 0
   jump z, read_six_store
 read_six_addloop:
@@ -123,12 +127,9 @@ backtracking_search:
 search_loop:
   compare s2, 6
   jump z, evaluate_attempt
-  ; load next_try[depth] into s3
-  load s4, 20
-  ; compute pointer = 20 + depth by adding depth times
-  load s5, s2
-  ; build s4 = 20 + depth
+  ; compute pointer = 20 + depth into s6
   load s6, 20
+  load s5, s2
   compare s5, 0
   jump z, nt_have_ptr
 nt_addloop:
@@ -181,8 +182,7 @@ at_ptr_ready:
   ; increment counts_used[s3] stored at s7 earlier
   add s8, 1
   store s8, (s7)
-  ; set next_try[depth] = s3 + 1 (store into pointer s6_base at 20+depth -> which was s6? we used s6 earlier differently; recompute)
-  ; recompute nt pointer in s4 = 20 + depth
+  ; set next_try[depth] = s3 + 1
   load s4, 20
   load s5, s2
   compare s5, 0
@@ -212,8 +212,7 @@ ntnew_ready:
 digit_not_available:
   ; increment s3 and store back into next_try[depth]
   add s3, 1
-  ; store to pointer s6 we computed earlier (20+depth was s6 first time)
-  ; recompute pointer 20+depth into s4 for safety
+  ; compute pointer 20+depth into s4
   load s4, 20
   load s5, s2
   compare s5, 0
@@ -230,7 +229,7 @@ backtrack:
   compare s2, 0
   jump z, done_search
   sub s2, 1
-  ; release digit used at depth (which is attempt[depth]) where depth now is decremented
+  ; release digit used at depth (attempt[depth]) where depth now is decremented
   ; compute pointer to attempt[depth]
   load s5, 10
   load s6, s2
@@ -263,7 +262,7 @@ return
 ; -------------------------
 ; evaluate_attempt: depth==6
 evaluate_attempt:
-  ; fetch attempt digits into registers r0..r5 -> use s0..s5
+  ; fetch attempt digits into registers r0..r5 -> use s0..s6
   load s5, 10
   fetch s0, (s5)   ; a
   add s5, 1
@@ -437,9 +436,7 @@ sum_lo_diff:
   ; if s2 > s4 then update
   compare s2, s4
   jump nc, after_eval
-  ; s2 < s4 => update? WAIT: PicoBlaze compare/jump semantics are tricky; to avoid subtlety, we'll only update when sum_hi>best_hi or (sum_hi==best_hi and s2>bestLo)
-  ; The above logic tries to detect s2> s4; if compare sets NZ when not equal, but sign unknown.
-  ; For simplicity, we will update only when sum_hi>best_hi or sum_lo > best_lo detected earlier insufficiently. To stay safe we'll skip update here.
+  ; s2 < s4 => update? (conservative: skip)
   jump after_eval
 
 update_best:
@@ -486,8 +483,7 @@ print_result:
   ; fetch sum
   fetch s4, (49)
   fetch s5, (50)
-  ; move sum into s4(lo), s5(hi) expected by print routine
-  ; call print routine (implemented below)
+  ; call print routine (expects s4=lo, s5=hi)
   call PRINT_UINT_LT1000_FROM_S4_S5
   ; print '='
   load s9, "="
