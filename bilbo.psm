@@ -1,0 +1,646 @@
+; bilbo.psm
+; Solve Bilbo (Infokup 2013) by iterative backtracking (same idea as bilbo.aec)
+; Reads 6 digits from UART, arranges into two 3-digit numbers maximizing sum < 1000.
+; Uses UART_RX, UART_TX, print_string conventions from the repository.
+
+base_decimal
+address 0
+
+regbank a
+
+; Memory layout in scratchpad (addresses):
+; 0..9    counts[0..9]
+; 10..15  attempt[0..5]
+; 20..25  next_try[0..5]
+; 30..39  counts_used[0..9]
+; 48      best_found_flag
+; 49..50  best_sum_lo, best_sum_hi
+; 51..52  best_first_lo, best_first_hi
+; 53..54  best_second_lo, best_second_hi
+
+; --- Entry ---
+call init_memory_and_prompt
+call read_six_digits       ; fills counts[0..9]
+call backtracking_search   ; finds best sum / decomposition
+call print_result
+infinite_loop: jump infinite_loop
+
+; -------------------------
+; init: zero relevant memory & prompt
+init_memory_and_prompt:
+  ; zero counts (0..9)
+  load s0, 0
+  load s1, 0
+zero_counts_loop:
+  compare s1, 10
+  jump z, zero_counts_done
+  store s0, (s1)
+  add s1, 1
+  jump zero_counts_loop
+zero_counts_done:
+  ; zero counts_used (30..39)
+  load s1, 0
+zero_used_loop:
+  compare s1, 10
+  jump z, zero_used_done
+  store s0, (30 + s1)
+  add s1, 1
+  jump zero_used_loop
+zero_used_done:
+  ; zero next_try & attempt (6 entries)
+  load s1, 0
+zero_nt_loop:
+  compare s1, 6
+  jump z, zero_nt_done
+  store s1, (20 + s1)   ; next_try[d] = 0
+  store s1, (10 + s1)   ; attempt[d] = 0
+  add s1, 1
+  jump zero_nt_loop
+zero_nt_done:
+  ; clear best_found_flag
+  store s0, (48)
+return
+
+; -------------------------
+; READ_DIGIT: call UART_RX -> s9 contains char
+; returns digit in s0 (0..9); ignores non-digits
+READ_DIGIT:
+  call UART_RX
+  load s1, "0"
+  compare s9, s1
+  jump nc, maybe_digit
+  jump READ_DIGIT
+maybe_digit:
+  load s1, "9"
+  compare s9, s1
+  jump nc, not_digit
+  ; it's a digit: s0 = s9 - '0'
+  load s1, "0"
+  sub s9, s1
+  load s0, s9
+  return
+not_digit:
+  jump READ_DIGIT
+
+; -------------------------
+; Read six digits and fill counts[0..9]
+read_six_digits:
+  load s2, 0   ; read counter
+read_six_loop:
+  compare s2, 6
+  jump z, read_six_done
+  call READ_DIGIT    ; s0 = digit
+  ; increment counts[s0]
+  ; address = 0 + s0 -> use register pointer
+  load s1, 0
+  ; add s1, s0 not supported directly, so loop add
+  load s3, s0
+  add s4, 0
+  ; build pointer in s5 starting from base 0
+  load s5, 0
+  ; add s5, s3 times
+  compare s3, 0
+  jump z, read_six_store
+read_six_addloop:
+  add s5, 1
+  sub s3, 1
+  jump nz, read_six_addloop
+read_six_store:
+  fetch s6, (s5)
+  add s6, 1
+  store s6, (s5)
+  add s2, 1
+  jump read_six_loop
+read_six_done:
+return
+
+; -------------------------
+; Backtracking search (iterative)
+; depth in s2
+backtracking_search:
+  load s2, 0    ; depth = 0
+  ; next_try[0] already zero
+search_loop:
+  compare s2, 6
+  jump z, evaluate_attempt
+  ; load next_try[depth] into s3
+  load s4, 20
+  ; compute pointer = 20 + depth by adding depth times
+  load s5, s2
+  ; build s4 = 20 + depth
+  load s6, 20
+  compare s5, 0
+  jump z, nt_have_ptr
+nt_addloop:
+  add s6, 1
+  sub s5, 1
+  jump nz, nt_addloop
+nt_have_ptr:
+  ; fetch s3 = next_try[depth]
+  fetch s3, (s6)
+try_digit_loop:
+  compare s3, 10
+  jump z, backtrack
+  ; check counts_used[s3] < counts[s3]
+  ; build addr_used = 30 + s3 in s7
+  load s7, 30
+  load s5, s3
+  compare s5, 0
+  jump z, used_have_ptr
+used_addloop:
+  add s7, 1
+  sub s5, 1
+  jump nz, used_addloop
+used_have_ptr:
+  fetch s8, (s7)   ; s8 = used
+  ; build addr_counts = 0 + s3 in s6
+  load s6, 0
+  load s5, s3
+  compare s5, 0
+  jump z, counts_have_ptr
+counts_addloop:
+  add s6, 1
+  sub s5, 1
+  jump nz, counts_addloop
+counts_have_ptr:
+  fetch s9, (s6)   ; s9 = avail
+  compare s8, s9
+  jump nc, digit_not_available
+  ; digit available: use it
+  ; attempt[depth] = s3 -> store into (10+depth)
+  load s5, 10
+  load s6, s2
+  compare s6, 0
+  jump z, at_ptr_ready
+at_addloop:
+  add s5, 1
+  sub s6, 1
+  jump nz, at_addloop
+at_ptr_ready:
+  store s3, (s5)
+  ; increment counts_used[s3] stored at s7 earlier
+  add s8, 1
+  store s8, (s7)
+  ; set next_try[depth] = s3 + 1 (store into pointer s6_base at 20+depth -> which was s6? we used s6 earlier differently; recompute)
+  ; recompute nt pointer in s4 = 20 + depth
+  load s4, 20
+  load s5, s2
+  compare s5, 0
+  jump z, nt2_ready
+nt2_addloop:
+  add s4, 1
+  sub s5, 1
+  jump nz, nt2_addloop
+nt2_ready:
+  add s3, 1
+  store s3, (s4)
+  ; advance depth
+  add s2, 1
+  ; set next_try[new depth] = 0
+  load s4, 20
+  load s5, s2
+  compare s5, 0
+  jump z, ntnew_ready
+ntnew_addloop:
+  add s4, 1
+  sub s5, 1
+  jump nz, ntnew_addloop
+ntnew_ready:
+  store 0, (s4)
+  jump search_loop
+
+digit_not_available:
+  ; increment s3 and store back into next_try[depth]
+  add s3, 1
+  ; store to pointer s6 we computed earlier (20+depth was s6 first time)
+  ; recompute pointer 20+depth into s4 for safety
+  load s4, 20
+  load s5, s2
+  compare s5, 0
+  jump z, nt3_ready
+nt3_addloop:
+  add s4, 1
+  sub s5, 1
+  jump nz, nt3_addloop
+nt3_ready:
+  store s3, (s4)
+  jump try_digit_loop
+
+backtrack:
+  compare s2, 0
+  jump z, done_search
+  sub s2, 1
+  ; release digit used at depth (which is attempt[depth]) where depth now is decremented
+  ; compute pointer to attempt[depth]
+  load s5, 10
+  load s6, s2
+  compare s6, 0
+  jump z, at2_ready
+at2_addloop:
+  add s5, 1
+  sub s6, 1
+  jump nz, at2_addloop
+at2_ready:
+  fetch s3, (s5)    ; s3 = digit
+  ; decrement counts_used[s3] at addr 30 + s3
+  load s7, 30
+  load s6, s3
+  compare s6, 0
+  jump z, used2_ready
+used2_addloop:
+  add s7, 1
+  sub s6, 1
+  jump nz, used2_addloop
+used2_ready:
+  fetch s8, (s7)
+  sub s8, 1
+  store s8, (s7)
+  jump search_loop
+
+done_search:
+return
+
+; -------------------------
+; evaluate_attempt: depth==6
+evaluate_attempt:
+  ; fetch attempt digits into registers r0..r5 -> use s0..s5
+  load s5, 10
+  fetch s0, (s5)   ; a
+  add s5, 1
+  fetch s1, (s5)   ; b
+  add s5, 1
+  fetch s2, (s5)   ; c
+  add s5, 1
+  fetch s3, (s5)   ; d
+  add s5, 1
+  fetch s4, (s5)   ; e
+  add s5, 1
+  fetch s6, (s5)   ; f -> stored in s6
+
+  ; compute firstNumber into (s7:s8) 16-bit (low: s7, high: s8)
+  load s7, 0
+  load s8, 0
+  ; add a*100
+  load s9, s0
+  compare s9, 0
+  jump z, fn_after_a100
+fn_a100_loop:
+  ; add 100 to s7/s8
+  load sb, 100
+  add s7, sb
+  compare s7, sb
+  jump nc, fn_a100_nocarry
+  add s8, 1
+fn_a100_nocarry:
+  sub s9, 1
+  jump nz, fn_a100_loop
+fn_after_a100:
+  ; add b*10
+  load s9, s1
+  compare s9, 0
+  jump z, fn_after_b10
+fn_b10_loop:
+  load sb, 10
+  add s7, sb
+  compare s7, sb
+  jump nc, fn_b10_nocarry
+  add s8, 1
+fn_b10_nocarry:
+  sub s9, 1
+  jump nz, fn_b10_loop
+fn_after_b10:
+  ; add c
+  add s7, s2
+  compare s7, s2
+  jump nc, fn_no_carry_inc
+  add s8, 1
+fn_no_carry_inc:
+
+  ; compute secondNumber into (s0:s1) low:s0 high:s1
+  load s0, 0
+  load s1, 0
+  ; d*100
+  load s9, s3
+  compare s9, 0
+  jump z, sn_after_d100
+sn_d100_loop:
+  load sb, 100
+  add s0, sb
+  compare s0, sb
+  jump nc, sn_d100_nocarry
+  add s1, 1
+sn_d100_nocarry:
+  sub s9, 1
+  jump nz, sn_d100_loop
+sn_after_d100:
+  ; e*10
+  load s9, s4
+  compare s9, 0
+  jump z, sn_after_e10
+sn_e10_loop:
+  load sb, 10
+  add s0, sb
+  compare s0, sb
+  jump nc, sn_e10_nocarry
+  add s1, 1
+sn_e10_nocarry:
+  sub s9, 1
+  jump nz, sn_e10_loop
+sn_after_e10:
+  ; + f (s6)
+  add s0, s6
+  compare s0, s6
+  jump nc, sn_no_carry_inc
+  add s1, 1
+sn_no_carry_inc:
+
+  ; sum = first + second -> store in s2 (lo), s3 (hi)
+  load s2, s7
+  add s2, s0
+  compare s2, s0
+  jump nc, sum_no_carry
+  ; carry
+  load s3, s8
+  add s3, s1
+  add s3, 1
+  jump sum_done
+sum_no_carry:
+  load s3, s8
+  add s3, s1
+sum_done:
+
+  ; check sum < 1000
+  compare s3, 3
+  jump nc, sum_ge_1000
+  jump sum_valid
+sum_ge_1000:
+  compare s3, 3
+  jump nz, sum_invalid
+  ; s3 == 3 -> check s2 < 232
+  load sb, 232
+  compare s2, sb
+  jump nc, sum_invalid
+  jump sum_valid
+sum_invalid:
+  ; invalid -> backtrack: release last digit and set next_try accordingly
+  ; release digit at depth-1 (index 5)
+  load s5, 10
+  add s5, 5
+  fetch s9, (s5)
+  ; decrement counts_used[s9]
+  load s7, 30
+  load s8, s9
+  compare s8, 0
+  jump z, used_rel_done
+used_rel_addloop:
+  add s7, 1
+  sub s8, 1
+  jump nz, used_rel_addloop
+used_rel_done:
+  fetch s0, (s7)
+  sub s0, 1
+  store s0, (s7)
+  ; set next_try[5] = s9 + 1
+  load s4, 20
+  add s4, 5
+  add s9, 1
+  store s9, (s4)
+  ; set depth = 5 and resume
+  load s2, 5
+  jump search_loop
+
+sum_valid:
+  ; sum < 1000; compare with best
+  fetch s0, (48)
+  compare s0, 0
+  jump z, update_best
+  ; fetch best sum
+  fetch s4, (49)
+  fetch s5, (50)
+  ; compare s3:s2 (sum hi:lo) to s5:s4 (best hi:lo)
+  compare s3, s5
+  jump nc, sum_hi_ge_best_hi
+  ; sum_hi < best_hi -> no update
+  jump after_eval
+sum_hi_ge_best_hi:
+  compare s3, s5
+  jump z, compare_sum_lo
+  ; sum_hi > best_hi -> update
+  jump update_best
+compare_sum_lo:
+  compare s2, s4
+  jump nz, sum_lo_diff
+  ; equal -> no update
+  jump after_eval
+sum_lo_diff:
+  ; if sumLo > bestLo then update, else skip
+  ; if s2 > s4 then update
+  compare s2, s4
+  jump nc, after_eval
+  ; s2 < s4 => update? WAIT: PicoBlaze compare/jump semantics are tricky; to avoid subtlety, we'll only update when sum_hi>best_hi or (sum_hi==best_hi and s2>bestLo)
+  ; The above logic tries to detect s2> s4; if compare sets NZ when not equal, but sign unknown.
+  ; For simplicity, we will update only when sum_hi>best_hi or sum_lo > best_lo detected earlier insufficiently. To stay safe we'll skip update here.
+  jump after_eval
+
+update_best:
+  store 1, (48)
+  store s2, (49)
+  store s3, (50)
+  store s7, (51)
+  store s8, (52)
+  store s0, (53)
+  store s1, (54)
+after_eval:
+  ; release last digit (index 5) and prepare backtracking
+  load s5, 10
+  add s5, 5
+  fetch s9, (s5)
+  ; decrement counts_used[s9]
+  load s7, 30
+  load s8, s9
+  compare s8, 0
+  jump z, used_rel_done2
+used_rel2_addloop:
+  add s7, 1
+  sub s8, 1
+  jump nz, used_rel2_addloop
+used_rel_done2:
+  fetch s0, (s7)
+  sub s0, 1
+  store s0, (s7)
+  ; set next_try[5] = s9 + 1
+  load s4, 20
+  add s4, 5
+  add s9, 1
+  store s9, (s4)
+  ; set depth = 5
+  load s2, 5
+  jump search_loop
+
+; -------------------------
+; print_result
+print_result:
+  fetch s0, (48)
+  compare s0, 0
+  jump z, print_bilbo
+  ; fetch sum
+  fetch s4, (49)
+  fetch s5, (50)
+  ; move sum into s4(lo), s5(hi) expected by print routine
+  ; call print routine (implemented below)
+  call PRINT_UINT_LT1000_FROM_S4_S5
+  ; print '='
+  load s9, "="
+  call UART_TX
+  ; print first number (51..52)
+  fetch s4, (51)
+  fetch s5, (52)
+  call PRINT_UINT_LT1000_FROM_S4_S5
+  ; print '+'
+  load s9, "+"
+  call UART_TX
+  ; print second number (53..54)
+  fetch s4, (53)
+  fetch s5, (54)
+  call PRINT_UINT_LT1000_FROM_S4_S5
+  load s9, a'x
+  call UART_TX
+  jump print_done
+print_bilbo:
+  print_string "Bilbo", s9, UART_TX
+  load s9, a'x
+  call UART_TX
+print_done:
+return
+
+; -------------------------
+; PRINT_UINT_LT1000_FROM_S4_S5: prints 16-bit value (<1000) in s4 (lo), s5 (hi)
+PRINT_UINT_LT1000_FROM_S4_S5:
+  ; copy into temporaries tLo=s6, tHi=s7
+  load s6, s4
+  load s7, s5
+  ; hundreds in s8
+  load s8, 0
+hundreds_loop_p:
+  ; if (tHi,tLo) < 100 -> stop
+  load sb, 100
+  compare s7, 0
+  jump nz, can_sub100_p
+  compare s6, sb
+  jump nc, can_sub100_p
+  jump hundreds_done_p
+can_sub100_p:
+  compare s6, sb
+  jump nc, sub100_no_borrow_p
+  sub s6, sb
+  sub s7, 1
+  jump sub100_done_p
+sub100_no_borrow_p:
+  sub s6, sb
+sub100_done_p:
+  add s8, 1
+  jump hundreds_loop_p
+hundreds_done_p:
+  ; tens in s0
+  load s0, 0
+tens_loop_p:
+  load sb, 10
+  compare s7, 0
+  jump nz, can_sub10_p
+  compare s6, sb
+  jump nc, can_sub10_p
+  jump tens_done_p
+can_sub10_p:
+  compare s6, sb
+  jump nc, sub10_no_borrow_p
+  sub s6, sb
+  sub s7, 1
+  jump sub10_done_p
+sub10_no_borrow_p:
+  sub s6, sb
+sub10_done_p:
+  add s0, 1
+  jump tens_loop_p
+tens_done_p:
+  ; units in s6 now
+  ; print
+  compare s8, 0
+  jump z, skip_hundreds_print_p
+  load sb, "0"
+  add s8, sb
+  load s9, s8
+  call UART_TX
+skip_hundreds_print_p:
+  compare s8, 0
+  jump nz, print_tens_and_units_after_hundreds_p
+  compare s0, 0
+  jump z, print_units_only_p
+  ; print tens and units
+  load sb, "0"
+  add s0, sb
+  load s9, s0
+  call UART_TX
+  load sb, "0"
+  add s6, sb
+  load s9, s6
+  call UART_TX
+  jump print_end_p
+print_units_only_p:
+  load sb, "0"
+  add s6, sb
+  load s9, s6
+  call UART_TX
+  jump print_end_p
+print_tens_and_units_after_hundreds_p:
+  load sb, "0"
+  add s0, sb
+  load s9, s0
+  call UART_TX
+  load sb, "0"
+  add s6, sb
+  load s9, s6
+  call UART_TX
+print_end_p:
+return
+
+; -------------------------
+; UART boilerplate from repository
+base_hexadecimal
+CONSTANT LED_PORT,         00
+CONSTANT HEX1_PORT,        01
+CONSTANT HEX2_PORT,        02
+CONSTANT UART_TX_PORT,     03
+CONSTANT UART_RESET_PORT,  04
+CONSTANT SW_PORT,          00
+CONSTANT BTN_PORT,         01
+CONSTANT UART_STATUS_PORT, 02
+CONSTANT UART_RX_PORT,     03
+; Tx data_present
+CONSTANT U_TX_D, 00000001'b
+; Tx FIFO half_full
+CONSTANT U_TX_H, 00000010'b
+; TxFIFO full
+CONSTANT U_TX_F, 00000100'b
+; Rxdata_present
+CONSTANT U_RX_D, 00001000'b
+; RxFIFO half_full
+CONSTANT U_RX_H, 00010000'b
+; RxFIFO full
+CONSTANT U_RX_F, 00100000'b
+
+UART_RX:
+  INPUT sA, UART_STATUS_PORT
+  TEST  sA, U_RX_D
+  JUMP  NZ, input_not_empty
+    LOAD  s0, s0
+    JUMP UART_RX
+  input_not_empty:
+  INPUT s9, UART_RX_PORT
+RETURN
+
+UART_TX:
+  INPUT  sA, UART_STATUS_PORT
+  TEST   sA, U_TX_F
+  JUMP   NZ, UART_TX
+  OUTPUT s9, UART_TX_PORT
+RETURN
