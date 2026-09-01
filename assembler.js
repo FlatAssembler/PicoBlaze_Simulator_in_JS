@@ -341,9 +341,14 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
         }
         if (node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) === "none") {
-          alert("Line #" + node_of_depth_1.lineNumber + ': "' +
-                node_of_depth_1.children[2].children[0].text +
-                '" is not a register!');
+          alert(
+              "Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[2].children[0].text +
+              '" is not a register!' +
+              ([ '+',
+                 '-' ].includes(node_of_depth_1.children[2].children[0].text)
+                   ? " And, in PicoBlaze assembly, you cannot just add a constant to a register and store a piece of data into RAM in a single instruction, like you can in x86 assembly. In PicoBlaze assembly, you need to do that in two instructions. The Artificial Intelligence seems to try to do this in PicoBlaze assembly a lot!"
+                   : ""));
           return;
         }
         machineCode[address].hex +=
@@ -380,9 +385,14 @@ function assemble(root_of_abstract_syntax_tree, output_of_preprocessor) {
         }
         if (node_of_depth_1.children[2].children[0].getRegisterNumber(
                 output_of_preprocessor.namedRegisters) === "none") {
-          alert("Line #" + node_of_depth_1.lineNumber + ': "' +
-                node_of_depth_1.children[2].children[0].text +
-                '" is not a register!');
+          alert(
+              "Line #" + node_of_depth_1.lineNumber + ': "' +
+              node_of_depth_1.children[2].children[0].text +
+              '" is not a register!' +
+              ([ '+',
+                 '-' ].includes(node_of_depth_1.children[2].children[0].text)
+                   ? " And, in PicoBlaze assembly, you cannot just add a constant to a register and fetch a piece of data from RAM in a single instruction, like you can in x86 assembly. In PicoBlaze assembly, you need to do that in two instructions. The Artificial Intelligence seems to try to do this in PicoBlaze assembly a lot!"
+                   : ""));
           return;
         }
         machineCode[address].hex +=
