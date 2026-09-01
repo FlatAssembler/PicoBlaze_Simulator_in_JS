@@ -58,16 +58,20 @@ zero_nt_loop:
   ; store 0 into next_try[ s1 ] at address 20 + s1
   load s7, 20
   add s7, s1
-  store s1, (s7)   ; next_try[d] = 0
+  load s0, 0
+  store s0, (s7)   ; next_try[d] = 0
   ; store 0 into attempt[ s1 ] at address 10 + s1
   load s7, 10
   add s7, s1
-  store s1, (s7)   ; attempt[d] = 0
+  load s0, 0
+  store s0, (s7)   ; attempt[d] = 0
   add s1, 1
   jump zero_nt_loop
 zero_nt_done:
-  ; clear best_found_flag
-  store s0, (48)
+  ; clear best_found_flag (store 0 at addr 48)
+  load s7, 48
+  load s0, 0
+  store s0, (s7)
 return
 
 ; -------------------------
@@ -206,7 +210,8 @@ ntnew_addloop:
   sub s5, 1
   jump nz, ntnew_addloop
 ntnew_ready:
-  store 0, (s4)
+  load s0, 0
+  store s0, (s4)
   jump search_loop
 
 digit_not_available:
@@ -410,12 +415,16 @@ used_rel_done:
 
 sum_valid:
   ; sum < 1000; compare with best
-  fetch s0, (48)
+  ; fetch best_found_flag from addr 48
+  load s7, 48
+  fetch s0, (s7)
   compare s0, 0
   jump z, update_best
   ; fetch best sum
-  fetch s4, (49)
-  fetch s5, (50)
+  load s7, 49
+  fetch s4, (s7)
+  load s7, 50
+  fetch s5, (s7)
   ; compare s3:s2 (sum hi:lo) to s5:s4 (best hi:lo)
   compare s3, s5
   jump nc, sum_hi_ge_best_hi
@@ -433,20 +442,33 @@ compare_sum_lo:
   jump after_eval
 sum_lo_diff:
   ; if sumLo > bestLo then update, else skip
-  ; if s2 > s4 then update
   compare s2, s4
   jump nc, after_eval
-  ; s2 < s4 => update? (conservative: skip)
   jump after_eval
 
 update_best:
-  store 1, (48)
-  store s2, (49)
-  store s3, (50)
-  store s7, (51)
-  store s8, (52)
-  store s0, (53)
-  store s1, (54)
+  ; store best_found_flag = 1 at addr 48
+  load sb, 1
+  load s7, 48
+  store sb, (s7)
+  ; store best sum lo/hi at 49/50
+  load s7, 49
+  store s2, (s7)
+  load s7, 50
+  store s3, (s7)
+  ; store firstNumber (s7:s8) -> at 51/52
+  load s7, 51
+  store s7, (s7)   ; store low byte (this is intentional storage of register value s7 to address 51)
+  ; note: because we used s7 as pointer, overwrite pointer before storing; instead store using another register
+  ; to avoid confusion below we will instead store using s9 as pointer for 51..54
+  load s9, 51
+  store s7, (s9)
+  load s9, 52
+  store s8, (s9)
+  load s9, 53
+  store s0, (s9)
+  load s9, 54
+  store s1, (s9)
 after_eval:
   ; release last digit (index 5) and prepare backtracking
   load s5, 10
@@ -477,27 +499,35 @@ used_rel_done2:
 ; -------------------------
 ; print_result
 print_result:
-  fetch s0, (48)
+  ; fetch best_found_flag
+  load s7, 48
+  fetch s0, (s7)
   compare s0, 0
   jump z, print_bilbo
   ; fetch sum
-  fetch s4, (49)
-  fetch s5, (50)
+  load s7, 49
+  fetch s4, (s7)
+  load s7, 50
+  fetch s5, (s7)
   ; call print routine (expects s4=lo, s5=hi)
   call PRINT_UINT_LT1000_FROM_S4_S5
   ; print '='
   load s9, "="
   call UART_TX
   ; print first number (51..52)
-  fetch s4, (51)
-  fetch s5, (52)
+  load s7, 51
+  fetch s4, (s7)
+  load s7, 52
+  fetch s5, (s7)
   call PRINT_UINT_LT1000_FROM_S4_S5
   ; print '+'
   load s9, "+"
   call UART_TX
   ; print second number (53..54)
-  fetch s4, (53)
-  fetch s5, (54)
+  load s7, 53
+  fetch s4, (s7)
+  load s7, 54
+  fetch s5, (s7)
   call PRINT_UINT_LT1000_FROM_S4_S5
   load s9, a'x
   call UART_TX
