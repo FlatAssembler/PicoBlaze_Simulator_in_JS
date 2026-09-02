@@ -461,6 +461,11 @@ update_best:
       fetch s9, (sf)
       add s9, "0"
       call UART_TX
+      compare sf, 10 + 3 - 1
+      jump nz, dont_print_the_plus_sign
+        load s9, "+"
+        call UART_TX
+      dont_print_the_plus_sign:
       add sf, 1
       jump printing_the_current_optimum_loop
     end_of_the_printing_the_current_optimum_loop:
