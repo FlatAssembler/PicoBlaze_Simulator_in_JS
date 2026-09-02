@@ -4,6 +4,8 @@
 ; Uses UART_RX, UART_TX, print_string conventions from the repository.
 
 base_decimal
+constant NDEBUG, 0
+
 address 0
 
 regbank a
@@ -447,6 +449,22 @@ sum_lo_diff:
   jump after_eval
 
 update_best:
+  jump NDEBUG ? dont_print_the_current_optimum : print_the_current_optimum
+  print_the_current_optimum:
+    print_string "Found a new optimum: ", s9, UART_TX
+    load sf, 10
+    printing_the_current_optimum_loop:
+      compare sf, 10 + 6
+      jump nc, end_of_the_printing_the_current_optimum_loop
+      fetch s9, (sf)
+      add s9, "0"
+      call UART_TX
+      add sf, 1
+      jump printing_the_current_optimum_loop
+    end_of_the_printing_the_current_optimum_loop:
+    load s9, a'x
+    call UART_TX
+  dont_print_the_current_optimum:
   ; store best_found_flag = 1 at addr 48
   load sb, 1
   load s7, 48
