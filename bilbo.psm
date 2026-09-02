@@ -469,13 +469,13 @@ update_best:
   dont_print_the_current_optimum:
   ; store best_found_flag = 1 at addr 48
   load sb, 1
-  load s7, 48
-  store sb, (s7)
+  load s9, 48
+  store sb, (s9)
   ; store best sum lo/hi at 49/50
-  load s7, 49
-  store s2, (s7)
-  load s7, 50
-  store s3, (s7)
+  load s9, 49
+  store s2, (s9)
+  load s9, 50
+  store s3, (s9)
   ; store firstNumber (s7:s8) -> at 51/52
   load s9, 51
   store s7, (s9)
