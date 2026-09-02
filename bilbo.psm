@@ -442,7 +442,7 @@ compare_sum_lo:
   compare s2, s4
   jump nz, sum_lo_diff
   ; equal -> no update
-  jump after_eval
+  ; jump after_eval ; If you uncomment this line, the first number in the sum will be smaller (rather than bigger).
 sum_lo_diff:
   ; if sumLo >= bestLo then update, else skip
   compare s2, s4
