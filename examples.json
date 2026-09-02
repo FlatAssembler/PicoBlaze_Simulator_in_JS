@@ -82,5 +82,12 @@
     "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Sierpinski_triangle.svg/500px-Sierpinski_triangle.svg.png",
     "image_alt": "The Sierpinski Triangle",
     "name": "Sierpinski Triangle"
+  },
+  {
+	  "id": "12",
+	  "file_name": "bilbo.psm",
+	  "image": "https://flatassembler.github.io/PicoBlaze/bilbo.jpg",
+	  "image_alt": "The problem statement of Bilbo",
+	  "name": "Bilbo - Infokup 2013"
   }
 ]
