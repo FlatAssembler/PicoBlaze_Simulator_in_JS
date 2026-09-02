@@ -21,6 +21,7 @@ regbank a
 ; 53..54  best_second_lo, best_second_hi
 
 ; --- Entry ---
+print_string "Enter 6 digits in the UART input.\n", s9, UART_TX
 call init_memory_and_prompt
 call read_six_digits       ; fills counts[0..9]
 call backtracking_search   ; finds best sum / decomposition
@@ -443,9 +444,10 @@ compare_sum_lo:
   ; equal -> no update
   jump after_eval
 sum_lo_diff:
-  ; if sumLo > bestLo then update, else skip
+  ; if sumLo >= bestLo then update, else skip
   compare s2, s4
   jump nc, update_best
+  jump z, update_best ; So that the first number in the sum is the bigger one.
   jump after_eval
 
 update_best:
@@ -548,9 +550,7 @@ print_result:
   call UART_TX
   jump print_done
 print_bilbo:
-  print_string "Bilbo", s9, UART_TX
-  load s9, a'x
-  call UART_TX
+  print_string "Bilbo\n", s9, UART_TX
 print_done:
 return
 
