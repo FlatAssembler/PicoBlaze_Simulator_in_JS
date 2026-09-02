@@ -89,7 +89,7 @@ READ_DIGIT:
   jump nc, maybe_digit
   jump READ_DIGIT
 maybe_digit:
-  load s1, "9"
+  load s1, "9" + 1 ; If we load "9" here and not ("9" + 1), the program will run into an infinite loop whenever the input contains a digit 9. There is probably no solution anyway if the input contains a digit 9, but, in that case, we should print out "Bilbo", rather than falling into an infinite loop.
   compare s9, s1
   jump nc, not_digit
   ; it's a digit: s0 = s9 - '0'
@@ -575,7 +575,7 @@ print_result:
   call UART_TX
   jump print_done
 print_bilbo:
-  print_string "Bilbo\n", s9, UART_TX
+  print_string "Bilbo -- There is no solution!\n", s9, UART_TX
 print_done:
 return
 
