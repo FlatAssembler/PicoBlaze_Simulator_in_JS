@@ -3,6 +3,8 @@
 ; Reads 6 digits from UART, arranges into two 3-digit numbers maximizing sum < 1000.
 ; Uses UART_RX, UART_TX, print_string conventions from the repository.
 
+;WARNING: This solution would not have scored the full 80 points on the Infokup 2013 competition. Apart from probably being too slow, it sometimes states that there is a solution when there is no solution. For instance, for the input "9 1 1 0 0 0", this program will claim that the solution is "920=910+10", which is wrong because "10" (the second number in the sum) is a two-digit number, rather than a three-digit one. A full solution (scoring 80 points) would have to print "Bilbo" in that case, signifying that there is no solution. That can be done using some additional checks, but the program is already too long (more than 700 lines) even without those additional checks.
+
 base_decimal
 constant NDEBUG, 0
 
