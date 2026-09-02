@@ -445,7 +445,7 @@ compare_sum_lo:
 sum_lo_diff:
   ; if sumLo > bestLo then update, else skip
   compare s2, s4
-  jump nc, after_eval
+  jump nc, update_best
   jump after_eval
 
 update_best:
@@ -475,14 +475,11 @@ update_best:
   load s7, 50
   store s3, (s7)
   ; store firstNumber (s7:s8) -> at 51/52
-  load s7, 51
-  store s7, (s7)   ; store low byte (this is intentional storage of register value s7 to address 51)
-  ; note: because we used s7 as pointer, overwrite pointer before storing; instead store using another register
-  ; to avoid confusion below we will instead store using s9 as pointer for 51..54
   load s9, 51
   store s7, (s9)
   load s9, 52
   store s8, (s9)
+  ; store secondNumber (s0:s1) -> at 53/54
   load s9, 53
   store s0, (s9)
   load s9, 54
