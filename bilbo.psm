@@ -15,6 +15,7 @@ regbank a
 ; 10..15  attempt[0..5]
 ; 20..25  next_try[0..5]
 ; 30..39  counts_used[0..9]
+; 40..41  temp_first_lo, temp_first_hi (temporary storage during evaluation)
 ; 48      best_found_flag
 ; 49..50  best_sum_lo, best_sum_hi
 ; 51..52  best_first_lo, best_first_hi
@@ -323,6 +324,12 @@ fn_after_b10:
   add s8, 1
 fn_no_carry_inc:
 
+  ; SAVE firstNumber (s7:s8) to temporary addresses 40-41 BEFORE overwriting s0/s1
+  load s9, 40
+  store s7, (s9)
+  load s9, 41
+  store s8, (s9)
+
   ; compute secondNumber into (s0:s1) low:s0 high:s1
   load s0, 0
   load s1, 0
@@ -361,16 +368,11 @@ sn_after_e10:
   add s1, 1
 sn_no_carry_inc:
 
-  ; SAVE firstNumber (s7:s8) and secondNumber (s0:s1) to memory IMMEDIATELY
-  ; This must happen before any subroutine calls that might clobber these registers
-  load s9, 51
-  store s7, (s9)   ; best_first_lo
-  load s9, 52
-  store s8, (s9)   ; best_first_hi
-  load s9, 53
-  store s0, (s9)   ; best_second_lo
-  load s9, 54
-  store s1, (s9)   ; best_second_hi
+  ; Restore firstNumber from temp storage into s7:s8
+  load s9, 40
+  fetch s7, (s9)
+  load s9, 41
+  fetch s8, (s9)
 
   ; sum = first + second -> store in s2 (lo), s3 (hi)
   load s2, s7
@@ -431,8 +433,8 @@ sum_valid:
   ; sum < 1000; compare with best
   ; fetch best_found_flag from addr 48
   load s7, 48
-  fetch s0, (s7)
-  compare s0, 0
+  fetch sa, (s7)
+  compare sa, 0
   jump z, update_best
   ; fetch best sum
   load s7, 49
@@ -492,7 +494,16 @@ update_best:
   store s2, (s9)
   load s9, 50
   store s3, (s9)
-  ; NOTE: firstNumber and secondNumber already saved to 51-54 above
+  ; store firstNumber (s7:s8) -> at 51/52
+  load s9, 51
+  store s7, (s9)
+  load s9, 52
+  store s8, (s9)
+  ; store secondNumber (s0:s1) -> at 53/54
+  load s9, 53
+  store s0, (s9)
+  load s9, 54
+  store s1, (s9)
 after_eval:
   ; release last digit (index 5) and prepare backtracking
   load s5, 10
