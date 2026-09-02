@@ -361,6 +361,17 @@ sn_after_e10:
   add s1, 1
 sn_no_carry_inc:
 
+  ; SAVE firstNumber (s7:s8) and secondNumber (s0:s1) to memory IMMEDIATELY
+  ; This must happen before any subroutine calls that might clobber these registers
+  load s9, 51
+  store s7, (s9)   ; best_first_lo
+  load s9, 52
+  store s8, (s9)   ; best_first_hi
+  load s9, 53
+  store s0, (s9)   ; best_second_lo
+  load s9, 54
+  store s1, (s9)   ; best_second_hi
+
   ; sum = first + second -> store in s2 (lo), s3 (hi)
   load s2, s7
   add s2, s0
@@ -481,16 +492,7 @@ update_best:
   store s2, (s9)
   load s9, 50
   store s3, (s9)
-  ; store firstNumber (s7:s8) -> at 51/52
-  load s9, 51
-  store s7, (s9)
-  load s9, 52
-  store s8, (s9)
-  ; store secondNumber (s0:s1) -> at 53/54
-  load s9, 53
-  store s0, (s9)
-  load s9, 54
-  store s1, (s9)
+  ; NOTE: firstNumber and secondNumber already saved to 51-54 above
 after_eval:
   ; release last digit (index 5) and prepare backtracking
   load s5, 10
