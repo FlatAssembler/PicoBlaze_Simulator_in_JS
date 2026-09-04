@@ -1,10 +1,10 @@
 ; bilbo.psm
-; Solve Bilbo (Infokup 2013) by iterative backtracking (same idea as bilbo.aec)
+; Solve Bilbo (Infokup 2013) by iterative backtracking (same idea as <a href="https://flatassembler.github.io/bilbo">bilbo.aec</a>)
 ; Reads 6 digits from UART, arranges into two 3-digit numbers maximizing sum < 1000.
 ; Uses UART_RX, UART_TX, print_string conventions from the repository.
 
 ;WARNING: This solution would not have scored the full 80 points on the Infokup 2013 competition. Apart from probably being too slow, it sometimes states that there is a solution when there is no solution. For instance, for the input "9 1 1 0 0 0", this program will claim that the solution is "920=910+10", which is wrong because "10" (the second number in the sum) is a two-digit number, rather than a three-digit one. A full solution (scoring 80 points) would have to print "Bilbo" in that case, signifying that there is no solution. That can be done using some additional checks, but the program is already too long (more than 700 lines) even without those additional checks.
-; (Just thinking about it, would doing something incredibly simple such as printing "Bilbo" whenever there is a digit 9 in the input do the trick to make this program fully correct? I cannot think of a counter-example right now, but that does not mean a counter-example does not exist.)
+; <del>(Just thinking about it, would doing something incredibly simple such as printing "Bilbo" whenever there is a digit 9 in the input do the trick to make this program fully correct? I cannot think of a counter-example right now, but that does not mean a counter-example does not exist.)</del> <ins>(UPDATE: No, that would score even fewer points. Namely, in the official test samples used for evaluation, there is the input "3 9 8 4 6 7" which this program correctly solves even though it has the digit "9" in it. Namely, now the program correctly outputs "883=497+386", whereas, with that modification, it would incorrectly output "Bilbo".)</ins>
 
 base_decimal
 constant NDEBUG, 0
