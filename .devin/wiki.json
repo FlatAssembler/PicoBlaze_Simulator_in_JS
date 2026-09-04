@@ -250,7 +250,7 @@
     },
     {
       "title": "Algorithmic Examples",
-      "purpose": "Walkthrough of the algorithmic .psm programs: dec2bin.psm (decimal-to-binary via UART, multiply_by_10, successive shifting), permutations.psm (bubble sort, manual stack DFS, ordinal number tracking), nQueensPuzzle.psm (iterative backtracking, diagonal/anti-diagonal collision detection, scratchpad stack), fibonacci.psm, gray.psm (Gray code via XOR+shift), sierpinski.psm (XOR cellular automaton, scratchpad double-buffer), and octal.psm (bit-rotation grouping algorithm).",
+      "purpose": "Walkthrough of the algorithmic .psm programs: dec2bin.psm (decimal-to-binary via UART, multiply_by_10, successive shifting), permutations.psm (bubble sort, manual stack DFS, ordinal number tracking), nQueensPuzzle.psm (iterative backtracking, diagonal/anti-diagonal collision detection, scratchpad stack), fibonacci.psm, gray.psm (Gray code via XOR+shift), sierpinski.psm (XOR cellular automaton, scratchpad double-buffer), bilbo.psm (another backtracking problem), and octal.psm (bit-rotation grouping algorithm).",
       "parent": "Example Assembly Programs",
       "page_notes": [
         {
