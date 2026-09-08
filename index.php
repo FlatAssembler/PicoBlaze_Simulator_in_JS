@@ -64,11 +64,15 @@ if (isset($_POST['username'])) {
     <script id="fetchPolyfill"></script>
     <script id="BabelJS"></script>
     <script id="BabelPolyfill"></script>
-    <script>
+<script>
+/*
+ * On Microsoft Azure, the JSON with example list as well as the PSM files
+ * themselves are stored in the same folder as the `index.php` file.
+ */
       var URL_of_JSON_with_examples =
-          "https://flatassembler.github.io/PicoBlaze/examples.json",
+          "examples.json",
         URL_prefix_of_the_examples =
-          "https://raw.githubusercontent.com/FlatAssembler/PicoBlaze_Simulator_in_JS/master/";
+          "";
     </script>
     <script src="list_of_directives.js" type="text/javascript"></script>
     <script src="headerScript.js" type="text/javascript"></script>
