@@ -294,6 +294,7 @@ function setupLayout() {
             document.getElementById("emulationHeader").style.scrollMarginTop =
                 document.getElementById("contributingHeader")
                     .style.scrollMarginTop =
+		  document.getElementById("deleteTheProgram").style.scrollMarginTop =
                     (document.getElementById("mainNavigation")
                          ? document.getElementById("mainNavigation")
                                .clientHeight
@@ -308,7 +309,9 @@ function setupLayout() {
         document.getElementById("machineCodeHeader").style.scrollMarginTop =
             document.getElementById("emulationHeader").style.scrollMarginTop =
                 document.getElementById("contributingHeader")
-                    .style.scrollMarginTop = "0px";
+                    .style.scrollMarginTop =
+		  document.getElementById("deleteTheProgram")
+		  .style.scrollMarginTop = "0px";
     if (document.getElementById("greeting"))
       document.getElementById("greeting").style.scrollMarginTop = "0px";
   if (/Firefox\/5[2-9][\. ]/.test(navigator.userAgent)) {
