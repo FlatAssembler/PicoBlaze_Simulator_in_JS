@@ -3,11 +3,11 @@
 
 base_decimal
 
-constant NDEBUG, 1
-constant address_of_the_current_attempt, 8
-constant digits_of_the_ordinal_number, 16
-constant bottom_of_the_stack, 24
-constant rely_on_sorting_working_correctly, 1 ; <a href="https://www.reddit.com/r/asm/comments/1qlxfrw/how_it_is_that_relying_on_an_input_array_being/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button">This speeds up the program by around 11%. I don't know why the speed-up is so small.</a>
+constant DEBUG_DISABLED, 1
+constant addr_current_attempt, 8
+constant ordinal_digits_addr, 16
+constant stack_bottom, 24
+constant assume_sorting_works, 1 ; See https://www.reddit.com/r/asm/comments/1qlxfrw/ — noted ~11% speedup
 
 address 0
 
@@ -16,100 +16,100 @@ namereg sf, length_of_the_input
 regbank a
 call print_the_introduction_message
 load length_of_the_input, 0
-beginning_of_the_input_loop:
+input_loop_start:
   call UART_RX
   compare s9, a'x ;The new-line character.
-  jump z, end_of_the_input_loop
+  jump z, input_loop_end
   store s9, (length_of_the_input)
   add length_of_the_input, 1
-  jump beginning_of_the_input_loop
-end_of_the_input_loop:
+  jump input_loop_start
+input_loop_end:
 compare length_of_the_input, 0
 jump z, 0
 
-;An improved version of BubbleSort written by <a href="https://codereview.stackexchange.com/a/295950">Sep Roland</a>...
+;An improved version of BubbleSort by Sep Roland - see https://codereview.stackexchange.com/a/295950
 namereg s0, first_pointer_in_BubbleSort
 namereg s1, second_pointer_in_BubbleSort
 namereg s2, value_at_the_first_pointer_in_BubbleSort
 namereg s3, value_at_the_second_pointer_in_BubbleSort
 namereg s4, has_a_swap_been_performed_in_BubbleSort
 namereg s5, retracting_limit_of_the_second_pointer_in_BubbleSort
-beginning_of_the_bubble_sort:
+bubble_sort_start:
     load    retracting_limit_of_the_second_pointer_in_BubbleSort, length_of_the_input
-  outer_bubble_sort_loop:
+  bubble_outer_loop:
     sub     retracting_limit_of_the_second_pointer_in_BubbleSort, 1
-    jump    z,  end_of_the_bubble_sort
+    jump    z,  bubble_sort_end
     load    has_a_swap_been_performed_in_BubbleSort, 0
     load    second_pointer_in_BubbleSort, 0
-  inner_bubble_sort_loop:
+  bubble_inner_loop:
     compare second_pointer_in_BubbleSort, retracting_limit_of_the_second_pointer_in_BubbleSort
-    jump    nc, end_of_the_inner_bubble_sort_loop
+    jump    nc, bubble_inner_loop_end
     load    first_pointer_in_BubbleSort, second_pointer_in_BubbleSort
     add     second_pointer_in_BubbleSort, 1
     fetch   value_at_the_first_pointer_in_BubbleSort, (first_pointer_in_BubbleSort)
     fetch   value_at_the_second_pointer_in_BubbleSort, (second_pointer_in_BubbleSort)
     compare value_at_the_second_pointer_in_BubbleSort, value_at_the_first_pointer_in_BubbleSort
-    jump    nc, inner_bubble_sort_loop
+    jump    nc, bubble_inner_loop
     store   value_at_the_second_pointer_in_BubbleSort, (first_pointer_in_BubbleSort)
     store   value_at_the_first_pointer_in_BubbleSort, (second_pointer_in_BubbleSort)
     load    has_a_swap_been_performed_in_BubbleSort, 1
-    jump    inner_bubble_sort_loop
-  end_of_the_inner_bubble_sort_loop:
+    jump    bubble_inner_loop
+  bubble_inner_loop_end:
     test    has_a_swap_been_performed_in_BubbleSort, has_a_swap_been_performed_in_BubbleSort
-    jump    nz, outer_bubble_sort_loop
-end_of_the_bubble_sort:
+    jump    nz, bubble_outer_loop
+bubble_sort_end:
 
-jump NDEBUG ? the_permutations_algorithm : printing_the_sorted_array
-printing_the_sorted_array:
+jump DEBUG_DISABLED ? permutations_main : print_sorted_array
+print_sorted_array:
 call print_the_sorted_array_message
 load s0, 0
-printing_the_sorted_array_loop:
+print_sorted_array_loop:
   compare s0, length_of_the_input
-  jump nc, end_of_the_printing_the_sorted_array_loop
+  jump nc, print_sorted_array_loop_end
   fetch s9, (s0)
   call UART_TX
   add s0, 1
-  jump printing_the_sorted_array_loop
-end_of_the_printing_the_sorted_array_loop:
+  jump print_sorted_array_loop
+print_sorted_array_loop_end:
 load s9, a'x
 call UART_TX
 
-the_permutations_algorithm:
+permutations_main:
 
 ;Let's set all the digits of the ordinal number of permutations to "0"
 regbank b
-load s0, digits_of_the_ordinal_number
-load s2, digits_of_the_ordinal_number ;End of the digits of the ordinal number.
-reset_ordinal_numbers_loop:
-  compare s0, bottom_of_the_stack
-  jump nc, end_of_the_reset_ordinal_numbers_loop
+load s0, ordinal_digits_addr
+load s2, ordinal_digits_addr ;End of the digits of the ordinal number.
+reset_ordinal_numbers:
+  compare s0, stack_bottom
+  jump nc, reset_ordinal_numbers_end
   load s1, "0"
   store s1, (s0)
   add s0, 1
-  jump reset_ordinal_numbers_loop
-end_of_the_reset_ordinal_numbers_loop:
+  jump reset_ordinal_numbers
+reset_ordinal_numbers_end:
 regbank a
 
 namereg se, top_of_the_stack
-load top_of_the_stack, bottom_of_the_stack
+load top_of_the_stack, stack_bottom
 load s0, 0
 store s0, (top_of_the_stack)
 add top_of_the_stack, length_of_the_input
 add top_of_the_stack, 1
-beginning_of_the_permutations_loop:
-  compare top_of_the_stack, bottom_of_the_stack
-  jump z, end_of_the_permutations_loop
+permutations_loop_start:
+  compare top_of_the_stack, stack_bottom
+  jump z, permutations_loop_end
   sub top_of_the_stack, length_of_the_input
   sub top_of_the_stack, 1
   namereg sd, length_of_the_current_attempt
   fetch length_of_the_current_attempt, (top_of_the_stack)
-  load s0, address_of_the_current_attempt
+  load s0, addr_current_attempt
   store length_of_the_current_attempt, (s0)
   load s1, 0
-  copying_the_current_attempt_from_the_stack_loop:
+  copy_current_attempt_from_stack:
     compare s1, length_of_the_current_attempt
-    jump nc, end_of_copying
-    load s0, address_of_the_current_attempt
+    jump nc, copy_current_attempt_end
+    load s0, addr_current_attempt
     add s0, s1
     add s0, 1
     load s3, top_of_the_stack
@@ -118,10 +118,10 @@ beginning_of_the_permutations_loop:
     fetch s4, (s3)
     store s4, (s0)
     add s1, 1
-    jump copying_the_current_attempt_from_the_stack_loop
-  end_of_copying:
-  jump NDEBUG ? dont_print_the_current_attempt : print_the_current_attempt
-  print_the_current_attempt:
+    jump copy_current_attempt_from_stack
+  copy_current_attempt_end:
+  jump DEBUG_DISABLED ? skip_print_current_attempt : print_current_attempt
+  print_current_attempt:
   call print_the_length_of_the_current_attempt_message
   load s9, length_of_the_current_attempt
   add s9, "0"
@@ -129,70 +129,70 @@ beginning_of_the_permutations_loop:
   load s9, a'x
   call UART_TX
   call print_the_current_attempt_message
-  load s0, address_of_the_current_attempt + 1
-  printing_the_current_attempt_loop:
-    load s1, address_of_the_current_attempt + 1
+  load s0, addr_current_attempt + 1
+  print_current_attempt_loop:
+    load s1, addr_current_attempt + 1
     add s1, length_of_the_current_attempt
     compare s0, s1
-    jump nc, end_of_the_printing_the_current_attempt_loop
+    jump nc, print_current_attempt_loop_end
     fetch s9, (s0)
     call UART_TX
     add s0, 1
-    jump printing_the_current_attempt_loop
-  end_of_the_printing_the_current_attempt_loop:
+    jump print_current_attempt_loop
+  print_current_attempt_loop_end:
   load s9, a'x
   call UART_TX
-  dont_print_the_current_attempt:
+  skip_print_current_attempt:
   compare length_of_the_current_attempt, length_of_the_input
-  jump c, current_attempt_is_not_a_solution
+  jump c, attempt_not_solution
     call print_found_a_solution_message
-    load s0, address_of_the_current_attempt + 1
-    printing_the_solution_loop:
-      load s1, address_of_the_current_attempt + 1
+    load s0, addr_current_attempt + 1
+    print_solution_loop:
+      load s1, addr_current_attempt + 1
       add s1, length_of_the_current_attempt
       compare s0, s1
-      jump nc, end_of_the_printing_the_solution_loop
+      jump nc, print_solution_loop_end
       fetch s9, (s0)
       call UART_TX
       add s0, 1
-      jump printing_the_solution_loop
-    end_of_the_printing_the_solution_loop:
+      jump print_solution_loop
+    print_solution_loop_end:
     load s9, a'x
     call UART_TX
     regbank b
     call print_the_ordinal_number_message
-    load s1, digits_of_the_ordinal_number
-    increasing_the_ordinal_number_loop:
+    load s1, ordinal_digits_addr
+    increment_ordinal_number:
       fetch s0, (s1)
       add s0, 1
       store s0, (s1)
       compare s0, "9" + 1
-      jump nz, end_of_increasing_the_ordinal_number_loop
+      jump nz, increment_ordinal_number_end
       load s0, "0"
       store s0, (s1)
       add s1, 1
-      jump increasing_the_ordinal_number_loop
-    end_of_increasing_the_ordinal_number_loop:
+      jump increment_ordinal_number
+    increment_ordinal_number_end:
     compare s1, s2
-    jump c, not_a_new_digit
+    jump c, not_new_digit
       load s2, s1
-    not_a_new_digit:
+    not_new_digit:
     load s1, s2
-    printing_the_ordinal_number:
+    print_ordinal_number:
       fetch s9, (s1)
       call UART_TX
       sub s1, 1
-      compare s1, digits_of_the_ordinal_number
-      jump nc, printing_the_ordinal_number
-    end_of_printing_the_ordinal_number:
+      compare s1, ordinal_digits_addr
+      jump nc, print_ordinal_number
+    print_ordinal_number_end:
     load s9, a'x
     call UART_TX
     regbank a
-  jump end_of_the_branching
-  current_attempt_is_not_a_solution:
+  jump branch_end
+  attempt_not_solution:
     load s0, length_of_the_input
     sub s0, 1
-    add_a_new_character_loop:
+    add_new_character_loop:
       ;No check at the beginning of this loop, for this is a do-while-loop,
       ;rather than a while-loop. Checking whether an overflow has occurred
       ;when decreasing the pointer stored in s0 by 1 is done at the end of
@@ -201,91 +201,91 @@ beginning_of_the_permutations_loop:
       fetch character_we_try_to_add, (s0)
       load s7, s0
       add s7, 1
-      jump rely_on_sorting_working_correctly ? dont_loop_toward_the_end : loop_toward_the_end
+      jump assume_sorting_works ? dont_loop_toward_the_end : loop_toward_the_end
       loop_toward_the_end:
         load s8, 0 ;Whether we already tried adding that character.
-        check_if_we_already_tried_that_character_loop:
+        check_already_tried_char:
           compare s7, length_of_the_input
-          jump nc, end_of_the_check_if_we_already_tried_that_character_loop
+          jump nc, check_already_tried_char_end
           fetch s6, (s7)
           compare s6, character_we_try_to_add
-          jump nz, third_characters_are_not_equal_label
+          jump nz, third_chars_not_equal
             load s8, 1
-          third_characters_are_not_equal_label:
+          third_chars_not_equal:
           add s7, 1
-          jump check_if_we_already_tried_that_character_loop
-        end_of_the_check_if_we_already_tried_that_character_loop:
-        jump test_whether_s8_is_set_to_1
+          jump check_already_tried_char
+        check_already_tried_char_end:
+        jump test_s8_set
       dont_loop_toward_the_end:
         load s8, 0
         compare s7, length_of_the_input
-        jump nc, test_whether_s8_is_set_to_1
+        jump nc, test_s8_set
         fetch s6, (s7)
         compare character_we_try_to_add, s6
-        jump nz, fourth_characters_are_not_equal_label
+        jump nz, fourth_chars_not_equal
           load s8, 1 ; When "addzy" fails to assemble, for some reason.
-        fourth_characters_are_not_equal_label:
-        jump test_whether_s8_is_set_to_1
-      test_whether_s8_is_set_to_1:
+        fourth_chars_not_equal:
+        jump test_s8_set
+      test_s8_set:
       test s8, s8
-      jump nz, dont_add_the_new_character
-      jump NDEBUG ? dont_print_the_character_we_are_trying_to_add : print_the_character_we_are_trying_to_add
-      print_the_character_we_are_trying_to_add:
+      jump nz, skip_add_new_character
+      jump DEBUG_DISABLED ? skip_print_trying_character : print_trying_character
+      print_trying_character:
         call print_we_are_trying_to_add_message
         load s9, character_we_try_to_add
         call UART_TX
         load s9, a'x
         call UART_TX
-      dont_print_the_character_we_are_trying_to_add:
+      skip_print_trying_character:
       load s2, 0 ; How many of the chosen character are present in the current attempt.
-      load s1, address_of_the_current_attempt + 1
-      count_in_the_current_attempt_loop:
-        load s4, address_of_the_current_attempt + 1
+      load s1, addr_current_attempt + 1
+      count_in_current_attempt:
+        load s4, addr_current_attempt + 1
         add s4, length_of_the_current_attempt
         compare s1, s4
-        jump z, end_of_the_count_in_the_current_attempt_loop
+        jump z, count_in_current_attempt_end
         fetch s4, (s1)
         compare s4, character_we_try_to_add
-        jump nz, first_the_characters_are_not_equal_label
+        jump nz, first_chars_not_equal
           add s2, 1
-        first_the_characters_are_not_equal_label:
+        first_chars_not_equal:
         add s1, 1
-        jump count_in_the_current_attempt_loop
-      end_of_the_count_in_the_current_attempt_loop:
-      jump NDEBUG ? dont_print_how_many_in_the_current_attempt : print_how_many_in_the_current_attempt
-      print_how_many_in_the_current_attempt:
+        jump count_in_current_attempt
+      count_in_current_attempt_end:
+      jump DEBUG_DISABLED ? skip_print_current_attempt_count : print_current_attempt_count
+      print_current_attempt_count:
         call print_the_current_attempt_count_message
         load s9, s2
         add s9, "0"
         call UART_TX
         load s9, a'x
         call UART_TX
-      dont_print_how_many_in_the_current_attempt:
+      skip_print_current_attempt_count:
       load s3, 0 ; How many of the chosen character are present in the input.
       load s1, 0
-      count_in_the_input_loop:
+      count_in_input:
         compare s1, length_of_the_input
-        jump z, end_of_the_count_in_the_input_loop
+        jump z, count_in_input_end
         fetch s4, (s1)
         compare s4, character_we_try_to_add
         jump nz, second_the_characters_are_not_equal_label
           add s3, 1
         second_the_characters_are_not_equal_label:
         add s1, 1
-        jump count_in_the_input_loop
-      end_of_the_count_in_the_input_loop:
-      jump NDEBUG ? dont_print_how_many_in_the_input : print_how_many_in_the_input
-      print_how_many_in_the_input:
+        jump count_in_input
+      count_in_input_end:
+      jump DEBUG_DISABLED ? skip_print_input_count : print_input_count
+      print_input_count:
         call print_count_in_the_input_message
         load s9, s3
         add s9, "0"
         call UART_TX
         load s9, a'x
         call UART_TX
-      dont_print_how_many_in_the_input:
+      skip_print_input_count:
       compare s2, s3
-      jump nc, dont_add_the_new_character
-        load s1, NDEBUG
+      jump nc, skip_add_new_character
+        load s1, DEBUG_DISABLED
         test s1, s1
         call z, print_the_we_are_adding_the_new_character_message
         load s1, top_of_the_stack
@@ -293,9 +293,9 @@ beginning_of_the_permutations_loop:
         add s2, 1
         store s2, (s1)
         add s1, 1
-        load s3, address_of_the_current_attempt + 1
+        load s3, addr_current_attempt + 1
         copying_the_new_attempt_loop:
-          load s5, address_of_the_current_attempt + 1
+          load s5, addr_current_attempt + 1
           add s5, length_of_the_current_attempt
           compare s3, s5
           jump z, end_of_the_copying_the_new_attempt_loop
@@ -309,16 +309,16 @@ beginning_of_the_permutations_loop:
         store character_we_try_to_add, (s1)
         add top_of_the_stack, length_of_the_input
         add top_of_the_stack, 1
-      dont_add_the_new_character:
+      skip_add_new_character:
       sub s0, 1
-      jump nc, add_a_new_character_loop
-    end_of_the_add_a_new_character_loop:
-    load sb, NDEBUG
+      jump nc, add_new_character_loop
+    add_new_character_loop_end:
+    load sb, DEBUG_DISABLED
     compare sb, 0
     call z, print_the_exited_the_loop_message
-  end_of_the_branching:
-  jump beginning_of_the_permutations_loop
-end_of_the_permutations_loop:
+  branch_end:
+  jump permutations_loop_start
+permutations_loop_end:
 call print_the_end_message
 ;Let's test whether we are on real PicoBlaze, or on the PicoBlaze assembler and emulator in JavaScript made by Teo Samaržija et aliis.
 regbank a
@@ -386,7 +386,7 @@ print_the_ordinal_number_message:
 return
 
 print_the_exited_the_loop_message:
-  print_string "The 'add_a_new_character_loop' loop has exited!\n", s9, UART_TX
+  print_string "The 'add_new_character_loop' loop has exited!\n", s9, UART_TX
 return
 
 base_hexadecimal
@@ -432,6 +432,7 @@ UART_TX:
   OUTPUT s9, UART_TX_PORT
 RETURN
 
-;You may also be interested in <a href="https://flatassembler.github.io/permutationsTest.html">my implementation of the same algorithm in WebAssembly</a>.
-;I've also opened <a href="https://codereview.stackexchange.com/q/295882/219010">a StackExchange thread about this program</a>.
+;See WebAssembly implementation: https://flatassembler.github.io/permutationsTest.html
+;Related StackExchange thread: https://codereview.stackexchange.com/q/295882/219010
+
 
