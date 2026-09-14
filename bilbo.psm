@@ -549,6 +549,19 @@ print_result:
   fetch s0, (s7)
   compare s0, 0
   jump z, print_bilbo
+  ; The following commented code will check whether the second number is smaller
+  ; than 100, which it must not be. It's still not a complete solution to that
+  ; problem, because it will output "Bilbo" for "2 3 0 0 9 0", when, in reality,
+  ; the solution is "590=390+200".
+; load sf, 58
+; fetch sf, (sf)
+; compare sf, 0
+; jump nz, second_is_bigger_than_256
+; load sf, 57
+; fetch sf, (sf)
+; compare sf, 100
+; jump c, print_bilbo
+; second_is_bigger_than_256:
   ; fetch sum
   load s7, 49
   fetch s4, (s7)
