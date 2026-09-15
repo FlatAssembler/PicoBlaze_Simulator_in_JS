@@ -3,8 +3,7 @@
 ; Reads 6 digits from UART, arranges into two 3-digit numbers maximizing sum < 1000.
 ; Uses UART_RX, UART_TX, print_string conventions from the repository.
 
-;WARNING: This solution would not have scored the full 80 points on the Infokup 2013 competition. Apart from probably being too slow, it sometimes states that there is a solution when there is no solution. For instance, for the input "9 1 1 0 0 0", this program will claim that the solution is "920=910+10", which is wrong because "10" (the second number in the sum) is a two-digit number, rather than a three-digit one. A full solution (scoring 80 points) would have to print "Bilbo" in that case, signifying that there is no solution. That can be done using some additional checks, but the program is already too long (more than 700 lines) even without those additional checks.
-; <del>(Just thinking about it, would doing something incredibly simple such as printing "Bilbo" whenever there is a digit 9 in the input do the trick to make this program fully correct? I cannot think of a counter-example right now, but that does not mean a counter-example does not exist.)</del> <ins>(UPDATE: No, that would score even fewer points. Namely, in the official test samples used for evaluation, there is the input "3 9 8 4 6 7" which this program correctly solves even though it has the digit "9" in it. Namely, now the program correctly outputs "883=497+386", whereas, with that modification, it would incorrectly output "Bilbo".)</ins>
+;WARNING: This solution would not have scored the full 80 points on the Infokup 2013 competition. Apart from probably being too slow, it wrongly solves one (and exactly one, if I am not mistaken) of the official test data from Infokup 2013, namely, the input "2 3 0 0 9 0". It outputs "Bilbo" (as if there were no solution) when it should output "590=390+200". Solving it would take adding a few additional checks, but the program is already very long (more than 700 lines of code).
 
 base_decimal
 constant NDEBUG, 0
@@ -549,19 +548,19 @@ print_result:
   fetch s0, (s7)
   compare s0, 0
   jump z, print_bilbo
-  ; The following commented code will check whether the second number is smaller
+  ; The following code will check whether the second number is smaller
   ; than 100, which it must not be. It's still not a complete solution to that
   ; problem, because it will output "Bilbo" for "2 3 0 0 9 0", when, in reality,
   ; the solution is "590=390+200".
-; load sf, 58
-; fetch sf, (sf)
-; compare sf, 0
-; jump nz, second_is_bigger_than_256
-; load sf, 57
-; fetch sf, (sf)
-; compare sf, 100
-; jump c, print_bilbo
-; second_is_bigger_than_256:
+  load sf, 58
+  fetch sf, (sf)
+  compare sf, 0
+  jump nz, second_number_is_bigger_than_255
+  load sf, 57
+  fetch sf, (sf)
+  compare sf, 100
+  jump c, print_bilbo
+  second_number_is_bigger_than_255:
   ; fetch sum
   load s7, 49
   fetch s4, (s7)
