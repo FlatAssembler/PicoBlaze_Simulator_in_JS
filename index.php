@@ -142,7 +142,7 @@ if (isset($_POST["username"]))
 	<button type="submit">Log in</button>
 	<div class="loginMessage" style="background-color:<?php echo $message == ""?"white":($message=="Login successful!"?"#afa":"#faa")?>"><?php echo $message;?></div>
 </form>
-<div style="text-align: justify;">Maybe you are willing to <a href="survey.php" target="_blank">fill my survey about vegetarianism</a> and/or <a href="survey-superbacteria.php" target="_blank">my survey about superbacteria</a>? I am interested in hearing from highly educated people who do not specialize in biology.</div>
+<div style="text-align: justify;">Maybe you are willing to <a href="survey.php" target="_blank">fill my survey about vegetarianism</a> and/or <a href="survey-superbacteria.php" target="_blank">my survey about superbacteria</a>? I am especially interested in hearing responses from highly educated people who do not specialize in biological sciences (those people are probably using this web-app).</div>
 <?php endif?>
 </div>
       <h3 id="assemblyCodeHeader">Assembly code</h3>
