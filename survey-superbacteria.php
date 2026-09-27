@@ -145,7 +145,7 @@ Geni za otpornost na antibiotike u bakterijama većinom su pohranjeni na genofor
 To je opasno kriva propozicija, jer preko 85% gena za otpornost na antibiotike pohranjeno je na plazmidima, a ne na genoforu. I bakterija ih može prenijeti na druge bakterije konjugacijom.
 </blockquote>
 <?php else: ?>
-<input type="radio" name="where_genes_are_stored" value="genophore" id="genes_are_stored_on_genophore"><label for="genes_are_stored_on_genophore">Yes/Da</label> <input type="radio" name="where_genes_are_stored" value="genes_are_stored_on_plasmids" id="genes_are_stored_on_plasmids"><label for="genes_are_stored_on_plasmids">No/Ne</label>
+<input type="radio" name="where_genes_are_stored" value="genophore" id="genes_are_stored_on_genophore"><label for="genes_are_stored_on_genophore">True/Točno</label> <input type="radio" name="where_genes_are_stored" value="genes_are_stored_on_plasmids" id="genes_are_stored_on_plasmids"><label for="genes_are_stored_on_plasmids">False/Netočno</label>
 <?php endif; ?>
 </section>
 <section>
@@ -155,7 +155,7 @@ Bakterije se u pravilu mogu konjugirati samo s blisko srodnim bakterijama, to je
 <blockquote>This is not remotely correct. Bacteria regularly conjugate with bacteria separated from them with billions of years of evolution. A specie in bacteriology is defined somehow complicated, and it has nothing to do with conjugations.<br/>
 Ovo nije ni izdaleka točno. Bakterije se redovito konjugiraju s bakterijama odvojenima od njih s milijardama godina evolucije. Vrsta se u bakteriologiji definira nekako komplicirano, i nema veze s konjugacijama.</blockquote>
 <?php else: ?>
-<input type="radio" name="conjugation" value="only_with_close_relatives" id="only_with_close_relatives"><label for="only_with_close_relatives">Yes/Da</label> <input type="radio" name="conjugation" value="with_distant_relatives" id="with_distant_relatives"><label for="with_distant_relatives">No/Ne</label>
+<input type="radio" name="conjugation" value="only_with_close_relatives" id="only_with_close_relatives"><label for="only_with_close_relatives">True/Točno</label> <input type="radio" name="conjugation" value="with_distant_relatives" id="with_distant_relatives"><label for="with_distant_relatives">False/Netočno</label>
 <?php endif; ?>
 </section>
 <section><div>We will soon have lab-grown eggs.<br/>
