@@ -269,6 +269,15 @@
       ]
     },
     {
+      "title": "Easter eggs",
+      "purpose": "Mention the SVG PacMan game using the database for storing the highscores and the two surveys storing their results into the database. Mention that the survey about superbacteria contains the complicated MySQL code for calculating the median.",
+      "page_notes": [
+        {
+          "content": ""
+        }
+      ]
+    },
+    {
       "title": "Glossary",
       "purpose": "Definitions of all codebase-specific terms, jargon, abbreviations, and domain concepts that an onboarding engineer needs to know, with code pointers to the relevant files and functions.",
       "page_notes": [
