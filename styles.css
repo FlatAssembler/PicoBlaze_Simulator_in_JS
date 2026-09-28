@@ -782,7 +782,7 @@ div[data-linenumber]:target {
     margin-left: 0;
     margin-right: 0;
     padding: 8px 16px;
-    background: white;
+    background: rgba(255,255,255,0.9);
   }
   #mainNavigation ul {
     display: flex;
@@ -799,7 +799,6 @@ div[data-linenumber]:target {
     padding: 0;
     margin: 0;
     border: none;
-    background: none;
   }
   #mainNavigation a {
     display: inline-block;
