@@ -774,7 +774,10 @@ function fetchExample(exampleName) {
   hasTheCodeBeenModifiedSinceLastSuccessfulAssembly =
       true; // https://github.com/FlatAssembler/PicoBlaze_Simulator_in_JS/issues/29
   document.getElementById("assemblyCode").innerHTML =
-      URL_prefix_of_the_examples ? ";Fetching the example from GitHub..." : ";Fetching the example from Azure as a static asset...";
+      URL_prefix_of_the_examples ?
+ ";Fetching the example from GitHub..." :
+ `;Fetching the example from Azure
+;as a static asset...`;
   setUpLineNumbers();
   fetch(URL_prefix_of_the_examples + exampleName)
       .then((response) => {
