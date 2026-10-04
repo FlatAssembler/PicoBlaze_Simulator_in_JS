@@ -275,18 +275,12 @@ return
 ; evaluate_attempt: depth==6
 evaluate_attempt:
   ; fetch attempt digits into registers r0..r5 -> use s0..s6
-  load s5, 10
-  fetch s0, (s5)   ; a
-  add s5, 1
-  fetch s1, (s5)   ; b
-  add s5, 1
-  fetch s2, (s5)   ; c
-  add s5, 1
-  fetch s3, (s5)   ; d
-  add s5, 1
-  fetch s4, (s5)   ; e
-  add s5, 1
-  fetch s6, (s5)   ; f -> stored in s6
+  fetch s0, 10   ; a
+  fetch s1, 11   ; b
+  fetch s2, 12   ; c
+  fetch s3, 13   ; d
+  fetch s4, 14   ; e
+  fetch s6, 15   ; f -> stored in s6
 
   ; compute firstNumber into (s7:s8) 16-bit (low: s7, high: s8)
   load s7, 0
@@ -367,14 +361,10 @@ sn_no_carry_inc:
 
   ; IMMEDIATELY SAVE firstNumber (s7:s8) and secondNumber (s0:s1) to candidate storage (51-54)
   ; This protects them from being clobbered by any subsequent operations
-  load s9, 51
-  store s7, (s9)   ; candidate_first_lo
-  load s9, 52
-  store s8, (s9)   ; candidate_first_hi
-  load s9, 53
-  store s0, (s9)   ; candidate_second_lo
-  load s9, 54
-  store s1, (s9)   ; candidate_second_hi
+  store s7, 51   ; candidate_first_lo
+  store s8, 52   ; candidate_first_hi
+  store s0, 53   ; candidate_second_lo
+  store s1, 54   ; candidate_second_hi
 
   ; sum = first + second -> store in s2 (lo), s3 (hi)
   load s2, s7
@@ -439,10 +429,8 @@ sum_valid:
   compare sa, 0
   jump z, update_best
   ; fetch best sum
-  load s7, 49
-  fetch s4, (s7)
-  load s7, 50
-  fetch s5, (s7)
+  fetch s4, 49
+  fetch s5, 50
   ; compare s3:s2 (sum hi:lo) to s5:s4 (best hi:lo)
   compare s3, s5
   jump nc, sum_hi_ge_best_hi
@@ -489,30 +477,19 @@ update_best:
   dont_print_the_current_optimum:
   ; store best_found_flag = 1 at addr 48
   load sb, 1
-  load s9, 48
-  store sb, (s9)
+  store sb, 48
   ; store best sum lo/hi at 49/50
-  load s9, 49
-  store s2, (s9)
-  load s9, 50
-  store s3, (s9)
+  store s2, 49
+  store s3, 50
   ; copy candidate decomposition (51-54) to best decomposition (55-58)
-  load s9, 51
-  fetch sa, (s9)
-  load s9, 55
-  store sa, (s9)
-  load s9, 52
-  fetch sa, (s9)
-  load s9, 56
-  store sa, (s9)
-  load s9, 53
-  fetch sa, (s9)
-  load s9, 57
-  store sa, (s9)
-  load s9, 54
-  fetch sa, (s9)
-  load s9, 58
-  store sa, (s9)
+  fetch sa, 51
+  store sa, 55
+  fetch sa, 52
+  store sa, 56
+  fetch sa, 53
+  store sa, 57
+  fetch sa, 54
+  store sa, 58
 after_eval:
   ; release last digit (index 5) and prepare backtracking
   load s5, 10
@@ -552,39 +529,31 @@ print_result:
   ; than 100, which it must not be. It's still not a complete solution to that
   ; problem, because it will output "Bilbo" for "2 3 0 0 9 0", when, in reality,
   ; the solution is "590=390+200".
-  load sf, 58
-  fetch sf, (sf)
+  fetch sf, 58
   compare sf, 0
-  jump nz, second_number_is_bigger_than_255
-  load sf, 57
-  fetch sf, (sf)
+  jump nz, second_number_is_bigger_than_99
+  fetch sf, 57
   compare sf, 100
   jump c, print_bilbo
-  second_number_is_bigger_than_255:
+  second_number_is_bigger_than_99:
   ; fetch sum
-  load s7, 49
-  fetch s4, (s7)
-  load s7, 50
-  fetch s5, (s7)
+  fetch s4, 49
+  fetch s5, 50
   ; call print routine (expects s4=lo, s5=hi)
   call PRINT_UINT_LT1000_FROM_S4_S5
   ; print '='
   load s9, "="
   call UART_TX
   ; print best first number (55..56)
-  load s7, 55
-  fetch s4, (s7)
-  load s7, 56
-  fetch s5, (s7)
+  fetch s4, 55
+  fetch s5, 56
   call PRINT_UINT_LT1000_FROM_S4_S5
   ; print '+'
   load s9, "+"
   call UART_TX
   ; print best second number (57..58)
-  load s7, 57
-  fetch s4, (s7)
-  load s7, 58
-  fetch s5, (s7)
+  fetch s4, 57
+  fetch s5, 58
   call PRINT_UINT_LT1000_FROM_S4_S5
   load s9, a'x
   call UART_TX
