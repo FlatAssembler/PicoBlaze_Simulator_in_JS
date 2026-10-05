@@ -7,7 +7,7 @@
   "pages": [
     {
       "title": "Project Overview",
-      "purpose": "High-level introduction to the PicoBlaze Simulator in JS: what it is, why it was built, how to access it, and how the major subsystems relate. Links to child pages for architecture, the assembler pipeline, the emulator, example programs, the backend, and testing.",
+      "purpose": "High-level introduction to the PicoBlaze Simulator in JS: what it is, why it was built (the 2020 pandemic in which the access to real PicoBlaze was limited), how to access it, and how the major subsystems relate. Links to child pages for architecture, the assembler pipeline, the emulator, example programs, the backend, and testing.",
       "page_notes": [
         {
           "content": ""
@@ -55,7 +55,7 @@
     },
     {
       "title": "Parser",
-      "purpose": "Detailed documentation of parser.js: multi-pass token-to-AST conversion, control-flow block handling (if/else/endif, while/endwhile), parenthesis recursion, operator-precedence hierarchy, ternary operator resolution, and type checking via TreeNode.checkTypes().",
+      "purpose": "Detailed documentation of parser.js: multi-pass token-to-AST conversion, control-flow block handling (if/else/endif, while/endwhile), parenthesis recursion, operator-precedence hierarchy (mention which operators have the highest and which ones have the lowest priority when parsing), ternary operator resolution (mention that this parser is using the controversial scanning-backwards method to parse right-associative operators such as the ternary conditional operator), and type checking via TreeNode.checkTypes().",
       "parent": "Assembler Pipeline",
       "page_notes": [
         {
