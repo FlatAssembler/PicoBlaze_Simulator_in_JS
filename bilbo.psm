@@ -382,14 +382,14 @@ sum_no_carry:
 sum_done:
 
   ; check sum < 1000
-  compare s3, 3
+  compare s3, bitand(1000, ff00'x) / 2 ^ 8
   jump nc, sum_ge_1000
   jump sum_valid
 sum_ge_1000:
   compare s3, 3
   jump nz, sum_invalid
-  ; s3 == 3 -> check s2 < 232
-  load sb, 232
+  ; s3 == 3 -> check s2 < 1000 & 0xff
+  load sb, bitand(1000, ff'x)
   compare s2, sb
   jump nc, sum_invalid
   jump sum_valid
@@ -464,7 +464,7 @@ update_best:
       fetch s9, (sf)
       add s9, "0"
       call UART_TX
-      compare sf, 10 + 3 - 1
+      compare sf, 10 + 6 / 2 - 1
       jump nz, dont_print_the_plus_sign
         load s9, "+"
         call UART_TX
