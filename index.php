@@ -504,6 +504,13 @@ Here you can see that there are five tables in the database (four related to Pic
             https://a.fsdn.com/con/app/sf-download-button?button_size=2x 2x
           "
       /></a>
+<!-- Begin  Tag -->
+<div class="sf-root" data-id="3379031" data-badge="oss-rising-star-white" data-metadata="achievement=oss-rising-star" style="width:125px">
+    <a href="https://sourceforge.net/projects/picoblaze-simulator/" target="_blank">PicoBlaze_Simulator_in_JS</a>
+</div>
+<script>(function () {var sc=document.createElement('script');sc.async=true;sc.src='https://b.sf-syn.com/badge_js?sf_id=3379031';var p=document.getElementsByTagName('script')[0];p.parentNode.insertBefore(sc, p);})();
+</script>
+<!-- End  Tag -->
 <br/><br/>
 	UPDATE on 16/07/2026: I've tried to make an English-language poem
 	describing the situation the engineers are in these days:
