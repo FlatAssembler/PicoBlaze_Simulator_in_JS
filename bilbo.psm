@@ -382,13 +382,14 @@ sum_no_carry:
 sum_done:
 
   ; check sum < 1000
-  compare s3, bitand(1000, ff00'x) / 2 ^ 8
+  constant upper_byte_of_1000,  bitand(1000, ff00'x) / 2 ^ 8
+  compare s3, upper_byte_of_1000
   jump nc, sum_ge_1000
   jump sum_valid
 sum_ge_1000:
-  compare s3, 3
+  compare s3, upper_byte_of_1000
   jump nz, sum_invalid
-  ; s3 == 3 -> check s2 < 1000 & 0xff
+  ; s3 == upper_byte_of_1000 -> check s2 < (1000 & 0xff)
   load sb, bitand(1000, ff'x)
   compare s2, sb
   jump nc, sum_invalid
