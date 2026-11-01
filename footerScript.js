@@ -5,6 +5,9 @@
 document.getElementById("assemblyCode").
        oninput=syntaxHighlighter;
 */
+if (!URL_prefix_of_the_examples)
+	document.getElementById("fetchingExamples").innerHTML =
+		"Fetching the JSON list of examples from Azure...";
 setUpLineNumbers();
 let hasTheCodeBeenModifiedSinceLastSuccessfulAssembly = false;
 let areWeCurrentlyAssembling = false;
