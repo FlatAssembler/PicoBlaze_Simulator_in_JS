@@ -687,9 +687,10 @@ function downloadHex() {
   } else if (/Dolphin/.test(navigator.userAgent))
     alert(
         "It's detected you are using Dolphin. 'Download Hexadecimal' didn't work there when we tested it.");
-  else if (/Mobile.+OPR/.test(navigator.userAgent))
+  else if (/Mobile.+OPR/.test(navigator.userAgent) ||
+	   /DuckDuckGo/.test(navigator.userAgent))
     alert(
-        "It's detected you are using the Opera Mini browser. The last time we tested it, 'Download Hexadecimal' caused it to 'download' a corrupted file.");
+        "It's detected you are using the Opera Mini or the DuckDuckGo browser. The last time we tested this feature of exporting the hexadecimal file in those browsers, 'Download Hexadecimal' caused them to 'download' a corrupted file.");
 
   /*
   The following code is loosely based on:
