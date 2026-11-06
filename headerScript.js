@@ -419,7 +419,7 @@ function setupLayout() {
     document.getElementById("divWithExamples").style.top =
         20 + heightOfTheGreetings + windowHeight + 4 +
         document.getElementById("assemblyCodeHeader").clientHeight +
-		  (/Firefox/.test(navigator.userAgent) | 0) * 3 +
+		  // (/Firefox/.test(navigator.userAgent) | 0) * 3 +
 		  "px";
     document.getElementById("simulationResults").style.top =
         60 + heightOfTheGreetings + windowHeight * 2 + 200 + 65 + 50 - 30 +
