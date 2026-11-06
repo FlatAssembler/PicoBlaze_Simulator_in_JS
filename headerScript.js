@@ -453,7 +453,7 @@ function setupLayout() {
         210 + 50 + heightOfTheDivWithTheInstructionAboutAssembling +
         document.getElementById("assemblyCodeHeader").clientHeight +
         document.getElementById("machineCodeHeader").clientHeight +
-        document.getElementById("emulationHeader").clientHeight
+        document.getElementById("emulationHeader").clientHeight +
 		  (/Firefox/.test(navigator.userAgent) | 0) * 3 + "px";
   } else {
     document.getElementById("assemblyCodeHeader").style.top =
