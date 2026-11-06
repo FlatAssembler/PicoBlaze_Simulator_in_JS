@@ -273,8 +273,8 @@ if (isset($_GET['id']) && isset($_GET['permanent'])) {
         preElement.innerHTML = highlightedText;
 
       }
-if (!/Firefox/.test(navigator.userAgent)) {
-  document.querySelector("head>meta[name=viewport]").setAttribute("content", "width=800px"); // Mobile browsers other than Firefox on Android seem to have some weird ideas about how to handle wide tables in the responsive design mode, so much so that it is worse than useless.
+if (/Mobile/.test(navigator.userAgent) && !/Firefox/.test(navigator.userAgent)) {
+  document.querySelector("head>meta[name=viewport]").setAttribute("content", "width=800px, initial-scale=0.2"); // Mobile browsers other than Firefox on Android seem to have some weird ideas about how to handle wide tables in the responsive design mode, so much so that it is worse than useless.
 alert("If you will try to manage this app using control pannel on mobile, I would strongly recommend using Firefox, as it is capable of dealing with wide tables in the responsive design mode better than other mobile browsers.");
 }
     };
