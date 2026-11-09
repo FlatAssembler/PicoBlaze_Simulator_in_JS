@@ -423,7 +423,8 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                     )
                 return false;
             for (var i = 0; i < 3; i++)
-                if (arrow.x == xKoordinataDuha[i] && arrow.y == yKoordinataDuha[i]) {
+		    if (Math.abs(arrow.x-xKoordinataDuha[i]) < 2 &&
+			    Math.abs(arrow.y - yKoordinataDuha[i]) < 2) {
                     xKoordinataDuha[i] = pocetnaXKoordinataDuha[i];
                     yKoordinataDuha[i] = pocetnaYKoordinataDuha[i];
                     smjerDuha[i] = pocetniSmjeroviDuha[i];
