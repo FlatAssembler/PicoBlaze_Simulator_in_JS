@@ -270,7 +270,7 @@
     },
     {
       "title": "Easter eggs",
-      "purpose": "Mention the SVG PacMan game using the database for storing the highscores and the two surveys storing their results into the database. Mention that the survey about superbacteria contains the complicated MySQL code for calculating the median.",
+      "purpose": "Mention the SVG PacMan game using the database for storing the highscores and the two surveys storing their results into the database. Mention that the survey about superbacteria contains the complicated MySQL code for calculating the median. Mention that the PacMan game is different from most other PacMan games in that it is playable on smartphones by the PacMan going in the direction of where in the maze the user most recently tapped, and that it is also unusual by PacMan having three arrows which it can use to shoot the ghosts so that they return back into the middle of the maze.",
       "page_notes": [
         {
           "content": ""
