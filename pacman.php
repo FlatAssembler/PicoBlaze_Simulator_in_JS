@@ -190,10 +190,10 @@ CSS - https://www.w3schools.com/css/default.asp
         <text x=175 y=385 fill="white"
               style="font-size: 18px; font-family:'Lucida Console'" id="score">Score: 0</text>
 	<text x=10 y=445 fill="white" id="arrowsRemaining">Arrows: 3</text>
-        <rect x=10 y=430 fill="pink" width=45 height=10 id="shootBackward"></rect>
-        <text x=10 y=430 fill="black" font-size=8>Shoot backward</text>
-	<rect y=430 x=250 fill="pink" width=45 height=10 id="shootForward"></rect>
-        <text x=250 y=430 fill="black" font-size=8>Shoot forward</text>
+        <rect x=10 y=415 fill="pink" width=45 height=15 id="shootBackward"></rect>
+        <text x=10 y=415 fill="black" font-size=8>Shoot backward</text>
+	<rect y=415 x=250 fill="pink" width=45 height=15 id="shootForward"></rect>
+        <text x=250 y=415 fill="black" font-size=8>Shoot forward</text>
         </svg>
         <br>
 	<div id="bodovi">
@@ -338,17 +338,6 @@ After you've finished playing this game, <a href="index.php">let's get back to t
         };
         var smjerDuha = [smjer.desno, smjer.gore, smjer.lijevo],
 		smjerPacmana = smjer.desno;
-	zaslon.getElementById("shootForward").onclick = function() {
-		if (smjerPacmana != smjer.stop)
-			shootArrow(smjerPacmana);
-	}
-	zaslon.getElementById("shootBackward").onclick = function() {
-		if (smjerPacmana == smjer.stop) return;
-		shootArrow(smjerPacmana == smjer.desno ? smjer.lijevo:
-			   smjerPacmana == smjer.lijevo ? smjer.desno:
-			   smjerPacmana == smjer.gore ? smjer.dolje:
-                           smjer.gore);
-	}
         var pocetniSmjeroviDuha = [smjer.desno, smjer.gore, smjer.lijevo];
         var pocetnaXKoordinataPacmana,
                 pocetnaYKoordinataPacmana,
@@ -400,7 +389,18 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                     "W"
                     )
                 smjerPacmana = smjer.desno;
-        }
+	}
+	zaslon.getElementById("shootForward").onclick = function() {
+		if (smjerPacmana != smjer.stop)
+			shootArrow(smjerPacmana);
+	}
+	zaslon.getElementById("shootBackward").onclick = function() {
+		if (smjerPacmana == smjer.stop) return;
+		shootArrow(smjerPacmana == smjer.desno ? smjer.lijevo:
+			   smjerPacmana == smjer.lijevo ? smjer.desno:
+			   smjerPacmana == smjer.gore ? smjer.dolje:
+                           smjer.gore);
+	}
         function drawShotArrow(arrow) {
             var x = arrow.x * 20 + 10;
             var y = arrow.y * 20 + 10;
