@@ -189,6 +189,7 @@ CSS - https://www.w3schools.com/css/default.asp
         <!-- Desna tipka -->
         <text x=175 y=385 fill="white"
               style="font-size: 18px; font-family:'Lucida Console'" id="score">Score: 0</text>
+        <text x=10 y=445 fill="white" id="arrowsRemaining">Arrows remaining: 3</text>
         </svg>
         <br>
 	<div id="bodovi">
@@ -196,7 +197,9 @@ CSS - https://www.w3schools.com/css/default.asp
             Global highscore: <i><?php echo $global_highscore; ?></i> by <i><?php echo $global_highscore_user; ?></i>
         </div>
         <div id="instructions">
-            The game responds to keyboard arrow keys, mouse clicks and touch. On smartphones, the
+            The game responds to keyboard arrow keys, mouse clicks and touch. Use W/A/S/D
+            (up/left/down/right) to shoot up to three arrows; a hit sends that ghost back to the middle
+            of the maze. On smartphones, the
             Pacman is supposed to follow your finger, to go in the direction
             where you last tapped. In case that doesn't work, you have buttons
             below the maze. On computers, it's playable by mouse or the arrow keys.<br />You can
@@ -331,6 +334,7 @@ After you've finished playing this game, <a href="index.php">let's get back to t
         };
         var smjerDuha = [smjer.desno, smjer.gore, smjer.lijevo],
                 smjerPacmana = smjer.desno;
+        var pocetniSmjeroviDuha = [smjer.desno, smjer.gore, smjer.lijevo];
         var pocetnaXKoordinataPacmana,
                 pocetnaYKoordinataPacmana,
                 pocetnaXKoordinataDuha = new Array(3),
@@ -340,6 +344,9 @@ After you've finished playing this game, <a href="index.php">let's get back to t
         var xKoordinataDuha = new Array(3);
         var yKoordinataDuha = new Array(3);
         var jeLiPacmanPojeoDuha = [false, false, false];
+        var arrowsRemaining = 3;
+        var shotArrows = [];
+        var nextShotArrowId = 0;
         var bojaDuha = ["red", "pink", "orange"];
         var smjerKretanjaSiluete = [smjer.stop, smjer.stop, smjer.stop];
         var xKoordinataSiluete = new Array(3);
@@ -378,6 +385,95 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                     "W"
                     )
                 smjerPacmana = smjer.desno;
+        }
+        function drawShotArrow(arrow) {
+            var x = arrow.x * 20 + 10;
+            var y = arrow.y * 20 + 10;
+            var dx = xKomponentaSmjeraPacmana[arrow.direction];
+            var dy = yKomponentaSmjeraPacmana[arrow.direction];
+            var path = document.createElementNS(XML_namespace_of_SVG, "path");
+            path.setAttribute("id", arrow.id);
+            path.setAttribute(
+                    "d",
+                    "M " + (x - dx * 7) + " " + (y - dy * 7) +
+                    " L " + (x + dx * 7) + " " + (y + dy * 7) +
+                    " M " + (x + dx * 7) + " " + (y + dy * 7) +
+                    " L " + (x + dx * 2 + dy * 4) + " " + (y + dy * 2 - dx * 4) +
+                    " M " + (x + dx * 7) + " " + (y + dy * 7) +
+                    " L " + (x + dx * 2 - dy * 4) + " " + (y + dy * 2 + dx * 4)
+                    );
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke", "white");
+            path.setAttribute("stroke-width", 3);
+            zaslon.appendChild(path);
+        }
+        function moveShotArrow(arrow) {
+            arrow.x += xKomponentaSmjeraPacmana[arrow.direction];
+            arrow.y += yKomponentaSmjeraPacmana[arrow.direction];
+            if (arrow.x > 14 && arrow.y == 8)
+                arrow.x = 0;
+            else if (arrow.x < 0 && arrow.y == 8)
+                arrow.x = 14;
+            if (
+                    arrow.y < 0 ||
+                    arrow.y > 18 ||
+                    arrow.x < 0 ||
+                    arrow.x > 14 ||
+                    pocetnoStanjeLabirinta[arrow.y].charAt(arrow.x) == "W"
+                    )
+                return false;
+            for (var i = 0; i < 3; i++)
+                if (arrow.x == xKoordinataDuha[i] && arrow.y == yKoordinataDuha[i]) {
+                    xKoordinataDuha[i] = pocetnaXKoordinataDuha[i];
+                    yKoordinataDuha[i] = pocetnaYKoordinataDuha[i];
+                    smjerDuha[i] = pocetniSmjeroviDuha[i];
+                    jeLiPacmanPojeoDuha[i] = false;
+                    return false;
+                }
+            return true;
+        }
+        function shootArrow(direction) {
+            if (!arrowsRemaining || isGameFinished)
+                return;
+            arrowsRemaining--;
+            document.getElementById("arrowsRemaining").firstChild.nodeValue =
+                    "Arrows remaining: " + arrowsRemaining;
+            var arrow = {
+                id: "shotArrow" + nextShotArrowId++,
+                x: xKoordinataPacmana,
+                y: yKoordinataPacmana,
+                direction: direction
+            };
+            if (moveShotArrow(arrow))
+                shotArrows.push(arrow);
+            drawShotArrows();
+        }
+        function drawShotArrows() {
+            for (var i = 0; i < shotArrows.length; i++) {
+                var previousArrow = zaslon.getElementById(shotArrows[i].id);
+                if (previousArrow)
+                    zaslon.removeChild(previousArrow);
+            }
+            for (var i = 0; i < shotArrows.length; i++)
+                drawShotArrow(shotArrows[i]);
+        }
+        function advanceShotArrows() {
+            for (var i = shotArrows.length - 1; i >= 0; i--)
+                if (!moveShotArrow(shotArrows[i])) {
+                    var removedArrow = zaslon.getElementById(shotArrows[i].id);
+                    if (removedArrow)
+                        zaslon.removeChild(removedArrow);
+                    shotArrows.splice(i, 1);
+                }
+            drawShotArrows();
+        }
+        function clearShotArrows() {
+            for (var i = 0; i < shotArrows.length; i++) {
+                var arrow = zaslon.getElementById(shotArrows[i].id);
+                if (arrow)
+                    zaslon.removeChild(arrow);
+            }
+            shotArrows = [];
         }
         function drawLine(x1, x2, y1, y2) {
             //Za crtanje labirinta, 'W' iz 'pocetnoStanjeLabirinta'.
@@ -547,6 +643,7 @@ After you've finished playing this game, <a href="index.php">let's get back to t
             zaslon.appendChild(usta);
         }
         function nextLevel() {
+            clearShotArrows();
             level++;
             setTimeout(function () {
                 score += 90 + 10 * level;
@@ -1127,6 +1224,7 @@ After you've finished playing this game, <a href="index.php">let's get back to t
             if (xKoordinataPacmana < 0)
                 //Ako PacMan prode kroz lijevi prolaz.
                 xKoordinataPacmana = 14;
+            advanceShotArrows();
             if (howManyDotsHasPacmanEaten == howManyDotsAreThere)
                 nextLevel();
         }
@@ -1385,6 +1483,30 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                 case 'ArrowRight':
                     e.preventDefault();
                     onButtonRight();
+                    break;
+                case 'w':
+                case 'W':
+                    e.preventDefault();
+                    if (!e.repeat)
+                        shootArrow(smjer.gore);
+                    break;
+                case 'a':
+                case 'A':
+                    e.preventDefault();
+                    if (!e.repeat)
+                        shootArrow(smjer.lijevo);
+                    break;
+                case 's':
+                case 'S':
+                    e.preventDefault();
+                    if (!e.repeat)
+                        shootArrow(smjer.dolje);
+                    break;
+                case 'd':
+                case 'D':
+                    e.preventDefault();
+                    if (!e.repeat)
+                        shootArrow(smjer.desno);
                     break;
             }
         }, false);
