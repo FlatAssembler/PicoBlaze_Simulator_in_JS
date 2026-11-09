@@ -1277,6 +1277,20 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                                     ")"
                                     );
             }
+for (var i = 0; i < shotArrows.length; i++) {
+    var arrow = zaslon.getElementById(shotArrows[i].id);
+    if (arrow)
+        arrow.setAttribute(
+                "transform",
+                "translate(" +
+                (20 / 5) * brojacAnimacijskePetlje *
+                xKomponentaSmjeraPacmana[shotArrows[i].direction] +
+                " " +
+                (20 / 5) * brojacAnimacijskePetlje *
+                yKomponentaSmjeraPacmana[shotArrows[i].direction] +
+                ")"
+                );
+}
             if (hasPacmanChangedDirection == true)
                 //Nemoj animirati PacMana ukoliko on upravo mijenja smjer.
                 return;
