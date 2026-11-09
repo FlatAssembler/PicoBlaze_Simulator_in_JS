@@ -191,9 +191,9 @@ CSS - https://www.w3schools.com/css/default.asp
               style="font-size: 18px; font-family:'Lucida Console'" id="score">Score: 0</text>
 	<text x=10 y=445 fill="white" id="arrowsRemaining">Arrows: 3</text>
         <rect x=10 y=415 fill="pink" width=70 height=15 id="shootBackward"></rect>
-        <text x=12 y=427 fill="black" font-size=10>Shoot backward</text>
+        <text x=12 y=427 fill="black" font-size=10 id="shootBackwardText">Shoot backward</text>
 	<rect y=415 x=230 fill="pink" width=65 height=15 id="shootForward"></rect>
-        <text x=235 y=427 fill="black" font-size=10>Shoot forward</text>
+        <text x=235 y=427 fill="black" font-size=10 id="shootForwardText">Shoot forward</text>
         </svg>
         <br>
 	<div id="bodovi">
@@ -390,11 +390,13 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                     )
                 smjerPacmana = smjer.desno;
 	}
-	zaslon.getElementById("shootForward").onclick = function() {
+	zaslon.getElementById("shootForward").onclick =
+	       	zaslon.getElementById("shootForwardText").onclick = function() {
 		if (smjerPacmana != smjer.stop)
 			shootArrow(smjerPacmana);
 	}
-	zaslon.getElementById("shootBackward").onclick = function() {
+	zaslon.getElementById("shootBackward").onclick =
+	       zaslon.getElementById("shootBackwardText").onclick = function() {
 		if (smjerPacmana == smjer.stop) return;
 		shootArrow(smjerPacmana == smjer.desno ? smjer.lijevo:
 			   smjerPacmana == smjer.lijevo ? smjer.desno:
