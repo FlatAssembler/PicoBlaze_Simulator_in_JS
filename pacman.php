@@ -437,7 +437,7 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                 return;
             arrowsRemaining--;
             document.getElementById("arrowsRemaining").firstChild.nodeValue =
-                    "Arrows remaining: " + arrowsRemaining;
+                    "Arrows: " + arrowsRemaining;
             var arrow = {
                 id: "shotArrow" + nextShotArrowId++,
                 x: xKoordinataPacmana,
