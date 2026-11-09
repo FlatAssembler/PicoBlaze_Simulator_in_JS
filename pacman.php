@@ -189,7 +189,7 @@ CSS - https://www.w3schools.com/css/default.asp
         <!-- Desna tipka -->
         <text x=175 y=385 fill="white"
               style="font-size: 18px; font-family:'Lucida Console'" id="score">Score: 0</text>
-	<text x=10 y=445 fill="white" id="arrowsRemaining">Arrows: 3</text>
+	<text x=10 y=445 fill="white" id="arrowsRemaining">Arrows: 9</text>
         <rect x=10 y=415 fill="pink" width=70 height=15 id="shootBackward"></rect>
         <text x=12 y=427 fill="black" font-size=10 id="shootBackwardText">Shoot backward</text>
 	<rect y=415 x=230 fill="pink" width=65 height=15 id="shootForward"></rect>
@@ -202,7 +202,7 @@ CSS - https://www.w3schools.com/css/default.asp
         </div>
         <div id="instructions">
             The game responds to keyboard arrow keys, mouse clicks and touch. Use W/A/S/D
-            (up/left/down/right) to shoot up to three arrows; a hit sends that ghost back to the middle
+            (up/left/down/right) to shoot up to nine arrows; a hit sends that ghost back to the middle
             of the maze. On smartphones, the
             Pacman is supposed to follow your finger, to go in the direction
             where you last tapped. In case that doesn't work, you have buttons
@@ -348,7 +348,7 @@ After you've finished playing this game, <a href="index.php">let's get back to t
         var xKoordinataDuha = new Array(3);
         var yKoordinataDuha = new Array(3);
         var jeLiPacmanPojeoDuha = [false, false, false];
-        var arrowsRemaining = 3;
+        var arrowsRemaining = 9;
         var shotArrows = [];
         var nextShotArrowId = 0;
         var bojaDuha = ["red", "pink", "orange"];
