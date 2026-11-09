@@ -189,7 +189,7 @@ CSS - https://www.w3schools.com/css/default.asp
         <!-- Desna tipka -->
         <text x=175 y=385 fill="white"
               style="font-size: 18px; font-family:'Lucida Console'" id="score">Score: 0</text>
-        <text x=10 y=445 fill="white" id="arrowsRemaining">Arrows remaining: 3</text>
+        <text x=10 y=445 fill="white" id="arrowsRemaining">Arrows: 3</text>
         </svg>
         <br>
 	<div id="bodovi">
