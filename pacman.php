@@ -190,10 +190,10 @@ CSS - https://www.w3schools.com/css/default.asp
         <text x=175 y=385 fill="white"
               style="font-size: 18px; font-family:'Lucida Console'" id="score">Score: 0</text>
 	<text x=10 y=445 fill="white" id="arrowsRemaining">Arrows: 3</text>
-        <rect x=20 y=415 fill="pink" width=60 height=15 id="shootBackward"></rect>
-        <text x=20 y=427 fill="black" font-size=10>Shoot backward</text>
-	<rect y=415 x=230 fill="pink" width=60 height=15 id="shootForward"></rect>
-        <text x=230 y=427 fill="black" font-size=10>Shoot forward</text>
+        <rect x=20 y=415 fill="pink" width=70 height=15 id="shootBackward"></rect>
+        <text x=15 y=427 fill="black" font-size=10>Shoot backward</text>
+	<rect y=415 x=230 fill="pink" width=70 height=15 id="shootForward"></rect>
+        <text x=235 y=427 fill="black" font-size=10>Shoot forward</text>
         </svg>
         <br>
 	<div id="bodovi">
