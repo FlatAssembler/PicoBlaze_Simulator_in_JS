@@ -260,7 +260,19 @@ After you've finished playing this game, <a href="index.php">let's get back to t
                 instructions.style.width = sredinaEkrana * 2 - 2 * 16 + "px";
             };
             window.onresize();
-        }
+	}
+	    if (/Mobile/.test(navigator.userAgent)) {
+		    if (/Firefox/.test(navigator.userAgent) ||
+			    /OPR/.test(navigator.userAgent) ||
+			    /Dolphin/.test(navigator.userAgent)) {
+		    	document.getElementById("shootForwardText").setAttribute("font-size", 9);
+			document.getElementById("shootBackwardText").setAttribute("font-size", 9);
+		    }
+		    else {
+			document.getElementById("shootForwardText").setAttribute("font-size", 8);
+			document.getElementById("shootBackwardText").setAttribute("font-size", 8);
+		    }
+	    }
         /*      window.setTimeout(function () {
          document.body.removeChild(
          document.body.children[document.body.children.length - 1]
