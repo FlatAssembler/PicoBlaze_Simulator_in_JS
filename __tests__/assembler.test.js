@@ -35,6 +35,43 @@ inst 1 + 2 * 3
     expect(machineCode[0].hex).toBe("00007");
   });
 
+  test("ElseIf branches are evaluated in order", () => {
+    const assembly = `
+constant first_result, 0
+constant second_result, 0
+constant fallback_result, 0
+if 1
+  constant first_result, 1
+elseif 1
+  constant first_result, 2
+else
+  constant first_result, 3
+endif
+if 0
+  constant second_result, 1
+elseif 1
+  constant second_result, 2
+elseif 1
+  constant second_result, 3
+else
+  constant second_result, 4
+endif
+if 0
+  constant fallback_result, 1
+elseif 0
+  constant fallback_result, 2
+else
+  constant fallback_result, 3
+endif
+`;
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    expect(compilation_context.constants.get("first_result")).toBe(1);
+    expect(compilation_context.constants.get("second_result")).toBe(2);
+    expect(compilation_context.constants.get("fallback_result")).toBe(3);
+  });
+
   test("Loading a constant into a register works", () => {
     const assembly = `
 address 0

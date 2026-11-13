@@ -11,6 +11,13 @@ function isMnemonic(str) {
   return false;
 }
 
+function isDirectiveInCompilationContext(str) {
+  for (const directive of preprocessor)
+    if (RegExp("^" + directive + "$", "i").test(str))
+      return true;
+  return /:$/.test(str) && str.length > 1;
+}
+
 if (typeof Bun !== "undefined") {
   module.exports.isMnemonic = isMnemonic;
 }
@@ -46,7 +53,7 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
   let address;
   for (const node_of_depth_1 of root_of_the_abstract_syntax_tree.children) {
     if (typeof oldCompilationContext != "undefined" &&
-        !isDirective(node_of_depth_1.text)) {
+        !isDirectiveInCompilationContext(node_of_depth_1.text)) {
       alert(
           "Line #" + node_of_depth_1.lineNumber + ": \"" +
           node_of_depth_1.text +
@@ -280,27 +287,55 @@ function makeCompilationContext(root_of_the_abstract_syntax_tree,
                 context.constants));
       }
     }
-    if (/^if$/i.test(node_of_depth_1.text) &&
-        node_of_depth_1.children.length == 2) {
-      //"if" without "else"
+    if (/^if$/i.test(node_of_depth_1.text)) {
+      if (node_of_depth_1.children.length < 2) {
+        alert("Line #" + node_of_depth_1.lineNumber +
+              ': The "if" node should have at least 2 child nodes. This one has ' +
+              node_of_depth_1.children.length + " child nodes!");
+        return context;
+      }
       if (node_of_depth_1.children[0].interpretAsArithmeticExpression(
               context.constants)) {
         context = makeCompilationContext(node_of_depth_1.children[1], context);
-      }
-    } else if (/^if$/i.test(node_of_depth_1.text) &&
-               node_of_depth_1.children.length == 3) {
-      // if-else
-      if (node_of_depth_1.children[0].interpretAsArithmeticExpression(
-              context.constants))
-        context = makeCompilationContext(node_of_depth_1.children[1], context);
-      else
+      } else if (node_of_depth_1.children.length == 3 &&
+                 !/^elseif$/i.test(node_of_depth_1.children[2].text) &&
+                 !/^else$/i.test(node_of_depth_1.children[2].text)) {
+        // The third child is the else body in the original if-else AST shape.
         context = makeCompilationContext(node_of_depth_1.children[2], context);
-    } else if (/^if$/i.test(node_of_depth_1.text)) {
-      alert(
-          "Line #" + node_of_depth_1.lineNumber +
-          ': The "if" node should have either 2 or 3 child nodes. This one has ' +
-          node_of_depth_1.children.length + " child nodes!");
-      return context;
+      } else {
+        for (let branchIndex = 2;
+             branchIndex < node_of_depth_1.children.length; branchIndex++) {
+          const branch = node_of_depth_1.children[branchIndex];
+          if (/^elseif$/i.test(branch.text)) {
+            if (branch.children.length != 2) {
+              alert("Line #" + branch.lineNumber +
+                    ': The "elseif" node should have exactly 2 child nodes. This one has ' +
+                    branch.children.length + " child nodes!");
+              return context;
+            }
+            if (branch.children[0].interpretAsArithmeticExpression(
+                    context.constants)) {
+              context =
+                  makeCompilationContext(branch.children[1], context);
+              break;
+            }
+          } else if (/^else$/i.test(branch.text)) {
+            if (branch.children.length != 1) {
+              alert("Line #" + branch.lineNumber +
+                    ': The "else" node should have exactly 1 child node. This one has ' +
+                    branch.children.length + " child nodes!");
+              return context;
+            }
+            context = makeCompilationContext(branch.children[0], context);
+            break;
+          } else {
+            alert("Line #" + branch.lineNumber +
+                  ': Unexpected branch node "' + branch.text +
+                  '" in an "if" node!');
+            return context;
+          }
+        }
+      }
     }
     if (/^while$/i.test(node_of_depth_1.text) &&
         node_of_depth_1.children.length == 2) {

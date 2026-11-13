@@ -20,6 +20,7 @@ const preprocessor = [
   "ENDIF",
   "WHILE",
   "ENDWHILE",
+  "ELSEIF",
   "BASE_DECIMAL",
   "BASE_HEXADECIMAL",
   "PRINT_STRING",

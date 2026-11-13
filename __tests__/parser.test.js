@@ -51,6 +51,18 @@ endif
     '("assembly" ("if" ("=" ("+" "2" "2") "4") ("assembly" ("display" ""Correct!"")) ("assembly" ("display" ""Incorrect!""))))'
   ],
   [
+    "An if-elseif-else statement", `
+if 1
+  display "First"
+elseif 2
+  display "Second"
+else
+  display "Else"
+endif
+`,
+    '("assembly" ("if" "1" ("assembly" ("display" ""First"")) ("elseif" "2" ("assembly" ("display" ""Second""))) ("else" ("assembly" ("display" ""Else"")))))'
+  ],
+  [
     "An simple while statement", `
 while i < 10'd
   constant i, i + 1

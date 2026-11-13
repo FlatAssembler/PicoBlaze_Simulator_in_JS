@@ -44,58 +44,114 @@ function parse(tokenized) {
         return root_of_abstract_syntax_tree;
       }
       const condition = tokenized.slice(i + 1, pointerToTheNextNewline);
-      tokenized[i].children.push(parse(condition).children[0]);
-      tokenized.splice(i + 1, pointerToTheNextNewline - i);
-      let counter = 1;
-      const pointerToTheEndIfOrElse = tokenized.findIndex((node, index) => {
-        if (index <= i)
-          return false;
-        if (/^if$/i.test(node.text))
-          counter++;
-        if (/^endif$/i.test(node.text))
-          counter--;
-        if (!counter || (/^else$/i.test(node.text) && counter == 1))
-          return true;
-        return counter == 0;
-      });
-      if (pointerToTheEndIfOrElse == -1) {
+      const branches = [ {
+        type : "if",
+        condition,
+        lineNumber : tokenized[i].lineNumber,
+        bodyStart : pointerToTheNextNewline + 1,
+      } ];
+      let depth = 1;
+      let elseSeen = false;
+      let endIfIndex = -1;
+      for (let index = pointerToTheNextNewline + 1;
+           index < tokenized.length; index++) {
+        if (/^if$/i.test(tokenized[index].text)) {
+          depth++;
+        } else if (/^endif$/i.test(tokenized[index].text)) {
+          depth--;
+          if (depth == 0) {
+            branches[branches.length - 1].body =
+                tokenized.slice(branches[branches.length - 1].bodyStart, index);
+            endIfIndex = index;
+            break;
+          }
+        } else if (depth == 1 &&
+                   (/^elseif$/i.test(tokenized[index].text) ||
+                    /^else$/i.test(tokenized[index].text))) {
+          const isElseIf = /^elseif$/i.test(tokenized[index].text);
+          if (elseSeen) {
+            alert("Line #" + tokenized[index].lineNumber +
+                  ': Found "' + tokenized[index].text +
+                  '" after the "else" branch!');
+            return root_of_abstract_syntax_tree;
+          }
+          branches[branches.length - 1].body =
+              tokenized.slice(branches[branches.length - 1].bodyStart, index);
+          if (isElseIf) {
+            const conditionEnd = tokenized.findIndex(
+                (node, nextIndex) =>
+                    nextIndex > index && node.text == '\n');
+            if (conditionEnd == -1) {
+              alert("Line #" + tokenized[index].lineNumber +
+                    ': The condition after "elseif" doesn\'t end in a new-line character!');
+              return root_of_abstract_syntax_tree;
+            }
+            const elseIfCondition =
+                tokenized.slice(index + 1, conditionEnd);
+            if (!elseIfCondition.length) {
+              alert("Line #" + tokenized[index].lineNumber +
+                    ': The "elseif" directive has no condition!');
+              return root_of_abstract_syntax_tree;
+            }
+            branches.push({
+              type : "elseif",
+              condition : elseIfCondition,
+              lineNumber : tokenized[index].lineNumber,
+              bodyStart : conditionEnd + 1,
+            });
+            index = conditionEnd;
+          } else {
+            elseSeen = true;
+            branches.push({
+              type : "else",
+              lineNumber : tokenized[index].lineNumber,
+              bodyStart : index + 1,
+            });
+          }
+        }
+      }
+      if (endIfIndex == -1) {
         alert("Line #" + tokenized[i].lineNumber +
               ': The "if" directive here isn\'t closed by an "endif"!');
         return root_of_abstract_syntax_tree;
       }
-
-      const thenClause = tokenized.slice(i + 1, pointerToTheEndIfOrElse);
-      let lineNumberOfElseOrEndIf =
-          tokenized[pointerToTheEndIfOrElse].lineNumber;
-      tokenized.splice(i + 1, pointerToTheEndIfOrElse - i);
-      tokenized[i].children.push(parse(thenClause));
-      if (counter) {
-        // If there is an "else"-clause
-        const pointerToEndIf = tokenized.findIndex((node, index) => {
-          if (index <= i)
-            return false;
-          if (/^if$/i.test(node.text))
-            counter++;
-          if (/^endif$/i.test(node.text))
-            counter--;
-          if (/^else$/i.test(node.text) && counter == 1) {
-            alert("Line #" + node.lineNumber +
-                  ': Found "else" when expecting "endif"!');
-            return true;
-          }
-          return counter == 0;
-        });
-        if (pointerToEndIf == -1) {
-          alert("Line #" + lineNumberOfElseOrEndIf +
-                ': The "else" here is not followed by an "endif"!');
-          return root_of_abstract_syntax_tree;
-        }
-        const elseClause = tokenized.slice(i + 1, pointerToEndIf);
-        tokenized.splice(i + 1, pointerToEndIf - i);
-        tokenized[i].children.push(parse(elseClause));
+      const ifNode = tokenized[i];
+      const ifCondition = parse(branches[0].condition).children[0];
+      if (!ifCondition) {
+        alert("Line #" + ifNode.lineNumber +
+              ': The "if" directive has no condition!');
+        return root_of_abstract_syntax_tree;
       }
+      ifNode.children = [ ifCondition, parse(branches[0].body) ];
+      for (let branchIndex = 1; branchIndex < branches.length;
+           branchIndex++) {
+        const branch = branches[branchIndex];
+        if (branch.type == "elseif") {
+          const branchCondition = parse(branch.condition).children[0];
+          if (!branchCondition) {
+            alert("Line #" + branch.lineNumber +
+                  ': The "elseif" directive has no condition!');
+            return root_of_abstract_syntax_tree;
+          }
+          const elseIfNode = new TreeNode("elseif", branch.lineNumber);
+          elseIfNode.children = [ branchCondition, parse(branch.body) ];
+          ifNode.children.push(elseIfNode);
+        } else {
+          const elseBody = parse(branch.body);
+          if (branches.length == 2) {
+            // Keep the existing AST shape for a plain if-else statement.
+            ifNode.children.push(elseBody);
+          } else {
+            const elseNode = new TreeNode("else", branch.lineNumber);
+            elseNode.children = [ elseBody ];
+            ifNode.children.push(elseNode);
+          }
+        }
+      }
+      tokenized.splice(i, endIfIndex - i + 1, ifNode);
     } else if (/^endif$/i.test(tokenized[i].text) ||
-               /^else$/i.test(tokenized[i].text)) {
+               /^else$/i.test(tokenized[i].text) ||
+               /^elseif$/i.test(tokenized[i].text)) {
       alert("Line #" + tokenized[i].lineNumber +
             ': The preprocessor directive "' + tokenized[i].text +
             '" found without the corresponding "if" directive!');
