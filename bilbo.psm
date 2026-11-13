@@ -3,8 +3,6 @@
 ; Reads 6 digits from UART, arranges into two 3-digit numbers maximizing sum < 1000.
 ; Uses UART_RX, UART_TX, print_string conventions from the repository.
 
-;WARNING: This solution would not have scored the full 80 points on the Infokup 2013 competition. Apart from probably being too slow, it wrongly solves one (and exactly one, if I am not mistaken) of the official test data from Infokup 2013, namely, the input "2 3 0 0 9 0". It outputs "Bilbo" (as if there were no solution) when it should output "590=390+200". Solving it would take adding a few additional checks, but the program is already very long (more than 700 lines of code).
-
 base_decimal
 constant NDEBUG, 0
 
@@ -91,7 +89,7 @@ READ_DIGIT:
   jump nc, maybe_digit
   jump READ_DIGIT
 maybe_digit:
-  load s1, "9" + 1 ; If we load "9" here and not ("9" + 1), the program will run into an infinite loop whenever the input contains a digit 9. There is probably no solution anyway if the input contains a digit 9, but, in that case, we should print out "Bilbo", rather than falling into an infinite loop.
+  load s1, "9" + 1 ; If we load "9" here and not ("9" + 1), the program will run into an infinite loop whenever the input contains a digit 9.
   compare s9, s1
   jump nc, not_digit
   ; it's a digit: s0 = s9 - '0'
@@ -281,6 +279,12 @@ evaluate_attempt:
   fetch s3, 13   ; d
   fetch s4, 14   ; e
   fetch s6, 15   ; f -> stored in s6
+  
+  ;Now let's fulfill the requirement that the two numbers must be tree-digit ones (to correctly solve the test case "2 3 0 0 9 0").
+  compare s0, 0
+  jump z, sum_invalid
+  compare s3, 0
+  jump z, sum_invalid
 
   ; compute firstNumber into (s7:s8) 16-bit (low: s7, high: s8)
   load s7, 0
