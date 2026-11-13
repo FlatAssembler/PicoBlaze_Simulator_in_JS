@@ -280,7 +280,8 @@ evaluate_attempt:
   fetch s4, 14   ; e
   fetch s6, 15   ; f -> stored in s6
   
-  ;Now let's fulfill the requirement that the two numbers must be tree-digit ones (to correctly solve the test case "2 3 0 0 9 0").
+  ; Now let's fulfill the requirement that the two numbers must be three-digit
+  ; ones (to correctly solve the test case "2 3 0 0 9 0").
   compare s0, 0
   jump z, sum_invalid
   compare s3, 0
