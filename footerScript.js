@@ -56,6 +56,14 @@ document.getElementById("assembleButton").onclick = () => {
     alert("Internal compiler error in the preprocessor: " + error.message);
   }
   console.log("Result of preprocessing: ", context);
+  reverse_nameregs = [];
+  for (let i = 0; i < 16; i++)
+	reverse_nameregs.push([]);
+  const keys = Array.from(context.namedRegisters.keys());
+  for (const key of keys)
+	reverse_nameregs[parseInt(context.namedRegisters.get(key)[1], 16)].
+		push(key);
+  console.log("The reversed named registers are: ", reverse_nameregs);
   try {
     assemble(parsed, context);
   } catch (error) {

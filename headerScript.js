@@ -9,6 +9,9 @@ let machineCode = [];
 for (let i = 0; i < 4096; i++)
   machineCode.push({hex : "00000", line : 0});
 let default_base_of_literals_in_assembly = 16;
+let reverse_nameregs = [];
+for (let i = 0; i < 16; i++)
+	reverse_nameregs.push([]);
 function displayRegistersAndFlags() {
   if (playing && !document.getElementById("shouldWeUpdateRegisters").checked)
     return;
@@ -611,7 +614,10 @@ Displaying registers and flags on every step is useful for debugging, but it slo
 <th>Registers</th>
   `;
   for (let i = 0; i < 16; i++)
-    registersTable += "<th>s" + i.toString(16) + "</th>";
+	if (reverse_nameregs[i].length == 0)
+    		registersTable += "<th>s" + i.toString(16) + "</th>";
+	else
+		registersTable += "<th><abbr title=\"" + reverse_nameregs[i].join(", ") +"\">s" + i.toString(16) + "</abbr></th>";
   registersTable += "<th>PC</th>";
   registersTable += '</tr><tr class="regbank_a"><th>REGBANK A</th>';
   for (let i = 0; i < 16; i++)
