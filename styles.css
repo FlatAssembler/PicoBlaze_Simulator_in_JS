@@ -301,6 +301,28 @@ table {
   background-color: white;
   margin-bottom: 15px;
 }
+#simulationResults abbr[tabindex="0"] {
+  position: relative;
+}
+#simulationResults abbr[tabindex="0"]:focus::after {
+  content: attr(title);
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  transform: translateX(-50%);
+  z-index: 10;
+  width: 14em;
+  max-width: calc(100vw - 20px);
+  padding: 4px 6px;
+  border: 1px solid black;
+  border-radius: 3px;
+  background: #ffffaa;
+  color: black;
+  box-shadow: 2px 3px 4px #555;
+  font: normal 0.9em Arial, sans-serif;
+  text-align: left;
+  white-space: normal;
+}
 input {
   width: 30px;
 }

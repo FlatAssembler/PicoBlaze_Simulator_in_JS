@@ -569,6 +569,12 @@ function deletePCpointer() {
   for (let i = 0; i < machineCode.length; i++)
     document.getElementById("PC_label_" + formatAsAddress(i)).innerHTML = "";
 }
+function formatRegisterHeader(i, alternatives) {
+  const registerName = "s" + i.toString(16);
+  if (alternatives.length === 0)
+    return registerName;
+  return `<abbr tabindex="0" title="${alternatives.join(", ")}">${registerName}</abbr>`;
+}
 function drawTable() {
   let tableHTML = `
   <button id="downloadHex"><img src="https://icons.getbootstrap.com/assets/icons/download.svg" alt="Download Hexadecimal"></button>
@@ -614,10 +620,8 @@ Displaying registers and flags on every step is useful for debugging, but it slo
 <th>Registers</th>
   `;
   for (let i = 0; i < 16; i++)
-	if (reverse_nameregs[i].length == 0)
-    		registersTable += "<th>s" + i.toString(16) + "</th>";
-	else
-		registersTable += "<th><abbr title=\"" + reverse_nameregs[i].join(", ") +"\">s" + i.toString(16) + "</abbr></th>";
+    registersTable +=
+        "<th>" + formatRegisterHeader(i, reverse_nameregs[i]) + "</th>";
   registersTable += "<th>PC</th>";
   registersTable += '</tr><tr class="regbank_a"><th>REGBANK A</th>';
   for (let i = 0; i < 16; i++)
@@ -818,5 +822,5 @@ function fetchExample(exampleName) {
 }
 
 if (typeof Bun !== "undefined") {
-  module.exports = {formatAsAddress};
+  module.exports = {formatAsAddress, formatRegisterHeader};
 }
