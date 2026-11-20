@@ -133,7 +133,7 @@
     },
     {
       "title": "Layout, Styling, and Syntax Highlighting",
-      "purpose": "Details of styles.css and headerScript.js UI responsibilities: fixed-width mobile-first layout, absolute-positioned panes (assemblyCode editor, machineCode table, simulationResults, UART_IO), CSS classes for syntax highlighting (.mnemonic, .register, .flag, .label, .directive, .comment), simulation feedback classes (.changed, .turning_off, .active, .inactive), responsive navigation ribbon, and the syntaxHighlighter() function.",
+      "purpose": "Details of styles.css and headerScript.js UI responsibilities: fixed-width mobile-first layout, absolute-positioned panes (assemblyCode editor, machineCode table, simulationResults, UART_IO), CSS classes for syntax highlighting (.mnemonic, .register, .flag, .label, .directive, .comment), simulation feedback classes (.changed, .turning_off, .active, .inactive), responsive navigation ribbon, and the syntaxHighlighter() function. Also mention that the register names for which alternate names (nameregs) exist in the assembly code are stored in an HTML abbr element so that the user can see the alternative name by hovering the mouse over it.",
       "parent": "Web IDE — Frontend Architecture",
       "page_notes": [
         {
