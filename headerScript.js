@@ -822,5 +822,5 @@ function fetchExample(exampleName) {
 }
 
 if (typeof Bun !== "undefined") {
-  module.exports = {formatAsAddress};
+  module.exports = {formatAsAddress, formatRegisterHeader};
 }
