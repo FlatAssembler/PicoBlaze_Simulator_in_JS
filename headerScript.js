@@ -728,7 +728,8 @@ function downloadHex() {
   for (let i = 0; i < hexadecimalString.length; i++)
     arrayOfBytes[i] = hexadecimalString.charCodeAt(i);
   const blob = new Blob([ arrayOfBytes ], {
-    type : "application/binhex",
+	  type : (/Servo/.test(navigator.userAgent) ?
+		  "text/plain" : "application/binhex"),
     endings : "transparent",
   });
   const url = URL.createObjectURL(blob);
