@@ -23,6 +23,8 @@
 ;the terminal, converts them into binary,
 ;and then prints the binary
 ;representations back onto the terminal.
+;And it also prints their Gray Code 
+;equivalents.
 ;Because all registers in PicoBlaze are
 ;8-bit, the numbers must be smaller than
 ;2**8=256. Dealing with bigger numbers
@@ -38,13 +40,13 @@
 <span style="color: black">;</span>255
 <span style="color: black">;</span></span>
 ;And the expected output is: <span style="white-space:pre; display: block; font-size: 1em; background: black; color: aquamarine; margin-top: 0; margin-bottom: 0;">
-<span style="color: black">;</span>1_(10)=1_(2)
-<span style="color: black">;</span>2_(10)=10_(2)
-<span style="color: black">;</span>4_(10)=100_(2)
-<span style="color: black">;</span>8_(10)=1000_(2)
-<span style="color: black">;</span>15_(10)=1111_(2)
-<span style="color: black">;</span>127_(10)=1111111_(2)
-<span style="color: black">;</span>255_(10)=11111111_(2)
+<span style="color: black">;</span>1_(10)=1_(2)=1_(Gray)
+<span style="color: black">;</span>2_(10)=10_(2)=11_(Gray)
+<span style="color: black">;</span>4_(10)=100_(2)=110_(Gray)
+<span style="color: black">;</span>8_(10)=1000_(2)=1100_(Gray)
+<span style="color: black">;</span>15_(10)=1111_(2)=1000_(Gray)
+<span style="color: black">;</span>127_(10)=1111111_(2)=1000000_(Gray)
+<span style="color: black">;</span>255_(10)=11111111_(2)=10000000_(Gray)
 <span style="color: black">;</span></span>
 ;Note that you need to click the
 ;"Enable UART" button in order to use it.
@@ -155,6 +157,9 @@ display a
 endif
 
 
+constant flag_of_whether_the_binary_number_has_been_printed, 10'd
+constant the_binary_number_pointer, 11'd
+
 ADDRESS 0
 START:
 ;At the beginning, the number is 0.
@@ -227,13 +232,26 @@ end_of_printing_the_decimal:
 ;The following line will only assemble
 ;using v5.3.0 or newer
 print_string "_(10)=", s9, UART_TX
+store s0, the_binary_number_pointer
+load s9, 0
+store s9, flag_of_whether_the_binary_number_has_been_printed
+printing_some_binary_numbers:
+fetch s0, the_binary_number_pointer
 ;If the number to be printed is
 ;equal to zero, print 0.
 sub  s0, 0
-jump nz, print_the_binary
+jump nz, check_whether_we_have_already_printed_binary
 load s9, "0"
 call UART_TX
 jump end_of_printing_loop
+check_whether_we_have_already_printed_binary:
+fetch s9, flag_of_whether_the_binary_number_has_been_printed
+compare s9, 0
+jump z, print_the_binary
+  ; If the binary has already been printed, we will then print the Gray code.
+  load s9, s0
+  sr0 s9
+  xor s0, s9
 print_the_binary:
 ;Make the pointer point to the
 ;beginning of RAM.
@@ -289,7 +307,15 @@ beginning_of_printing_loop:
   ;stored in RAM.
   jump beginning_of_printing_loop
 end_of_printing_loop:
-print_string "_(2)", s9, UART_TX
+fetch s9, flag_of_whether_the_binary_number_has_been_printed
+compare s9, 0
+jump nz, print_the_Gray_in_parentheses_message
+  load s9, 1
+  store s9, flag_of_whether_the_binary_number_has_been_printed
+  print_string "_(2)=", s9, UART_TX
+  jump printing_some_binary_numbers
+print_the_Gray_in_parentheses_message:
+print_string "_(Gray)", s9, UART_TX
 load s9, a ;<span id="newline_character">newline character</a>, 0xa=='\n'.
 ;The last line is being highlighted
 ;incorrectly by the syntax
