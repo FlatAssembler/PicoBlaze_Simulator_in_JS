@@ -1,3 +1,4 @@
+const fs = require("fs");
 const tree = require("../TreeNode.js");
 global.TreeNode = tree.TreeNode; // referenced by tokenizer
 
@@ -122,6 +123,22 @@ store s0, (pointer)
         preprocessor.makeCompilationContext(abstract_syntax_tree);
     assembler.assemble(abstract_syntax_tree, compilation_context);
     expect(machineCode[0].hex).toBe("2e0f0");
+  });
+
+  test("Bilbo puzzle assembles with named constants and registers", () => {
+    const assembly =
+        fs.readFileSync(require.resolve("../bilbo.psm"), "utf8")
+            .replace(/\r\n/g, "\n");
+    const abstract_syntax_tree = parser.parse(tokenizer.tokenize(assembly));
+    const compilation_context =
+        preprocessor.makeCompilationContext(abstract_syntax_tree);
+    assembler.assemble(abstract_syntax_tree, compilation_context);
+
+    expect(compilation_context.constants.get("LAST_ATTEMPT_INDEX")).toBe(5);
+    expect(compilation_context.namedRegisters.get("search_depth")).toBe("s2");
+    expect(compilation_context.namedRegisters.get("value_low")).toBe("s6");
+    expect(machineCode[compilation_context.labels.get("backtracking_search")]
+               .hex).not.toBe("00000");
   });
 
   test("Conditional jumps work", () => {
