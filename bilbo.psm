@@ -5,6 +5,27 @@
 
 base_decimal
 constant NDEBUG, 0
+constant DIGIT_COUNT, 10
+constant ATTEMPT_LENGTH, 6
+constant LAST_ATTEMPT_INDEX, ATTEMPT_LENGTH - 1
+constant COUNTS_BASE, 0
+constant ATTEMPT_BASE, 10
+constant NEXT_TRY_BASE, 20
+constant COUNTS_USED_BASE, 30
+constant BEST_FOUND_FLAG, 48
+constant BEST_SUM_LOW, 49
+constant BEST_SUM_HIGH, 50
+constant CANDIDATE_FIRST_LOW, 51
+constant CANDIDATE_FIRST_HIGH, 52
+constant CANDIDATE_SECOND_LOW, 53
+constant CANDIDATE_SECOND_HIGH, 54
+constant BEST_FIRST_LOW, 55
+constant BEST_FIRST_HIGH, 56
+constant BEST_SECOND_LOW, 57
+constant BEST_SECOND_HIGH, 58
+constant TEN, 10
+constant HUNDRED, 100
+constant MAX_SUM_EXCLUSIVE, 1000
 
 address 0
 
@@ -37,7 +58,7 @@ init_memory_and_prompt:
   load s0, 0
   load s1, 0
 zero_counts_loop:
-  compare s1, 10
+  compare s1, DIGIT_COUNT
   jump z, zero_counts_done
   store s0, (s1)
   add s1, 1
@@ -46,10 +67,10 @@ zero_counts_done:
   ; zero counts_used (30..39)
   load s1, 0
 zero_used_loop:
-  compare s1, 10
+  compare s1, DIGIT_COUNT
   jump z, zero_used_done
-  ; compute pointer = 30 + s1 into s7
-  load s7, 30
+  ; compute pointer = COUNTS_USED_BASE + s1 into s7
+  load s7, COUNTS_USED_BASE
   add s7, s1
   store s0, (s7)
   add s1, 1
@@ -58,23 +79,23 @@ zero_used_done:
   ; zero next_try & attempt (6 entries)
   load s1, 0
 zero_nt_loop:
-  compare s1, 6
+  compare s1, ATTEMPT_LENGTH
   jump z, zero_nt_done
-  ; store 0 into next_try[ s1 ] at address 20 + s1
-  load s7, 20
+  ; store 0 into next_try[s1] at NEXT_TRY_BASE + s1
+  load s7, NEXT_TRY_BASE
   add s7, s1
   load s0, 0
   store s0, (s7)   ; next_try[d] = 0
-  ; store 0 into attempt[ s1 ] at address 10 + s1
-  load s7, 10
+  ; store 0 into attempt[s1] at ATTEMPT_BASE + s1
+  load s7, ATTEMPT_BASE
   add s7, s1
   load s0, 0
   store s0, (s7)   ; attempt[d] = 0
   add s1, 1
   jump zero_nt_loop
 zero_nt_done:
-  ; clear best_found_flag (store 0 at addr 48)
-  load s7, 48
+  ; clear best_found_flag
+  load s7, BEST_FOUND_FLAG
   load s0, 0
   store s0, (s7)
 return
@@ -102,168 +123,167 @@ not_digit:
 
 ; -------------------------
 ; Read six digits and fill counts[0..9]
+namereg s2, digits_read
+namereg s5, counts_pointer
 read_six_digits:
-  load s2, 0   ; read counter
+  load digits_read, 0
 read_six_loop:
-  compare s2, 6
+  compare digits_read, ATTEMPT_LENGTH
   jump z, read_six_done
   call READ_DIGIT    ; s0 = digit
   ; increment counts[s0]
-  ; compute pointer = 0 + s0 into s5
-  load s5, 0
+  load counts_pointer, COUNTS_BASE
   load s3, s0
   compare s3, 0
   jump z, read_six_store
 read_six_addloop:
-  add s5, 1
+  add counts_pointer, 1
   sub s3, 1
   jump nz, read_six_addloop
 read_six_store:
-  fetch s6, (s5)
+  fetch s6, (counts_pointer)
   add s6, 1
-  store s6, (s5)
-  add s2, 1
+  store s6, (counts_pointer)
+  add digits_read, 1
   jump read_six_loop
 read_six_done:
 return
 
 ; -------------------------
 ; Backtracking search (iterative)
-; depth in s2
+; Search register aliases
+namereg s2, search_depth
+namereg s3, candidate_digit
+namereg s4, next_try_pointer
+namereg s5, pointer_offset
+namereg s6, scratchpad_pointer
+namereg s7, used_counts_pointer
+namereg s8, used_digit_count
+namereg s9, available_digit_count
 backtracking_search:
-  load s2, 0    ; depth = 0
+  load search_depth, 0
   ; next_try[0] already zero
 search_loop:
-  compare s2, 6
+  compare search_depth, ATTEMPT_LENGTH
   jump z, evaluate_attempt
-  ; compute pointer = 20 + depth into s6
-  load s6, 20
-  load s5, s2
-  compare s5, 0
+  ; compute pointer = NEXT_TRY_BASE + depth
+  load scratchpad_pointer, NEXT_TRY_BASE
+  load pointer_offset, search_depth
+  compare pointer_offset, 0
   jump z, nt_have_ptr
 nt_addloop:
-  add s6, 1
-  sub s5, 1
+  add scratchpad_pointer, 1
+  sub pointer_offset, 1
   jump nz, nt_addloop
 nt_have_ptr:
-  ; fetch s3 = next_try[depth]
-  fetch s3, (s6)
+  fetch candidate_digit, (scratchpad_pointer)
 try_digit_loop:
-  compare s3, 10
+  compare candidate_digit, DIGIT_COUNT
   jump z, backtrack
-  ; check counts_used[s3] < counts[s3]
-  ; build addr_used = 30 + s3 in s7
-  load s7, 30
-  load s5, s3
-  compare s5, 0
+  ; check counts_used[candidate_digit] < counts[candidate_digit]
+  load used_counts_pointer, COUNTS_USED_BASE
+  load pointer_offset, candidate_digit
+  compare pointer_offset, 0
   jump z, used_have_ptr
 used_addloop:
-  add s7, 1
-  sub s5, 1
+  add used_counts_pointer, 1
+  sub pointer_offset, 1
   jump nz, used_addloop
 used_have_ptr:
-  fetch s8, (s7)   ; s8 = used
-  ; build addr_counts = 0 + s3 in s6
-  load s6, 0
-  load s5, s3
-  compare s5, 0
+  fetch used_digit_count, (used_counts_pointer)
+  load scratchpad_pointer, COUNTS_BASE
+  load pointer_offset, candidate_digit
+  compare pointer_offset, 0
   jump z, counts_have_ptr
 counts_addloop:
-  add s6, 1
-  sub s5, 1
+  add scratchpad_pointer, 1
+  sub pointer_offset, 1
   jump nz, counts_addloop
 counts_have_ptr:
-  fetch s9, (s6)   ; s9 = avail
-  compare s8, s9
+  fetch available_digit_count, (scratchpad_pointer)
+  compare used_digit_count, available_digit_count
   jump nc, digit_not_available
-  ; digit available: use it
-  ; attempt[depth] = s3 -> store into (10+depth)
-  load s5, 10
-  load s6, s2
-  compare s6, 0
+  ; attempt[depth] = candidate_digit
+  load pointer_offset, ATTEMPT_BASE
+  load scratchpad_pointer, search_depth
+  compare scratchpad_pointer, 0
   jump z, at_ptr_ready
 at_addloop:
-  add s5, 1
-  sub s6, 1
+  add pointer_offset, 1
+  sub scratchpad_pointer, 1
   jump nz, at_addloop
 at_ptr_ready:
-  store s3, (s5)
-  ; increment counts_used[s3] stored at s7 earlier
-  add s8, 1
-  store s8, (s7)
-  ; set next_try[depth] = s3 + 1
-  load s4, 20
-  load s5, s2
-  compare s5, 0
+  store candidate_digit, (pointer_offset)
+  add used_digit_count, 1
+  store used_digit_count, (used_counts_pointer)
+  ; set next_try[depth] = candidate_digit + 1
+  load next_try_pointer, NEXT_TRY_BASE
+  load pointer_offset, search_depth
+  compare pointer_offset, 0
   jump z, nt2_ready
 nt2_addloop:
-  add s4, 1
-  sub s5, 1
+  add next_try_pointer, 1
+  sub pointer_offset, 1
   jump nz, nt2_addloop
 nt2_ready:
-  add s3, 1
-  store s3, (s4)
+  add candidate_digit, 1
+  store candidate_digit, (next_try_pointer)
   ; advance depth
-  add s2, 1
+  add search_depth, 1
   ; set next_try[new depth] = 0
-  load s4, 20
-  load s5, s2
-  compare s5, 0
+  load next_try_pointer, NEXT_TRY_BASE
+  load pointer_offset, search_depth
+  compare pointer_offset, 0
   jump z, ntnew_ready
 ntnew_addloop:
-  add s4, 1
-  sub s5, 1
+  add next_try_pointer, 1
+  sub pointer_offset, 1
   jump nz, ntnew_addloop
 ntnew_ready:
   load s0, 0
-  store s0, (s4)
+  store s0, (next_try_pointer)
   jump search_loop
 
 digit_not_available:
-  ; increment s3 and store back into next_try[depth]
-  add s3, 1
-  ; compute pointer 20+depth into s4
-  load s4, 20
-  load s5, s2
-  compare s5, 0
+  add candidate_digit, 1
+  load next_try_pointer, NEXT_TRY_BASE
+  load pointer_offset, search_depth
+  compare pointer_offset, 0
   jump z, nt3_ready
 nt3_addloop:
-  add s4, 1
-  sub s5, 1
+  add next_try_pointer, 1
+  sub pointer_offset, 1
   jump nz, nt3_addloop
 nt3_ready:
-  store s3, (s4)
+  store candidate_digit, (next_try_pointer)
   jump try_digit_loop
 
 backtrack:
-  compare s2, 0
+  compare search_depth, 0
   jump z, done_search
-  sub s2, 1
-  ; release digit used at depth (attempt[depth]) where depth now is decremented
-  ; compute pointer to attempt[depth]
-  load s5, 10
-  load s6, s2
-  compare s6, 0
+  sub search_depth, 1
+  load pointer_offset, ATTEMPT_BASE
+  load scratchpad_pointer, search_depth
+  compare scratchpad_pointer, 0
   jump z, at2_ready
 at2_addloop:
-  add s5, 1
-  sub s6, 1
+  add pointer_offset, 1
+  sub scratchpad_pointer, 1
   jump nz, at2_addloop
 at2_ready:
-  fetch s3, (s5)    ; s3 = digit
-  ; decrement counts_used[s3] at addr 30 + s3
-  load s7, 30
-  load s6, s3
-  compare s6, 0
+  fetch candidate_digit, (pointer_offset)
+  load used_counts_pointer, COUNTS_USED_BASE
+  load scratchpad_pointer, candidate_digit
+  compare scratchpad_pointer, 0
   jump z, used2_ready
 used2_addloop:
-  add s7, 1
-  sub s6, 1
+  add used_counts_pointer, 1
+  sub scratchpad_pointer, 1
   jump nz, used2_addloop
 used2_ready:
-  fetch s8, (s7)
-  sub s8, 1
-  store s8, (s7)
+  fetch used_digit_count, (used_counts_pointer)
+  sub used_digit_count, 1
+  store used_digit_count, (used_counts_pointer)
   jump search_loop
 
 done_search:
@@ -273,12 +293,12 @@ return
 ; evaluate_attempt: depth==6
 evaluate_attempt:
   ; fetch attempt digits into registers r0..r5 -> use s0..s6
-  fetch s0, 10   ; a
-  fetch s1, 11   ; b
-  fetch s2, 12   ; c
-  fetch s3, 13   ; d
-  fetch s4, 14   ; e
-  fetch s6, 15   ; f -> stored in s6
+  fetch s0, ATTEMPT_BASE       ; a
+  fetch s1, ATTEMPT_BASE + 1   ; b
+  fetch s2, ATTEMPT_BASE + 2   ; c
+  fetch s3, ATTEMPT_BASE + 3   ; d
+  fetch s4, ATTEMPT_BASE + 4   ; e
+  fetch s6, ATTEMPT_BASE + 5   ; f -> stored in s6
   
   ; Now let's fulfill the requirement that the two numbers must be three-digit
   ; ones (to correctly solve the test case "2 3 0 0 9 0").
@@ -296,7 +316,7 @@ evaluate_attempt:
   jump z, fn_after_a100
 fn_a100_loop:
   ; add 100 to s7/s8
-  load sb, 100
+  load sb, HUNDRED
   add s7, sb
   compare s7, sb
   jump nc, fn_a100_nocarry
@@ -310,7 +330,7 @@ fn_after_a100:
   compare s9, 0
   jump z, fn_after_b10
 fn_b10_loop:
-  load sb, 10
+  load sb, TEN
   add s7, sb
   compare s7, sb
   jump nc, fn_b10_nocarry
@@ -334,7 +354,7 @@ fn_no_carry_inc:
   compare s9, 0
   jump z, sn_after_d100
 sn_d100_loop:
-  load sb, 100
+  load sb, HUNDRED
   add s0, sb
   compare s0, sb
   jump nc, sn_d100_nocarry
@@ -348,7 +368,7 @@ sn_after_d100:
   compare s9, 0
   jump z, sn_after_e10
 sn_e10_loop:
-  load sb, 10
+  load sb, TEN
   add s0, sb
   compare s0, sb
   jump nc, sn_e10_nocarry
@@ -366,10 +386,10 @@ sn_no_carry_inc:
 
   ; IMMEDIATELY SAVE firstNumber (s7:s8) and secondNumber (s0:s1) to candidate storage (51-54)
   ; This protects them from being clobbered by any subsequent operations
-  store s7, 51   ; candidate_first_lo
-  store s8, 52   ; candidate_first_hi
-  store s0, 53   ; candidate_second_lo
-  store s1, 54   ; candidate_second_hi
+  store s7, CANDIDATE_FIRST_LOW
+  store s8, CANDIDATE_FIRST_HIGH
+  store s0, CANDIDATE_SECOND_LOW
+  store s1, CANDIDATE_SECOND_HIGH
 
   ; sum = first + second -> store in s2 (lo), s3 (hi)
   load s2, s7
@@ -386,27 +406,27 @@ sum_no_carry:
   add s3, s1
 sum_done:
 
-  ; check sum < 1000
-  constant upper_byte_of_1000,  bitand(1000, ff00'x) / 2 ^ 8
-  compare s3, upper_byte_of_1000
+  ; check sum < MAX_SUM_EXCLUSIVE
+  constant upper_byte_of_limit, bitand(MAX_SUM_EXCLUSIVE, ff00'x) / 2 ^ 8
+  compare s3, upper_byte_of_limit
   jump nc, sum_ge_1000
   jump sum_valid
 sum_ge_1000:
-  compare s3, upper_byte_of_1000
+  compare s3, upper_byte_of_limit
   jump nz, sum_invalid
-  ; s3 == upper_byte_of_1000 -> check s2 < (1000 & 0xff)
-  load sb, bitand(1000, ff'x)
+  ; s3 == upper_byte_of_limit -> check s2 < (MAX_SUM_EXCLUSIVE & 0xff)
+  load sb, bitand(MAX_SUM_EXCLUSIVE, ff'x)
   compare s2, sb
   jump nc, sum_invalid
   jump sum_valid
 sum_invalid:
   ; invalid -> backtrack: release last digit and set next_try accordingly
   ; release digit at depth-1 (index 5)
-  load s5, 10
-  add s5, 5
+  load s5, ATTEMPT_BASE
+  add s5, LAST_ATTEMPT_INDEX
   fetch s9, (s5)
   ; decrement counts_used[s9]
-  load s7, 30
+  load s7, COUNTS_USED_BASE
   load s8, s9
   compare s8, 0
   jump z, used_rel_done
@@ -419,24 +439,23 @@ used_rel_done:
   sub s0, 1
   store s0, (s7)
   ; set next_try[5] = s9 + 1
-  load s4, 20
-  add s4, 5
+  load s4, NEXT_TRY_BASE
+  add s4, LAST_ATTEMPT_INDEX
   add s9, 1
   store s9, (s4)
   ; set depth = 5 and resume
-  load s2, 5
+  load s2, LAST_ATTEMPT_INDEX
   jump search_loop
 
 sum_valid:
   ; sum < 1000; compare with best
-  ; fetch best_found_flag from addr 48
-  load s7, 48
+  load s7, BEST_FOUND_FLAG
   fetch sa, (s7)
   compare sa, 0
   jump z, update_best
   ; fetch best sum
-  fetch s4, 49
-  fetch s5, 50
+  fetch s4, BEST_SUM_LOW
+  fetch s5, BEST_SUM_HIGH
   ; compare s3:s2 (sum hi:lo) to s5:s4 (best hi:lo)
   compare s3, s5
   jump nc, sum_hi_ge_best_hi
@@ -463,14 +482,14 @@ update_best:
   jump NDEBUG ? dont_print_the_current_optimum : print_the_current_optimum
   print_the_current_optimum:
     print_string "Found a new optimum: ", s9, UART_TX
-    load sf, 10
+    load sf, ATTEMPT_BASE
     printing_the_current_optimum_loop:
-      compare sf, 10 + 6
+      compare sf, ATTEMPT_BASE + ATTEMPT_LENGTH
       jump nc, end_of_the_printing_the_current_optimum_loop
       fetch s9, (sf)
       add s9, "0"
       call UART_TX
-      compare sf, 10 + 6 / 2 - 1
+      compare sf, ATTEMPT_BASE + ATTEMPT_LENGTH / 2 - 1
       jump nz, dont_print_the_plus_sign
         load s9, "+"
         call UART_TX
@@ -481,28 +500,25 @@ update_best:
     load s9, a'x
     call UART_TX
   dont_print_the_current_optimum:
-  ; store best_found_flag = 1 at addr 48
   load sb, 1
-  store sb, 48
-  ; store best sum lo/hi at 49/50
-  store s2, 49
-  store s3, 50
-  ; copy candidate decomposition (51-54) to best decomposition (55-58)
-  fetch sa, 51
-  store sa, 55
-  fetch sa, 52
-  store sa, 56
-  fetch sa, 53
-  store sa, 57
-  fetch sa, 54
-  store sa, 58
+  store sb, BEST_FOUND_FLAG
+  store s2, BEST_SUM_LOW
+  store s3, BEST_SUM_HIGH
+  fetch sa, CANDIDATE_FIRST_LOW
+  store sa, BEST_FIRST_LOW
+  fetch sa, CANDIDATE_FIRST_HIGH
+  store sa, BEST_FIRST_HIGH
+  fetch sa, CANDIDATE_SECOND_LOW
+  store sa, BEST_SECOND_LOW
+  fetch sa, CANDIDATE_SECOND_HIGH
+  store sa, BEST_SECOND_HIGH
 after_eval:
   ; release last digit (index 5) and prepare backtracking
-  load s5, 10
-  add s5, 5
+  load s5, ATTEMPT_BASE
+  add s5, LAST_ATTEMPT_INDEX
   fetch s9, (s5)
   ; decrement counts_used[s9]
-  load s7, 30
+  load s7, COUNTS_USED_BASE
   load s8, s9
   compare s8, 0
   jump z, used_rel_done2
@@ -515,19 +531,19 @@ used_rel_done2:
   sub s0, 1
   store s0, (s7)
   ; set next_try[5] = s9 + 1
-  load s4, 20
-  add s4, 5
+  load s4, NEXT_TRY_BASE
+  add s4, LAST_ATTEMPT_INDEX
   add s9, 1
   store s9, (s4)
   ; set depth = 5
-  load s2, 5
+  load s2, LAST_ATTEMPT_INDEX
   jump search_loop
 
 ; -------------------------
 ; print_result
 print_result:
   ; fetch best_found_flag
-  load s7, 48
+  load s7, BEST_FOUND_FLAG
   fetch s0, (s7)
   compare s0, 0
   jump z, print_bilbo
@@ -535,31 +551,31 @@ print_result:
   ; than 100, which it must not be. It's still not a complete solution to that
   ; problem, because it will output "Bilbo" for "2 3 0 0 9 0", when, in reality,
   ; the solution is "590=390+200".
-  fetch sf, 58
+  fetch sf, BEST_SECOND_HIGH
   compare sf, 0
   jump nz, second_number_is_bigger_than_99
-  fetch sf, 57
-  compare sf, 100
+  fetch sf, BEST_SECOND_LOW
+  compare sf, HUNDRED
   jump c, print_bilbo
   second_number_is_bigger_than_99:
   ; fetch sum
-  fetch s4, 49
-  fetch s5, 50
+  fetch s4, BEST_SUM_LOW
+  fetch s5, BEST_SUM_HIGH
   ; call print routine (expects s4=lo, s5=hi)
   call PRINT_UINT_LT1000_FROM_S4_S5
   ; print '='
   load s9, "="
   call UART_TX
   ; print best first number (55..56)
-  fetch s4, 55
-  fetch s5, 56
+  fetch s4, BEST_FIRST_LOW
+  fetch s5, BEST_FIRST_HIGH
   call PRINT_UINT_LT1000_FROM_S4_S5
   ; print '+'
   load s9, "+"
   call UART_TX
   ; print best second number (57..58)
-  fetch s4, 57
-  fetch s5, 58
+  fetch s4, BEST_SECOND_LOW
+  fetch s5, BEST_SECOND_HIGH
   call PRINT_UINT_LT1000_FROM_S4_S5
   load s9, a'x
   call UART_TX
@@ -571,90 +587,91 @@ return
 
 ; -------------------------
 ; PRINT_UINT_LT1000_FROM_S4_S5: prints 16-bit value (<1000) in s4 (lo), s5 (hi)
+namereg s0, tens_digit
+namereg s6, value_low
+namereg s7, value_high
+namereg s8, hundreds_digit
 PRINT_UINT_LT1000_FROM_S4_S5:
-  ; copy into temporaries tLo=s6, tHi=s7
-  load s6, s4
-  load s7, s5
-  ; hundreds in s8
-  load s8, 0
+  load value_low, s4
+  load value_high, s5
+  load hundreds_digit, 0
 hundreds_loop_p:
   ; if (tHi,tLo) < 100 -> stop
-  load sb, 100
-  compare s7, 0
+  load sb, HUNDRED
+  compare value_high, 0
   jump nz, can_sub100_p
-  compare s6, sb
+  compare value_low, sb
   jump nc, can_sub100_p
   jump hundreds_done_p
 can_sub100_p:
-  compare s6, sb
+  compare value_low, sb
   jump nc, sub100_no_borrow_p
-  sub s6, sb
-  sub s7, 1
+  sub value_low, sb
+  sub value_high, 1
   jump sub100_done_p
 sub100_no_borrow_p:
-  sub s6, sb
+  sub value_low, sb
 sub100_done_p:
-  add s8, 1
+  add hundreds_digit, 1
   jump hundreds_loop_p
 hundreds_done_p:
-  ; tens in s0
-  load s0, 0
+  load tens_digit, 0
 tens_loop_p:
-  load sb, 10
-  compare s7, 0
+  load sb, TEN
+  compare value_high, 0
   jump nz, can_sub10_p
-  compare s6, sb
+  compare value_low, sb
   jump nc, can_sub10_p
   jump tens_done_p
 can_sub10_p:
-  compare s6, sb
+  compare value_low, sb
   jump nc, sub10_no_borrow_p
-  sub s6, sb
-  sub s7, 1
+  sub value_low, sb
+  sub value_high, 1
   jump sub10_done_p
 sub10_no_borrow_p:
-  sub s6, sb
+  sub value_low, sb
 sub10_done_p:
-  add s0, 1
+  add tens_digit, 1
   jump tens_loop_p
 tens_done_p:
   ; units in s6 now
   ; print
-  compare s8, 0
+  compare hundreds_digit, 0
   jump z, skip_hundreds_print_p
   load sb, "0"
-  add s8, sb
-  load s9, s8
+  add hundreds_digit, sb
+  load s9, hundreds_digit
   call UART_TX
 skip_hundreds_print_p:
-  compare s8, 0
+  compare hundreds_digit, 0
   jump nz, print_tens_and_units_after_hundreds_p
-  compare s0, 0
+  compare tens_digit, 0
   jump z, print_units_only_p
   ; print tens and units
   load sb, "0"
-  add s0, sb
-  load s9, s0
+  add tens_digit, sb
+  load s9, tens_digit
   call UART_TX
   load sb, "0"
-  add s6, sb
-  load s9, s6
+  add value_low, sb
+  load s9, value_low
   call UART_TX
   jump print_end_p
 print_units_only_p:
   load sb, "0"
-  add s6, sb
-  load s9, s6
+  add value_low, sb
+  load s9, value_low
   call UART_TX
   jump print_end_p
 print_tens_and_units_after_hundreds_p:
   load sb, "0"
-  add s0, sb
-  load s9, s0
+  add tens_digit, sb
+  load s9, tens_digit
   call UART_TX
   load sb, "0"
-  add s6, sb
-  load s9, s6
+  add value_low, sb
+  load s9, value_low
   call UART_TX
 print_end_p:
 return
