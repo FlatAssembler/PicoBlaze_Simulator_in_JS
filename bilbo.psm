@@ -306,6 +306,19 @@ evaluate_attempt:
   jump z, sum_invalid
   compare s3, 0
   jump z, sum_invalid
+  
+  ; Let's attempt to speed it up a bit, to eliminate obviously invalid sums.
+  load sf, s0
+  add sf, s3
+  compare sf, 10
+  jump nc, sum_invalid
+  compare sf, 9
+  jump nz, the_first_digit_of_the_sum_is_not_9
+  load sf, s1
+  add sf, s4
+  compare sf, 10
+  jump nc, sum_invalid
+  the_first_digit_of_the_sum_is_not_9:
 
   ; compute firstNumber into (s7:s8) 16-bit (low: s7, high: s8)
   load s7, 0
@@ -408,6 +421,17 @@ sum_done:
 
   ; check sum < MAX_SUM_EXCLUSIVE
   constant upper_byte_of_limit, bitand(MAX_SUM_EXCLUSIVE, invertBits(ff'x)) / 2 ^ 8
+  if NDEBUG = 0
+    display "Debugging the preprocessor: Upper limit is "
+    display upper_byte_of_limit + "0"
+    display "*256+"
+    display bitor(bitand(MAX_SUM_EXCLUSIVE, ff'x) / 100, 0) + "0"
+    display "*100+"
+    display bitor(mod(bitand(MAX_SUM_EXCLUSIVE, ff'x) / 10, 10), 0) + "0"
+    display "*10+"
+    display mod(bitand(MAX_SUM_EXCLUSIVE, ff'x), 10) + "0"
+    display a'x
+  endif
   compare s3, upper_byte_of_limit
   jump nc, sum_ge_1000
   jump sum_valid
