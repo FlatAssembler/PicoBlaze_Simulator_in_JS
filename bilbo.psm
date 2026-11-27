@@ -407,7 +407,7 @@ sum_no_carry:
 sum_done:
 
   ; check sum < MAX_SUM_EXCLUSIVE
-  constant upper_byte_of_limit, bitand(MAX_SUM_EXCLUSIVE, ff00'x) / 2 ^ 8
+  constant upper_byte_of_limit, bitand(MAX_SUM_EXCLUSIVE, invertBits(ff'x)) / 2 ^ 8
   compare s3, upper_byte_of_limit
   jump nc, sum_ge_1000
   jump sum_valid
